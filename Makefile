@@ -32,6 +32,11 @@ debug:
 	@echo $(MS)/$(MSS)
 	@echo $(MS_LOGS)
 	@echo $(MS_IDE)
+	mkdir $(TEMP)
+	mkdir builds
+	mkdir $(PUB_BUILD)
+	mkdir $(MS_PUB_BUILD)
+	cp README.txt $(PUB_BUILD)
 	cp  $(MS_ROOT)/$(MSS)/IonControl1.cs  $(TEMP)/IonControl1.cs.bak
 	./setVersion patch $(MS_ROOT)/$(MSS)/IonControl1.cs  $(MS_ROOT)/$(MSS)/IonControl2.cs
 	rm $(MS_ROOT)/$(MSS)/IonControl1.cs
@@ -47,9 +52,11 @@ debug:
 	mv $(ZIP_PREFIX).zip $(ZIP_PREFIX)-$(SUFFIX).zip
 
 clean:
-	rm -rf $(PUB_BUILD)/addin.deploy/*
+	rm -rf builds
+	rm -rf $(MS_PUB_BUILD)
 	rm  $(PUB_BUILD)/*.xqy
 	rm  $(PUB_BUILD)/*.js
 	rm -rf $(MS_BUILD)/*
 	rm ./*.zip
+	rm -rf $(TEMP)
 
