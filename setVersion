@@ -1,0 +1,28 @@
+
+RELEASE_OR_PATCH=$1
+SRCDIR=$2
+DSTDIR=$3
+
+MAV=`cat MAJOR_VERSION`
+MIV=`cat MINOR_VERSION`
+
+if [ "$RELEASE_OR_PATCH" == 'patch' ]; then
+  PV=`date +%Y%m%d`
+cat << EOF > temp$$
+1,\$s/@MAJOR_VERSION/$MAV/
+1,\$s/@MINOR_VERSION/$MIV/
+1,\$s/@PATCH_VERSION/-$PV/
+EOF
+
+else
+cat << EOF > temp$$
+1,\$s/@MAJOR_VERSION/$MAV/
+1,\$s/@MINOR_VERSION/$MIV/
+1,\$s/@PATCH_VERSION//
+EOF
+
+fi
+
+
+sed -f temp$$ < $SRCDIR > $DSTDIR
+rm temp$$
