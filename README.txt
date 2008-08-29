@@ -22,8 +22,8 @@ Files Required:
 MarkLogic Server:
 
 MarkLogic-Addin.js
-word-addin.xqy
-custom-xml.xqy
+word-processing-ml.xqy
+package.xqy
 
 
 Windows Client:
@@ -39,8 +39,8 @@ Directions for Installation:
 
 MarkLogic Server:
 
-1) Copy word-addin.xqy, custom-xml.xqy to <MARKLOGIC>/Modules/MarkLogic/openxml
-   (if you are on 4.0, the openxml directory will exist; otherwise, you may need to add it.)
+1) Copy word-processing-ml.xqy, package.xqy to <MARKLOGIC>/Modules/MarkLogic/openxml
+   (if you are using 4.0, the openxml directory will exist; otherwise, you may need to add it.)
 2) Copy MarkLogic-WordAddin.js to whichever directory you will be creating your solution in.
 
 

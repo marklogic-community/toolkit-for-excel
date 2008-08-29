@@ -46,15 +46,15 @@ package:
 	mv $(TEMP)/IonControl1.cs.bak  $(MS_ROOT)/$(MSS)/IonControl1.cs
 	cp -r   $(MS_BUILD)/* $(MS_PUB_BUILD)/.
 	./setVersion patch $(JS)/MarkLogicWordAddin.js $(PUB_BUILD)/MarkLogicWordAddin.js
-	./setVersion patch $(ML)/word-addin.xqy $(PUB_BUILD)/word-addin.xqy
-	cp $(ML)/custom-xml.xqy $(PUB_BUILD)/custom-xml.xqy
+	./setVersion patch $(ML)/word-processing-ml.xqy $(PUB_BUILD)/word-processing-ml.xqy
+	./setVersion patch $(ML)/package.xqy $(PUB_BUILD)/package.xqy
 	@echo Create zip file $(ZIP_PREFIX)_$(SUFFIX).zip
 	(cd builds; zip -r ../$(ZIP_PREFIX).zip Word/*)
 	mv $(ZIP_PREFIX).zip $(ZIP_PREFIX)-$(SUFFIX).zip
 
 clean:
-	rm -rf $(BUILDS)
-	rm -rf $(MS_BUILD)/*
-	rm ./*.zip
-	rm -rf $(TEMP)
+	  rm -rf $(BUILDS)
+	  rm -rf $(MS_BUILD)
+	  rm -rf $(TEMP)
+	  rm ./*.zip
 
