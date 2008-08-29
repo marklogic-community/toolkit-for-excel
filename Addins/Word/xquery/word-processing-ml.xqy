@@ -21,7 +21,7 @@ declare namespace wne="http://schemas.microsoft.com/office/word/2006/wordml"
 declare namespace ooxml = "http://marklogic.com/openxml"
 import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy"
 
-define variable $ooxml:wml-format-support-version { "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION"}
+define variable $ooxml:wml-format-support-version { "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" }
  
 define function ooxml:ooxml-version() as xs:string
 {
@@ -250,17 +250,21 @@ define function ooxml:set-paragraph-styles($wp as node()*, $wpProps as element(w
 :)
 
 (: END SET PARAGRAPH STYLES ==================================================================== :)
-(: TBD :)
-define function ooxml:transfer-paragraph-styles($styleparagraph as element(w:p), $contentparagraph as element(w:p)) as element(w:p)
+
+define function ooxml:custom-xml($content as element(), $tag as xs:string) as element(w:customXml)?
 {
-
-}
-
-define function ooxml:custom-xml($content as element(), $tag as xs:string) as element(w:customXml)
-{
-  (:check element passed in that it can be child of w:customXml :)
-
-  element w:customXml{attribute w:element{$tag}, $content}
+  typeswitch($content)
+   case element(w:p) return  element w:customXml{attribute w:element{$tag}, $content}
+   case element(w:r) return  element w:customXml{attribute w:element{$tag}, $content}
+   case element(w:customXml) return  element w:customXml{attribute w:element{$tag}, $content}
+   case element(w:sdt) return  element w:customXml{attribute w:element{$tag}, $content}
+   case element(w:tbl) return  element w:customXml{attribute w:element{$tag}, $content}
+   case element(w:tr) return  element w:customXml{attribute w:element{$tag}, $content}
+   case element(w:tc) return  element w:customXml{attribute w:element{$tag}, $content}
+   case element(w:hyperlink) return  element w:customXml{attribute w:element{$tag}, $content}
+   case element(w:fldSimple) return  element w:customXml{attribute w:element{$tag}, $content}
+   case element(w:fldChar) return  element w:customXml{attribute w:element{$tag}, $content}
+  default return ()
 }
 
 (: BEGIN SET CUSTOM XML TAG ==================================================================== :)
