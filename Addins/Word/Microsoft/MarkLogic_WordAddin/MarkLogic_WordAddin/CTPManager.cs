@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools = Microsoft.Office.Tools;
-using Word = Microsoft.Office.Interop.Word;
+using MSWord = Microsoft.Office.Interop.Word;
 using Microsoft.Office.Tools.Ribbon;
-using Microsoft.Office.Tools;
 
 namespace MarkLogic_WordAddin
 {
-    public class CTPManager<TTaskPane> where TTaskPane : IonControl1
-    { 
-        Dictionary<Word.Window, TaskPaneEntry> _taskPanes = null;
+    public class CTPManager<TTaskPane> where TTaskPane : UserControl1
+    {
+        Dictionary<MSWord.Window, TaskPaneEntry> _taskPanes = null;
         ITaskPaneFactory _taskPaneFactory = null;
         List<RibbonToggleButton> _managedButtons = null;
 
         public CTPManager(ITaskPaneFactory taskPaneFactory)
         {
-            _taskPanes = new Dictionary<Word.Window, TaskPaneEntry>();
+            _taskPanes = new Dictionary<MSWord.Window, TaskPaneEntry>();
             _taskPaneFactory = taskPaneFactory;
             _managedButtons = new List<RibbonToggleButton>();
             Globals.ThisAddIn.Application.WindowActivate += new Microsoft.Office.Interop.Word.ApplicationEvents4_WindowActivateEventHandler(Application_WindowActivate);
@@ -36,7 +35,7 @@ namespace MarkLogic_WordAddin
         public TTaskPane GetCurrentTaskPane()
         {
             TTaskPane pane = null;
-            Word.Window activeWindow = Globals.ThisAddIn.Application.ActiveWindow;
+            MSWord.Window activeWindow = Globals.ThisAddIn.Application.ActiveWindow;
             if (_taskPanes.ContainsKey(activeWindow))
             {
                 pane = _taskPanes[activeWindow].UserTaskPane;
@@ -44,7 +43,7 @@ namespace MarkLogic_WordAddin
             return pane;
         }
 
-        public bool IsTaskPaneVisible(Word.Window window)
+        public bool IsTaskPaneVisible(MSWord.Window window)
         {
             bool visible = false;
             if (_taskPanes.ContainsKey(window))
@@ -54,7 +53,7 @@ namespace MarkLogic_WordAddin
             return visible;
         }
 
-        public TTaskPane ToggleTaskPane(Word.Window window)
+        public TTaskPane ToggleTaskPane(MSWord.Window window)
         {
             TaskPaneEntry entry;
             if (_taskPanes.ContainsKey(window))
@@ -106,7 +105,7 @@ namespace MarkLogic_WordAddin
         void VstoTaskPane_VisibleChanged(object sender, EventArgs e)
         {
             Tools.CustomTaskPane taskPane = (Tools.CustomTaskPane)sender;
-            TTaskPane userTaskPane = _taskPanes[(Word.Window)taskPane.Window].UserTaskPane;
+            TTaskPane userTaskPane = _taskPanes[(MSWord.Window)taskPane.Window].UserTaskPane;
             RefreshToggleButtons();
             OnTaskPaneVisibilityChanged(
                 new CTPManager<TTaskPane>.TaskPaneVisiblityChangedEventArgs(userTaskPane));
@@ -126,7 +125,7 @@ namespace MarkLogic_WordAddin
         public interface ITaskPaneFactory
         {
             string CreateTitle(TTaskPane taskPane);
-            TTaskPane CreateNewTaskPane(Word.Document document, Word.Window window);
+            TTaskPane CreateNewTaskPane(MSWord.Document document, MSWord.Window window);
         }
 
         struct TaskPaneEntry

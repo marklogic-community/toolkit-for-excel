@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PublishUrlHistory>C:\cygwin\home\paven\MLOS\Office2007\builds\Word\|C:\cygwin\home\paven\MLOS\Office2007\builds\|publish\</PublishUrlHistory>
+    <PublishUrlHistory>C:\cygwin\home\paven\MLOS\Office2007\builds\Word\</PublishUrlHistory>
     <InstallUrlHistory>
     </InstallUrlHistory>
   </PropertyGroup>

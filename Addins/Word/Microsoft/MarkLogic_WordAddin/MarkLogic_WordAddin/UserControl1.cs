@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Word=Microsoft.Office.Interop.Word;
 using System.Runtime.InteropServices;
+using System.Security.Permissions;
 //using System.Xml;
 using System.IO;
 //using DocumentFormat.OpenXml.Packaging; //OpenXML sdk
@@ -16,7 +17,12 @@ using Office = Microsoft.Office.Core;
 namespace MarkLogic_WordAddin
 {   
     [ComVisible(true)]
-    public partial class IonControl1 : UserControl
+   // [ClassInterfaceAttribute(ClassInterfaceType.AutoDispatch)]
+  //  [DockingAttribute(DockingBehavior.AutoDock)]
+  //  [PermissionSetAttribute(SecurityAction.InheritanceDemand, Name = "FullTrust")]
+  //  [PermissionSetAttribute(SecurityAction.LinkDemand, Name = "FullTrust")]
+
+    public partial class UserControl1 : UserControl
     {
         private string tmpPath = "";                    
         private string propsFile = "";
@@ -26,12 +32,12 @@ namespace MarkLogic_WordAddin
         private string color = "";
         private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";
 
-        public IonControl1()
+
+        public UserControl1()
         {
             InitializeComponent();
             tmpPath=Path.GetTempPath();
             propsFile=tmpPath+"OfficeProperties.txt";
-
             bool configFileExists = checkForConnectionPropertiesFile();
 
             //MessageBox.Show("tmp path is" + tmpPath);
@@ -50,7 +56,7 @@ namespace MarkLogic_WordAddin
                 webBrowser1.WebBrowserShortcutsEnabled = false;
                 webBrowser1.ObjectForScripting = this;
                 webBrowser1.Navigate(webUrl);
-
+                webBrowser1.ScriptErrorsSuppressed = true;
 
             }
 
@@ -125,24 +131,48 @@ namespace MarkLogic_WordAddin
 
         //start methods used by MarkLogicWordAddin.js
 
-        public String getConfiguration()
+     /*   public String getConfiguration()
         {
             return addinVersion+"U+016000"+webUrl + "U+016000" + color ;
+        }
+     */
+
+        public String getOfficeColor()
+        {
+            return color;
+        }
+
+        public String getAddinVersion()
+        {
+            return addinVersion;
+        }
+
+        public String getBrowserUrl()
+        {
+            return webUrl;
         }
 
         public String getCustomPieceIds()
         {
+            
             string ids = "";
+
             try
             {
                 Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
                 int count = doc.CustomXMLParts.Count;
+
+                //ADDED THIS
+
+                int indCount = 0;
 
                 foreach (Office.CustomXMLPart c in doc.CustomXMLParts)
                 {
                     if (c.BuiltIn.Equals(false))
                     {
                         ids += c.Id + "U+016000";
+
+             
                     }
                 }
                 
@@ -158,6 +188,7 @@ namespace MarkLogic_WordAddin
             if (debug)
                 ids = "error";
 
+            //MessageBox.Show(ids);
             return ids;
         }
 
@@ -446,7 +477,28 @@ namespace MarkLogic_WordAddin
             return message;
         }
 
+   /*     public string getArray()
+        {
+            string[] c = { "ONE", "TWO" };
 
+            for (int i = 0; i < c.Length; i++)
+                MessageBox.Show("ARRAY IND" + i + ": " + c[i]);
+
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < c.Length; i++)
+            {
+
+                sb.AppendFormat("'{0}', ", c[i]);
+
+            }
+           //remove last two chars
+
+            sb.Remove(sb.Length - 2, 2);
+            string elements = sb.ToString();
+            return elements;
+        }
+*/
 
     }
 }

@@ -14,14 +14,14 @@ namespace MarkLogic_WordAddin
 {
     public partial class ThisAddIn
     {
-        CTPManager<IonControl1> _manager = null;
-        public CTPManager<IonControl1> CTPManager
+        CTPManager<UserControl1> _manager = null;
+        public CTPManager<UserControl1> CTPManager
         {
             get
             {
                 if (_manager == null)
                 {
-                    _manager = new CTPManager<IonControl1>(
+                    _manager = new CTPManager<UserControl1>(
                         new TaskPaneFactory());
 
                 }
@@ -32,7 +32,7 @@ namespace MarkLogic_WordAddin
 
         internal void ClearTaskPanes()
         {
-            foreach (IonControl1 taskPane in CTPManager.GetTaskPanes())
+            foreach (UserControl1 taskPane in CTPManager.GetTaskPanes())
             {
                 taskPane.Clear();
             }
@@ -40,10 +40,12 @@ namespace MarkLogic_WordAddin
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            Globals.ThisAddIn.CTPManager.ToggleTaskPane(Globals.ThisAddIn.Application.ActiveWindow);
             
-            //This is setting pane open on startupe
+            Globals.ThisAddIn.CTPManager.ToggleTaskPane(Globals.ThisAddIn.Application.ActiveWindow);
             Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = true;
+           
+            //This is setting pane open on startupe
+            //Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = false;
 
         }
 
@@ -52,17 +54,17 @@ namespace MarkLogic_WordAddin
         }
         
         class TaskPaneFactory
-           : CTPManager<IonControl1>.ITaskPaneFactory
+           : CTPManager<UserControl1>.ITaskPaneFactory
         {
-            public string CreateTitle(IonControl1 taskPane)
+            public string CreateTitle(UserControl1 taskPane)
             {
                 return "Mark Logic Authoring Kit";
             }
 
-            public IonControl1 CreateNewTaskPane(
+            public UserControl1 CreateNewTaskPane(
                 Document document, Window window)
             {
-                IonControl1 pane = new IonControl1();
+                UserControl1 pane = new UserControl1();
                 pane.Document = document;
                 return pane;
             }

@@ -1,6 +1,6 @@
 ﻿namespace MarkLogic_WordAddin
 {
-    partial class IonControl1
+    partial class UserControl1
     {
         /// <summary> 
         /// Required designer variable.
@@ -40,12 +40,12 @@
             this.webBrowser1.Size = new System.Drawing.Size(269, 378);
             this.webBrowser1.TabIndex = 0;
             // 
-            // IonControl1
+            // UserControl1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.webBrowser1);
-            this.Name = "IonControl1";
+            this.Name = "UserControl1";
             this.Size = new System.Drawing.Size(269, 378);
             this.ResumeLayout(false);
 
@@ -54,5 +54,8 @@
         #endregion
 
         private System.Windows.Forms.WebBrowser webBrowser1;
+
+
+
     }
 }
