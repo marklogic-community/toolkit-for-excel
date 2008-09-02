@@ -14,21 +14,20 @@ namespace MarkLogic_WordAddin
 {
     public partial class ThisAddIn
     {
-        CTPManager<UserControl1> _manager = null;
+        CTPManager<UserControl1> mgr = null;
         public CTPManager<UserControl1> CTPManager
         {
             get
             {
-                if (_manager == null)
+                if (mgr == null)
                 {
-                    _manager = new CTPManager<UserControl1>(
-                        new TaskPaneFactory());
-
+                    mgr = new CTPManager<UserControl1>(
+                        new CustomTaskPaneFactory());
+                   
                 }
-                return _manager;
+                return mgr;
             }
         }
-
 
         internal void ClearTaskPanes()
         {
@@ -40,12 +39,10 @@ namespace MarkLogic_WordAddin
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            
-            Globals.ThisAddIn.CTPManager.ToggleTaskPane(Globals.ThisAddIn.Application.ActiveWindow);
-            Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = true;
-           
-            //This is setting pane open on startupe
-            //Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = false;
+            //Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = true;
+            //Globals.ThisAddIn.CTPManager.ManageToggleButton(Globals.Ribbons.Ribbon1.viewTaskPaneButton);
+            //Globals.ThisAddIn.CTPManager.ToggleTaskPane(Globals.ThisAddIn.Application.ActiveWindow);
+            //Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = true;
 
         }
 
@@ -53,7 +50,7 @@ namespace MarkLogic_WordAddin
         {
         }
         
-        class TaskPaneFactory
+        class CustomTaskPaneFactory
            : CTPManager<UserControl1>.ITaskPaneFactory
         {
             public string CreateTitle(UserControl1 taskPane)
@@ -66,6 +63,9 @@ namespace MarkLogic_WordAddin
             {
                 UserControl1 pane = new UserControl1();
                 pane.Document = document;
+               // Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = true;
+               // pane.Visible = true;
+          
                 return pane;
             }
         }
