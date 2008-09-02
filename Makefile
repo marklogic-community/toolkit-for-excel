@@ -38,12 +38,12 @@ package:
 	mkdir $(PUB_BUILD)
 	mkdir $(MS_PUB_BUILD)
 	cp README.txt $(PUB_BUILD)
-	cp  $(MS_ROOT)/$(MSS)/IonControl1.cs  $(TEMP)/IonControl1.cs.bak
-	./setVersion patch $(MS_ROOT)/$(MSS)/IonControl1.cs  $(MS_ROOT)/$(MSS)/IonControl2.cs
-	rm $(MS_ROOT)/$(MSS)/IonControl1.cs
-	mv $(MS_ROOT)/$(MSS)/IonControl2.cs $(MS_ROOT)/$(MSS)/IonControl1.cs
+	cp  $(MS_ROOT)/$(MSS)/UserControl1.cs  $(TEMP)/UserControl1.cs.bak
+	./setVersion patch $(MS_ROOT)/$(MSS)/UserControl1.cs  $(MS_ROOT)/$(MSS)/UserControl2.cs
+	rm $(MS_ROOT)/$(MSS)/UserControl1.cs
+	mv $(MS_ROOT)/$(MSS)/UserControl2.cs $(MS_ROOT)/$(MSS)/UserControl1.cs
 	build-addin.bat
-	mv $(TEMP)/IonControl1.cs.bak  $(MS_ROOT)/$(MSS)/IonControl1.cs
+	mv $(TEMP)/UserControl1.cs.bak  $(MS_ROOT)/$(MSS)/UserControl1.cs
 	cp -r   $(MS_BUILD)/* $(MS_PUB_BUILD)/.
 	./setVersion patch $(JS)/MarkLogicWordAddin.js $(PUB_BUILD)/MarkLogicWordAddin.js
 	./setVersion patch $(ML)/word-processing-ml.xqy $(PUB_BUILD)/word-processing-ml.xqy
