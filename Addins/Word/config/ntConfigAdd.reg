@@ -1,0 +1,3 @@
+REGEDIT4
+[HKEY_CURRENT_USER\MarkLogicAddinConfiguration\Word]
+"URL"="http://localhost:8000/addinNew/addinhello.xqy" 
