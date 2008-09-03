@@ -13,6 +13,7 @@ using System.Security.Permissions;
 using System.IO;
 //using DocumentFormat.OpenXml.Packaging; //OpenXML sdk
 using Office = Microsoft.Office.Core;
+using Microsoft.Win32;
 
 namespace MarkLogic_WordAddin
 {   
@@ -38,18 +39,23 @@ namespace MarkLogic_WordAddin
             InitializeComponent();
             tmpPath=Path.GetTempPath();
             propsFile=tmpPath+"OfficeProperties.txt";
-            bool configFileExists = checkForConnectionPropertiesFile();
-
+ //CHANGED
+ // bool configFileExists = checkForConnectionPropertiesFile();
+            bool regEntryExists = checkUrlInRegistry();
             //MessageBox.Show("tmp path is" + tmpPath);
             //MessageBox.Show("propsFile is"+propsFile);
             //MessageBox.Show("file exists"+configFileExists);
-            if (!configFileExists)
+            if (!regEntryExists)
             {
-                MessageBox.Show("Unable to find configuration info. Please insure OfficeProperties.txt exists in your system temp directory.  If problems persist, please contact your system administrator.");
+                //MessageBox.Show("Unable to find configuration info. Please insure OfficeProperties.txt exists in your system temp directory.  If problems persist, please contact your system administrator.");
+                MessageBox.Show("                                   Unable to find configuration info. \n\r "+
+                                " Please see the README for how to add configuration info for your system. \n\r "+
+                                "           If problems persist, please contact your system administrator.");
             }
             else
             {
-                getConfigurationValues();
+                //CHANGED
+               // getConfigurationValues();
                 color = TryGetColorScheme().ToString();
                 webBrowser1.AllowWebBrowserDrop = false;
                 webBrowser1.IsWebBrowserContextMenuEnabled = false;
@@ -67,6 +73,29 @@ namespace MarkLogic_WordAddin
         private bool checkForConnectionPropertiesFile()
         {
             return File.Exists(propsFile);
+        }
+
+        private bool checkUrlInRegistry()
+        {
+            RegistryKey regKey1 = Registry.CurrentUser;
+            regKey1 = regKey1.OpenSubKey(@"MarkLogicAddinConfiguration\Word");
+            bool keyExists = false;
+            if (regKey1 == null)
+            {
+                if(debugMsg)
+                   MessageBox.Show("KEY IS NULL");
+
+            }
+            else
+            {
+                if(debugMsg)
+                    MessageBox.Show("KEY IS: "+regKey1.GetValue("URL"));
+
+                webUrl = (string)regKey1.GetValue("URL");
+                if(!((webUrl.Equals(""))||(webUrl==null)))
+                        keyExists = true;
+            }
+            return keyExists;
         }
 
         //read config info
@@ -163,8 +192,6 @@ namespace MarkLogic_WordAddin
                 int count = doc.CustomXMLParts.Count;
 
                 //ADDED THIS
-
-                int indCount = 0;
 
                 foreach (Office.CustomXMLPart c in doc.CustomXMLParts)
                 {
@@ -327,6 +354,15 @@ namespace MarkLogic_WordAddin
             {
                 string docxml = Globals.ThisAddIn.Application.ActiveDocument.WordOpenXML;
                 stylesxml = Transform.GetStylesXmlFromCurrentDoc(docxml);
+
+               if (debugMsg)
+               {
+                    TextWriter tw = new StreamWriter(@"C:\styles.xml");
+                    tw.WriteLine(stylesxml);
+                    tw.Close();
+               }
+
+
             }
             catch (Exception e)
             {
