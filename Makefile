@@ -15,6 +15,7 @@ ML = Addins/Word/xquery
 MS = Addins/Word/Microsoft
 MSS = MarkLogic_WordAddin
 JS = Addins/Word/javascript
+CF = Addins/Word/config
 BUILDS = builds
 PUB_BUILD = $(BUILDS)/Word
 MS_PUB_BUILD = $(PUB_BUILD)/addin.deploy
@@ -36,7 +37,9 @@ package:
 	mkdir $(TEMP)
 	mkdir $(BUILDS) 
 	mkdir $(PUB_BUILD)
+	mkdir $(PUB_BUILD)/config
 	mkdir $(MS_PUB_BUILD)
+	cp $(CF)/*.reg $(PUB_BUILD)/config/.
 	cp README.txt $(PUB_BUILD)
 	cp  $(MS_ROOT)/$(MSS)/UserControl1.cs  $(TEMP)/UserControl1.cs.bak
 	./setVersion patch $(MS_ROOT)/$(MSS)/UserControl1.cs  $(MS_ROOT)/$(MSS)/UserControl2.cs
