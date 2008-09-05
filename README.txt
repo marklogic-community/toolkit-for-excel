@@ -47,7 +47,7 @@ MarkLogic Server:
 
 
 Windows Client:
-1) copy the addin.deploy folder as well as the .reg file to your client.
+1) copy the addin.deploy folder as well as the .reg files to your client.
 
 2) Configuration info is stored in the registry. A Key for the current user will be created: 
 
