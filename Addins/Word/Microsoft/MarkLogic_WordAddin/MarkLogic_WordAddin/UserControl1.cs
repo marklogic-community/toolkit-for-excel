@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 //using System.Xml;
 using System.IO;
-//using DocumentFormat.OpenXml.Packaging; //OpenXML sdk
+using DocumentFormat.OpenXml.Packaging; //OpenXML sdk
 using Office = Microsoft.Office.Core;
 using Microsoft.Win32;
 
@@ -25,8 +25,8 @@ namespace MarkLogic_WordAddin
 
     public partial class UserControl1 : UserControl
     {
-        private string tmpPath = "";                    
-        private string propsFile = "";
+      //  private string tmpPath = "";                    
+     //   private string propsFile = "";
         private string webUrl = "";
         private bool debug = false;
         private bool debugMsg = false;
@@ -37,8 +37,8 @@ namespace MarkLogic_WordAddin
         public UserControl1()
         {
             InitializeComponent();
-            tmpPath=Path.GetTempPath();
-            propsFile=tmpPath+"OfficeProperties.txt";
+   // tmpPath=Path.GetTempPath();
+  //       propsFile=tmpPath+"OfficeProperties.txt";
  //CHANGED
  // bool configFileExists = checkForConnectionPropertiesFile();
             bool regEntryExists = checkUrlInRegistry();
@@ -69,11 +69,11 @@ namespace MarkLogic_WordAddin
 
         }
 
-        //checks for propsFile  tmpPath/OfficeProperties.txt
-        private bool checkForConnectionPropertiesFile()
-        {
-            return File.Exists(propsFile);
-        }
+      //  checks for propsFile  tmpPath/OfficeProperties.txt
+      //  private bool checkForConnectionPropertiesFile()
+      //  {
+      //      return File.Exists(propsFile);
+      //  }
 
         private bool checkUrlInRegistry()
         {
@@ -99,7 +99,7 @@ namespace MarkLogic_WordAddin
         }
 
         //read config info
-        private void getConfigurationValues()
+   /*     private void getConfigurationValues()
         {
             TextReader tr = new StreamReader(propsFile);
             webUrl = tr.ReadLine();
@@ -110,7 +110,7 @@ namespace MarkLogic_WordAddin
             //connPort.Text = tr.ReadLine();
             tr.Close();
             tr.Dispose();
-
+    */
           /*  if (File.Exists(versionFile))
             {
                 TextReader trv = new StreamReader(versionFile);
@@ -119,7 +119,7 @@ namespace MarkLogic_WordAddin
             }
           */
 
-        }
+     //   }
 
         
         //used by CTPManager
@@ -324,7 +324,7 @@ namespace MarkLogic_WordAddin
                 {
                     rng.Select();
                     xmlizable = Globals.ThisAddIn.Application.Selection.WordOpenXML; // wordApp.Selection.WordOpenXML;  //instead of .Text
-                    wpml = Transform.ConvertToWPMLFromText(xmlizable);
+                    wpml = Transform.ConvertToWPMLDelimitedFromText(xmlizable);
                 }
                 else
                 {
@@ -344,6 +344,7 @@ namespace MarkLogic_WordAddin
                 wpml = "error";
 
             return wpml;
+
         }
 
         //returns the entire styles.xml from the active package
@@ -513,28 +514,20 @@ namespace MarkLogic_WordAddin
             return message;
         }
 
-   /*     public string getArray()
+        public static void AddImagePart(string document, string fileName)
         {
-            string[] c = { "ONE", "TWO" };
-
-            for (int i = 0; i < c.Length; i++)
-                MessageBox.Show("ARRAY IND" + i + ": " + c[i]);
-
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 0; i < c.Length; i++)
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(document, true))
             {
+                MainDocumentPart mainPart = wordDoc.MainDocumentPart;
 
-                sb.AppendFormat("'{0}', ", c[i]);
+                ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
 
+                using (FileStream stream = new FileStream(fileName, FileMode.Open))
+                {
+                    imagePart.FeedData(stream);
+                }
             }
-           //remove last two chars
-
-            sb.Remove(sb.Length - 2, 2);
-            string elements = sb.ToString();
-            return elements;
         }
-*/
 
     }
 }
