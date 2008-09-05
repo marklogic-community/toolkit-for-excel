@@ -64,19 +64,26 @@ MLA.deleteCustomPiece = function(customPieceId)
         //return deletedPiece;
 }
 
+
+
 MLA.getSelection = function()
 {
 	var selection = window.external.getSelection();
-
-        if(selection == "")
+	var selections;
+        if(selections == "")
 	{
-	   selection=null;
+	   selections=null;
+	}
+	else
+	{
+	   selections = selection.split("U+016000");
 	}
 
-	if(selection == "error")
-   	   throw(selection+": unable to getSelection.");
 
-	return selection;
+	if(selections[0] == "error")
+   	   throw(selections[0]+": unable to getSelection.");
+
+	return selections;
 }
 
 MLA.getRangePreview = function()
@@ -103,12 +110,36 @@ MLA.getActiveDocStylesXml = function()
 	return stylesXml;
 }
 
+MLA.isArray = function(obj)
+{
+ return obj.constructor == Array;
+}
+
 MLA.insertBlockContent = function(blockContentXml,stylesXml)
 {
 	if(stylesXml == null) 
 	    stylesXml = "";
+   
+	var v_block="";
+	var v_array = MLA.isArray(blockContentXml);
+        //alert("ARRAY? :"+v_array);
 
-        var inserted = window.external.insertBlockContent(blockContentXml,stylesXml);
+	if(v_array)
+	{
+		for(var i=0;i<blockContentXml.length;i++)
+		{
+			v_block = v_block+blockContentXml[i];
+		}
+		//alert("v_block: "+v_block);
+	}
+	else
+	{
+		v_block = blockContentXml;
+		//alert("v_block: "+v_block);
+	}
+
+        //var inserted = window.external.insertBlockContent(blockContentXml,stylesXml);
+        var inserted = window.external.insertBlockContent(v_block,stylesXml);
 
 	if(inserted=="")
 	  inserted = null;
@@ -121,17 +152,26 @@ MLA.insertBlockContent = function(blockContentXml,stylesXml)
 
 MLA.getConfiguration = function()
 {
-	var configDetails = window.external.getConfiguration();
+//	var configDetails = window.external.getConfiguration();
 
-	if(configDetails == "")
-	   throw(configDetails+":unable to getConfiguration.");
+//	if(configDetails == "")
+//	   throw(configDetails+":unable to getConfiguration.");
 
-	var configs = configDetails.split("U+016000");
+//	var configs = configDetails.split("U+016000");
+        var version = window.external.getAddinVersion();
+	var color = window.external.getOfficeColor();
+	var webUrl = window.external.getBrowserUrl();
+
+	if(version == "" || color == "" || webUrl == "")
+		throw("unable to access configuration");
 
 	MLA.config = {
-		       "version":configs[0],
-                       "url":configs[1],
-	               "color":configs[2]
+		        "version":version,
+			"url":webUrl,
+			"theme":color
+		       //"version":configs[0],
+                       //"url":configs[1],
+	               //"color":configs[2]
 	};
 
         return MLA.config;	
