@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 //using System.Xml;
 using System.IO;
-using DocumentFormat.OpenXml.Packaging; //OpenXML sdk
+//using DocumentFormat.OpenXml.Packaging; //OpenXML sdk
 using Office = Microsoft.Office.Core;
 using Microsoft.Win32;
 
@@ -63,6 +63,7 @@ namespace MarkLogic_WordAddin
                 webBrowser1.ObjectForScripting = this;
                 webBrowser1.Navigate(webUrl);
                 webBrowser1.ScriptErrorsSuppressed = true;
+                
 
             }
 
@@ -395,7 +396,7 @@ namespace MarkLogic_WordAddin
 
                     rng.Select();
                     xmlizable = Globals.ThisAddIn.Application.Selection.WordOpenXML; // wordApp.Selection.WordOpenXML;  //instead of .Text
-                    wpml = Transform.ConvertToWPMLFromText(xmlizable);
+                    wpml = Transform.ConvertToWPMLFromTextFinalNode(xmlizable);
                 }
                 else
                 {
@@ -514,7 +515,7 @@ namespace MarkLogic_WordAddin
             return message;
         }
 
-        public static void AddImagePart(string document, string fileName)
+   /*     public static void AddImagePart(string document, string fileName)
         {
             using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(document, true))
             {
@@ -528,6 +529,7 @@ namespace MarkLogic_WordAddin
                 }
             }
         }
+    * */
 
     }
 }
