@@ -137,6 +137,58 @@ namespace MarkLogic_WordAddin
             return response.ToString();
         }
 
+        public static string ConvertToWPMLFromTextIdx(string wordprocessingML, int idx)
+        {
+            //StringBuilder tmpResponse = new StringBuilder();
+            StringBuilder newResponse = new StringBuilder();
+            //StringBuilder response = new StringBuilder();
+            try
+            {
+                XmlDocument document = new XmlDocument();
+                document.LoadXml(wordprocessingML);
+                XmlNode content = document.SelectSingleNode(bodyXPath, NamespaceManager);
+
+                int nodeCount = content.ChildNodes.Count;
+                //System.Windows.Forms.MessageBox.Show("NODE COUNT" + nodeCount);
+                //removes w:sectPr
+                if (content.ChildNodes.Count > 0)
+                {
+                    content.RemoveChild(content.LastChild);
+                }
+
+                int length = 0;
+                int counter = 0;
+                length = content.ChildNodes.Count;
+
+                foreach (XmlNode n in content.ChildNodes)
+                {
+                    // System.Windows.Forms.MessageBox.Show(n.OuterXml);
+                    if(counter == idx)
+                      newResponse.Append(n.OuterXml);
+
+                    counter++;
+                   // if (counter < length)
+                     //   newResponse.Append("U+016000");
+
+                }
+
+
+                //       System.Windows.Forms.MessageBox.Show("FULL STRING: " + newResponse.ToString());
+
+                //        using (XmlTextWriter writer = new XmlTextWriter(
+                //            new StringWriter(response)))
+                //       {
+                //            writer.Formatting = Formatting.Indented;
+                //            content.WriteContentTo(writer);
+                //        }
+            }
+            catch (Exception e)
+            {
+                newResponse.Append("Error " + e.Message);
+            }
+            return newResponse.ToString();
+        }
+/*
         public static string ConvertToWPMLDelimitedFromText(string wordprocessingML)
         {
             //StringBuilder tmpResponse = new StringBuilder();
@@ -185,7 +237,7 @@ namespace MarkLogic_WordAddin
             return newResponse.ToString();
         }
 
-
+*/
         //USING THIS TO INSERT FINAL 2
         //UPDATED THIS, USED FOR RETAINING SOURCE FORMATTING
         //USING FOR INSERTING WITH STYLES

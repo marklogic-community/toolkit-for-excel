@@ -198,23 +198,23 @@ namespace MarkLogic_WordAddin
                 {
                     if (c.BuiltIn.Equals(false))
                     {
-                        ids += c.Id + "U+016000";
+                        ids += c.Id + " ";
 
-             
                     }
                 }
-                
-                char[] tengwar = { 'U','+','0','1','6','0','0','0'};
-                ids = ids.TrimEnd(tengwar);
+              
+               // char[] tengwar = { 'U','+','0','1','6','0','0','0'};
+                char[] space = { ' ' };
+                ids = ids.TrimEnd(space);
             }
             catch (Exception e)
             {
                 string errorMsg = e.Message;
-                ids = "error";
+                ids = "error: "+errorMsg;
             }
 
             if (debug)
-                ids = "error";
+                return "error: TESTING ERRORS";
 
             //MessageBox.Show(ids);
             return ids;
@@ -247,11 +247,11 @@ namespace MarkLogic_WordAddin
                  */
             }catch(Exception e){
                 string errorMsg = e.Message;
-                custompiecexml = "error";
+                custompiecexml = "error: "+errorMsg;
             }
 
             if (debug)
-                custompiecexml = "error";
+                custompiecexml = "error: TESTING ERRORS";
 
             return custompiecexml;
 
@@ -271,10 +271,11 @@ namespace MarkLogic_WordAddin
             {
                 string errorMsg = e.Message;
                 //should we display error message here? leaving in js for now.
-                newid = "error";
+                newid = "error: "+errorMsg;
             }
             if (debug)
-                newid = "error";
+                newid = "error: testing Errors";
+
             return newid;
 
         }
@@ -298,18 +299,18 @@ namespace MarkLogic_WordAddin
             catch (Exception e)
             {
                 string errorMsg = e.Message;
-                message = "error";
+                message = "error: "+errorMsg;
             }
 
             if (debug)
-                message = "error";
+                message = "error: Testing errors.";
 
             return message;
              
         }
 
         //currently no way to replace without delete,add, get new id
-
+/*
         public String getSelection()
         {
             string wpml = "";
@@ -332,22 +333,63 @@ namespace MarkLogic_WordAddin
                     wpml = "";
                 }
             }
+
+
             catch (Exception e)
             {
                 string errorMsg = e.Message;
-                wpml = "error";
+                wpml = "error: "+errorMsg;
             }
             
             if(debugMsg)
                MessageBox.Show("returning wpml: " + wpml);
 
             if (debug)
-                wpml = "error";
+                wpml = "error: Testing errors";
 
             return wpml;
 
         }
+        */
+        public String getSelection(int idx)
+        {
+            string wpml = "";
+            try
+            {
+                Word.Range rng = Globals.ThisAddIn.Application.Selection.Range;
+                int stTst = rng.Start;
+                int edTst = rng.End;
+                string xmlizable = "";
 
+
+                if (stTst < edTst)
+                {
+                    rng.Select();
+                    xmlizable = Globals.ThisAddIn.Application.Selection.WordOpenXML; // wordApp.Selection.WordOpenXML;  //instead of .Text
+                    wpml = Transform.ConvertToWPMLFromTextIdx(xmlizable, idx);
+                }
+                else
+                {
+                    wpml = "";
+                }
+            }
+
+
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                wpml = "error: " + errorMsg;
+            }
+
+            if (debugMsg)
+                MessageBox.Show("returning wpml: " + wpml);
+
+            if (debug)
+                wpml = "error: Testing errors";
+
+            return wpml;
+
+        }
         //returns the entire styles.xml from the active package
         public String getActiveDocStylesXml()
         {
@@ -369,18 +411,18 @@ namespace MarkLogic_WordAddin
             catch (Exception e)
             {
                 string errorMsg = e.Message;
-                stylesxml = "error";
+                stylesxml = "error: "+errorMsg;
             }
 
             if (debug)
-                stylesxml = "error";
+                stylesxml = "error: TESTING ERRORS";
 
             return stylesxml;
 
         }
 
         //returns the style for the current block
-        public String getRangePreview()
+        public String getSentenceAtCursor()
         {
             string wpml = "";
             try
@@ -421,14 +463,14 @@ namespace MarkLogic_WordAddin
             catch (Exception e)
             {
                 string errorMsg = e.Message;
-                wpml = "error";
+                wpml = "error: "+errorMsg;
             }
 
             if(debugMsg)
                MessageBox.Show("returning wpml: " + wpml);
 
             if(debug)
-               wpml = "error";
+               wpml = "error: TESTING ERRORS";
 
             return wpml;
         }
@@ -506,11 +548,11 @@ namespace MarkLogic_WordAddin
             {
                 string errMsg = e.Message;
                 //System.Windows.Forms.MessageBox.Show("Error in InsertBlock.\r\n\r\nUnable To Insert At This Location.\r\n\r\n" + ef.Message + ef.StackTrace);
-                message = "error";
+                message = "error: "+errMsg;
             }
 
             if (debug)
-                message = "error";
+                message = "error: TESTING ERRORS";
 
             return message;
         }

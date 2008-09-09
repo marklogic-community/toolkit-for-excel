@@ -11,17 +11,15 @@ MLA.getVersion = function()
 MLA.getCustomPieceIds = function()
 { 
 	var pieces = window.external.getCustomPieceIds();
-	var customPieces = pieces.split("U+016000");
 
-	if(customPieces == "") 
-	  customPieces =  null;
+        var errStr = pieces.substring(0,6);
+	var len = pieces.length;
+        var errMsg = pieces.substring(7,len);
 
-	if(customPieces=="error")
-	  throw(customPieces+": unable to get CustomPieceIds.");
+	if(errStr=="error:")
+	  throw("Error: Not able to get CustomPieceIds; "+errMsg);
 
-	//for(var i=0;i<customPieces.length;i++)
-	//	alert("ID: "+customPieces[i]+"TEST");
-	
+	var customPieces = pieces.split(" ");
 	return customPieces;
 }
 
@@ -29,12 +27,16 @@ MLA.getCustomPiece = function(customPieceId)
 {
 	var customPiece = window.external.getCustomPiece(customPieceId);
 
+	var errStr = customPiece.substring(0,6);
+	var len = customPiece.length;
+        var errMsg = customPiece.substring(7,len);
+
+	if(errStr=="error:")
+	  throw("Error: Not able to getCustomPiece; "+errMsg);
+
 	if(customPiece=="")
 	  customPiece=null;
    
-	if(customPiece=="error")
-	  throw(customPiece+": unable to getCustomPiece.");
-
 	return customPiece;
 }
 
@@ -42,11 +44,15 @@ MLA.addCustomPiece = function(customPieceXml)
 {
 	var newId = window.external.addCustomPiece(customPieceXml);
 
+	var errStr = newId.substring(0,6);
+	var len = newId.length;
+        var errMsg = newId.substring(7,len);
+
+	if(errStr=="error:")
+	  throw("Error: Not able to addCustomPiece; "+errMsg);
+
 	if(newId =="")
 	  newId=null;
-
-	if(newId=="error")
-	  throw(newId+": unable to addCustomPiece.");
 
 	return newId;
 }
@@ -54,21 +60,34 @@ MLA.addCustomPiece = function(customPieceXml)
 MLA.deleteCustomPiece = function(customPieceId)
 {
 	var deletedPiece = window.external.deleteCustomPiece(customPieceId);
+
+        var errStr = deletedPiece.substring(0,6);
+	var len = deletedPiece.length;
+        var errMsg = deletedPiece.substring(7,len);
+
+        if(errStr=="error:")
+          throw("Error: Not able to deleteCustomPiece; "+errMsg);
      
 	if(deletedPiece=="")
 	  deletedPiece = null;
-
-	if(deletedPiece=="error")
-          throw(deletedPiece+": unable to deleteCustomPiece.");
 
         //return deletedPiece;
 }
 
 
 
+/*
 MLA.getSelection = function()
 {
 	var selection = window.external.getSelection();
+
+        var errStr = selection.substring(0,6);
+	var len = selection.length;
+        var errMsg = selection.substring(7,len);
+
+	if(errStr == "error:")
+   	   throw("Unable to getSelection: "+errMsg);
+
 	var selections;
         if(selections == "")
 	{
@@ -79,33 +98,91 @@ MLA.getSelection = function()
 	   selections = selection.split("U+016000");
 	}
 
+	return selections;
+}
+*/
+MLA.getSelection = function()
+{
+	var arrCount=0;
+	var selCount =0;
+	var selections = new Array();
+        
+	var selection =  window.external.getSelection(selCount);
 
-	if(selections[0] == "error")
-   	   throw(selections[0]+": unable to getSelection.");
+	var errStr = selection.substring(0,6);
+	var len = 0;
+        var errMsg = "";
+	var err = false;
+
+	if(errStr == "error:")
+	{
+		err=true;
+		len = selection.length;
+                errMsg = selection.substring(7,len);
+		selection="";
+	}
+
+
+	selections[arrCount]=selection;
+
+	while(selection!="")
+	{
+  	  selCount++;
+          arrCount++;
+	  selection = window.external.getSelection(selCount);
+
+ 	  var errStr = selection.substring(0,6);
+
+	  if(errStr == "error:")
+	  {
+   	    err=true;
+	    len = selection.length;
+            errMsg = selection.substring(7,len);
+	    selection="";
+
+	  }
+
+	  if(selection!="")
+	      selections[arrCount] = selection;
+
+	}
+
+	if(err==true)
+	{
+	   throw("Error: Not able to getSelection; "+errMsg);
+	}
+
 
 	return selections;
 }
 
-MLA.getRangePreview = function()
+MLA.getSentenceAtCursor = function()
 {
-	var rangeXml = window.external.getRangePreview();
-   
-	if(rangeXml == "error")
-	   throw(rangeXml+": unable to getCursorXml.");
+	var rangeXml = window.external.getSentenceAtCursor();
+
+        var errStr = rangeXml.substring(0,6);
+	var len = rangeXml.length;
+        var errMsg = rangeXml.substring(7,len);
+
+        if(errStr == "error:")
+	   throw("Error: Not able to get Sentence at Cursor; "+errMsg);
 
 	return rangeXml;
-
 }
 
 MLA.getActiveDocStylesXml = function()
 { 
 	var stylesXml = window.external.getActiveDocStylesXml();
 
+	var errStr = stylesXml.substring(0,6);
+	var len = stylesXml.length;
+        var errMsg = stylesXml.substring(7,len);
+
+	if(errStr=="error:")
+          throw("Error: Not able to getActiveDocStylesXml; "+errMsg);
+
 	if(stylesXml=="")
           stylesXml=null;
-
-	if(stylesXml=="error")
-          throw(stylesXml+": unable to getActiveDocStylesXml.");
 
 	return stylesXml;
 }
@@ -141,11 +218,17 @@ MLA.insertBlockContent = function(blockContentXml,stylesXml)
         //var inserted = window.external.insertBlockContent(blockContentXml,stylesXml);
         var inserted = window.external.insertBlockContent(v_block,stylesXml);
 
+	var errStr = inserted.substring(0,6);
+	var len = inserted.length;
+        var errMsg = inserted.substring(7,len);
+
+	if(errStr=="error:")
+	  throw("Error: Not able to insertBlockContent; "+errMsg);
+
+
+
 	if(inserted=="")
 	  inserted = null;
-	
-	if(inserted=="error")
-	  throw(inserted+": unable to insertBlockContent.");
 
         //return inserted;
 }
@@ -163,7 +246,7 @@ MLA.getConfiguration = function()
 	var webUrl = window.external.getBrowserUrl();
 
 	if(version == "" || color == "" || webUrl == "")
-		throw("unable to access configuration");
+		throw("Error: Not able to access configuration info.");
 
 	MLA.config = {
 		        "version":version,
