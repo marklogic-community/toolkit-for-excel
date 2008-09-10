@@ -10,24 +10,20 @@ using System.Windows.Forms;
 using Word=Microsoft.Office.Interop.Word;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
-//using System.Xml;
 using System.IO;
-//using DocumentFormat.OpenXml.Packaging; //OpenXML sdk
 using Office = Microsoft.Office.Core;
 using Microsoft.Win32;
 
 namespace MarkLogic_WordAddin
 {   
     [ComVisible(true)]
-   // [ClassInterfaceAttribute(ClassInterfaceType.AutoDispatch)]
+  //  [ClassInterfaceAttribute(ClassInterfaceType.AutoDispatch)]
   //  [DockingAttribute(DockingBehavior.AutoDock)]
   //  [PermissionSetAttribute(SecurityAction.InheritanceDemand, Name = "FullTrust")]
   //  [PermissionSetAttribute(SecurityAction.LinkDemand, Name = "FullTrust")]
 
     public partial class UserControl1 : UserControl
     {
-      //  private string tmpPath = "";                    
-     //   private string propsFile = "";
         private string webUrl = "";
         private bool debug = false;
         private bool debugMsg = false;
@@ -38,25 +34,18 @@ namespace MarkLogic_WordAddin
         public UserControl1()
         {
             InitializeComponent();
-   // tmpPath=Path.GetTempPath();
-  //       propsFile=tmpPath+"OfficeProperties.txt";
- //CHANGED
- // bool configFileExists = checkForConnectionPropertiesFile();
             bool regEntryExists = checkUrlInRegistry();
-            //MessageBox.Show("tmp path is" + tmpPath);
-            //MessageBox.Show("propsFile is"+propsFile);
-            //MessageBox.Show("file exists"+configFileExists);
+
             if (!regEntryExists)
             {
                 //MessageBox.Show("Unable to find configuration info. Please insure OfficeProperties.txt exists in your system temp directory.  If problems persist, please contact your system administrator.");
-                MessageBox.Show("                                   Unable to find configuration info. \n\r "+
-                                " Please see the README for how to add configuration info for your system. \n\r "+
-                                "           If problems persist, please contact your system administrator.");
+                MessageBox.Show("                                            Unable to find configuration info. \n\r "+
+                                " Please see the installation instructions for how to add configuration info to your system. \n\r "+
+                                "                   If problems persist, please contact your system administrator.");
             }
             else
             {
-                //CHANGED
-               // getConfigurationValues();
+
                 color = TryGetColorScheme().ToString();
                 webBrowser1.AllowWebBrowserDrop = false;
                 webBrowser1.IsWebBrowserContextMenuEnabled = false;
@@ -70,12 +59,6 @@ namespace MarkLogic_WordAddin
 
 
         }
-
-      //  checks for propsFile  tmpPath/OfficeProperties.txt
-      //  private bool checkForConnectionPropertiesFile()
-      //  {
-      //      return File.Exists(propsFile);
-      //  }
 
         private bool checkUrlInRegistry()
         {
@@ -99,30 +82,6 @@ namespace MarkLogic_WordAddin
             }
             return keyExists;
         }
-
-        //read config info
-   /*     private void getConfigurationValues()
-        {
-            TextReader tr = new StreamReader(propsFile);
-            webUrl = tr.ReadLine();
-            webUrl = webUrl.Trim();
-            //string pwd = Encoding.Unicode.GetString(Convert.FromBase64String(tr.ReadLine()));
-            //connPwd.Password = pwd;
-            //connHost.Text = tr.ReadLine();
-            //connPort.Text = tr.ReadLine();
-            tr.Close();
-            tr.Dispose();
-    */
-          /*  if (File.Exists(versionFile))
-            {
-                TextReader trv = new StreamReader(versionFile);
-                connectLabel.Content = "Version: " + trv.ReadLine();
-                trv.Close();
-            }
-          */
-
-     //   }
-
         
         //used by CTPManager
         public Word.Document Document { get; set; }
@@ -160,14 +119,6 @@ namespace MarkLogic_WordAddin
             return CurrentColorScheme;
         }
 
-        //start methods used by MarkLogicWordAddin.js
-
-     /*   public String getConfiguration()
-        {
-            return addinVersion+"U+016000"+webUrl + "U+016000" + color ;
-        }
-     */
-
         public String getOfficeColor()
         {
             return color;
@@ -204,7 +155,6 @@ namespace MarkLogic_WordAddin
                     }
                 }
               
-               // char[] tengwar = { 'U','+','0','1','6','0','0','0'};
                 char[] space = { ' ' };
                 ids = ids.TrimEnd(space);
             }
@@ -217,7 +167,6 @@ namespace MarkLogic_WordAddin
             if (debug)
                 return "error: TESTING ERRORS";
 
-            //MessageBox.Show(ids);
             return ids;
         }
 
@@ -271,7 +220,6 @@ namespace MarkLogic_WordAddin
             catch (Exception e)
             {
                 string errorMsg = e.Message;
-                //should we display error message here? leaving in js for now.
                 newid = "error: "+errorMsg;
             }
             if (debug)
@@ -351,7 +299,7 @@ namespace MarkLogic_WordAddin
             return wpml;
 
         }
-        */
+*/
         public String getSelection(int idx)
         {
             string wpml = "";
@@ -498,7 +446,6 @@ namespace MarkLogic_WordAddin
         public String insertBlockContent(string blockContent, string stylesXml)
         {
             string clean = "";
-            //MessageBox.Show("IN insertBlockContent");
             clean = removeNamespaces(blockContent);
             string msg = insertBlock(blockContent, stylesXml);
 
@@ -558,7 +505,7 @@ namespace MarkLogic_WordAddin
             return message;
         }
 
-   /*     public static void AddImagePart(string document, string fileName)
+/*     public static void AddImagePart(string document, string fileName)
         {
             using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(document, true))
             {
@@ -572,7 +519,7 @@ namespace MarkLogic_WordAddin
                 }
             }
         }
-    * */
+ */
 
     }
 }

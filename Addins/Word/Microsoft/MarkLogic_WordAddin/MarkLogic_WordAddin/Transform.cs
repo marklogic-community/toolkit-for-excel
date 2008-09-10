@@ -140,9 +140,8 @@ namespace MarkLogic_WordAddin
 
         public static string ConvertToWPMLFromTextIdx(string wordprocessingML, int idx)
         {
-            //StringBuilder tmpResponse = new StringBuilder();
             StringBuilder newResponse = new StringBuilder();
-            //StringBuilder response = new StringBuilder();
+
             try
             {
                 XmlDocument document = new XmlDocument();
@@ -163,25 +162,13 @@ namespace MarkLogic_WordAddin
 
                 foreach (XmlNode n in content.ChildNodes)
                 {
-                    // System.Windows.Forms.MessageBox.Show(n.OuterXml);
                     if(counter == idx)
                       newResponse.Append(n.OuterXml);
 
                     counter++;
-                   // if (counter < length)
-                     //   newResponse.Append("U+016000");
 
                 }
 
-
-                //       System.Windows.Forms.MessageBox.Show("FULL STRING: " + newResponse.ToString());
-
-                //        using (XmlTextWriter writer = new XmlTextWriter(
-                //            new StringWriter(response)))
-                //       {
-                //            writer.Formatting = Formatting.Indented;
-                //            content.WriteContentTo(writer);
-                //        }
             }
             catch (Exception e)
             {
@@ -222,11 +209,11 @@ namespace MarkLogic_WordAddin
                 }
            
 
-         //       System.Windows.Forms.MessageBox.Show("FULL STRING: " + newResponse.ToString());
+        //        System.Windows.Forms.MessageBox.Show("FULL STRING: " + newResponse.ToString());
 
         //        using (XmlTextWriter writer = new XmlTextWriter(
         //            new StringWriter(response)))
-         //       {
+        //        {
         //            writer.Formatting = Formatting.Indented;
         //            content.WriteContentTo(writer);
         //        }
