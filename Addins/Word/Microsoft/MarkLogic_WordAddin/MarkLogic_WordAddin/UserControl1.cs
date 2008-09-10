@@ -177,7 +177,7 @@ namespace MarkLogic_WordAddin
             return addinVersion;
         }
 
-        public String getBrowserUrl()
+        public String getBrowserURL()
         {
             return webUrl;
         }

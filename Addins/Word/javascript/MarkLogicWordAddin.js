@@ -243,7 +243,7 @@ MLA.getConfiguration = function()
 //	var configs = configDetails.split("U+016000");
         var version = window.external.getAddinVersion();
 	var color = window.external.getOfficeColor();
-	var webUrl = window.external.getBrowserUrl();
+	var webUrl = window.external.getBrowserURL();
 
 	if(version == "" || color == "" || webUrl == "")
 		throw("Error: Not able to access configuration info.");
