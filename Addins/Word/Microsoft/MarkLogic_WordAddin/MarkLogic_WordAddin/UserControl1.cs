@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*Copyright 2002-2008 Mark Logic Corporation.  All Rights Reserved*/
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
