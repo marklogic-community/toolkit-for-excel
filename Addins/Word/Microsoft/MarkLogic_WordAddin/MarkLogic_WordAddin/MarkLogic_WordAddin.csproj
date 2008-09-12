@@ -196,6 +196,7 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="AddinConfiguration.cs" />
     <Compile Include="CTPManager.cs" />
     <Compile Include="UserControl1.cs">
       <SubType>UserControl</SubType>

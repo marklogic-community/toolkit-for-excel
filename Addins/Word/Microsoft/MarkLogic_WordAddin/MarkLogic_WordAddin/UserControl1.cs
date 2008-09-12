@@ -24,6 +24,7 @@ namespace MarkLogic_WordAddin
 
     public partial class UserControl1 : UserControl
     {
+        private AddinConfiguration ac = AddinConfiguration.GetInstance();
         private string webUrl = "";
         private bool debug = false;
         private bool debugMsg = false;
@@ -34,9 +35,12 @@ namespace MarkLogic_WordAddin
         public UserControl1()
         {
             InitializeComponent();
-            bool regEntryExists = checkUrlInRegistry();
+           // AddinConfiguration ac = AddinConfiguration.GetInstance();
+            //bool regEntryExists = checkUrlInRegistry();
+            webUrl = ac.getWebURL();
+            //MessageBox.Show(webUrl);
 
-            if (!regEntryExists)
+            if (webUrl.Equals(""))
             {
                 //MessageBox.Show("Unable to find configuration info. Please insure OfficeProperties.txt exists in your system temp directory.  If problems persist, please contact your system administrator.");
                 MessageBox.Show("                                            Unable to find configuration info. \n\r "+
@@ -59,7 +63,7 @@ namespace MarkLogic_WordAddin
 
 
         }
-
+/*
         private bool checkUrlInRegistry()
         {
             RegistryKey regKey1 = Registry.CurrentUser;
@@ -82,7 +86,7 @@ namespace MarkLogic_WordAddin
             }
             return keyExists;
         }
-        
+        */
         //used by CTPManager
         public Word.Document Document { get; set; }
 
@@ -503,6 +507,73 @@ namespace MarkLogic_WordAddin
                 message = "error: TESTING ERRORS";
 
             return message;
+        }
+
+        public String addCommentForText(string searchTerm, string comment)//(string comment, string text)
+        {
+           
+            string message = "";
+            object searchText = searchTerm;
+            object commentText = comment;
+            object missing = System.Reflection.Missing.Value;
+
+            object start = 0;
+
+            Word.Range rng = Globals.ThisAddIn.Application.ActiveDocument.Content;
+            try
+            {
+                rng.Find.ClearFormatting();
+                rng.Find.Forward = true;
+                rng.Find.MatchWholeWord = true;   //parameterize (as well as case?sounds like?)   
+                rng.Find.Text = searchTerm;
+
+                rng.Find.Execute(
+                    ref missing, ref missing, ref missing, ref missing, ref missing,
+                    ref missing, ref missing, ref missing, ref missing, ref missing,
+                    ref missing, ref missing, ref missing, ref missing, ref missing);
+
+                while (rng.Find.Found)
+                {
+
+                    rng.Comments.Add(rng, ref commentText);
+
+                    rng.Find.Execute(
+                        ref missing, ref missing, ref missing, ref missing, ref missing,
+                        ref missing, ref missing, ref missing, ref missing, ref missing,
+                        ref missing, ref missing, ref missing, ref missing, ref missing);
+                }
+            }catch(Exception e)
+            {
+                string errMsg = e.Message;
+                message = "error: " + errMsg;
+            }
+
+            if (debug)
+                message = "error: TESTING ERRORS";
+         
+            return message;
+
+        }
+
+        public String insertText(string text)
+        {
+            string message = "";
+            try
+            {
+                Word.Range rng = Globals.ThisAddIn.Application.Selection.Range;
+                rng.Text = text;
+            }catch(Exception e)
+            {
+                string errMsg = e.Message;
+                message = "error: " + errMsg;
+            }
+
+            if (debug)
+                message = "error: TESTING ERRORS";
+
+            return message;
+
+
         }
 
 /*     public static void AddImagePart(string document, string fileName)

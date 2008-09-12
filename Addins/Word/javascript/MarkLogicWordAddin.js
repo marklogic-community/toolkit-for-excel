@@ -226,3 +226,26 @@ MLA.getConfiguration = function()
 
         return MLA.config;	
 }
+
+MLA.addCommentForText = function(searchText, commentText)
+{
+	var commentAdded = window.external.addCommentForText(searchText, commentText);
+
+        var errMsg = MLA.errorCheck(commentAdded);
+	if(errMsg!=null)
+	   throw("Error: Not able to add Comment for text "+errMsg);
+     
+	if(commentAdded=="")
+	  commentAdded = null;
+}
+
+MLA.insertText = function(textToInsert)
+{
+	var textAdded = window.external.insertText(textToInsert);
+	var errMsg = MLA.errorCheck(textAdded);
+	if(errMsg!=null)
+	   throw("Error: Not able to insert text "+errMsg);
+     
+	if(textAdded=="")
+	  textAdded = null;
+}

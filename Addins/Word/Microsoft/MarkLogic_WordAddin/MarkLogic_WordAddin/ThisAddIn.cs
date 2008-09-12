@@ -15,6 +15,9 @@ namespace MarkLogic_WordAddin
 {
     public partial class ThisAddIn
     {
+        private AddinConfiguration ac = AddinConfiguration.GetInstance();
+        private string ctpTitle = "";
+
         CTPManager<UserControl1> mgr = null;
         public CTPManager<UserControl1> CTPManager
         {
@@ -39,11 +42,22 @@ namespace MarkLogic_WordAddin
         }
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
-        {
+        { 
+            string ribbonBtnLabel = ac.getRibbonButtonLabel();
+            string ribbonGroupLabel = ac.getRibbonGroupLabel();
+            string ribbonTabLabel = ac.getRibbonTabLabel();
             //Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = true;
             //Globals.ThisAddIn.CTPManager.ManageToggleButton(Globals.Ribbons.Ribbon1.viewTaskPaneButton);
             //Globals.ThisAddIn.CTPManager.ToggleTaskPane(Globals.ThisAddIn.Application.ActiveWindow);
             //Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = true;
+            if(!(ribbonBtnLabel.Equals("") || ribbonBtnLabel==null)) 
+               Globals.Ribbons.Ribbon1.viewTaskPaneButton.Label = ribbonBtnLabel;
+
+            if (!(ribbonTabLabel.Equals("") || ribbonTabLabel == null)) 
+               Globals.Ribbons.Ribbon1.tab2.Label = ribbonTabLabel;
+
+            if (!(ribbonGroupLabel.Equals("") || ribbonGroupLabel == null)) 
+               Globals.Ribbons.Ribbon1.group1.Label = ribbonGroupLabel;
 
         }
 
@@ -54,9 +68,14 @@ namespace MarkLogic_WordAddin
         class CustomTaskPaneFactory
            : CTPManager<UserControl1>.ITaskPaneFactory
         {
+            private AddinConfiguration ac = AddinConfiguration.GetInstance();
             public string CreateTitle(UserControl1 taskPane)
             {
-                return "Mark Logic Authoring Kit";
+                string title = ac.getCTPTitleLabel();
+                if (title.Equals("") || title == null)
+                    return "Mark Logic Authoring Kit";
+                else return title;
+                // return "Mark Logic Authoring Kit";
             }
 
             public UserControl1 CreateNewTaskPane(
