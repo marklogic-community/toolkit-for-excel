@@ -55,6 +55,9 @@ HKEY_CURRENT_USER\MarkLogicAddinConfiguration\Word
 
 for this Key, a subkey "URL", contains the value of the url used by the webBrowser in the Addin when it first loads.  
   A)Update the value in ntConfigAdd.reg to be the desired url.
+
+you will also find keys for the labels in the ribbon and task pane.  If these are not defined, defaults will be used.  Update the labels for the tab name, the group name for the button, and the button (the button enables the task pane). Also update the label for the task pane (this is the title at the top of the task pane).
+ 
   B)Double click the .reg file, and the entry will be added to your system.
 
 To remove the Key (and it's values), double click ntConfigRemove.reg.
