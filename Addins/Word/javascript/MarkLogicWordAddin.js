@@ -227,6 +227,8 @@ MLA.getConfiguration = function()
         return MLA.config;	
 }
 
+//FOLLOWING ARE NOT OFFICIALLY SANCTIONED, USE AT OWN RISK, THEY MAY CHANGE/BE REMOVED 
+
 MLA.addCommentForText = function(searchText, commentText)
 {
 	var commentAdded = window.external.addCommentForText(searchText, commentText);
@@ -239,6 +241,23 @@ MLA.addCommentForText = function(searchText, commentText)
 	  commentAdded = null;
 }
 
+MLA.addContentControlForText = function(searchTerm, ccTitle, ccTag)
+{
+	var controlAdded = window.external.addContentControlForText(searchTerm, ccTitle, ccTag);
+	var errMsg = MLA.errorCheck(controlAdded);
+	if(errMsg!=null)
+	   throw("Error: Not able to insert text "+errMsg);
+     
+	if(controlAdded=="")
+	  controlAdded = null;
+}
+
+//USE WITH CAUTION - IF EMBEDDED CONTROL, PARENT CONTROL WILL LOSE ITS TEXT, AS IT WAS IN THIS CHILD - UNDER CONSTRUCTION ...
+MLA.deleteContentControl = function()
+{
+	window.external.deleteContentControl();
+}
+
 MLA.insertText = function(textToInsert)
 {
 	var textAdded = window.external.insertText(textToInsert);
@@ -248,4 +267,27 @@ MLA.insertText = function(textToInsert)
      
 	if(textAdded=="")
 	  textAdded = null;
+}
+
+MLA.insertTextInControl = function(textToInsert,tagName,isLocked)
+{
+	var textAdded = window.external.insertTextInControl(textToInsert,tagName,isLocked);
+	var errMsg = MLA.errorCheck(textAdded);
+	if(errMsg!=null)
+	   throw("Error: Not able to insert text "+errMsg);
+     
+	if(textAdded=="")
+	  textAdded = null;
+}
+
+MLA.addContentControlToSelection = function(tagName, isLocked)
+{
+        var sdtAdded = window.external.addContentControlToSelection(tagName,isLocked);
+	var errMsg = MLA.errorCheck(sdtAdded);
+	if(errMsg!=null)
+	   throw("Error: Not able to insert text "+errMsg);
+     
+	if(sdtAdded=="")
+	  sdtAdded = null;
+
 }

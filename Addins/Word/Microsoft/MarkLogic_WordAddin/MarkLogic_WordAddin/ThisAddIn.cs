@@ -16,7 +16,7 @@ namespace MarkLogic_WordAddin
     public partial class ThisAddIn
     {
         private AddinConfiguration ac = AddinConfiguration.GetInstance();
-        private string ctpTitle = "";
+        //private string ctpTitle = "";
 
         CTPManager<UserControl1> mgr = null;
         public CTPManager<UserControl1> CTPManager
