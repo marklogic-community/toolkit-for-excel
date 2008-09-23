@@ -38,6 +38,7 @@ MarkLogic_WordAddin_Setup.msi
 
 Notes/Options on Installation For Developers:
 ===========================================================
+
 If the prerequisites are already installed on the client, only the .msi is required for installation of the Addin.
 
 setup.exe validates the prereqs on the client, and if not available, prompts to download and install them from the vendor.  Once the prereqs are installed, the .msi will be executed and installed as well.
@@ -45,12 +46,30 @@ setup.exe validates the prereqs on the client, and if not available, prompts to 
 Configurations for the Addin are stored in the registry at HKEY_CURRENT_USER/MarkLogicAddinConfiguration/Word.
 These entries will be removed automatically when the application is uninstalled.
 
-The .msi installs with these registry entries set to defaults. To edit, you may use the Windows SDK to update the msi so you may deliver your solution with all parameters configured.
+The .msi installs with these registry entries set to defaults. To edit, you may use the Windows SDK to update the msi so you may deliver your solution to users with all parameters pre-configured.
 
-The config.idt file is provided with the default values.  Just update the values in the .idt, then run :
-MsiDb -f <directory where idt is located> -d "MarkLogic_WordAddin_Setup.msi" -i config.idt
+The config.idt file is provided with default values.  Just update the values in the .idt, then execute:
 
-This will update the msi with your new values. Another option is to edit these values using orca.exe, also available with the Windows SDK.
+MsiDb -f "<directory where idt is located>" -d "MarkLogic_WordAddin_Setup.msi" -i config.idt
+
+Example:
+  MsiDb -f "C:\MyAddin\MyConfig" -d "C:\MyAddin\MarkLogic_WordAddin_Setup.msi" -i config.idt
+
+ ( Note: You'll require the Windows SDK to execute this update.)
+
+This will update the msi with your new values. Another option is to edit these values using orca.exe ( also available with the Windows SDK ) or just edit the values in regedit.
+
+The following registry key values will help to configure your Addin application:
+
+HKEY_CURRENT_USER\MarkLogicAddinConfiguration\Word\
+  URL:       The url for the Addin to connect to when the Addin is enabled in Word
+  RbnBtnLbl: The ribbon Button label
+  RbnGrpLbl: The ribbon Group label
+  RbnTabLbl: The ribbon Tab label
+  CTPTitle:  The title for the Custom Task Pane that has the browser embedded
+
+
+No other registry values should be edited.
 
 
 
@@ -65,25 +84,21 @@ MarkLogic Server:
 
 
 Windows Client:
-1) copy the addin.deploy folder as well as the .reg files to your client.
+1) copy the addin.deploy folder to your client.
 
 2) Configuration info is stored in the registry. A Key for the current user will be created: 
 
 HKEY_CURRENT_USER\MarkLogicAddinConfiguration\Word
 
-for this Key, a subkey "URL", contains the value of the url used by the webBrowser in the Addin when it first loads.  
-  A)Update the value in ntConfigAdd.reg to be the desired url.
-
-you will also find keys for the labels in the ribbon and task pane.  If these are not defined, defaults will be used.  Update the labels for the tab name, the group name for the button, and the button (the button enables the task pane). Also update the label for the task pane (this is the title at the top of the task pane).
+for this Key, a subkey "URL", contains the value of the url used by the webBrowser in the Addin when it first loads. 
+See the Notes/Option on installation above for information on how to update these entries. 
  
-  B)Double click the .reg file, and the entry will be added to your system.
 
-To remove the Key (and it's values), double click ntConfigRemove.reg.
+3) In addin.deploy, Double-Click setup.exe OR MarkLogic_WordAddin_Setup.msi
 
-3) In addin.deploy, Double-Click setup.exe (if installing on Vista, please right-click, and install as Administrator).
+   If you run setup.exe, the prereqs will be validated on your client. If they don't exist, you'll be prompted to download and install them from the vendor.  Once the prereqs are installed, setup.exe executes the .msi to install the Addin.
 
-   The Add-In will install.  It requires .net 3.5 and the Visual Studio Tools for Office Runtime 3.0.  If these aren't already available, the prerequisites will be downloaded from Microsoft.  You'll be prompted to install these as well.
-
+   If you run MarkLogic_WordAddin_Setup.msi, the Addin will install under the assumption that all prereqs have been installed prior. There is no validation of prerequisites.
 
 
 Usage
@@ -92,10 +107,10 @@ Upon successful installation of the Add-In, launch Word.
 
 
 
-
 Uninstall
 ===========================================================
 Control Panel -> Add/Remove Programs -> MarkLogic_WordAddin -> Remove
+   This will remove the registry entries for the Addin configuration.
 
 Additionally, remove .xqy and .js support sor the Addin from the server.
 
