@@ -57,7 +57,7 @@ Example:
 
  ( Note: You'll require the Windows SDK to execute this update.)
 
-This will update the msi with your new values. Another option is to edit these values using orca.exe ( also available with the Windows SDK ) or just edit the values in regedit.
+This will update the msi with your new values. Another option is to edit these values using orca.exe ( also available with the Windows SDK ) or just edit the values in regedit.  Once the .msi has been updated, you may install with setup.exe, or by itself.
 
 The following registry key values will help to configure your Addin application:
 
