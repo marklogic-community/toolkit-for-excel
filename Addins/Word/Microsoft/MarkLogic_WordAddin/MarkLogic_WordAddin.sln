@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkLogic_WordAddin", "MarkLogic_WordAddin\MarkLogic_WordAddin.csproj", "{84F24C49-07D0-4865-8987-A62EC5EF0AE9}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MarkLogic_WordAddin_Setup", "MarkLogic_WordAddin_Setup\MarkLogic_WordAddin_Setup.vdproj", "{1E3C61AB-6AB4-4D5F-9B0D-3D7EE7737AA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,9 @@ Global
 		{84F24C49-07D0-4865-8987-A62EC5EF0AE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84F24C49-07D0-4865-8987-A62EC5EF0AE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84F24C49-07D0-4865-8987-A62EC5EF0AE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E3C61AB-6AB4-4D5F-9B0D-3D7EE7737AA0}.Debug|Any CPU.ActiveCfg = Debug
+		{1E3C61AB-6AB4-4D5F-9B0D-3D7EE7737AA0}.Release|Any CPU.ActiveCfg = Release
+		{1E3C61AB-6AB4-4D5F-9B0D-3D7EE7737AA0}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

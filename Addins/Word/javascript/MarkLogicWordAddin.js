@@ -3,6 +3,18 @@ var MLA = {};
 
 MLA.version = { "release" : "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" }; 
 
+MLA.SimpleRange = function(begin,finish){
+	this.start = begin;
+	this.end = finish;
+
+};
+
+String.prototype.trim = function() {
+	return this.replace(/^\s+|\s+$/g,"");
+}
+
+
+
 MLA.getVersion = function()
 {
 	return MLA.version.release;
@@ -228,6 +240,102 @@ MLA.getConfiguration = function()
 }
 
 //FOLLOWING ARE NOT OFFICIALLY SANCTIONED, USE AT OWN RISK, THEY MAY CHANGE/BE REMOVED 
+MLA.getRangesForTerm = function(searchText)
+{
+       var ranges = window.external.getRangesForTerm(searchText);
+
+       var errMsg = MLA.errorCheck(ranges);
+       if(errMsg!=null)
+	   throw("Error: Not able to get ranges for text; "+errMsg);
+
+       //alert("RANGES" +ranges);
+       var rngArray = new Array(); 
+       var tmpArray = ranges.split(" ");
+       //alert("TMP ARRAY LENGTH"+tmpArray.length);
+
+       if(tmpArray[0].length >1 )
+       {	
+         for(var i=0;i<tmpArray.length;i++)
+         {
+            var pieces = tmpArray[i].split(":");
+   	    var finRng = new MLA.SimpleRange(pieces[0],pieces[1]);
+	    rngArray[i]=finRng;
+	    //alert("pieces "+pieces[0]+" OSLO "+pieces[1]); 
+         }
+       }
+
+	return rngArray;
+
+}
+
+MLA.getRangeForSelection = function()
+{
+   var sel = window.external.getRangeForSelection();
+   var finRng=null;
+   var errMsg = MLA.errorCheck(sel);
+       if(errMsg!=null)
+	   throw("Error: Not able to get ranges for text; "+errMsg);
+
+   var pieces = sel.split(":");
+
+   if(pieces.length==2)
+        finRng = new MLA.SimpleRange(pieces[0],pieces[1]);
+
+   return finRng;
+
+}
+
+MLA.addCommentToRange = function(ranges,commentText)
+{
+	if(ranges.length > 0)
+	{
+
+	  var stringRange="";
+	  for(var i=0;i<ranges.length;i++)
+	  {
+		// alert("TESTIN LOOP");
+		 var x = new MLA.SimpleRange(0,0);
+		 x=ranges[i];
+		 stringRange = stringRange+x.start+":"+x.end+" ";
+
+
+	  }
+		 stringRange = stringRange.trim();
+	  //alert("RANGE: "+stringRange+" : END TEST");
+	 var commentsAdded =  window.external.addCommentToRange(stringRange, commentText);
+
+	 var errMsg = MLA.errorCheck(commentsAdded);
+         if(errMsg!=null)
+	   throw("Error: Not able to add comments to ranges; "+errMsg)
+
+	}
+}
+
+MLA.addContentControlToRange = function(ranges,title,tag,lockstatus)
+{
+	if(ranges.length > 0)
+	{
+
+	  var stringRange="";
+	  for(var i=0;i<ranges.length;i++)
+	  {
+		// alert("TESTIN LOOP");
+		 var x = new MLA.SimpleRange(0,0);
+		 x=ranges[i];
+		 stringRange = stringRange+x.start+":"+x.end+" ";
+
+
+	  }
+		 stringRange = stringRange.trim();
+	  //alert("RANGE: "+stringRange+" : END TEST");
+	 var controlsAdded =  window.external.addContentControlToRange(stringRange, title,tag,lockstatus);
+
+	 var errMsg = MLA.errorCheck(controlsAdded);
+         if(errMsg!=null)
+	   throw("Error: Not able to add comments to ranges; "+errMsg)
+
+	}
+}
 
 MLA.addCommentForText = function(searchText, commentText)
 {
@@ -241,9 +349,9 @@ MLA.addCommentForText = function(searchText, commentText)
 	  commentAdded = null;
 }
 
-MLA.addContentControlForText = function(searchTerm, ccTitle, ccTag)
+MLA.addContentControlForText = function(searchTerm, ccTitle, ccTag,lockStatus)
 {
-	var controlAdded = window.external.addContentControlForText(searchTerm, ccTitle, ccTag);
+	var controlAdded = window.external.addContentControlForText(searchTerm, ccTitle, ccTag,lockStatus);
 	var errMsg = MLA.errorCheck(controlAdded);
 	if(errMsg!=null)
 	   throw("Error: Not able to insert text "+errMsg);
@@ -267,6 +375,19 @@ MLA.insertText = function(textToInsert)
      
 	if(textAdded=="")
 	  textAdded = null;
+}
+
+MLA.getSelectionText = function()
+{
+	var selText = window.external.getSelectionText();
+	var errMsg = MLA.errorCheck(selText);
+	if(errMsg!=null)
+	   throw("Error: Not able to get selection text "+errMsg);
+     
+	if(selText=="")
+	  selText = null;
+
+	return selText;
 }
 
 MLA.insertTextInControl = function(textToInsert,tagName,isLocked)

@@ -10,10 +10,12 @@ MarkLogic Server:
  version 3.2 or greater
 
 
-Windows Client:
- Office 2007 Installed
+Windows Client: 
+ Office 2007 Installed   
+    ( 2007 Microsoft Office Primary Interop Assemblies: installed with Office 2007, also available separately. )
  .net Framework 3.5
  Visual Studio Tools For Office Runtime 3.0
+ Windows Installer 3.1 
 
 
 
@@ -28,11 +30,27 @@ package.xqy
 
 Windows Client:
 
-ntConfigAdd.reg
 
 setup.exe
-MarkLogic-OfficeSuite.vsto
-/Application Files (directory)
+MarkLogic_WordAddin_Setup.msi
+
+
+
+Notes/Options on Installation For Developers:
+===========================================================
+If the prerequisites are already installed on the client, only the .msi is required for installation of the Addin.
+
+setup.exe validates the prereqs on the client, and if not available, prompts to download and install them from the vendor.  Once the prereqs are installed, the .msi will be executed and installed as well.
+
+Configurations for the Addin are stored in the registry at HKEY_CURRENT_USER/MarkLogicAddinConfiguration/Word.
+These entries will be removed automatically when the application is uninstalled.
+
+The .msi installs with these registry entries set to defaults. To edit, you may use the Windows SDK to update the msi so you may deliver your solution with all parameters configured.
+
+The config.idt file is provided with the default values.  Just update the values in the .idt, then run :
+MsiDb -f <directory where idt is located> -d "MarkLogic_WordAddin_Setup.msi" -i config.idt
+
+This will update the msi with your new values. Another option is to edit these values using orca.exe, also available with the Windows SDK.
 
 
 
@@ -77,9 +95,7 @@ Upon successful installation of the Add-In, launch Word.
 
 Uninstall
 ===========================================================
-Control Panel -> Add/Remove Programs -> MarkLogic-WordAddin -> Remove
-
-double click ntConfigRemove.reg to remove the registry entry.
+Control Panel -> Add/Remove Programs -> MarkLogic_WordAddin -> Remove
 
 Additionally, remove .xqy and .js support sor the Addin from the server.
 

@@ -47,7 +47,7 @@ namespace MarkLogic_WordAddin
             if (regKey1 == null)
             {
                 if (debugMsg)
-                    MessageBox.Show("KEY IS NULL");
+                    MessageBox.Show("KEY IS  NULL");
 
             }
             else

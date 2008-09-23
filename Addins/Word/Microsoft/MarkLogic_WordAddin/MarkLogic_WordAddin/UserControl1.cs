@@ -30,7 +30,7 @@ namespace MarkLogic_WordAddin
         private bool debug = false;
         private bool debugMsg = false;
         private string color = "";
-        private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";
+        private string addinVersion = "1.0-20080922";
 
 
         public UserControl1()
@@ -58,7 +58,6 @@ namespace MarkLogic_WordAddin
                 webBrowser1.ObjectForScripting = this;
                 webBrowser1.Navigate(webUrl);
                 webBrowser1.ScriptErrorsSuppressed = true;
-                
 
             }
 
@@ -513,11 +512,248 @@ namespace MarkLogic_WordAddin
 
         //FOLLOWING ARE UNDOCUMENTED AND NOT OFFICIALLY SANCTIONED METHODS
         //THESE MAY BE REMOVED, OR CHANGE
+        //====================================================================
+        public String getRangeForSelection()
+        {
+            string message="";
+            try
+            {
 
+                Word.Range rng = Globals.ThisAddIn.Application.Selection.Range;
+                int stTst = rng.Start;
+                int edTst = rng.End;
+
+                if (stTst < edTst)
+                    message = stTst + ":" + edTst;
+            }
+            catch (Exception e)
+            {
+                string errMsg = e.Message; 
+                message = "error: " + errMsg;
+            }
+
+            if (debug)
+                message = "error: TESTING ERRORS";
+
+            return message;
+        }
+
+        public String getRangesForTerm(string searchTerm)
+        {
+            string message = "";
+            object searchText = searchTerm;
+            object missing = System.Reflection.Missing.Value;
+            object start = 0;
+
+            Word.Range rng = Globals.ThisAddIn.Application.ActiveDocument.Content;
+            try
+            {
+                rng.Find.ClearFormatting();
+                rng.Find.Forward = true;
+                rng.Find.MatchWholeWord = true;   //parameterize (as well as case?sounds like?)   
+                rng.Find.Text = searchTerm;
+
+                rng.Find.Execute(
+                    ref missing, ref missing, ref missing, ref missing, ref missing,
+                    ref missing, ref missing, ref missing, ref missing, ref missing,
+                    ref missing, ref missing, ref missing, ref missing, ref missing);
+
+                while (rng.Find.Found)
+                {
+
+                    MessageBox.Show("RANGE" + rng.Start + " " + rng.End);
+                    message = message + rng.Start + ":" + rng.End + " ";
+
+                        rng.Find.Execute(
+                        ref missing, ref missing, ref missing, ref missing, ref missing,
+                        ref missing, ref missing, ref missing, ref missing, ref missing,
+                        ref missing, ref missing, ref missing, ref missing, ref missing);
+                }
+                message=message.Trim();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("IN ERROR");
+                string errMsg = e.Message;
+                message = "error: " + errMsg;
+            }
+
+            if (debug)
+                message = "error: TESTING ERRORS";
+
+            //MessageBox.Show("RETURNING: " + message);
+            return message;
+        }
+
+
+        public String addContentControlToRange(string ranges, string title, string tag, bool lockStatus)
+        {
+            string message = "";
+            object missing = System.Reflection.Missing.Value;
+            ranges = ranges.Trim();
+            char[] delimiter = { ' ' };
+
+            if (!(ranges.Equals("") || ranges == null))
+            {
+                string[] tmp1 = ranges.Split(delimiter);
+                if (tmp1.Length > 0)
+                {
+                    char[] delimiter2 = { ':' };
+                    int count = 0;
+                    try
+                    {
+                        foreach (string x in tmp1)
+                        {
+                            string[] tmp2 = x.Split(delimiter2);
+                            int start = System.Convert.ToInt32(tmp2[0], 10);
+                            int end = System.Convert.ToInt32(tmp2[1], 10);
+                            object s = start + count;
+                            object e = end + count;
+
+                            //count++; //range shifts as each comment added (i know, wtf?)
+                            Word.Range rng = Globals.ThisAddIn.Application.ActiveDocument.Range(ref s, ref e);
+
+                            //can't add comment to plain text control, or to control that's locked
+                            //how bout adding other control???
+                            //which leads to question - unlock, add comment, relock???
+                            bool locked = false;
+                            bool plainText = false;
+                            Word.Range rngSection = rng.Sections[1].Range;
+                            Word.ContentControls cs = rngSection.ContentControls;
+
+                            foreach (Word.ContentControl cc in cs)
+                            {
+                                // MessageBox.Show("TYPE IS" + cc.Type);
+                                if (rng.InRange(cc.Range) && locked == false && plainText == false)
+                                {
+                                    if (cc.LockContents == true)
+                                        locked = true;
+
+                                    if (cc.Type.Equals(Microsoft.Office.Interop.Word.WdContentControlType.wdContentControlText))
+                                        plainText = true;
+                                }
+                            }
+                            //added if around comments.add line
+                            if (!locked && !plainText)
+                            {
+                                //rng.Comments.Add(rng, ref cmt);
+
+                                Word.ContentControl cControl = rng.ContentControls.Add(Microsoft.Office.Interop.Word.WdContentControlType.wdContentControlRichText, ref missing);
+                                cControl.Title = title;
+                                cControl.Tag = tag;
+                                string t = rng.Text;
+                                cControl.Range.Text = t;
+                                cControl.LockContents = lockStatus;
+                                cControl.LockContents = lockStatus;
+
+                                int len = t.Length + 1;
+
+                                //Have to shift range manually to get out of new Content Control
+                                rng.Start = rng.End + len;
+                                //have to add 2 to range for controls, 1 to range for comments
+                                //in this if as we only increase if we add a control
+                                count++;
+                                count++;
+                            }
+                            // MessageBox.Show("VALUE OF start" + start + "end " + end);
+                            // MessageBox.Show("TRUE" + rng.StoryLength + " " + rng.StoryType + "");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        string errMsg = ex.Message;
+                        message = "error: " + errMsg;
+                    }
+
+
+                    if (debug)
+                        message = "error: TESTING ERRORS";
+
+
+                }
+            }
+            return message;
+
+        }
 
         //can't add comment to locked content controls - change this? (we can make the change)
         //noting for discussion later
+        public String addCommentToRange(string ranges, string comment)
+        {
+            string message = "";
+            ranges = ranges.Trim();
+            //MessageBox.Show("IN FUNCTION  ranges:"  +ranges + " comment: "+comment);
+            char[] delimiter = { ' ' };
+            if (!(ranges.Equals("") || ranges == null))
+            {
 
+              string[] tmp1 = ranges.Split(delimiter);
+              if (tmp1.Length > 0)
+              {
+                char[] delimiter2 = { ':' };
+                int count = 0;
+                try
+                {
+                    foreach (string x in tmp1)
+                    {
+                        string[] tmp2 = x.Split(delimiter2);
+                        int start = System.Convert.ToInt32(tmp2[0], 10);
+                        int end = System.Convert.ToInt32(tmp2[1], 10);
+                        object s = start + count;
+                        object e = end + count;
+
+                       //count++; //range shifts as each comment added (i know, wtf?)
+                        Word.Range rng = Globals.ThisAddIn.Application.ActiveDocument.Range(ref s, ref e);
+
+                        object cmt = comment;
+
+                        //added from here to next comment to check for rang in control with lock
+                        //can't add comment to plain text control, or to control that's locked
+                        //which leads to question - unlock, add comment, relock???
+                        bool locked = false;
+                        bool plainText = false;
+                        Word.Range rngSection = rng.Sections[1].Range;
+                        Word.ContentControls cs = rngSection.ContentControls;
+                       
+                        foreach (Word.ContentControl cc in cs)
+                        {
+                            // MessageBox.Show("TYPE IS" + cc.Type);
+                            if (rng.InRange(cc.Range) && locked == false && plainText == false)
+                            {
+                                if (cc.LockContents == true)
+                                    locked = true;
+
+                                if (cc.Type.Equals(Microsoft.Office.Interop.Word.WdContentControlType.wdContentControlText))
+                                    plainText = true;
+                            }
+                        }
+                        //added if around comments.add line
+                        if (!locked && !plainText)
+                        {
+                            rng.Comments.Add(rng, ref cmt);
+                            count++;
+                        }
+                        // MessageBox.Show("VALUE OF start" + start + "end " + end);
+                        // MessageBox.Show("TRUE" + rng.StoryLength + " " + rng.StoryType + "");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string errMsg = ex.Message;
+                    message = "error: " + errMsg;
+                }
+             
+
+                    if (debug)
+                        message = "error: TESTING ERRORS";
+
+                    
+              }
+            }
+            return message;
+        }
+
+        //orig, broke this up into 2 functions, one to get ranges, on too add comment based on ranges
         public String addCommentForText(string searchTerm, string comment)//(string comment, string text)
         {
            
@@ -597,7 +833,7 @@ namespace MarkLogic_WordAddin
         //will only add control to text that is not in locked control already
         //we can change this, not even sure how useful this function is though
         //noting here for later
-        public String addContentControlForText(string searchTerm, string title, string tag)//(string comment, string text)
+        public String addContentControlForText(string searchTerm, string title, string tag, bool lockstatus)//(string comment, string text)
         {
             string message = "";
             object missing = System.Reflection.Missing.Value;
@@ -672,8 +908,12 @@ namespace MarkLogic_WordAddin
                         Word.ContentControl cControl = rng.ContentControls.Add(Microsoft.Office.Interop.Word.WdContentControlType.wdContentControlRichText, ref missing);
                         cControl.Title = title;
                         cControl.Tag = tag;
+                        MessageBox.Show("LOCKSTATUS" + lockstatus);
                         string t = rng.Text;
                         cControl.Range.Text = t;
+                        cControl.LockContentControl = lockstatus;
+                        cControl.LockContents = lockstatus;
+
 
                         int len = t.Length + 1;
 
@@ -759,6 +999,23 @@ namespace MarkLogic_WordAddin
 
         }
 
+        public String getSelectionText()
+        {
+            string message = "";
+            object missing = System.Reflection.Missing.Value;
+            Word.Selection selection = Globals.ThisAddIn.Application.Selection;//((Word.Window)control.Context).Application.Selection;
+            int selectionLength = selection.Range.End - selection.Range.Start;
+
+            if (selectionLength > 0)
+            {
+
+                message = selection.Text;
+            }
+
+            return message;
+
+        }
+
         public String insertTextInControl(string text, string tag, bool lockStatus)
         {
             string message = "";
@@ -816,6 +1073,7 @@ namespace MarkLogic_WordAddin
                     selection.MoveRight(ref oUnit, ref oCount, ref missing);
                 }
             }
+            
 
             return message;
         }
@@ -851,7 +1109,9 @@ namespace MarkLogic_WordAddin
 
             return contentControl;
         }
-
+       
+       
+        
 /*     public static void AddImagePart(string document, string fileName)
         {
             using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(document, true))
