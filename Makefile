@@ -12,7 +12,7 @@ SUFFIX := $(MAJ_VER).$(MIN_VER)-$(DATE)
 ZIP_PREFIX = MarkLogic_WordAddin
 
 # Build machine path to MS compiler
-#MS_IDE="c:/Program Files (x86)/Microsoft Visual Studio 9.0/Common7/IDE/devenv.exe"
+#MS_IDE="C:/Program Files (x86)/Microsoft Visual Studio 9.0/Common7/IDE/devenv.exe"
 # Optional developer machine path to MS compiler
 MS_IDE="C:/Program Files/Microsoft Visual Studio 9.0/Common7/IDE/devenv.exe"
 #MS_IDE="C:/WINDOWS/Microsoft.NET/Framework/v3.5/MSBuild.exe"
