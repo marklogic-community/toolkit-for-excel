@@ -128,12 +128,12 @@ define function ooxml:create-paragraph($para as xs:string) as element(w:p)
 }
 
 (: BEGIN REMOVE w:p PROPERTIES =============================================================== :)
-define function ooxml:passthru-para($x as node()) as node()
+define function ooxml:passthru-para($x as node()) as node()*
 {
    for $i in $x/node() return ooxml:dispatch-paragraph-to-clean($i)
 }
 
-define function ooxml:dispatch-paragraph-to-clean($x as node()) as node()
+define function ooxml:dispatch-paragraph-to-clean($x as node()) as node()?
 {
 
       typeswitch($x)
@@ -225,7 +225,8 @@ define function ooxml:add-run-style-properties($wr as node(),$runprops as elemen
 
 define function ooxml:add-paragraph-properties($wp as node()*, $paraprops as element(w:pPr)?, $type as xs:string) as node()*
 {
-        element w:p{ $wp/@*, $paraprops, element w:r { $wp/w:r/@*, ooxml:set-paragraph-styles-passthru($wp/* except $wp/w:pPr, $paraprops, $type) }}
+       (: element w:p{ $wp/@*, $paraprops, element w:r { $wp/w:r/@*, ooxml:set-paragraph-styles-passthru($wp/* except $wp/w:pPr, $paraprops, $type) }} :)
+        element w:p{ $wp/@*, $paraprops, ooxml:set-paragraph-styles-passthru($wp except $wp/w:pPr, $paraprops, $type) }
 }
 
 define function ooxml:replace-paragraph-styles($block as element(), $wpProps as element(w:pPr)?) as element()

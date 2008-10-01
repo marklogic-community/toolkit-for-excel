@@ -56,13 +56,25 @@ MLA.getCustomPiece = function(customPieceId)
 
 	if(customPiece=="")
 	  customPiece=null;
-   
-	return customPiece;
+
+        var v_cp = MLA.getXMLDOMFromString(customPiece); 
+
+	return v_cp;
 }
 
 MLA.addCustomPiece = function(customPieceXml)
 {
-	var newId = window.external.addCustomPiece(customPieceXml);
+	var v_customPiece ="";
+	if(customPieceXml.xml)
+	{
+               v_customPiece=customPieceXml.xml;
+	}
+	else
+	{
+	       v_customPiece=customPieceXml
+	}
+	
+	var newId = window.external.addCustomPiece(v_customPiece);
 
 	var errMsg = MLA.errorCheck(newId);
 	if(errMsg!=null)
@@ -119,6 +131,7 @@ MLA.getSelection = function()
 	var arrCount=0;
 	var selCount =0;
 	var selections = new Array();
+	var domSelections = new Array();
         
 	var selection =  window.external.getSelection(selCount);
 
@@ -157,7 +170,13 @@ MLA.getSelection = function()
 	}
 
 
-	return selections;
+
+	for(i=0;i<selections.length;i++)
+	{
+         	domSelections[i] = MLA.getXMLDOMFromString(selections[i]);
+	}
+
+	return domSelections;
 }
 
 MLA.getSentenceAtCursor = function()
@@ -168,7 +187,8 @@ MLA.getSentenceAtCursor = function()
 	if(errMsg!=null) 
 	   throw("Error: Not able to get Sentence at Cursor; "+errMsg);
 
-	return rangeXml;
+	var v_rangeXml = MLA.getXMLDOMFromString(rangeXml);
+	return v_rangeXml;
 }
 
 MLA.getActiveDocStylesXml = function()
@@ -182,7 +202,8 @@ MLA.getActiveDocStylesXml = function()
 	if(stylesXml=="")
           stylesXml=null;
 
-	return stylesXml;
+	var v_stylesXml = MLA.getXMLDOMFromString(stylesXml);
+	return v_stylesXml;
 }
 
 MLA.isArray = function(obj)
@@ -194,23 +215,42 @@ MLA.insertBlockContent = function(blockContentXml,stylesXml)
 {
 	if(stylesXml == null) 
 	    stylesXml = "";
-   
+  
+       
 	var v_block="";
-	var v_array = MLA.isArray(blockContentXml);
+	var v_styles="";
 
-	if(v_array)
+	if(blockContentXml.xml)
 	{
+               v_block=blockContentXml.xml;
+	}
+	else
+	{
+	  var v_array = MLA.isArray(blockContentXml);
+
+	  if(v_array)
+	  {
 		for(var i=0;i<blockContentXml.length;i++)
 		{
 			v_block = v_block+blockContentXml[i];
 		}
+	  }
+	  else
+	  {
+		v_block = blockContentXml;
+	  }
+	}
+
+	if(stylesXml.xml)
+	{
+             v_styles=stylesXml.xml;
 	}
 	else
 	{
-		v_block = blockContentXml;
+             v_styles=stylesXml;
 	}
-
-        var inserted = window.external.insertBlockContent(v_block,stylesXml);
+	
+        var inserted = window.external.insertBlockContent(v_block,v_styles);
 
 	var errMsg = MLA.errorCheck(inserted);
 	if(errMsg!=null)
@@ -411,4 +451,22 @@ MLA.addContentControlToSelection = function(tagName, isLocked)
 	if(sdtAdded=="")
 	  sdtAdded = null;
 
+}
+//UTIL FUNCTIONS FOR MANIPULATING XML ON THE CLIENT
+//
+MLA.getXMLDOMFromString = function(xmlstring,asynch)
+{
+   var xmlDom = new ActiveXObject("Microsoft.XMLDOM");
+       xmlDom.async=asynch;
+       xmlDom.loadXML(xmlstring);
+   return xmlDom;
+}
+
+MLA.createParagraph = function(textstring)
+{
+	var newParagraphString = "<w:p xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'><w:r><w:t>"+
+		                    textstring+
+			         "</w:t></w:r></w:p>";
+	var newPara = MLA.getXMLDOMFromString(newParagraphString,false);
+	return newPara;
 }
