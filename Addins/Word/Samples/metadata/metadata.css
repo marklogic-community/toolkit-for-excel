@@ -1,0 +1,11 @@
+#header {
+	font: normal 1em Arial, Helvetica, sans-serif;
+	height: 46px;
+	margin: auto;
+	padding: 10; 
+}
+
+textarea {
+overflow:auto;
+}
+
