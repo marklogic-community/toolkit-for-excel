@@ -1,6 +1,6 @@
 window.onload=initPage;
 
-var debug = true;
+var debug = false;
 
 function initPage()
 {
@@ -123,11 +123,6 @@ function updateMetadata(i)
 	if(edited){
 		alert("Metadata Edited"); 
 	}
-		/*
-	  alert("Existing Metadata in the Document was edited.");
-	}else{
-	  alert("Metadata Saved To Document.");
-	}*/   
    }
    else
    {    if(debug)

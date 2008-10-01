@@ -5,10 +5,10 @@ xdmp:set-response-content-type('text/html'),
       <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
         <head>
             <title>WordAddOn</title>
-            <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-	    <link type="text/css" rel="stylesheet" href="addin.css" />
-            <script type="text/javascript" src="addin.js"></script>
-            <script type="text/javascript" src="MarkLogicWordAddin.js"></script>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	    <link type="text/css" rel="stylesheet" href="metadata.css" />
+            <script type="text/javascript" src="metadata.js"></script>
+            <script type="text/javascript" src="../js/MarkLogicWordAddin.js"></script>
 
             
         </head>
