@@ -8,6 +8,7 @@
 <body>
 	<ul>
 		<li><a href="search/">Search</a></li>
+		<li><a href="metadata/">Metadata</a></li>
 	</ul>
 </body>
 </html>
