@@ -8,7 +8,11 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Samples</title>
+	<title>Search and Reuse Sample</title>
+	<script type="text/javascript" src="../js/prototype-1.6.0.3.js">//</script>
+	<script type="text/javascript" src="../js/MarkLogicWordAddin.js">//</script>
+	<script type="text/javascript" src="../js/debug.js">//</script>
+	<script type="text/javascript" src="search.js">//</script>
 </head>
 <body>
 			{
@@ -32,15 +36,15 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 							let $or-query := cts:or-query(for $token in $tokens return cts:word-query($token))
 							let $hits := cts:search(//w:p, $and-query)
 							let $start := (xs:int(xdmp:get-request-field("start")), 1)[1] 
-							let $end := (xs:int(xdmp:get-request-field("end")), 10)[1]
+							let $end := (xs:int(xdmp:get-request-field("end")), $start + 9)[1]
 							(: This doesn't actually truly paginate, becuase we're not filtering the hits :)
 							for $hit in $hits[$start to $end]
 								let $uri := base-uri($hit)
-								return <li>
-									{cts:highlight(<p>{data($hit)}</p>, $or-query, <strong>{$cts:text}</strong>)}
+								return <li xlink:href="{concat($uri,'#', 'xmlns(w=http://schemas.openxmlformats.org/wordprocessingml/2006/main) xpath(',xdmp:path($hit),')')}">
+									{cts:highlight(<p>{data($hit)}</p>, $or-query, <strong class="ML-highlight">{$cts:text}</strong>)}
 									<ul class="ML-hit-metadata">
 										<li>
-											<a href="content.xqy?uri={$uri}" target="_blank">{substring-before(tokenize($uri,"/")[2],"_docx_parts")}</a>
+											<a href="content.xqy?uri={xdmp:url-encode(concat($uri,'#xmlns(w=http://schemas.openxmlformats.org/wordprocessingml/2006/main) xpath(',xdmp:path($hit),')'))}" target="_blank">{substring-before(tokenize($uri,"/")[2],"_docx_parts")}</a>
 										</li>
 									</ul>
 								</li>
