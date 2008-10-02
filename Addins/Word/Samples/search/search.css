@@ -21,6 +21,7 @@
 }
 #ML-Results li {
 	margin: 1em 0;
+	cursor: pointer;
 }
 .ML-hit-metadata {
 	margin-top: 0.25em;

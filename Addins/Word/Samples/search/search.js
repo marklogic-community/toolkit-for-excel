@@ -1,11 +1,17 @@
-/* $Id: search.js,v 1.3 2008-10-02 22:38:56 jmakeig Exp $ */
+/* $Id: search.js,v 1.4 2008-10-02 23:21:57 jmakeig Exp $ */
 
 document.observe("dom:loaded", function() {
+	// Listen to all double-click events on the ML-Results list container.
+	// These will include double-clicks on its descendents.
 	$("ML-Results").observe("dblclick", function(e) {
+		// Get the parent list item
 		var target = Event.findElement(e, "li");
-		// This is wrong in so many ways. Should be using getAttributeNS
+		// Get the path to the document fragment from the result item's xlink:href attribute
 		var path = target.readAttribute('xlink:href');
-		_l(path);
+		// If there's no referece to external content, then we're done
+		if(!path) return;
+		
+		// Request the actual WordprocessingML snippet from the server as an XLink+XPointer
 		new Ajax.Request('content.xqy', 
 			{
 				'method': 'get',
@@ -16,6 +22,8 @@ document.observe("dom:loaded", function() {
 					'Accept': 'application/xml'
 				},
 				'onSuccess': function(response) {
+					// Upon successful retrieval from the server,
+					// insert the parsed XML into the active document
 					MLA.insertBlockContent(response.responseXML);
 				},
 				'onFailure': function(response) {
@@ -23,16 +31,13 @@ document.observe("dom:loaded", function() {
 						message: "Failed AJAX response",
 						payload: response
 					}
-				},
-				'onComplete': function() {
 				}
 			}
 		
 		);
-		
-		//COMPAT: Selection/range handling varies across browsers
+		// Clear the text selection that happens by default with a double-click
 		document.selection.empty() ;
-		//window.getSelection().removeAllRanges();
+		// Don't bubble the event
 		Event.stop(e);
 	});
 	

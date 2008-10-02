@@ -47,8 +47,11 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 							{cts:highlight(<p>{$snippet}</p>, $or-query, <strong class="ML-highlight">{$cts:text}</strong>)}
 							<ul class="ML-hit-metadata">
 								<li>
-									<a href="content.xqy?uri={xdmp:url-encode(concat($uri,'#xmlns(w=http://schemas.openxmlformats.org/wordprocessingml/2006/main) xpath(',xdmp:path($hit),')'))}" target="_blank">{substring-before(tokenize($uri,"/")[2],"_docx_parts")}</a>
+									<a href="content.xqy?uri={xdmp:url-encode($uri)}" target="_blank">{substring-before(tokenize($uri,"/")[2],"_docx_parts")}</a>
 								</li>
+								<!-- <li>
+									<a href="content.xqy?uri={xdmp:url-encode(replace($uri,'_docx_parts$','.docx'))}">{substring-before(tokenize($uri,"/")[2],"_docx_parts")}</a>
+								</li> -->
 							</ul>
 						</li>
 				else ()		
