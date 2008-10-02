@@ -1,4 +1,4 @@
-/* $Id: search.js,v 1.1 2008-10-02 20:37:59 jmakeig Exp $ */
+/* $Id: search.js,v 1.2 2008-10-02 22:37:48 jmakeig Exp $ */
 
 document.observe("dom:loaded", function() {
 	$("ML-Results").observe("dblclick", function(e) {
@@ -16,8 +16,7 @@ document.observe("dom:loaded", function() {
 					'Accept': 'application/xml'
 				},
 				'onSuccess': function(response) {
-					console.dir(response);
-					//MLA.insertBlockContent(response.responseText);
+					MLA.insertBlockContent(response.responseXML);
 				},
 				'onFailure': function(response) {
 					throw {

@@ -1,0 +1,24 @@
+@import url('reset.css');
+body {
+	padding: 1em;
+	overflow: hidden;
+}
+body, td, th, input, button, legend, textarea {
+	font-family: "Segoe UI"; /* http://msdn.microsoft.com/en-us/library/aa511282.aspx */
+	font-size: 9pt; /* Default for Vista is 9pt -> http://msdn.microsoft.com/en-us/library/aa511282.aspx */
+	line-height: 1.1;
+}
+a {
+	text-decoration: none;
+}
+#ML-Navigation {
+	position: fixed;
+	padding: 0.25em 0.5em;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	font-size: 80%;
+}
+body {
+	padding-bottom: 2em;
+}

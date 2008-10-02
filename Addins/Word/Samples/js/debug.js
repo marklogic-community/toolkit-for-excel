@@ -1,4 +1,4 @@
-/* $Id: debug.js,v 1.1 2008-10-02 20:37:58 jmakeig Exp $ */
+/* $Id: debug.js,v 1.2 2008-10-02 22:37:49 jmakeig Exp $ */
 
 if(!window.console) {
 	window.console = (function() {
@@ -10,8 +10,8 @@ if(!window.console) {
 				document.body.appendChild(log);
 				log = $(log);
 				log.setStyle({
-					"position": "absolute",
-					"bottom": "0",
+					"position": "fixed",
+					"bottom": "2em",
 					"left": "0",
 					"width": "20em",
 					"height": "10em",
@@ -38,8 +38,8 @@ document.observe("dom:loaded", function() {
 	document.body.appendChild(refresh);
 	refresh = $(refresh); 
 	refresh.setStyle({
-		"position": "absolute",
-		"bottom": "0",
+		"position": "fixed",
+		"bottom": "2em",
 		"right": "0",
 		"width": "8em",
 	    "z-index": "10"
