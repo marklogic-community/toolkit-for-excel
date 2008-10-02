@@ -31,16 +31,22 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 						let $tokens := tokenize($q, "\s+")
 						let $and-query := cts:and-query(for $token in $tokens return cts:word-query($token))
 						let $or-query := cts:or-query(for $token in $tokens return cts:word-query($token))
-						let $results := cts:search(collection()[w:document], $and-query, "unfiltered")
+						(: Run the search unfiltered :)
+						let $hits := cts:search(collection()[w:document], $and-query, "unfiltered")
 						let $start := 1
 						let $end := 10
-						for $result in $results[$start to $end]
-							return <li><a href="content.xqy?uri={document-uri($result)}">asdf</a>
-								<ol>{
-									for $para in $result//w:p[cts:contains(., $or-query)]
-									return cts:highlight(<li>{data($para)}</li>, $or-query, <strong>{$cts:text}</strong>)
-								}</ol>
-							</li>
+						(: This doesn't actually truly paginate, becuase we're not filtering the hits :)
+						let $results := for $hit in $hits (: [cts:contains(//w:p, $and-query)][1 to 10] :)
+							(: Implement the filter :)
+							let $paras := $hit//w:p[cts:contains(., $and-query)]
+							return 
+								if($paras) then
+									<li><a href="asdf">{base-uri($hit)}</a>{
+									for $para in $paras
+										return cts:highlight(<p>{data($para)}</p>, $or-query, <strong>{$cts:text}</strong>)
+									}</li>
+								else ()
+						return $results[1 to 2]
 					else ()		
 				}
 				</ol>
