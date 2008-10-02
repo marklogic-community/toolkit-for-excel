@@ -1,4 +1,4 @@
-/* $Id: search.js,v 1.2 2008-10-02 22:37:48 jmakeig Exp $ */
+/* $Id: search.js,v 1.3 2008-10-02 22:38:56 jmakeig Exp $ */
 
 document.observe("dom:loaded", function() {
 	$("ML-Results").observe("dblclick", function(e) {
@@ -37,35 +37,3 @@ document.observe("dom:loaded", function() {
 	});
 	
 });
-
-var MarkLogic = window.MarkLogic || {}
-
-MLA.OOXML = {}
-MLA.OOXML.namespaces = {
-		"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
-}
-MLA.OOXML.createParagraph = function(text) {
-	return "<w:p xmlns:w='"+MLA.OOXML.namespaces.w+"'><w:r><w:t>"+text+"</w:t></w:r></w:p>";
-}
-
-// EXPERIMENTAL
-MarkLogic.DOM = function() {
-	var MSXML_VERSION = 'Msxml2.DOMDocument.6.0';
-	return {
-		parse: function(xml, options) {
-			var dom = new ActiveXObject(MSXML_VERSION);
-			dom.async = false;
-			dom.validateOnParse = false;
-			dom.resolveExternals = false;
-			options = options || {}
-			for(p in options) { dom[p] = options[p] }
-			if(xml) dom.loadXML(xml);
-			return dom;
-		}
-	}
-}();
-
-MLA.DOM = {}
-MLA.DOM.insertBlockContent = function(node) {
-	MLA.insertBlockContent(node.xml);
-}
