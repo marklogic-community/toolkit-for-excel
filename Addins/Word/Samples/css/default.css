@@ -8,8 +8,12 @@ body, td, th, input, button, legend, textarea {
 	font-size: 9pt; /* Default for Vista is 9pt -> http://msdn.microsoft.com/en-us/library/aa511282.aspx */
 	line-height: 1.1;
 }
-a {
+a, a:link, a:visited, a:hover, a:active {
 	text-decoration: none;
+	cursor: default;
+}
+a:hover {
+	text-decoration: underline;	
 }
 #ML-Navigation {
 	position: fixed;
