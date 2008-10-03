@@ -51,12 +51,9 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 					<input id="ML-Id" name="v_id"/>
 				</div>
 			</div>
-		
-		
 		<div>
-		<input type="submit" value="Save Metadata" onclick="updateMetadata(1)"/>
-		
-		<input type="submit" value="Remove" onclick="updateMetadata(2)"/>
+		<button id="ML-Save">Save</button>
+		<button id="ML-Remove">Remove</button>
 		
 		<p id="v_fc"></p>    
 		<p id="v_fc2"></p>    
