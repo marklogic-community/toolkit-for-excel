@@ -13,8 +13,6 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 	<script type="text/javascript" src="../js/MarkLogicWordAddin.js">//</script>
 	<script type="text/javascript" src="../js/debug.js">//</script>
 	<script type="text/javascript" src="metadata.js">//</script>
-
-   
 </head>
  <body>
 	 <div id="ML-Add-in">
@@ -54,9 +52,12 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 		<div>
 		<!-- 
 		<button id="ML-Save">Save</button>
-		<button id="ML-Remove">Remove</button>
-		 -->
-		<p id="v_fc"></p>    
+		-->
+		<button id="ML-Remove" class="ML-action" title="Remove the metadata from the current document">
+			<img src="../img/delete.png"/> Remove
+		</button>
+		 
+		<p id="ML-Message"></p>    
 		<p id="v_fc2"></p>    
 		                
 		</div> 
