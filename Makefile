@@ -22,8 +22,14 @@ MS = Addins/Word/Microsoft
 MSS = MarkLogic_WordAddin
 JS = Addins/Word/javascript
 CF = Addins/Word/config
+SAMPLES = Addins/Word/Samples
+SAMPLES_JS = $(SAMPLES)/js
+
 BUILDS = builds
 PUB_BUILD = $(BUILDS)/Word
+
+BUILD_SAMPLES = $(PUB_BUILD)/Samples
+
 MS_PUB_BUILD = $(PUB_BUILD)/addin.deploy
 MS_ROOT = $(MS)/MarkLogic_WordAddin
 MS_MAIN_REL = $(MS)/MarkLogic_WordAddin/MarkLogic_WordAddin/bin/Release
@@ -44,6 +50,7 @@ package:
 	mkdir $(TEMP)
 	mkdir $(BUILDS) 
 	mkdir $(PUB_BUILD)
+	mkdir $(BUILD_SAMPLES)
 	mkdir $(PUB_BUILD)/config
 	mkdir $(MS_PUB_BUILD)
 	cp $(CF)/*.idt $(PUB_BUILD)/config/.
@@ -61,8 +68,10 @@ package:
 	#here
 	cp -r   $(MS_BUILD)/* $(MS_PUB_BUILD)/.
 	./setVersion patch $(JS)/MarkLogicWordAddin.js $(PUB_BUILD)/MarkLogicWordAddin.js
+	./setVersion patch $(JS)/MarkLogicWordAddin.js $(SAMPLES_JS)/MarkLogicWordAddin.js
 	./setVersion patch $(ML)/word-processing-ml.xqy $(PUB_BUILD)/word-processing-ml.xqy
 	./setVersion patch $(ML)/package.xqy $(PUB_BUILD)/package.xqy
+	cp -r $(SAMPLES)/* $(BUILD_SAMPLES) 
 	@echo Create zip file $(ZIP_PREFIX)_$(SUFFIX).zip
 	(cd builds; zip -r ../$(ZIP_PREFIX).zip Word/*)
 	mv $(ZIP_PREFIX).zip $(ZIP_PREFIX)-$(SUFFIX).zip

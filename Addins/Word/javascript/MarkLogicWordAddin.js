@@ -1,25 +1,60 @@
 //Copyright 2002-2008 Mark Logic Corporation.  All Rights Reserved.
+/** 
+ * @fileoverview  API documentation for MarkLogicWordAddin.js
+ *
+ *
+ *
+ * {@link http://www.marklogic.com} 
+ *
+ * @author Pete Aven pete.aven@marklogic.com
+ * @version 0.1 
+ */
+//Copyright 2002-2008 Mark Logic Corporation.  All Rights Reserved.
+//var MLA = {};
+
+
+/**
+ * The MLA object is used for global attribution. The methods within this namespace provide ways of interacting with an Active OpenXML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
+ *
+ * The methods here are mostly for Word; however, the functions getCustomPiece(), getCustomPieceIds(), addCustomPiece(), and deleteCustomPiece() will work for any Open XML package.
+ * This object has methods for accessing an ActiveDocument in Word.
+ */
 var MLA = {};
+/*
+function MLA(){
+      this.getClassName = function(){
+      return "MLA";
+   
+      }
+}
+*/
+/** @ignore */
+MLA.version = { "release" : "1.0-20081002" }; 
 
-MLA.version = { "release" : "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" }; 
-
+/** @ignore */
 MLA.SimpleRange = function(begin,finish){
 	this.start = begin;
 	this.end = finish;
 
 };
 
+/** @ignore */
 String.prototype.trim = function() {
 	return this.replace(/^\s+|\s+$/g,"");
 }
 
 
-
+/**
+ * Returns version of MarkLogicWordAddin.js library
+ * @return the version of MarkLogicWordAddin.js
+ * @type String
+ */
 MLA.getVersion = function()
 {
 	return MLA.version.release;
 }
 
+/** @ignore */
 MLA.errorCheck = function(message)
 {
 	var returnVal = null;
@@ -33,7 +68,70 @@ MLA.errorCheck = function(message)
 	return returnVal;
 
 }
+/** Utility function for creating Microsoft.XMLDOM object from string
+ *
+ *@param xmlString the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML.
+ *@return Microsoft.XMLDOM object
+ *@throws Exception if unable to create the XMLDOM object
+ */
+MLA.getXMLDOMFromString = function(xmlstring,asynch)
+{
+   var xmlDom = new ActiveXObject("Microsoft.XMLDOM");
+       xmlDom.async=asynch;
+       xmlDom.loadXML(xmlstring);
+   return xmlDom;
+}
 
+/** Utility function to create a default WordprocessingML paragraph <w:p>, with no styles, for a given string.
+ *
+ *@param textString the string to be converted into a WordprocessingML paragraph
+ *@return Microsoft.XMLDOM object that is a WordprocessingML paragraph
+ *@throws Exception if unable to create the paragraph
+ */
+MLA.createParagraph = function(textstring)
+{
+	var newParagraphString = "<w:p xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'><w:r><w:t>"+
+		                    textstring+
+			         "</w:t></w:r></w:p>";
+	var newPara = MLA.getXMLDOMFromString(newParagraphString,false);
+	return newPara;
+}
+/** Inserts text into the ActiveDocument at current cursor position.  Text will be styled according to whatever is the currently chosen style for text in Word. 
+ *@param textToInsert the text to be inserted at the current cursor position in the ActiveDocument.
+ *@throws Exception if unable to insert text 
+ */
+MLA.insertText = function(textToInsert)
+{
+	var textAdded = window.external.insertText(textToInsert);
+	var errMsg = MLA.errorCheck(textAdded);
+	if(errMsg!=null)
+	   throw("Error: Not able to insert text "+errMsg);
+     
+	if(textAdded=="")
+	  textAdded = null;
+}
+/**
+ * Returns the text currently highlighted in the Active Document. If nothing is selected, null is returned. 
+ * @returns text currently hightlighted in ActiveDocument as string
+ * @type String
+ */
+MLA.getSelectionText = function()
+{
+	var selText = window.external.getSelectionText();
+	var errMsg = MLA.errorCheck(selText);
+	if(errMsg!=null)
+	   throw("Error: Not able to get selection text "+errMsg);
+     
+	if(selText=="")
+	  selText = null;
+
+	return selText;
+}
+/**
+ * Returns ids for custom pieces (not built-in) that are part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
+ * @returns the ids for custom pieces in active OpenXML package as array of string
+ * @type Array 
+ */
 MLA.getCustomPieceIds = function()
 { 
 	var pieces = window.external.getCustomPieceIds();
@@ -46,6 +144,13 @@ MLA.getCustomPieceIds = function()
 	return customPieces;
 }
 
+/**
+ * Returns the custom piece, identified by customPieceId, that is part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
+ * @param customPieceId the id of the custom piece to be fetched from the active package
+ * @return the XML for the custom piece as a DOM object. 
+ * @type Microsoft.XMLDOM 
+ * @throws Exception if there is error retrieving the custom piece 
+ */
 MLA.getCustomPiece = function(customPieceId)
 {
 	var customPiece = window.external.getCustomPiece(customPieceId);
@@ -62,6 +167,12 @@ MLA.getCustomPiece = function(customPieceId)
 	return v_cp;
 }
 
+/** Adds custom piece to active OpenXML package.  Returns the id of the piece added.
+ *@param customPieceXML Either A) an XMLDOM object that is the custom piece to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom piece to the active Open XML package. ( The XML must be well-formed. )
+ *@return id for custom piece added 
+ *@type String
+ *@throws Exception if unable to add custom piece
+ */
 MLA.addCustomPiece = function(customPieceXml)
 {
 	var v_customPiece ="";
@@ -86,6 +197,10 @@ MLA.addCustomPiece = function(customPieceXml)
 	return newId;
 }
 
+/** Deletes custom piece from Active OpenXML package identified by id.
+ *@param customPieceId the id of the custom piece to be deleted from the active OpenXML package.
+ *@throws Exception if unable to add custom piece
+ */
 MLA.deleteCustomPiece = function(customPieceId)
 {
 	var deletedPiece = window.external.deleteCustomPiece(customPieceId);
@@ -125,6 +240,12 @@ MLA.getSelection = function()
 
 	return selections;
 }
+*/
+
+/** Returns the XML that represents what is currently selected (highlighted) by the user in the ActiveDocument as an XMLDOM object.  Whatever is highlighted by the user will be returned in this function as a block level element.  A user may highlight text that will be materialized as multiple sibling block elements in the XML.  For this reason, the function returns an array, where each element of the array is an XMLDOM object that contains the XML for the blocks highlighted by the user in the ActiveDocument.  The order of elements in the array represents the order of items that are highlighted in the ActiveDocument.
+ *@return the blocks of XML currently selected by the user in the ActiveDocument as XMLDOM objects. If nothing is selected, an empty array is returned.
+ *@type Array
+ *@throws Exception if unable to retreive the Selection
 */
 MLA.getSelection = function()
 {
@@ -179,6 +300,11 @@ MLA.getSelection = function()
 	return domSelections;
 }
 
+/** Returns the final XML block that represents the Sentence at the current cursor position.  Nothing needs to be highlighted in the ActiveDocument.  If a selection is highlighted, this returns the XML for the Sentence immediately preceding the cursor.  If there is no selection, the XML for the sentence immediately preceding the cursor position is still returned. 
+ *@return the block of XML, as XMLDOM object,  for the Sentence immediately preceding the cursor position.
+ *@type XMLDOM
+ *@throws Exception if unable to retreive the XML for the Sentence.
+*/
 MLA.getSentenceAtCursor = function()
 {
 	var rangeXml = window.external.getSentenceAtCursor();
@@ -191,6 +317,11 @@ MLA.getSentenceAtCursor = function()
 	return v_rangeXml;
 }
 
+/** Returns the Styles.xml for the ActiveDocument as XMLDOM object. 
+ * @return Styles.xml if no Styles.xml present in ActiveDocument package, returns null.
+ * @type Microsoft.XMLDOM 
+ *@throws Exception if unable to retrieve Styles.xml from the ActiveDocument.
+ */
 MLA.getActiveDocStylesXml = function()
 { 
 	var stylesXml = window.external.getActiveDocStylesXml();
@@ -206,11 +337,20 @@ MLA.getActiveDocStylesXml = function()
 	return v_stylesXml;
 }
 
+/** @ignore */
 MLA.isArray = function(obj)
 {
  return obj.constructor == Array;
 }
 
+/** Inserts block-level xml into the ActiveDocument in Word at the current cursor position, or over the selected range (if selected).  If stylesxml parameter is defined, the blockxml will be inserted and the Styles.xml will be overwritten with the stylesxml contents. If stylesxml is not defined, then only the blockxml will be inserted ; the assumption being that whatever styles required by the blockxml are already present in the .docx Styles.xml.
+ *
+ * There are two main levels of content in the document.xml; block-level and inline content. Block level describes the structure of the document, and includes paragraphs and tables. Anything that can be inserted under <w:body> may be inserted here
+ * 
+ *@param blockXml this parameter may either be A) and XMLDOM object that is the block-level XML to be inserted,or an array of such objects,or B) a String, that is the serialized, well-formed XML of the block to be inserted, or an Array of such Strings.
+ *@param stylesXml (optional) this parameter is either A) an XMLDOM object that contains Styles.xml for the pacakge, or B)a String, which is the serialized, well-formed XML that represents Styles.xml for the ActiveDocument package in Word.
+ *@throws Exception if unable to insert the blockContent or Styles.xml
+ */
 MLA.insertBlockContent = function(blockContentXml,stylesXml)
 {
 	if(stylesXml == null) 
@@ -261,6 +401,12 @@ MLA.insertBlockContent = function(blockContentXml,stylesXml)
 
 }
 
+/**
+ *
+ *Returns MLA.config. The fields for this object are version, url, and theme.  
+version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color of Office. 
+ *@throws Exception if unable to create MLA.config object
+ */
 MLA.getConfiguration = function()
 {
         var version = window.external.getAddinVersion();
@@ -280,6 +426,7 @@ MLA.getConfiguration = function()
 }
 
 //FOLLOWING ARE NOT OFFICIALLY SANCTIONED, USE AT OWN RISK, THEY MAY CHANGE/BE REMOVED 
+/** @ignore */
 MLA.getRangesForTerm = function(searchText)
 {
        var ranges = window.external.getRangesForTerm(searchText);
@@ -307,7 +454,7 @@ MLA.getRangesForTerm = function(searchText)
 	return rngArray;
 
 }
-
+/** @ignore */
 MLA.getRangeForSelection = function()
 {
    var sel = window.external.getRangeForSelection();
@@ -324,7 +471,7 @@ MLA.getRangeForSelection = function()
    return finRng;
 
 }
-
+/** @ignore */
 MLA.addCommentToRange = function(ranges,commentText)
 {
 	if(ranges.length > 0)
@@ -350,7 +497,7 @@ MLA.addCommentToRange = function(ranges,commentText)
 
 	}
 }
-
+/** @ignore */
 MLA.addContentControlToRange = function(ranges,title,tag,lockstatus)
 {
 	if(ranges.length > 0)
@@ -376,7 +523,7 @@ MLA.addContentControlToRange = function(ranges,title,tag,lockstatus)
 
 	}
 }
-
+/** @ignore */
 MLA.addCommentForText = function(searchText, commentText)
 {
 	var commentAdded = window.external.addCommentForText(searchText, commentText);
@@ -388,7 +535,7 @@ MLA.addCommentForText = function(searchText, commentText)
 	if(commentAdded=="")
 	  commentAdded = null;
 }
-
+/** @ignore */
 MLA.addContentControlForText = function(searchTerm, ccTitle, ccTag,lockStatus)
 {
 	var controlAdded = window.external.addContentControlForText(searchTerm, ccTitle, ccTag,lockStatus);
@@ -401,35 +548,13 @@ MLA.addContentControlForText = function(searchTerm, ccTitle, ccTag,lockStatus)
 }
 
 //USE WITH CAUTION - IF EMBEDDED CONTROL, PARENT CONTROL WILL LOSE ITS TEXT, AS IT WAS IN THIS CHILD - UNDER CONSTRUCTION ...
+/** @ignore */
 MLA.deleteContentControl = function()
 {
 	window.external.deleteContentControl();
 }
 
-MLA.insertText = function(textToInsert)
-{
-	var textAdded = window.external.insertText(textToInsert);
-	var errMsg = MLA.errorCheck(textAdded);
-	if(errMsg!=null)
-	   throw("Error: Not able to insert text "+errMsg);
-     
-	if(textAdded=="")
-	  textAdded = null;
-}
-
-MLA.getSelectionText = function()
-{
-	var selText = window.external.getSelectionText();
-	var errMsg = MLA.errorCheck(selText);
-	if(errMsg!=null)
-	   throw("Error: Not able to get selection text "+errMsg);
-     
-	if(selText=="")
-	  selText = null;
-
-	return selText;
-}
-
+/** @ignore */
 MLA.insertTextInControl = function(textToInsert,tagName,isLocked)
 {
 	var textAdded = window.external.insertTextInControl(textToInsert,tagName,isLocked);
@@ -440,7 +565,7 @@ MLA.insertTextInControl = function(textToInsert,tagName,isLocked)
 	if(textAdded=="")
 	  textAdded = null;
 }
-
+/** @ignore */
 MLA.addContentControlToSelection = function(tagName, isLocked)
 {
         var sdtAdded = window.external.addContentControlToSelection(tagName,isLocked);
@@ -452,21 +577,5 @@ MLA.addContentControlToSelection = function(tagName, isLocked)
 	  sdtAdded = null;
 
 }
-//UTIL FUNCTIONS FOR MANIPULATING XML ON THE CLIENT
-//
-MLA.getXMLDOMFromString = function(xmlstring,asynch)
-{
-   var xmlDom = new ActiveXObject("Microsoft.XMLDOM");
-       xmlDom.async=asynch;
-       xmlDom.loadXML(xmlstring);
-   return xmlDom;
-}
 
-MLA.createParagraph = function(textstring)
-{
-	var newParagraphString = "<w:p xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'><w:r><w:t>"+
-		                    textstring+
-			         "</w:t></w:r></w:p>";
-	var newPara = MLA.getXMLDOMFromString(newParagraphString,false);
-	return newPara;
-}
+
