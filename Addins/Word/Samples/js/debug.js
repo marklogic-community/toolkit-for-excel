@@ -1,4 +1,4 @@
-/* $Id: debug.js,v 1.3 2008-10-02 23:30:18 jmakeig Exp $ */
+/* $Id: debug.js,v 1.4 2008-10-03 05:15:33 jmakeig Exp $ */
 
 // Last resort error handler
 Event.observe(window, "error", function(ex) {
@@ -7,7 +7,7 @@ Event.observe(window, "error", function(ex) {
 
 
 // Global flag to enable debugging
-var _debug = true;
+var _debug = false;
 
 // Global log function. By default it does nothing.
 var _l = function() {}
