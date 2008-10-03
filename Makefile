@@ -29,6 +29,12 @@ BUILDS = builds
 PUB_BUILD = $(BUILDS)/Word
 
 BUILD_SAMPLES = $(PUB_BUILD)/Samples
+BUILD_SAMPLES_JS = $(PUB_BUILD)/Samples/js
+BUILD_SAMPLES_CSS = $(PUB_BUILD)/Samples/css
+BUILD_SAMPLES_IMG = $(PUB_BUILD)/Samples/img
+BUILD_SAMPLES_METADATA = $(PUB_BUILD)/Samples/metadata
+BUILD_SAMPLES_MODULES = $(PUB_BUILD)/Samples/modules
+BUILD_SAMPLES_SEARCH = $(PUB_BUILD)/Samples/search
 
 MS_PUB_BUILD = $(PUB_BUILD)/addin.deploy
 MS_ROOT = $(MS)/MarkLogic_WordAddin
@@ -51,6 +57,12 @@ package:
 	mkdir $(BUILDS) 
 	mkdir $(PUB_BUILD)
 	mkdir $(BUILD_SAMPLES)
+	mkdir $(BUILD_SAMPLES_JS)
+	mkdir $(BUILD_SAMPLES_CSS)
+	mkdir $(BUILD_SAMPLES_IMG)
+	mkdir $(BUILD_SAMPLES_METADATA)
+	mkdir $(BUILD_SAMPLES_MODULES)
+	mkdir $(BUILD_SAMPLES_SEARCH)
 	mkdir $(PUB_BUILD)/config
 	mkdir $(MS_PUB_BUILD)
 	cp $(CF)/*.idt $(PUB_BUILD)/config/.
@@ -71,7 +83,19 @@ package:
 	./setVersion patch $(JS)/MarkLogicWordAddin.js $(SAMPLES_JS)/MarkLogicWordAddin.js
 	./setVersion patch $(ML)/word-processing-ml.xqy $(PUB_BUILD)/word-processing-ml.xqy
 	./setVersion patch $(ML)/package.xqy $(PUB_BUILD)/package.xqy
-	cp -r $(SAMPLES)/* $(BUILD_SAMPLES) 
+	#cp -r $(SAMPLES)/* $(BUILD_SAMPLES) 
+	cp $(SAMPLES)/default.xqy $(BUILD_SAMPLES)
+	cp $(SAMPLES)/js/*.js $(BUILD_SAMPLES_JS) 
+	cp $(SAMPLES)/css/*.css $(BUILD_SAMPLES_CSS) 
+	cp $(SAMPLES)/img/*.png $(BUILD_SAMPLES_IMG) 
+	cp $(SAMPLES)/img/LICENSE $(BUILD_SAMPLES_IMG) 
+	cp $(SAMPLES)/metadata/*.js $(BUILD_SAMPLES_METADATA) 
+	cp $(SAMPLES)/metadata/*.xqy $(BUILD_SAMPLES_METADATA) 
+	cp $(SAMPLES)/metadata/*.css $(BUILD_SAMPLES_METADATA) 
+	cp $(SAMPLES)/search/*.js $(BUILD_SAMPLES_SEARCH) 
+	cp $(SAMPLES)/search/*.xqy $(BUILD_SAMPLES_SEARCH) 
+	cp $(SAMPLES)/search/*.css $(BUILD_SAMPLES_SEARCH) 
+	#cp -r $(SAMPLES)/modules/*.js $(BUILD_SAMPLES_JS) 
 	@echo Create zip file $(ZIP_PREFIX)_$(SUFFIX).zip
 	(cd builds; zip -r ../$(ZIP_PREFIX).zip Word/*)
 	mv $(ZIP_PREFIX).zip $(ZIP_PREFIX)-$(SUFFIX).zip
