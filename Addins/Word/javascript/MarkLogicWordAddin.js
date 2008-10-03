@@ -14,7 +14,7 @@
 
 
 /**
- * The MLA object is used for global attribution. The methods within this namespace provide ways of interacting with an Active OpenXML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
+ * The MLA namespace is used for global attribution. The methods within this namespace provide ways of interacting with an Active OpenXML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
  *
  * The methods here are mostly for Word; however, the functions getCustomPiece(), getCustomPieceIds(), addCustomPiece(), and deleteCustomPiece() will work for any Open XML package.
  * This object has methods for accessing an ActiveDocument in Word.
@@ -71,6 +71,7 @@ MLA.errorCheck = function(message)
 /** Utility function for creating Microsoft.XMLDOM object from string
  *
  *@param xmlString the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML.
+ *@param asynch sets asynchronous property of object
  *@return Microsoft.XMLDOM object
  *@throws Exception if unable to create the XMLDOM object
  */
@@ -84,7 +85,7 @@ MLA.getXMLDOMFromString = function(xmlstring,asynch)
 
 /** Utility function to create a default WordprocessingML paragraph <w:p>, with no styles, for a given string.
  *
- *@param textString the string to be converted into a WordprocessingML paragraph
+ *@param textstring the string to be converted into a WordprocessingML paragraph
  *@return Microsoft.XMLDOM object that is a WordprocessingML paragraph
  *@throws Exception if unable to create the paragraph
  */
@@ -96,7 +97,7 @@ MLA.createParagraph = function(textstring)
 	var newPara = MLA.getXMLDOMFromString(newParagraphString,false);
 	return newPara;
 }
-/** Inserts text into the ActiveDocument at current cursor position.  Text will be styled according to whatever is the currently chosen style for text in Word. 
+/** Inserts text into the ActiveDocument at current cursor position.  Text will be styled according to whatever is the currently chosen style for text within Word. 
  *@param textToInsert the text to be inserted at the current cursor position in the ActiveDocument.
  *@throws Exception if unable to insert text 
  */
@@ -111,8 +112,8 @@ MLA.insertText = function(textToInsert)
 	  textAdded = null;
 }
 /**
- * Returns the text currently highlighted in the Active Document. If nothing is selected, null is returned. 
- * @returns text currently hightlighted in ActiveDocument as string
+ * Returns the text currently highlighted in the ActiveDocument. If nothing is selected, null is returned. 
+ * @returns text currently highlighted in ActiveDocument as string
  * @type String
  */
 MLA.getSelectionText = function()
@@ -148,7 +149,7 @@ MLA.getCustomPieceIds = function()
  * Returns the custom piece, identified by customPieceId, that is part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
  * @param customPieceId the id of the custom piece to be fetched from the active package
  * @return the XML for the custom piece as a DOM object. 
- * @type Microsoft.XMLDOM 
+ * @type Microsoft.XMLDOM object 
  * @throws Exception if there is error retrieving the custom piece 
  */
 MLA.getCustomPiece = function(customPieceId)
@@ -245,7 +246,7 @@ MLA.getSelection = function()
 /** Returns the XML that represents what is currently selected (highlighted) by the user in the ActiveDocument as an XMLDOM object.  Whatever is highlighted by the user will be returned in this function as a block level element.  A user may highlight text that will be materialized as multiple sibling block elements in the XML.  For this reason, the function returns an array, where each element of the array is an XMLDOM object that contains the XML for the blocks highlighted by the user in the ActiveDocument.  The order of elements in the array represents the order of items that are highlighted in the ActiveDocument.
  *@return the blocks of XML currently selected by the user in the ActiveDocument as XMLDOM objects. If nothing is selected, an empty array is returned.
  *@type Array
- *@throws Exception if unable to retreive the Selection
+ *@throws Exception if unable to retrieve the Selection
 */
 MLA.getSelection = function()
 {
@@ -300,10 +301,10 @@ MLA.getSelection = function()
 	return domSelections;
 }
 
-/** Returns the final XML block that represents the Sentence at the current cursor position.  Nothing needs to be highlighted in the ActiveDocument.  If a selection is highlighted, this returns the XML for the Sentence immediately preceding the cursor.  If there is no selection, the XML for the sentence immediately preceding the cursor position is still returned. 
+/** Returns the final XML block that represents the Sentence at the current cursor position.  Nothing is required to be highlighted in the ActiveDocument.  If a selection is highlighted, this returns the XML for the Sentence immediately preceding the cursor.  If there is no selection, the XML for the sentence immediately preceding the cursor position is still returned. 
  *@return the block of XML, as XMLDOM object,  for the Sentence immediately preceding the cursor position.
- *@type XMLDOM
- *@throws Exception if unable to retreive the XML for the Sentence.
+ *@type Microsoft.XMLDOM object
+ *@throws Exception if unable to retrieve the XML for the Sentence.
 */
 MLA.getSentenceAtCursor = function()
 {
@@ -319,7 +320,7 @@ MLA.getSentenceAtCursor = function()
 
 /** Returns the Styles.xml for the ActiveDocument as XMLDOM object. 
  * @return Styles.xml if no Styles.xml present in ActiveDocument package, returns null.
- * @type Microsoft.XMLDOM 
+ * @type Microsoft.XMLDOM object
  *@throws Exception if unable to retrieve Styles.xml from the ActiveDocument.
  */
 MLA.getActiveDocStylesXml = function()

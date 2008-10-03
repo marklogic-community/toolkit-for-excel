@@ -147,6 +147,8 @@ Start Word and navigate to the Addin.  The landing page provides links for
 the examples provided.  Examples of search and reuse, as well as a way
 to add custom metadata to a Word document are provided.
 
+Note: a copy of MarkLogic_WordAddin.js is placed in /Samples/js.  
+
 Uninstall
 ===========================================================
 Control Panel -> Add/Remove Programs -> MarkLogic_WordAddin -> Remove

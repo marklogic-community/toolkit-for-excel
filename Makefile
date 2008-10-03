@@ -23,11 +23,13 @@ MSS = MarkLogic_WordAddin
 JS = Addins/Word/javascript
 CF = Addins/Word/config
 SAMPLES = Addins/Word/Samples
+DOCS = Addins/Word/docs
 SAMPLES_JS = $(SAMPLES)/js
 
 BUILDS = builds
 PUB_BUILD = $(BUILDS)/Word
 
+BUILD_DOCS = $(PUB_BUILD)/docs
 BUILD_SAMPLES = $(PUB_BUILD)/Samples
 BUILD_SAMPLES_JS = $(PUB_BUILD)/Samples/js
 BUILD_SAMPLES_CSS = $(PUB_BUILD)/Samples/css
@@ -56,6 +58,7 @@ package:
 	mkdir $(TEMP)
 	mkdir $(BUILDS) 
 	mkdir $(PUB_BUILD)
+	mkdir $(BUILD_DOCS)
 	mkdir $(BUILD_SAMPLES)
 	mkdir $(BUILD_SAMPLES_JS)
 	mkdir $(BUILD_SAMPLES_CSS)
@@ -95,6 +98,8 @@ package:
 	cp $(SAMPLES)/search/*.js $(BUILD_SAMPLES_SEARCH) 
 	cp $(SAMPLES)/search/*.xqy $(BUILD_SAMPLES_SEARCH) 
 	cp $(SAMPLES)/search/*.css $(BUILD_SAMPLES_SEARCH) 
+	cp $(DOCS)/*.css $(BUILD_DOCS)
+	cp $(DOCS)/*.html $(BUILD_DOCS)
 	#cp -r $(SAMPLES)/modules/*.js $(BUILD_SAMPLES_JS) 
 	@echo Create zip file $(ZIP_PREFIX)_$(SUFFIX).zip
 	(cd builds; zip -r ../$(ZIP_PREFIX).zip Word/*)
