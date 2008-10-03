@@ -1,50 +1,71 @@
 xquery version "0.9-ml"
 declare namespace w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 
-xdmp:set-response-content-type('text/html'),
-      <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-        <head>
-            <title>WordAddOn</title>
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link type="text/css" rel="stylesheet" href="metadata.css" />
-            <script type="text/javascript" src="metadata.js"></script>
-            <script type="text/javascript" src="../js/MarkLogicWordAddin.js"></script>
+xdmp:set-response-content-type('text/html;charset=utf-8'),
+'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Custom Metadata</title>
+	<link rel="stylesheet" type="text/css" href="../css/office-blue.css"/>
+	<link rel="stylesheet" type="text/css" href="metadata.css"/>
+	<script type="text/javascript" src="../js/prototype-1.6.0.3.js">//</script>
+	<script type="text/javascript" src="../js/MarkLogicWordAddin.js">//</script>
+	<script type="text/javascript" src="../js/debug.js">//</script>
+	<script type="text/javascript" src="metadata.js">//</script>
 
-            
-        </head>
-        {
-        let $rgb :=  "rgb(200,216,237)"
-        let $body:=
-         <body bgcolor={$rgb}>
-              <div id="header">
-                 <form id="basicsearch" action="#" method="post">
-                   <div>
-                      Title <br/>
-                      <input type="text" name="v_title" autocomplete="off" value="" style='width: 250px;'id="v_title"/>&nbsp;
-                      <br/>
-                      Description <br/>
-                      <textarea rows="5" cols="30" name="v_desc" value="" style='width: 250px; height: 90px;' id="v_desc"/>&nbsp;
-                      <br/>
-                      Publisher <br/>
-                      <input type="text" name="v_publisher" value="" style='width: 250px;' id="v_pub"/>
-                      <br/>
-                      Identifier <br/>
-                      <input type="text" name="v_identifier" value="" style='width: 250px;' id="v_id"/>
-                      <br/>
-                      <br/>
-                      <input type="submit" value="Save Metadata" onClick="updateMetadata(1)"/>&nbsp;&nbsp;
-                      <input type="submit" value="Remove" style='width: 110px;'  onClick="updateMetadata(2)"/>
-                     <br/>
-                     <br/>
-                     <p style="color:#000000;" id="v_fc"></p>    
-                     <br/>
-                     <p style="color:#000000;" id="v_fc2"></p>    
-                                             
-                   </div> 
-                  </form>
-                   
-             </div>
-          </body>
-          return $body
-         }
-         </html>
+   
+</head>
+ <body>
+	 <div id="ML-Add-in">
+		<form action="." method="post" onsubmit="_l('cancel submit');return false;">
+			<div class="ML-control">
+				<div class="ML-label">
+					<label for="ML-Title">Title</label>
+				</div>
+				<div class="ML-input">
+					<input id="ML-Title" name="v_title"/>
+				</div>
+			</div>
+			<div class="ML-control">
+				<div class="ML-label">
+					<label for="ML-Desc">Description</label>
+				</div>
+				<div class="ML-input">
+					<textarea id="ML-Desc" name="v_desc"></textarea>
+				</div>
+			</div>
+			<div class="ML-control">
+				<div class="ML-label">
+					<label for="ML-Publisher">Publisher</label>
+				</div>
+				<div class="ML-input">
+					<input id="ML-Publisher" name="v_publisher"/>
+				</div>
+			</div>
+			<div class="ML-control">
+				<div class="ML-label">
+					<label for="ML-Id">Identifier</label>
+				</div>
+				<div class="ML-input">
+					<input id="ML-Id" name="v_id"/>
+				</div>
+			</div>
+		
+		
+		<div>
+		<input type="submit" value="Save Metadata" onclick="updateMetadata(1)"/>
+		
+		<input type="submit" value="Remove" onclick="updateMetadata(2)"/>
+		
+		<p id="v_fc"></p>    
+		<p id="v_fc2"></p>    
+		                
+		</div> 
+		</form>
+	  <div id="ML-Navigation">
+			<a href="../">« Samples</a>
+		</div>
+	</div>
+ </body>
+</html>
