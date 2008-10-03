@@ -31,7 +31,12 @@ document.observe(
 			showMessage("Saving metadata…", -1);
 			var edited = false;
 			_l("Saving Custom Piece");
+			try{
 			var customPieceIds = MLA.getCustomPieceIds();
+			}catch(ex){
+				// TODO: Figure out why this exception is being thrown when Word closes. Probably some timing thing about the order of things eing unloaded
+				return;
+			}
 			_l(customPieceIds.length);
 			var customPieceId = null;
 			for (i = 0; i < customPieceIds.length; i++) {
