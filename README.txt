@@ -27,7 +27,6 @@ MarkLogic Server:
 MarkLogic-Addin.js
 word-processing-ml.xqy
 package.xqy
-/Samples (optional)
 
 
 Windows Client:
@@ -36,7 +35,14 @@ Windows Client:
 setup.exe
 MarkLogic_WordAddin_Setup.msi
 
+Additional Files:
+============================================================
+/Samples - directory includes sample Addin examples
+    (more detail provided below)
 
+/docs - directory - simple api documentation for the javascript 
+                    functions available for interacting with
+                    the Active Document in Word.
 
 Notes/Options on Installation For Developers:
 ===========================================================
