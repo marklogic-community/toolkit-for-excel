@@ -58,8 +58,15 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 		</button>
 		 
 		<p id="ML-Message"></p>    
-		<p id="v_fc2"></p>    
-		                
+		
+		<div id="ML-Intro">
+			<h1>Custom Metadata</h1>
+			<p>Use the above form to manage custom metadata associated with the current document. 
+			Upon saving the active document, this Dublin Core snippet is stored within the document’s <code>.docx</code> package as a XML document.</p>
+			<p>Use the <code>Remove</code> button to discard the metadata.</p>
+		</div>
+		
+				                
 		</div> 
 		</form>
 	  <div id="ML-Navigation">
