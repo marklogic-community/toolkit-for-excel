@@ -20,11 +20,17 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 	<div id="ML-Add-in">
 	{
 		let $q := xdmp:get-request-field("q") 
+		let $intro := <div id="ML-Intro">
+			<h1>Search and Reuse</h1>
+			<p>Use the above search box to find content in Word 2007 documents stored on MarkLogic Server.
+				Keywords narrow the results. Each search result represents a paragraph (or list item) that matches your criteria.</p>
+			<p>To insert that entire paragraph into the active document at the current cursor location, double-click the result snippet.</p>
+		</div>
 		return (
 			<form action="." method="get">
 				<div class="ML-control">
 					<div class="ML-label">
-						<label for="ML-Search">Search for</label>
+						<label for="ML-Search">Search</label>
 					</div>
 					<div class="ML-input">
 						<input id="ML-Search" name="q" type="text" value="{$q}"/>
@@ -41,7 +47,7 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 					let $start := (xs:int(xdmp:get-request-field("start")), 1)[1] 
 					let $end := (xs:int(xdmp:get-request-field("end")), $start + 9)[1]
 					return if(not($hits)) then
-						<p id="ML-Message">Nada, zilch, goose egg</p>
+						(<div id="ML-Message"><p><strong>Nada, zilch, goose egg</strong></p><p>Your search for "{$q}" did not match anything.</p></div>,$intro)
 					else
 					for $hit in $hits[$start to $end]
 						let $uri := base-uri($hit)
@@ -57,7 +63,8 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 								</li> -->
 							</ul>
 						</li>
-				else ()		
+				else 
+					$intro		
 		}</ol>
 		)
 	}

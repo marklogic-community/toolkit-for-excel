@@ -32,10 +32,9 @@
 	font-size: 80%;
 }
 #ML-Message {
-	margin: 1em 4em;
-	padding: 0.5em 1.5em;
+	margin: 2em 0;
+	padding: 1em 2em;
 	text-align: center;
 
-	font-size: 110%;
-	font-weight: bold;
+	font-size: 120%;
 }

@@ -26,3 +26,11 @@ a:hover {
 body {
 	padding-bottom: 2em;
 }
+#ML-Intro {
+	margin: 1em;
+	font-size: 110%;
+	line-height: 1.45;
+}
+#ML-Intro p {
+	margin-bottom: 1em;
+}
