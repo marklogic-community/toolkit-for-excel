@@ -35,11 +35,14 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 			<ol id="ML-Results">{
 				if($q) then
 					let $tokens := tokenize($q, "\s+")
-					let $and-query := cts:and-query(for $token in $tokens return cts:word-query($token))
-					let $or-query := cts:or-query(for $token in $tokens return cts:word-query($token))
+					let $and-query := cts:and-query(for $token in $tokens return cts:word-query($token, "case-insensitive"))
+					let $or-query := cts:or-query(for $token in $tokens return cts:word-query($token, "case-insensitive"))
 					let $hits := cts:search(//w:p, $and-query)
 					let $start := (xs:int(xdmp:get-request-field("start")), 1)[1] 
 					let $end := (xs:int(xdmp:get-request-field("end")), $start + 9)[1]
+					return if(not($hits)) then
+						<p id="ML-Message">Nada, zilch, goose egg</p>
+					else
 					for $hit in $hits[$start to $end]
 						let $uri := base-uri($hit)
 						let $snippet := if(string-length(data($hit)) > 120) then concat(substring(data($hit), 1, 250), "…") else data($hit)
