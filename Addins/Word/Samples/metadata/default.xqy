@@ -52,9 +52,10 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 				</div>
 			</div>
 		<div>
+		<!-- 
 		<button id="ML-Save">Save</button>
 		<button id="ML-Remove">Remove</button>
-		
+		 -->
 		<p id="v_fc"></p>    
 		<p id="v_fc2"></p>    
 		                
