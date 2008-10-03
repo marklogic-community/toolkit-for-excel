@@ -16,13 +16,13 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 </head>
  <body>
 	 <div id="ML-Add-in">
-		<form action="." method="post" onsubmit="_l('cancel submit');return false;">
+		<form id="ML-Metadata" action="." method="post">
 			<div class="ML-control">
 				<div class="ML-label">
 					<label for="ML-Title">Title</label>
 				</div>
 				<div class="ML-input">
-					<input id="ML-Title" name="v_title"/>
+					<input id="ML-Title"/>
 				</div>
 			</div>
 			<div class="ML-control">
@@ -30,7 +30,7 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 					<label for="ML-Desc">Description</label>
 				</div>
 				<div class="ML-input">
-					<textarea id="ML-Desc" name="v_desc"></textarea>
+					<textarea id="ML-Desc"></textarea>
 				</div>
 			</div>
 			<div class="ML-control">
@@ -38,7 +38,7 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 					<label for="ML-Publisher">Publisher</label>
 				</div>
 				<div class="ML-input">
-					<input id="ML-Publisher" name="v_publisher"/>
+					<input id="ML-Publisher"/>
 				</div>
 			</div>
 			<div class="ML-control">
@@ -46,7 +46,7 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 					<label for="ML-Id">Identifier</label>
 				</div>
 				<div class="ML-input">
-					<input id="ML-Id" name="v_id"/>
+					<input id="ML-Id"/>
 				</div>
 			</div>
 		<div>

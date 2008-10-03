@@ -1,6 +1,14 @@
 document.observe(
 	"dom:loaded",
 	function() {
+		/**
+		 * Generate the Dublin Core document.
+		 * @param {String} title
+		 * @param {String} description
+		 * @param {String} publisher
+		 * @param {String} id
+		 * @return {String} The text serialization of the XML
+		 */
 		function generateTemplate(title, description, publisher, id) {
 			var v_template = "<metadata "
 					+ "xmlns='http://example.org/myapp/' "
@@ -16,8 +24,11 @@ document.observe(
 			return v_template;
 	
 		}
+		/**
+		 * Save the metadata from the form as an XML document in the active document.
+		 */
 		function updateMetadata() {
-			$("ML-Message").innerHTML = "Saving metadata…";
+			showMessage("Saving metadata…", -1);
 			var edited = false;
 			_l("Saving Custom Piece");
 			var customPieceIds = MLA.getCustomPieceIds();
@@ -34,8 +45,12 @@ document.observe(
 					_l("Deleted " + delPiece);
 					edited = true;
 				}
-	
 			}
+			
+			// Escape hatch for when the DOM has been unloaded 
+			if(!$("ML-Title")) 
+				return;
+			
 			_l("getting values");
 			var v_title = $("ML-Title").value;
 			_l(v_title);
@@ -45,6 +60,8 @@ document.observe(
 			_l(v_publisher);
 			var v_identifier = $("ML-Id").value;
 			_l(v_identifier);
+			
+			// TODO: Revive the validation
 			/*
 			 * if(v_title=="" || v_title==null) v_title="Please
 			 * Enter A Title"; if(v_description=="" ||
@@ -67,15 +84,27 @@ document.observe(
 			}
 			showMessage("Metadata saved");
 		}
+		
+		// Default the status message to hidden
 		$("ML-Message").setStyle({display: "none"});
+		
+		/**
+		 * Show a GMail-style status message.
+		 * 
+		 * @param {String} message The text message
+		 * @param {Number} The duration that the message should be visible. Defaults to 1000ms. < 0 means infinite.
+		 */
 		function showMessage(message, duration) {
 			duration = duration || 1000;
 			$("ML-Message").setStyle({display: "block"});
 			$("ML-Message").innerHTML = message;
-			setTimeout( function() {
-				$("ML-Message").innerHTML = "";
-				$("ML-Message").setStyle({display: "none"});
-			}, duration);
+			
+			if(duration > 0) {
+				setTimeout( function() {
+					$("ML-Message").innerHTML = "";
+					$("ML-Message").setStyle({display: "none"});
+				}, duration);
+			}
 		}
 		function removeMetadata() {
 			_l("Removing Custom Piece");
@@ -97,22 +126,28 @@ document.observe(
 			});
 			showMessage("Metadata removed");
 		}
-		/*
-		   $("ML-Save").observe("click", function(e) {
-		   updateMetadata() }); 
-		 */
 		
 		$("ML-Remove").observe("click",function(e) {
 			removeMetadata()
 		});
 		
+		// Cancel the default form submission. This should never be called becuase there's no submit button in the UI.
+		$("ML-Metadata").observe("submit", function(e) {
+			Event.stop(e);
+			return false;
+		});
+		
+		// Save after losing focus on each control
+		// 'change' would be a better event, but it doesn't get fired when focus leaves the add-in
 		[ "ML-Title", "ML-Desc", "ML-Publisher", "ML-Id" ].each(function(el) {
+			// FIXME: Both 'blur' and 'change' disable the tab key's ability to switch between fields
 			$(el).observe("blur", function(e) {
 				updateMetadata();
 			});
 		});
 		
-		_l("initializing page");
+		
+		// TODO: Wrap this all in a load() function
 		var customPieceIds =  MLA.getCustomPieceIds();
 		var customPieceId = null;
 		var tmpCustomPieceXml = null;

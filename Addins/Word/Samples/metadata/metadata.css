@@ -19,12 +19,11 @@ button.ML-action img {
 }
 #ML-Message {
 	position: absolute;
-	top: 0;
+	top: 0.5em;
 	margin: 0 4em;
-	padding: 0.5em 1.5em;
+	padding: 0.25em 1.5em;
 	text-align: center;
 	
 	background-color: #FDF1B1;
 	border: solid 1px #DEBE90;
-	border-top-style: none;
 }
