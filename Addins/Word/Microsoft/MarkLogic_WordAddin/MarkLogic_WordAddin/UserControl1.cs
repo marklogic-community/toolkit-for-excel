@@ -30,7 +30,7 @@ namespace MarkLogic_WordAddin
         private bool debug = false;
         private bool debugMsg = false;
         private string color = "";
-        private string addinVersion = "1.0-20080922";
+        private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";
 
 
         public UserControl1()
@@ -54,7 +54,7 @@ namespace MarkLogic_WordAddin
                 color = TryGetColorScheme().ToString();
                 webBrowser1.AllowWebBrowserDrop = false;
                 webBrowser1.IsWebBrowserContextMenuEnabled = false;
-                webBrowser1.WebBrowserShortcutsEnabled = false;
+                webBrowser1.WebBrowserShortcutsEnabled = true;
                 webBrowser1.ObjectForScripting = this;
                 webBrowser1.Navigate(webUrl);
                 webBrowser1.ScriptErrorsSuppressed = true;

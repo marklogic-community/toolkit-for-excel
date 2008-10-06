@@ -29,7 +29,7 @@ function MLA(){
 }
 */
 /** @ignore */
-MLA.version = { "release" : "1.0-20081002" }; 
+MLA.version = { release: "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" }; 
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){
