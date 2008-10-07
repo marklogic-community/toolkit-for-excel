@@ -24,14 +24,14 @@ JS = Addins/Word/javascript
 CF = Addins/Word/config
 SAMPLES = Addins/Word/Samples
 DOCS = Addins/Word/docs
-JSDOCS = $(DOCS)/JSDoc
+JSDOCS = $(DOCS)/jsdocs
 SAMPLES_JS = $(SAMPLES)/js
 
 BUILDS = builds
 PUB_BUILD = $(BUILDS)/Word
 
 BUILD_DOCS = $(PUB_BUILD)/docs
-BUILD_DOCS_JSDOC = $(BUILD_DOCS)/JSDoc
+BUILD_DOCS_JSDOC = $(BUILD_DOCS)/jsdocs
 
 BUILD_SAMPLES = $(PUB_BUILD)/Samples
 BUILD_SAMPLES_JS = $(PUB_BUILD)/Samples/js
