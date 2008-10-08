@@ -28,7 +28,7 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 	<ul id="ML-Menu">
 		<li>
 			<h2><a href="search/">Search »</a></h2>
-			<p>Search and expolore Word 2007 content. Insert results into the active document.</p>
+			<p>Search and explore Word 2007 content. Insert results into the active document.</p>
 		</li>
 		<li>
 			<h2><a href="metadata/">Metadata »</a></h2>
