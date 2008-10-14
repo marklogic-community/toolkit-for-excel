@@ -66,17 +66,6 @@ document.observe(
 			var v_identifier = $("ML-Id").value;
 			_l(v_identifier);
 			
-			// TODO: Revive the validation
-			/*
-			 * if(v_title=="" || v_title==null) v_title="Please
-			 * Enter A Title"; if(v_description=="" ||
-			 * v_description==null) v_description="Please Enter A
-			 * Description"; if(v_publisher=="" ||
-			 * v_publisher==null) v_publisher="Please Enter A
-			 * Publisher"; if(v_identifier=="" ||
-			 * v_identifier==null) v_identifier="Please Enter An
-			 * Id";
-			 */
 			var customPiece = generateTemplate(v_title,
 					v_description, v_publisher, v_identifier);
 	
@@ -152,7 +141,6 @@ document.observe(
 		});
 		
 		
-		// TODO: Wrap this all in a load() function
 		var customPieceIds =  MLA.getCustomPieceIds();
 		var customPieceId = null;
 		var tmpCustomPieceXml = null;
@@ -171,10 +159,22 @@ document.observe(
 		var xmlDoc = tmpCustomPieceXml;
 		if(xmlDoc) {
 			_l(xmlDoc.xml);
-			var v_title = xmlDoc.getElementsByTagName("dc:title")[0].childNodes[0].nodeValue;
-			var v_description = xmlDoc.getElementsByTagName("dc:description")[0].childNodes[0].nodeValue;
-			var v_publisher = xmlDoc.getElementsByTagName("dc:publisher")[0].childNodes[0].nodeValue;
-			var v_identifier = xmlDoc.getElementsByTagName("dc:identifier")[0].childNodes[0].nodeValue;
+			var v_title="";
+			var v_description="";
+			var v_publisher="";
+			var v_identifier="";
+			if(xmlDoc.getElementsByTagName("dc:title")[0].hasChildNodes()) 
+			   v_title = xmlDoc.getElementsByTagName("dc:title")[0].childNodes[0].nodeValue;
+
+			if(xmlDoc.getElementsByTagName("dc:description")[0].hasChildNodes()) 
+			   v_description = xmlDoc.getElementsByTagName("dc:description")[0].childNodes[0].nodeValue;
+
+			if(xmlDoc.getElementsByTagName("dc:publisher")[0].hasChildNodes()) 
+			   v_publisher = xmlDoc.getElementsByTagName("dc:publisher")[0].childNodes[0].nodeValue;
+			
+			if(xmlDoc.getElementsByTagName("dc:identifier")[0].hasChildNodes()) 
+			   v_identifier = xmlDoc.getElementsByTagName("dc:identifier")[0].childNodes[0].nodeValue;
+
 			$("ML-Title").value = v_title;
 			$("ML-Desc").value = v_description;
 			$("ML-Publisher").value = v_publisher;
