@@ -691,7 +691,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MarkLogic_WordAddin"
         "ProductCode" = "8:{40D875B9-AF8C-456F-BC8E-107A5095C42E}"
-        "PackageCode" = "8:{DDD63FF3-7235-4A75-964F-7E30A8B416A4}"
+        "PackageCode" = "8:{CADBEADC-28CC-464B-9237-142899B92A3F}"
         "UpgradeCode" = "8:{BA58D1F8-2509-467D-A6A5-C6982D44FE7A}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -886,6 +886,14 @@
                                     "Transitive" = "11:FALSE"
                                     "ValueTypes" = "3:1"
                                     "Value" = "8:http://www.marklogic.com"
+                                    }
+                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_3BDA7BAFF66A4C55A459AA65686E772A"
+                                    {
+                                    "Name" = "8:CTPEnabled"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "ValueTypes" = "3:1"
+                                    "Value" = "8:false"
                                     }
                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_945D8F3F50C144289C018FAFF12C4F2F"
                                     {

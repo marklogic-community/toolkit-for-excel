@@ -20,6 +20,9 @@ namespace MarkLogic_WordAddin
         private string rbnGrpLbl = "";
         private string ctpTtlLbl = "";
 
+        private string isPaneEnabled = "";
+        private bool paneEnabled = false;
+
         private AddinConfiguration()
         {
             //MessageBox.Show("IN INITIALIZE");
@@ -60,6 +63,12 @@ namespace MarkLogic_WordAddin
                 rbnTabLbl = (string)regKey1.GetValue("RbnTabLbl");
                 rbnGrpLbl = (string)regKey1.GetValue("RbnGrpLbl");
                 rbnBtnLbl = (string)regKey1.GetValue("RbnBtnLbl");
+                isPaneEnabled = (string)regKey1.GetValue("CTPEnabled");
+
+                if(isPaneEnabled.ToUpper().Equals("TRUE"))
+                {
+                    paneEnabled=true;
+                }
       
             }
             
@@ -90,6 +99,11 @@ namespace MarkLogic_WordAddin
         public string getCTPTitleLabel()
         {
             return ctpTtlLbl;
+        }
+
+        public bool getPaneEnabled()
+        {
+            return paneEnabled;
         }
     }
 

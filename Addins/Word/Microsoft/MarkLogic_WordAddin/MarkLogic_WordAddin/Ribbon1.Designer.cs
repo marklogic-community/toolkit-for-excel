@@ -61,7 +61,7 @@
             this.viewTaskPaneButton.Label = "Enable Kit";
             this.viewTaskPaneButton.Name = "viewTaskPaneButton";
             this.viewTaskPaneButton.ShowImage = true;
-           // this.viewTaskPaneButton.Checked = true;
+            this.viewTaskPaneButton.Click += new System.EventHandler<Microsoft.Office.Tools.Ribbon.RibbonControlEventArgs>(this.viewTaskPaneButton_Click);
             // 
             // Ribbon1
             // 
