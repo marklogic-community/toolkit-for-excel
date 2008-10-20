@@ -176,6 +176,24 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       </TD>
    </TR>
 
+      <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!createXMLDOM">createXMLDOM</A></B>(xmlstring)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Utility function for creating Microsoft.XMLDOM object from string
+      </TD>
+   </TR>
+
+
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
@@ -326,23 +344,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	 Returns version of MarkLogicWordAddin.js library
-      </TD>
-   </TR>
-
-   <TR BGCOLOR="white" CLASS="TableRowColor">
-      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
-	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
-	 </FONT>
-      </TD>
-      <TD>
-	 <CODE>
-	    <B>
-	       <A HREF="#!s!getXMLDOMFromString">getXMLDOMFromString</A></B>(xmlstring,asynch)
-	 </CODE>
-	 <BR>
-	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Utility function for creating Microsoft.XMLDOM object from string
       </TD>
    </TR>
 
@@ -773,9 +774,9 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
-   <A NAME="!s!getXMLDOMFromString"><!-- --></A>
-   <H3>getXMLDOMFromString</H3>
-   <PRE>&lt;static&gt; Object <B>getXMLDOMFromString</B>(xmlstring,asynch)</PRE>
+   <A NAME="!s!createXMLDOM"><!-- --></A>
+   <H3>createXMLDOM</H3>
+   <PRE>&lt;static&gt; Object <B>createXMLDOM</B>(xmlstring)</PRE>
    
       <UL>Utility function for creating Microsoft.XMLDOM object from string</UL>
    
@@ -784,9 +785,6 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    
    <UL>
    <B>Parameters:</B>
-   
-     <UL><CODE>asynch</CODE> -  sets asynchronous property of object 
-      </UL> 
    
      <UL><CODE>xmlString</CODE> -  the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML. 
       </UL> 

@@ -188,14 +188,13 @@ MLA.errorCheck = <span class="reserved">function</span>(message)
 <span class="comment">/** Utility function for creating Microsoft.XMLDOM object from string
  *
  *<span class="attrib">@param</span> xmlString the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML.
- *<span class="attrib">@param</span> asynch sets asynchronous property of object
  *<span class="attrib">@return</span> Microsoft.XMLDOM object
  *<span class="attrib">@throws</span> Exception if unable to create the XMLDOM object
  */</span>
-MLA.getXMLDOMFromString = <span class="reserved">function</span>(xmlstring,asynch)
+MLA.createXMLDOM = <span class="reserved">function</span>(xmlstring)
 {
    var xmlDom = new ActiveXObject(<span class="literal">"Microsoft.XMLDOM"</span>);
-       xmlDom.async=asynch;
+       xmlDom.async=false;
        xmlDom.loadXML(xmlstring);
    <span class="reserved">return</span> xmlDom;
 }
@@ -211,7 +210,7 @@ MLA.createParagraph = <span class="reserved">function</span>(textstring)
 	var newParagraphString = <span class="literal">"&lt;w:p xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'&gt;&lt;w:r&gt;&lt;w:t&gt;"</span>+
 		                    textstring+
 			         <span class="literal">"&lt;/w:t&gt;&lt;/w:r&gt;&lt;/w:p&gt;"</span>;
-	var newPara = MLA.getXMLDOMFromString(newParagraphString,false);
+	var newPara = MLA.createXMLDOM(newParagraphString);
 	<span class="reserved">return</span> newPara;
 }
 <span class="comment">/** Inserts text into the ActiveDocument at current cursor position.  Text will be styled according to whatever is the currently chosen style for text within Word. 
@@ -280,7 +279,7 @@ MLA.getCustomPiece = <span class="reserved">function</span>(customPieceId)
 	<span class="reserved">if</span>(customPiece==<span class="literal">""</span>)
 	  customPiece=null;
 
-        var v_cp = MLA.getXMLDOMFromString(customPiece); 
+        var v_cp = MLA.createXMLDOM(customPiece); 
 
 	<span class="reserved">return</span> v_cp;
 }
@@ -412,7 +411,7 @@ MLA.getSelection = <span class="reserved">function</span>()
 
 	<span class="reserved">for</span>(i=0;i&lt;selections.length;i++)
 	{
-         	domSelections[i] = MLA.getXMLDOMFromString(selections[i]);
+         	domSelections[i] = MLA.createXMLDOM(selections[i]);
 	}
 
 	<span class="reserved">return</span> domSelections;
@@ -431,7 +430,7 @@ MLA.getSentenceAtCursor = <span class="reserved">function</span>()
 	<span class="reserved">if</span>(errMsg!=null) 
 	   throw(<span class="literal">"Error: Not able to get Sentence at Cursor; "</span>+errMsg);
 
-	var v_rangeXml = MLA.getXMLDOMFromString(rangeXml);
+	var v_rangeXml = MLA.createXMLDOM(rangeXml);
 	<span class="reserved">return</span> v_rangeXml;
 }
 
@@ -451,7 +450,7 @@ MLA.getActiveDocStylesXml = <span class="reserved">function</span>()
 	<span class="reserved">if</span>(stylesXml==<span class="literal">""</span>)
           stylesXml=null;
 
-	var v_stylesXml = MLA.getXMLDOMFromString(stylesXml);
+	var v_stylesXml = MLA.createXMLDOM(stylesXml);
 	<span class="reserved">return</span> v_stylesXml;
 }
 
