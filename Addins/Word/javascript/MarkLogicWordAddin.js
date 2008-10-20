@@ -29,7 +29,7 @@ function MLA(){
 }
 */
 /** @ignore */
-MLA.version = { release: "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" }; 
+MLA.version = { "release" : "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" }; 
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){
@@ -75,10 +75,10 @@ MLA.errorCheck = function(message)
  *@return Microsoft.XMLDOM object
  *@throws Exception if unable to create the XMLDOM object
  */
-MLA.getXMLDOMFromString = function(xmlstring,asynch)
+MLA.createXMLDOM = function(xmlstring)
 {
    var xmlDom = new ActiveXObject("Microsoft.XMLDOM");
-       xmlDom.async=asynch;
+       xmlDom.async=false;
        xmlDom.loadXML(xmlstring);
    return xmlDom;
 }
@@ -94,7 +94,7 @@ MLA.createParagraph = function(textstring)
 	var newParagraphString = "<w:p xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'><w:r><w:t>"+
 		                    textstring+
 			         "</w:t></w:r></w:p>";
-	var newPara = MLA.getXMLDOMFromString(newParagraphString,false);
+	var newPara = MLA.createXMLDOM(newParagraphString);
 	return newPara;
 }
 /** Inserts text into the ActiveDocument at current cursor position.  Text will be styled according to whatever is the currently chosen style for text within Word. 
@@ -163,7 +163,7 @@ MLA.getCustomPiece = function(customPieceId)
 	if(customPiece=="")
 	  customPiece=null;
 
-        var v_cp = MLA.getXMLDOMFromString(customPiece); 
+        var v_cp = MLA.createXMLDOM(customPiece); 
 
 	return v_cp;
 }
@@ -295,7 +295,7 @@ MLA.getSelection = function()
 
 	for(i=0;i<selections.length;i++)
 	{
-         	domSelections[i] = MLA.getXMLDOMFromString(selections[i]);
+         	domSelections[i] = MLA.createXMLDOM(selections[i]);
 	}
 
 	return domSelections;
@@ -314,7 +314,7 @@ MLA.getSentenceAtCursor = function()
 	if(errMsg!=null) 
 	   throw("Error: Not able to get Sentence at Cursor; "+errMsg);
 
-	var v_rangeXml = MLA.getXMLDOMFromString(rangeXml);
+	var v_rangeXml = MLA.createXMLDOM(rangeXml);
 	return v_rangeXml;
 }
 
@@ -334,7 +334,7 @@ MLA.getActiveDocStylesXml = function()
 	if(stylesXml=="")
           stylesXml=null;
 
-	var v_stylesXml = MLA.getXMLDOMFromString(stylesXml);
+	var v_stylesXml = MLA.createXMLDOM(stylesXml);
 	return v_stylesXml;
 }
 
