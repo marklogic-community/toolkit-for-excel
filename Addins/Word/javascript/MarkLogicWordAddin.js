@@ -71,7 +71,6 @@ MLA.errorCheck = function(message)
 /** Utility function for creating Microsoft.XMLDOM object from string
  *
  *@param xmlString the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML.
- *@param asynch sets asynchronous property of object
  *@return Microsoft.XMLDOM object
  *@throws Exception if unable to create the XMLDOM object
  */
