@@ -33,7 +33,16 @@ namespace MarkLogic_WordAddin
         public void AddAllTaskPanes()
         {
             // First check if there are any open documents.
-            if (Globals.ThisAddIn.Application.Documents.Count > 0)
+           
+           // opening existing doc has doc.count of 0 ??
+           // probably because addin loads before document does, how to handle?
+           // MessageBox.Show(""+Globals.ThisAddIn.Application.Documents.Count);
+           // if (Globals.ThisAddIn.Application.Documents.Count == 0)
+           // {
+           //  Document d = Globals.ThisAddIn.Application.ActiveDocument;
+           //  Globals.ThisAddIn.Application.ActiveDocument = d;
+           // }else
+            if (Globals.ThisAddIn.Application.Documents.Count >= 0)
             {
                 // If Show all windows in the Taskbar is selected then 
                 // each open document has its own window.  
@@ -164,11 +173,14 @@ namespace MarkLogic_WordAddin
                 Application_DocumentChange);
 
            //If we add this, then have to set 
-            if (ac.getPaneEnabled())
+            if (this.Application.ShowWindowsInTaskbar == true)
             {
+                if (ac.getPaneEnabled())
+                {
 
-                Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = true;
-                AddAllTaskPanes();
+                    Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = true;
+                    AddAllTaskPanes();
+                }
             }
 
 
