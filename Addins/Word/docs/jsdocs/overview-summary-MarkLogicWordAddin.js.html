@@ -482,7 +482,7 @@ MLA.getActiveDocStylesXml = <span class="reserved">function</span>()
  *<span class="attrib">@param</span> documentXml this parameter may either be A) an XMLDOM object that is the XML equivalent of the document.xml to be inserted,or B) a String, that is the serialized, well-formed XML of the document.xml to be inserted.
  *<span class="attrib">@throws</span> Exception if unable to replace the documentXml
  */</span>
-MLA.replaceActiveDocumentXml = <span class="reserved">function</span>(documentXml)
+MLA.replaceActiveDocXml = <span class="reserved">function</span>(documentXml)
 {
 	var v_document=<span class="literal">""</span>;
 
@@ -495,11 +495,11 @@ MLA.replaceActiveDocumentXml = <span class="reserved">function</span>(documentXm
 	       v_document = documentXml;
 	}
 
-        var inserted = window.external.replaceActiveDocumentXml(v_document);
+        var inserted = window.external.replaceActiveDocXml(v_document);
 
 	var errMsg = MLA.errorCheck(inserted);
 	<span class="reserved">if</span>(errMsg!=null)
-	   throw(<span class="literal">"Error: Not able to replaceActiveDocumentXml; "</span>+errMsg);
+	   throw(<span class="literal">"Error: Not able to replaceActiveDocXml; "</span>+errMsg);
 
 	<span class="reserved">if</span>(inserted==<span class="literal">""</span>)
 	  inserted = null;
