@@ -343,6 +343,50 @@ namespace MarkLogic_WordAddin
             return wpml;
 
         }
+
+        public String replaceActiveDocumentXml(string wpml)
+        {
+            string docxml = "";
+            object missing = System.Reflection.Missing.Value;
+            //MessageBox.Show(wpml);
+
+            try
+            {
+                Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
+                doc.Application.Selection.InsertXML(Transform.ConvertToWPML(wpml), ref missing);
+            } 
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                docxml = "error: " + errorMsg;
+            }
+
+            if (debug)
+                docxml = "error: TESTING ERRORS";
+
+            return docxml;
+        }
+
+        public String getActiveDocXml()
+        {
+            string docxml = "";
+            try
+            {
+                string wpml = Globals.ThisAddIn.Application.ActiveDocument.WordOpenXML;
+                docxml = Transform.GetActiveDocumentXml(wpml);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                docxml = "error: " + errorMsg;
+            }
+
+            if (debug)
+                docxml = "error: TESTING ERRORS";
+
+            return docxml;
+        }
+
         //returns the entire styles.xml from the active package
         public String getActiveDocStylesXml()
         {

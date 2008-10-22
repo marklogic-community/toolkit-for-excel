@@ -33,7 +33,7 @@ namespace MarkLogic_WordAddin
                 "w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
         }
 
-        public static string GetActiveDocXML()
+      /*  public static string GetActiveDocXML()
         {
             //Get current Selected Range
             Word.Range tmprng = Globals.ThisAddIn.Application.Selection.Range;
@@ -52,6 +52,31 @@ namespace MarkLogic_WordAddin
             rng.Select();
 
             return docxml;
+        }
+       * */
+
+        public static string GetActiveDocumentXml(string wordprocessingML)
+        {
+            StringBuilder response = new StringBuilder();
+            try
+            {
+                XmlDocument document = new XmlDocument();
+                document.LoadXml(wordprocessingML);
+                XmlNode content = document.SelectSingleNode(documentXPath, NamespaceManager);
+               
+                using (XmlTextWriter writer = new XmlTextWriter(
+                    new StringWriter(response)))
+                {
+                    writer.Formatting = Formatting.Indented;
+                    content.WriteContentTo(writer);
+                }
+            }
+            catch (Exception e)
+            {
+                response.Append("Error " + e.Message);
+            }
+
+            return response.ToString();
         }
 
         public static string GetStylesXmlFromCurrentDoc(string wordprocessingML)
@@ -276,6 +301,35 @@ namespace MarkLogic_WordAddin
                 string errMsg = e.Message;
                 //System.Windows.Forms.MessageBox.Show("Error in ConvertToWordprocessingMLPara" + e.Message + " " + e.StackTrace);
             }
+            return builder.ToString();
+        }
+
+        internal static string ConvertToWPML(string documentXml)
+        {
+            StringBuilder builder = new StringBuilder();
+            XmlDocument document = new XmlDocument();
+
+            try
+            {
+                Globals.ThisAddIn.Application.ActiveDocument.Content.Select();
+                string docx = Globals.ThisAddIn.Application.Selection.WordOpenXML;
+                document.LoadXml(docx);
+
+                XmlNode doc = document.SelectSingleNode(documentXPath, NamespaceManager);
+                //System.Windows.Forms.MessageBox.Show("DOCUMENT INNERXML" + doc.InnerXml);
+                doc.InnerXml = documentXml;
+
+                using (StringWriter writer = new StringWriter(builder))
+                {
+                    document.Save(writer);
+                }
+
+            }
+            catch (Exception e)
+            {
+                string errMsg = e.Message;
+            }
+
             return builder.ToString();
         }
 

@@ -119,6 +119,7 @@ namespace MarkLogic_WordAddin
 
         private void Application_DocumentOpen(Document Doc)
         {
+            //MessageBox.Show("IN DOCUMENT OPEN");
             RemoveOrphanedTaskPanes();
             if (mlPaneDisplayed && this.Application.ShowWindowsInTaskbar)
             {
@@ -128,19 +129,25 @@ namespace MarkLogic_WordAddin
 
         private void Application_NewDocument(Document Doc)
         {
+            //MessageBox.Show("IN NEW DOCUMENT");
             if (mlPaneDisplayed && this.Application.ShowWindowsInTaskbar)
             {
+
                 AddTaskPane(Doc);
             }
         }
 
         private void Application_DocumentChange()
         {
+
+            
             RemoveOrphanedTaskPanes();
+           // MessageBox.Show("IN DOCUMENT CHANGE");
         }
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
-        { 
+        {
+            //MessageBox.Show("IN STARTUP");
             string ribbonBtnLabel = ac.getRibbonButtonLabel();
             string ribbonGroupLabel = ac.getRibbonGroupLabel();
             string ribbonTabLabel = ac.getRibbonTabLabel();

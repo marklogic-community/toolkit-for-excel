@@ -317,6 +317,27 @@ MLA.getSentenceAtCursor = function()
 	return v_rangeXml;
 }
 
+/** Returns the document.xml for the ActiveDocument as XMLDOM object. 
+ * @return document.xml from the active Open XML package -- NOTE: This is the materialized view of the document.  If you have Content Controls bound to XML data islands within the .docx package, you'll only see the inline text, not the references, nor the original XML from which the value was mapped.
+ * @type Microsoft.XMLDOM object
+ * @throws Exception if unable to retrieve Styles.xml from the ActiveDocument.
+ */
+MLA.getActiveDocXml = function()
+{
+	var documentXml = window.external.getActiveDocXml();
+
+        var errMsg = MLA.errorCheck(documentXml);
+	if(errMsg!=null)
+	   throw("Error: Not able to getActiveDocumentXml; "+errMsg);
+
+	if(documentXml=="")
+          documentXml=null;
+
+	var v_documentXml = MLA.createXMLDOM(documentXml);
+	return v_documentXml;
+
+}
+
 /** Returns the Styles.xml for the ActiveDocument as XMLDOM object. 
  * @return Styles.xml if no Styles.xml present in ActiveDocument package, returns null.
  * @type Microsoft.XMLDOM object
@@ -335,6 +356,36 @@ MLA.getActiveDocStylesXml = function()
 
 	var v_stylesXml = MLA.createXMLDOM(stylesXml);
 	return v_stylesXml;
+}
+
+/** Inserts document.xml into the ActiveDocument package in Word.  This will replace the contents of the entire document the user is currently viewing. 
+ *
+ * As this only allows insert of document.xml, it is assumed that whatever references required by document.xml by other xml files in the package currently being authored (styles, themes, etc.) already exist.
+ * 
+ *@param documentXml this parameter may either be A) an XMLDOM object that is the XML equivalent of the document.xml to be inserted,or B) a String, that is the serialized, well-formed XML of the document.xml to be inserted.
+ *@throws Exception if unable to replace the documentXml
+ */
+MLA.replaceActiveDocumentXml = function(documentXml)
+{
+	var v_document="";
+
+	if(documentXml.xml)
+	{ 
+               v_document=documentXml.xml;
+	}
+	else
+	{ 
+	       v_document = documentXml;
+	}
+
+        var inserted = window.external.replaceActiveDocumentXml(v_document);
+
+	var errMsg = MLA.errorCheck(inserted);
+	if(errMsg!=null)
+	   throw("Error: Not able to replaceActiveDocumentXml; "+errMsg);
+
+	if(inserted=="")
+	  inserted = null;
 }
 
 /** @ignore */
