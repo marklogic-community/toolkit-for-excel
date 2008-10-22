@@ -176,7 +176,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       </TD>
    </TR>
 
-      <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
 	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
@@ -192,7 +192,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 Utility function for creating Microsoft.XMLDOM object from string
       </TD>
    </TR>
-
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
@@ -225,6 +224,23 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	 Returns the Styles.xml for the ActiveDocument as XMLDOM object.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;Microsoft.XMLDOM object</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getActiveDocXml">getActiveDocXml</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns the document.xml for the ActiveDocument as XMLDOM object.
       </TD>
    </TR>
 
@@ -381,6 +397,23 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       </TD>
    </TR>
 
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!replaceActiveDocumentXml">replaceActiveDocumentXml</A></B>(documentXml)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Inserts document.xml into the ActiveDocument package in Word.
+      </TD>
+   </TR>
+
 
 </TABLE>
 
@@ -522,6 +555,43 @@ MLA</H3>
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="!s!createXMLDOM"><!-- --></A>
+   <H3>createXMLDOM</H3>
+   <PRE>&lt;static&gt; Object <B>createXMLDOM</B>(xmlstring)</PRE>
+   
+      <UL>Utility function for creating Microsoft.XMLDOM object from string</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>xmlString</CODE> -  the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML. 
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        Microsoft.XMLDOM object  
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to create the XMLDOM object</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!deleteCustomPiece"><!-- --></A>
    <H3>deleteCustomPiece</H3>
    <PRE>&lt;static&gt; void <B>deleteCustomPiece</B>(customPieceId)</PRE>
@@ -568,6 +638,35 @@ MLA</H3>
    <B>Returns:</B>
         <UL>
         Styles.xml if no Styles.xml present in ActiveDocument package, returns null.   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to retrieve Styles.xml from the ActiveDocument.</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getActiveDocXml"><!-- --></A>
+   <H3>getActiveDocXml</H3>
+   <PRE>&lt;static&gt; Microsoft.XMLDOM object <B>getActiveDocXml</B>()</PRE>
+   
+      <UL>Returns the document.xml for the ActiveDocument as XMLDOM object.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        document.xml from the active Open XML package -- NOTE: This is the materialized view of the document.  If you have Content Controls bound to XML data islands within the .docx package, you'll only see the inline text, not the references, nor the original XML from which the value was mapped.   
         </UL>
    </UL>
    
@@ -774,43 +873,6 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
-   <A NAME="!s!createXMLDOM"><!-- --></A>
-   <H3>createXMLDOM</H3>
-   <PRE>&lt;static&gt; Object <B>createXMLDOM</B>(xmlstring)</PRE>
-   
-      <UL>Utility function for creating Microsoft.XMLDOM object from string</UL>
-   
-
-   <!-- METHOD PARAMETERS START -->
-   
-   <UL>
-   <B>Parameters:</B>
-   
-     <UL><CODE>xmlString</CODE> -  the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML. 
-      </UL> 
-   
-   </UL>
-   
-   <!-- METHOD PARAMETERS END -->
-
-   
-   <UL>
-   <B>Returns:</B>
-        <UL>
-        Microsoft.XMLDOM object  
-        </UL>
-   </UL>
-   
-
-   <!-- ADDITIONAL ATTRIBUTES START -->
-   
-   <UL>   
-   <B>Throws:</B><UL>- Exception if unable to create the XMLDOM object</UL>
-   </UL>
-   
-   <!-- ADDITIONAL ATTRIBUTES  END -->
-<HR>
-
    <A NAME="!s!insertBlockContent"><!-- --></A>
    <H3>insertBlockContent</H3>
    <PRE>&lt;static&gt; void <B>insertBlockContent</B>(blockContentXml,stylesXml)</PRE>
@@ -871,6 +933,38 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    
    <UL>   
    <B>Throws:</B><UL>- Exception if unable to insert text     </UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!replaceActiveDocumentXml"><!-- --></A>
+   <H3>replaceActiveDocumentXml</H3>
+   <PRE>&lt;static&gt; void <B>replaceActiveDocumentXml</B>(documentXml)</PRE>
+   
+      <UL>Inserts document.xml into the ActiveDocument package in Word.  This will replace the contents of the entire document the user is currently viewing. 
+
+ As this only allows insert of document.xml, it is assumed that whatever references required by document.xml by other xml files in the package currently being authored (styles, themes, etc.) already exist.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>documentXml</CODE> -  this parameter may either be A) an XMLDOM object that is the XML equivalent of the document.xml to be inserted,or B) a String, that is the serialized, well-formed XML of the document.xml to be inserted. 
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to replace the documentXml    </UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -942,6 +1036,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 <FONT SIZE="-1">
 
 </FONT>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Oct  3 10:52:31 2008</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Oct 22 14:49:02 2008</div>
 </BODY>
 </HTML>
