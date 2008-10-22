@@ -47,6 +47,8 @@ Additional Files:
 Notes/Options on Installation For Developers:
 ===========================================================
 
+Installing:
+--------------------------------------
 If the prerequisites are already installed on the client, only the .msi is
 required for installation of the Addin.
 
@@ -59,24 +61,14 @@ HKEY_CURRENT_USER/MarkLogicAddinConfiguration/Word.
 These entries will be removed automatically when the application is 
 uninstalled.
 
-The .msi installs with these registry entries set to defaults. To edit, you ma
-use the Windows SDK to update the msi so you may deliver your solution to users
- with all parameters pre-configured.
 
-The config.idt file is provided with default values.  Just update the values in
-the .idt, then execute:
+Configuring the .msi:
+--------------------------------------
 
-MsiDb -f "<directory where idt is located>" -d "MarkLogic_WordAddin_Setup.msi" -i config.idt
-
-Example:
-  MsiDb -f "C:\MyAddin\MyConfig" -d "C:\MyAddin\MarkLogic_WordAddin_Setup.msi" -i config.idt
-
- ( Note: You'll require the Windows SDK to execute this update.)
-
-This will update the msi with your new values. Another option is to edit these
-values using orca.exe ( also available with the Windows SDK ) or just edit the
-values in regedit.  Once the .msi has been updated, you may install with
-setup.exe, or by itself.
+The .msi installs with the configuration registry entries set to defaults. 
+Using the Windows SDK, there are several options available to update 
+the msi properties so you may deliver a solution to users with the Addin 
+fully pre-configured.
 
 The following registry key values will help to configure your Addin application:
 
@@ -86,9 +78,47 @@ HKEY_CURRENT_USER\MarkLogicAddinConfiguration\Word\
   RbnGrpLbl: The ribbon Group label
   RbnTabLbl: The ribbon Tab label
   CTPTitle:  The title for the Custom Task Pane that has the browser embedded
+  CTPEnabled: true|false - determines if pane is opened when Word starts, 
+              or left to the user to enable using the button
+
+No other registry values or tables in the .msi require editing.
 
 
-No other registry values should be edited.
+A config.idt file is provided with default values.  You have 2 options for
+updating the .msi properties using an .idt file:
+
+1)Just update the values in the provided .idt, then execute:
+
+MsiDb -f "<directory where idt is located>" -d "MarkLogic_WordAddin_Setup.msi" -i config.idt
+
+Example:
+  MsiDb -f "C:\MyAddin\MyConfig" -d "C:\MyAddin\MarkLogic_WordAddin_Setup.msi" -i config.idt
+
+ ( Note: You'll require the Windows SDK to execute this update.)
+
+or 
+
+2) you can export the table for update yourself by executing:
+
+MsiDb -f "<directory where idt is located>" -d "C:\MyAddin\MarkLogic_WordAddin_Setup.msi" -e Registry
+
+this command produces Registry.idt. You can then open this file in WordPad, 
+edit the values, save, and then import the file to your .msi, 
+similar to how we did in step 1:
+
+MsiDb -f "<directory where idt is located>" -d "MarkLogic_WordAddin_Setup.msi" -i config.idt
+
+This will update the msi with your new values. 
+
+A Third option is use orca.exe ( also available with the Windows SDK ) You
+can open the .msi in orca, navigate to the Registry table, and update 
+the values accordingly.  You can save the edited .msi directly from orca.
+
+Finally, to get developing your Addin quickly, you can always just 
+edit values using regedit.  
+
+Once the .msi has been updated, you may install with
+setup.exe, or by itself.
 
 
 
