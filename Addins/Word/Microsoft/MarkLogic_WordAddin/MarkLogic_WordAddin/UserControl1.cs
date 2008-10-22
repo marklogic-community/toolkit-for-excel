@@ -344,7 +344,7 @@ namespace MarkLogic_WordAddin
 
         }
 
-        public String replaceActiveDocumentXml(string wpml)
+        public String replaceActiveDocXml(string wpml)
         {
             string docxml = "";
             object missing = System.Reflection.Missing.Value;
