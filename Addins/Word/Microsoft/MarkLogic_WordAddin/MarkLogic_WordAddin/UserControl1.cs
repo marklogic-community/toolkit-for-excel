@@ -138,7 +138,7 @@ namespace MarkLogic_WordAddin
             return webUrl;
         }
 
-        public String getCustomPieceIds()
+        public String getCustomXMLPartIds()
         {
             
             string ids = "";
@@ -175,7 +175,7 @@ namespace MarkLogic_WordAddin
         }
 
 
-        public String getCustomPiece(string id)
+        public String getCustomXMLPart(string id)
         {
 
             string custompiecexml = "";
@@ -211,7 +211,7 @@ namespace MarkLogic_WordAddin
 
         }
 
-        public String addCustomPiece(string custompiecexml)
+        public String addCustomXMLPart(string custompiecexml)
         {
             string newid = "";
             try
@@ -233,7 +233,7 @@ namespace MarkLogic_WordAddin
 
         }
 
-        public String deleteCustomPiece(string id)
+        public String deleteCustomXMLPart(string id)
         {
             string message = "";
             try
@@ -344,7 +344,7 @@ namespace MarkLogic_WordAddin
 
         }
 
-        public String replaceActiveDocXml(string wpml)
+        public String setActiveDocXml(string wpml)
         {
             string docxml = "";
             object missing = System.Reflection.Missing.Value;

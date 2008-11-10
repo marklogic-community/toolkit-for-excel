@@ -16,7 +16,7 @@
 /**
  * The MLA namespace is used for global attribution. The methods within this namespace provide ways of interacting with an Active OpenXML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
  *
- * The methods here are mostly for Word; however, the functions getCustomPiece(), getCustomPieceIds(), addCustomPiece(), and deleteCustomPiece() will work for any Open XML package.
+ * The methods here are mostly for Word; however, the functions getCustomXMLPart(), getCustomXMLPartIds(), addCustomXMLPart(), and deleteCustomXMLPart() will work for any Open XML package.
  * This object has methods for accessing an ActiveDocument in Word.
  */
 var MLA = {};
@@ -29,7 +29,7 @@ function MLA(){
 }
 */
 /** @ignore */
-MLA.version = { "release" : "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" }; 
+MLA.version = { "release" : "1.0-20081110" }; 
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){
@@ -128,68 +128,68 @@ MLA.getSelectionText = function()
 	return selText;
 }
 /**
- * Returns ids for custom pieces (not built-in) that are part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
- * @returns the ids for custom pieces in active OpenXML package as array of string
+ * Returns ids for custom parts (not built-in) that are part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
+ * @returns the ids for custom XML parts in active OpenXML package as array of string
  * @type Array 
  */
-MLA.getCustomPieceIds = function()
+MLA.getCustomXMLPartIds = function()
 { 
-	var pieces = window.external.getCustomPieceIds();
+	var partIds = window.external.getCustomXMLPartIds();
 
-	var errMsg = MLA.errorCheck(pieces);
+	var errMsg = MLA.errorCheck(partIds);
 	if(errMsg!=null)
-	  throw("Error: Not able to get CustomPieceIds; "+errMsg);
+	  throw("Error: Not able to get CustomXMLPartIds; "+errMsg);
 
-	var customPieces = pieces.split(" ");
-	return customPieces;
+	var customPartIds = partIds.split(" ");
+	return customPartIds;
 }
 
 /**
- * Returns the custom piece, identified by customPieceId, that is part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
- * @param customPieceId the id of the custom piece to be fetched from the active package
- * @return the XML for the custom piece as a DOM object. 
+ * Returns the custom XML part, identified by customXMLPartId, that is part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
+ * @param customXMLPartId the id of the custom part to be fetched from the active package
+ * @return the XML for the custom part as a DOM object. 
  * @type Microsoft.XMLDOM object 
- * @throws Exception if there is error retrieving the custom piece 
+ * @throws Exception if there is error retrieving the custom part 
  */
-MLA.getCustomPiece = function(customPieceId)
+MLA.getCustomXMLPart = function(customXMLPartId)
 {
-	var customPiece = window.external.getCustomPiece(customPieceId);
+	var customXMLPart = window.external.getCustomXMLPart(customXMLPartId);
 
-	var errMsg = MLA.errorCheck(customPiece);
+	var errMsg = MLA.errorCheck(customXMLPart);
 	if(errMsg!=null)
-	   throw("Error: Not able to getCustomPiece; "+errMsg);
+	   throw("Error: Not able to getCustomXMLPart; "+errMsg);
 
-	if(customPiece=="")
-	  customPiece=null;
+	if(customXMLPart=="")
+	  customXMLPart=null;
 
-        var v_cp = MLA.createXMLDOM(customPiece); 
+        var v_cp = MLA.createXMLDOM(customXMLPart); 
 
 	return v_cp;
 }
 
-/** Adds custom piece to active OpenXML package.  Returns the id of the piece added.
- *@param customPieceXML Either A) an XMLDOM object that is the custom piece to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom piece to the active Open XML package. ( The XML must be well-formed. )
- *@return id for custom piece added 
+/** Adds custom part to active OpenXML package.  Returns the id of the part added.
+ *@param customPartXML Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. )
+ *@return id for custom part added 
  *@type String
- *@throws Exception if unable to add custom piece
+ *@throws Exception if unable to add custom part
  */
-MLA.addCustomPiece = function(customPieceXml)
+MLA.addCustomXMLPart = function(customPartXml)
 {
-	var v_customPiece ="";
-	if(customPieceXml.xml)
+	var v_customPart ="";
+	if(customPartXml.xml)
 	{
-               v_customPiece=customPieceXml.xml;
+               v_customPart=customPartXml.xml;
 	}
 	else
 	{
-	       v_customPiece=customPieceXml
+	       v_customPart=customPartXml
 	}
 	
-	var newId = window.external.addCustomPiece(v_customPiece);
+	var newId = window.external.addCustomXMLPart(v_customPart);
 
 	var errMsg = MLA.errorCheck(newId);
 	if(errMsg!=null)
-	   throw("Error: Not able to addCustomPiece; "+errMsg);
+	   throw("Error: Not able to addCustomXMLPart; "+errMsg);
 
 	if(newId =="")
 	  newId=null;
@@ -197,20 +197,20 @@ MLA.addCustomPiece = function(customPieceXml)
 	return newId;
 }
 
-/** Deletes custom piece from Active OpenXML package identified by id.
- *@param customPieceId the id of the custom piece to be deleted from the active OpenXML package.
- *@throws Exception if unable to add custom piece
+/** Deletes custom part from Active OpenXML package identified by id.
+ *@param customXMLPartId the id of the custom part to be deleted from the active OpenXML package.
+ *@throws Exception if unable to delete custom part
  */
-MLA.deleteCustomPiece = function(customPieceId)
+MLA.deleteCustomXMLPart = function(customXMLPartId)
 {
-	var deletedPiece = window.external.deleteCustomPiece(customPieceId);
+	var deletedPart = window.external.deleteCustomXMLPart(customXMLPartId);
 
-        var errMsg = MLA.errorCheck(deletedPiece);
+        var errMsg = MLA.errorCheck(deletedPart);
 	if(errMsg!=null)
-	   throw("Error: Not able to deleteCustomPiece; "+errMsg);
+	   throw("Error: Not able to deleteCustomXMLPart; "+errMsg);
      
-	if(deletedPiece=="")
-	  deletedPiece = null;
+	if(deletedPart=="")
+	  deletedPart = null;
 
 }
 
@@ -363,9 +363,9 @@ MLA.getActiveDocStylesXml = function()
  * As this only allows insert of document.xml, it is assumed that whatever references required by document.xml by other xml files in the package currently being authored (styles, themes, etc.) already exist.
  * 
  *@param documentXml this parameter may either be A) an XMLDOM object that is the XML equivalent of the document.xml to be inserted,or B) a String, that is the serialized, well-formed XML of the document.xml to be inserted.
- *@throws Exception if unable to replace the documentXml
+ *@throws Exception if unable to set the documentXml
  */
-MLA.replaceActiveDocXml = function(documentXml)
+MLA.setActiveDocXml = function(documentXml)
 {
 	var v_document="";
 
@@ -378,11 +378,11 @@ MLA.replaceActiveDocXml = function(documentXml)
 	       v_document = documentXml;
 	}
 
-        var inserted = window.external.replaceActiveDocXml(v_document);
+        var inserted = window.external.setActiveDocXml(v_document);
 
 	var errMsg = MLA.errorCheck(inserted);
 	if(errMsg!=null)
-	   throw("Error: Not able to replaceActiveDocXml; "+errMsg);
+	   throw("Error: Not able to setActiveDocXml; "+errMsg);
 
 	if(inserted=="")
 	  inserted = null;

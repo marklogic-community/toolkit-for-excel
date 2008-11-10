@@ -133,7 +133,7 @@ function asd() {
 <span class="comment">/**
  * The MLA namespace is used for global attribution. The methods within this namespace provide ways of interacting with an Active OpenXML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
  *
- * The methods here are mostly for Word; however, the functions getCustomPiece(), getCustomPieceIds(), addCustomPiece(), and deleteCustomPiece() will work for any Open XML package.
+ * The methods here are mostly for Word; however, the functions getCustomXMLPart(), getCustomXMLPartIds(), addCustomXMLPart(), and deleteCustomXMLPart() will work for any Open XML package.
  * This object has methods for accessing an ActiveDocument in Word.
  */</span>
 <span class="comment">//var MLA = {};</span>
@@ -146,7 +146,7 @@ function asd() {
 }
 
 <span class="comment">/** <span class="attrib">@ignore</span> */</span>
-MLA.version = { <span class="literal">"release"</span> : <span class="literal">"@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION"</span> }; 
+MLA.version = { <span class="literal">"release"</span> : <span class="literal">"1.0-20081110"</span> }; 
 
 <span class="comment">/** <span class="attrib">@ignore</span> */</span>
 MLA.SimpleRange = <span class="reserved">function</span>(begin,finish){
@@ -245,68 +245,68 @@ MLA.getSelectionText = <span class="reserved">function</span>()
 	<span class="reserved">return</span> selText;
 }
 <span class="comment">/**
- * Returns ids for custom pieces (not built-in) that are part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
- * <span class="attrib">@returns</span> the ids for custom pieces in active OpenXML package as array of string
+ * Returns ids for custom parts (not built-in) that are part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
+ * <span class="attrib">@returns</span> the ids for custom XML parts in active OpenXML package as array of string
  * <span class="attrib">@type</span> Array 
  */</span>
-MLA.getCustomPieceIds = <span class="reserved">function</span>()
+MLA.getCustomXMLPartIds = <span class="reserved">function</span>()
 { 
-	var pieces = window.external.getCustomPieceIds();
+	var partIds = window.external.getCustomXMLPartIds();
 
-	var errMsg = MLA.errorCheck(pieces);
+	var errMsg = MLA.errorCheck(partIds);
 	<span class="reserved">if</span>(errMsg!=null)
-	  throw(<span class="literal">"Error: Not able to get CustomPieceIds; "</span>+errMsg);
+	  throw(<span class="literal">"Error: Not able to get CustomXMLPartIds; "</span>+errMsg);
 
-	var customPieces = pieces.split(<span class="literal">" "</span>);
-	<span class="reserved">return</span> customPieces;
+	var customPartIds = partIds.split(<span class="literal">" "</span>);
+	<span class="reserved">return</span> customPartIds;
 }
 
 <span class="comment">/**
- * Returns the custom piece, identified by customPieceId, that is part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
- * <span class="attrib">@param</span> customPieceId the id of the custom piece to be fetched from the active package
- * <span class="attrib">@return</span> the XML for the custom piece as a DOM object. 
+ * Returns the custom XML part, identified by customXMLPartId, that is part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
+ * <span class="attrib">@param</span> customXMLPartId the id of the custom part to be fetched from the active package
+ * <span class="attrib">@return</span> the XML for the custom part as a DOM object. 
  * <span class="attrib">@type</span> Microsoft.XMLDOM object 
- * <span class="attrib">@throws</span> Exception if there is error retrieving the custom piece 
+ * <span class="attrib">@throws</span> Exception if there is error retrieving the custom part 
  */</span>
-MLA.getCustomPiece = <span class="reserved">function</span>(customPieceId)
+MLA.getCustomXMLPart = <span class="reserved">function</span>(customXMLPartId)
 {
-	var customPiece = window.external.getCustomPiece(customPieceId);
+	var customXMLPart = window.external.getCustomXMLPart(customXMLPartId);
 
-	var errMsg = MLA.errorCheck(customPiece);
+	var errMsg = MLA.errorCheck(customXMLPart);
 	<span class="reserved">if</span>(errMsg!=null)
-	   throw(<span class="literal">"Error: Not able to getCustomPiece; "</span>+errMsg);
+	   throw(<span class="literal">"Error: Not able to getCustomXMLPart; "</span>+errMsg);
 
-	<span class="reserved">if</span>(customPiece==<span class="literal">""</span>)
-	  customPiece=null;
+	<span class="reserved">if</span>(customXMLPart==<span class="literal">""</span>)
+	  customXMLPart=null;
 
-        var v_cp = MLA.createXMLDOM(customPiece); 
+        var v_cp = MLA.createXMLDOM(customXMLPart); 
 
 	<span class="reserved">return</span> v_cp;
 }
 
-<span class="comment">/** Adds custom piece to active OpenXML package.  Returns the id of the piece added.
- *<span class="attrib">@param</span> customPieceXML Either A) an XMLDOM object that is the custom piece to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom piece to the active Open XML package. ( The XML must be well-formed. )
- *<span class="attrib">@return</span> id for custom piece added 
+<span class="comment">/** Adds custom part to active OpenXML package.  Returns the id of the part added.
+ *<span class="attrib">@param</span> customPartXML Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. )
+ *<span class="attrib">@return</span> id for custom part added 
  *<span class="attrib">@type</span> String
- *<span class="attrib">@throws</span> Exception if unable to add custom piece
+ *<span class="attrib">@throws</span> Exception if unable to add custom part
  */</span>
-MLA.addCustomPiece = <span class="reserved">function</span>(customPieceXml)
+MLA.addCustomXMLPart = <span class="reserved">function</span>(customPartXml)
 {
-	var v_customPiece =<span class="literal">""</span>;
-	<span class="reserved">if</span>(customPieceXml.xml)
+	var v_customPart =<span class="literal">""</span>;
+	<span class="reserved">if</span>(customPartXml.xml)
 	{
-               v_customPiece=customPieceXml.xml;
+               v_customPart=customPartXml.xml;
 	}
 	<span class="reserved">else</span>
 	{
-	       v_customPiece=customPieceXml
+	       v_customPart=customPartXml
 	}
 	
-	var newId = window.external.addCustomPiece(v_customPiece);
+	var newId = window.external.addCustomXMLPart(v_customPart);
 
 	var errMsg = MLA.errorCheck(newId);
 	<span class="reserved">if</span>(errMsg!=null)
-	   throw(<span class="literal">"Error: Not able to addCustomPiece; "</span>+errMsg);
+	   throw(<span class="literal">"Error: Not able to addCustomXMLPart; "</span>+errMsg);
 
 	<span class="reserved">if</span>(newId ==<span class="literal">""</span>)
 	  newId=null;
@@ -314,20 +314,20 @@ MLA.addCustomPiece = <span class="reserved">function</span>(customPieceXml)
 	<span class="reserved">return</span> newId;
 }
 
-<span class="comment">/** Deletes custom piece from Active OpenXML package identified by id.
- *<span class="attrib">@param</span> customPieceId the id of the custom piece to be deleted from the active OpenXML package.
- *<span class="attrib">@throws</span> Exception if unable to add custom piece
+<span class="comment">/** Deletes custom part from Active OpenXML package identified by id.
+ *<span class="attrib">@param</span> customXMLPartId the id of the custom part to be deleted from the active OpenXML package.
+ *<span class="attrib">@throws</span> Exception if unable to delete custom part
  */</span>
-MLA.deleteCustomPiece = <span class="reserved">function</span>(customPieceId)
+MLA.deleteCustomXMLPart = <span class="reserved">function</span>(customXMLPartId)
 {
-	var deletedPiece = window.external.deleteCustomPiece(customPieceId);
+	var deletedPart = window.external.deleteCustomXMLPart(customXMLPartId);
 
-        var errMsg = MLA.errorCheck(deletedPiece);
+        var errMsg = MLA.errorCheck(deletedPart);
 	<span class="reserved">if</span>(errMsg!=null)
-	   throw(<span class="literal">"Error: Not able to deleteCustomPiece; "</span>+errMsg);
+	   throw(<span class="literal">"Error: Not able to deleteCustomXMLPart; "</span>+errMsg);
      
-	<span class="reserved">if</span>(deletedPiece==<span class="literal">""</span>)
-	  deletedPiece = null;
+	<span class="reserved">if</span>(deletedPart==<span class="literal">""</span>)
+	  deletedPart = null;
 
 }
 
@@ -480,9 +480,9 @@ MLA.getActiveDocStylesXml = <span class="reserved">function</span>()
  * As this only allows insert of document.xml, it is assumed that whatever references required by document.xml by other xml files in the package currently being authored (styles, themes, etc.) already exist.
  * 
  *<span class="attrib">@param</span> documentXml this parameter may either be A) an XMLDOM object that is the XML equivalent of the document.xml to be inserted,or B) a String, that is the serialized, well-formed XML of the document.xml to be inserted.
- *<span class="attrib">@throws</span> Exception if unable to replace the documentXml
+ *<span class="attrib">@throws</span> Exception if unable to set the documentXml
  */</span>
-MLA.replaceActiveDocXml = <span class="reserved">function</span>(documentXml)
+MLA.setActiveDocXml = <span class="reserved">function</span>(documentXml)
 {
 	var v_document=<span class="literal">""</span>;
 
@@ -495,11 +495,11 @@ MLA.replaceActiveDocXml = <span class="reserved">function</span>(documentXml)
 	       v_document = documentXml;
 	}
 
-        var inserted = window.external.replaceActiveDocXml(v_document);
+        var inserted = window.external.setActiveDocXml(v_document);
 
 	var errMsg = MLA.errorCheck(inserted);
 	<span class="reserved">if</span>(errMsg!=null)
-	   throw(<span class="literal">"Error: Not able to replaceActiveDocXml; "</span>+errMsg);
+	   throw(<span class="literal">"Error: Not able to setActiveDocXml; "</span>+errMsg);
 
 	<span class="reserved">if</span>(inserted==<span class="literal">""</span>)
 	  inserted = null;
@@ -805,6 +805,6 @@ MLA.addContentControlToSelection = <span class="reserved">function</span>(tagNam
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Oct 22 14:49:02 2008</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Mon Nov 10 15:28:07 2008</div>
 </body>
 </html>

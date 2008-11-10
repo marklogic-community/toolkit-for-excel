@@ -151,11 +151,11 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       <TD>
 	 <CODE>
 	    <B>
-	       <A HREF="#!s!addCustomPiece">addCustomPiece</A></B>(customPieceXml)
+	       <A HREF="#!s!addCustomXMLPart">addCustomXMLPart</A></B>(customPartXml)
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Adds custom piece to active OpenXML package.
+	 Adds custom part to active OpenXML package.
       </TD>
    </TR>
 
@@ -202,11 +202,11 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       <TD>
 	 <CODE>
 	    <B>
-	       <A HREF="#!s!deleteCustomPiece">deleteCustomPiece</A></B>(customPieceId)
+	       <A HREF="#!s!deleteCustomXMLPart">deleteCustomXMLPart</A></B>(customXMLPartId)
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Deletes custom piece from Active OpenXML package identified by id.
+	 Deletes custom part from Active OpenXML package identified by id.
       </TD>
    </TR>
 
@@ -270,11 +270,11 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       <TD>
 	 <CODE>
 	    <B>
-	       <A HREF="#!s!getCustomPiece">getCustomPiece</A></B>(customPieceId)
+	       <A HREF="#!s!getCustomXMLPart">getCustomXMLPart</A></B>(customXMLPartId)
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Returns the custom piece, identified by customPieceId, that is part of the active OpenXML package.
+	 Returns the custom XML part, identified by customXMLPartId, that is part of the active OpenXML package.
       </TD>
    </TR>
 
@@ -287,11 +287,11 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       <TD>
 	 <CODE>
 	    <B>
-	       <A HREF="#!s!getCustomPieceIds">getCustomPieceIds</A></B>()
+	       <A HREF="#!s!getCustomXMLPartIds">getCustomXMLPartIds</A></B>()
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Returns ids for custom pieces (not built-in) that are part of the active OpenXML package.
+	 Returns ids for custom parts (not built-in) that are part of the active OpenXML package.
       </TD>
    </TR>
 
@@ -406,7 +406,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       <TD>
 	 <CODE>
 	    <B>
-	       <A HREF="#!s!replaceActiveDocXml">replaceActiveDocXml</A></B>(documentXml)
+	       <A HREF="#!s!setActiveDocXml">setActiveDocXml</A></B>(documentXml)
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -447,7 +447,7 @@ MLA</H3>
 <UL>
    The MLA namespace is used for global attribution. The methods within this namespace provide ways of interacting with an Active OpenXML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
 
- The methods here are mostly for Word; however, the functions getCustomPiece(), getCustomPieceIds(), addCustomPiece(), and deleteCustomPiece() will work for any Open XML package.
+ The methods here are mostly for Word; however, the functions getCustomXMLPart(), getCustomXMLPartIds(), addCustomXMLPart(), and deleteCustomXMLPart() will work for any Open XML package.
  This object has methods for accessing an ActiveDocument in Word.
 </UL>
 
@@ -481,11 +481,11 @@ MLA</H3>
 
 <!-- One single method detail entry -->
 
-   <A NAME="!s!addCustomPiece"><!-- --></A>
-   <H3>addCustomPiece</H3>
-   <PRE>&lt;static&gt; String <B>addCustomPiece</B>(customPieceXml)</PRE>
+   <A NAME="!s!addCustomXMLPart"><!-- --></A>
+   <H3>addCustomXMLPart</H3>
+   <PRE>&lt;static&gt; String <B>addCustomXMLPart</B>(customPartXml)</PRE>
    
-      <UL>Adds custom piece to active OpenXML package.  Returns the id of the piece added.</UL>
+      <UL>Adds custom part to active OpenXML package.  Returns the id of the part added.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -493,7 +493,7 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>customPieceXML</CODE> -  Either A) an XMLDOM object that is the custom piece to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom piece to the active Open XML package. ( The XML must be well-formed. ) 
+     <UL><CODE>customPartXML</CODE> -  Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. ) 
       </UL> 
    
    </UL>
@@ -504,7 +504,7 @@ MLA</H3>
    <UL>
    <B>Returns:</B>
         <UL>
-        id for custom piece added   
+        id for custom part added   
         </UL>
    </UL>
    
@@ -512,7 +512,7 @@ MLA</H3>
    <!-- ADDITIONAL ATTRIBUTES START -->
    
    <UL>   
-   <B>Throws:</B><UL>- Exception if unable to add custom piece</UL>
+   <B>Throws:</B><UL>- Exception if unable to add custom part</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -592,11 +592,11 @@ MLA</H3>
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
-   <A NAME="!s!deleteCustomPiece"><!-- --></A>
-   <H3>deleteCustomPiece</H3>
-   <PRE>&lt;static&gt; void <B>deleteCustomPiece</B>(customPieceId)</PRE>
+   <A NAME="!s!deleteCustomXMLPart"><!-- --></A>
+   <H3>deleteCustomXMLPart</H3>
+   <PRE>&lt;static&gt; void <B>deleteCustomXMLPart</B>(customXMLPartId)</PRE>
    
-      <UL>Deletes custom piece from Active OpenXML package identified by id.</UL>
+      <UL>Deletes custom part from Active OpenXML package identified by id.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -604,7 +604,7 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>customPieceId</CODE> -  the id of the custom piece to be deleted from the active OpenXML package. 
+     <UL><CODE>customXMLPartId</CODE> -  the id of the custom part to be deleted from the active OpenXML package. 
       </UL> 
    
    </UL>
@@ -616,7 +616,7 @@ MLA</H3>
    <!-- ADDITIONAL ATTRIBUTES START -->
    
    <UL>   
-   <B>Throws:</B><UL>- Exception if unable to add custom piece    </UL>
+   <B>Throws:</B><UL>- Exception if unable to delete custom part    </UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -703,11 +703,11 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
-   <A NAME="!s!getCustomPiece"><!-- --></A>
-   <H3>getCustomPiece</H3>
-   <PRE>&lt;static&gt; Microsoft.XMLDOM object <B>getCustomPiece</B>(customPieceId)</PRE>
+   <A NAME="!s!getCustomXMLPart"><!-- --></A>
+   <H3>getCustomXMLPart</H3>
+   <PRE>&lt;static&gt; Microsoft.XMLDOM object <B>getCustomXMLPart</B>(customXMLPartId)</PRE>
    
-      <UL>Returns the custom piece, identified by customPieceId, that is part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)</UL>
+      <UL>Returns the custom XML part, identified by customXMLPartId, that is part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -715,7 +715,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>customPieceId</CODE> -  the id of the custom piece to be fetched from the active package  
+     <UL><CODE>customXMLPartId</CODE> -  the id of the custom part to be fetched from the active package  
       </UL> 
    
    </UL>
@@ -726,7 +726,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Returns:</B>
         <UL>
-        the XML for the custom piece as a DOM object.    
+        the XML for the custom part as a DOM object.    
         </UL>
    </UL>
    
@@ -734,17 +734,17 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES START -->
    
    <UL>   
-   <B>Throws:</B><UL>- Exception if there is error retrieving the custom piece</UL>
+   <B>Throws:</B><UL>- Exception if there is error retrieving the custom part</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
-   <A NAME="!s!getCustomPieceIds"><!-- --></A>
-   <H3>getCustomPieceIds</H3>
-   <PRE>&lt;static&gt; Array <B>getCustomPieceIds</B>()</PRE>
+   <A NAME="!s!getCustomXMLPartIds"><!-- --></A>
+   <H3>getCustomXMLPartIds</H3>
+   <PRE>&lt;static&gt; Array <B>getCustomXMLPartIds</B>()</PRE>
    
-      <UL>Returns ids for custom pieces (not built-in) that are part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)</UL>
+      <UL>Returns ids for custom parts (not built-in) that are part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -755,7 +755,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Returns:</B>
         <UL>
-        the ids for custom pieces in active OpenXML package as array of string   
+        the ids for custom XML parts in active OpenXML package as array of string   
         </UL>
    </UL>
    
@@ -938,9 +938,9 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
-   <A NAME="!s!replaceActiveDocXml"><!-- --></A>
-   <H3>replaceActiveDocXml</H3>
-   <PRE>&lt;static&gt; void <B>replaceActiveDocXml</B>(documentXml)</PRE>
+   <A NAME="!s!setActiveDocXml"><!-- --></A>
+   <H3>setActiveDocXml</H3>
+   <PRE>&lt;static&gt; void <B>setActiveDocXml</B>(documentXml)</PRE>
    
       <UL>Inserts document.xml into the ActiveDocument package in Word.  This will replace the contents of the entire document the user is currently viewing. 
 
@@ -964,7 +964,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES START -->
    
    <UL>   
-   <B>Throws:</B><UL>- Exception if unable to replace the documentXml    </UL>
+   <B>Throws:</B><UL>- Exception if unable to set the documentXml    </UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -1036,6 +1036,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 <FONT SIZE="-1">
 
 </FONT>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Oct 22 14:49:02 2008</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Mon Nov 10 15:28:07 2008</div>
 </BODY>
 </HTML>

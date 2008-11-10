@@ -32,7 +32,7 @@ document.observe(
 			var edited = false;
 			_l("Saving Custom Piece");
 			try{
-			var customPieceIds = MLA.getCustomPieceIds();
+			var customPieceIds = MLA.getCustomXMLPartIds();
 			}catch(ex){
 				// TODO: Figure out why this exception is being thrown when Word closes. Probably some timing thing about the order of things eing unloaded
 				return;
@@ -46,7 +46,7 @@ document.observe(
 				} else {
 					customPieceId = customPieceIds[i];
 					var delPiece = MLA
-							.deleteCustomPiece(customPieceId);
+							.deleteCustomXMLPart(customPieceId);
 					_l("Deleted " + delPiece);
 					edited = true;
 				}
@@ -71,7 +71,7 @@ document.observe(
 	
 			_l(customPiece);
 	
-			var newid = MLA.addCustomPiece(customPiece);
+			var newid = MLA.addCustomXMLPart(customPiece);
 	
 			if (edited) {
 				_l("Metadata Edited");
@@ -102,7 +102,7 @@ document.observe(
 		}
 		function removeMetadata() {
 			_l("Removing Custom Piece");
-			var customPieceIds = MLA.getCustomPieceIds();
+			var customPieceIds = MLA.getCustomXMLPartIds();
 			var customPieceId = null;
 			for (i = 0; i < customPieceIds.length; i++) {
 				if (customPieceIds[i] == null
@@ -111,7 +111,7 @@ document.observe(
 				} else {
 					customPieceId = customPieceIds[i];
 					var delPiece = MLA
-							.deleteCustomPiece(customPieceId);
+							.deleteCustomXMLPart(customPieceId);
 				}
 	
 			}
@@ -141,7 +141,7 @@ document.observe(
 		});
 		
 		
-		var customPieceIds =  MLA.getCustomPieceIds();
+		var customPieceIds =  MLA.getCustomXMLPartIds();
 		var customPieceId = null;
 		var tmpCustomPieceXml = null;
 		
@@ -151,7 +151,7 @@ document.observe(
 			} else {
 				_l("PIECE ID: " + customPieceIds[i]);
 				customPieceId = customPieceIds[i];
-				tmpCustomPieceXml = MLA.getCustomPiece(customPieceId);
+				tmpCustomPieceXml = MLA.getCustomXMLPart(customPieceId);
 				_l(tmpCustomPieceXml.xml);
 			}
 		}
