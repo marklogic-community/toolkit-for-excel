@@ -653,7 +653,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_B58A056769CB45EA95D5564DDCA69A1B"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFilesFolder]\\MarkLogic\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
