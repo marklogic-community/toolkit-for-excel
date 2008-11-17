@@ -681,14 +681,14 @@
             {
             "Name" = "8:Verify Office 2007 Shared PIA availability"
             "Condition" = "8:HASSHAREDPIA"
-            "Message" = "8:A required component for interacting with Excel 2007 is not available. Please run setup.exe"
+            "Message" = "8:A required component for interacting with Word 2007 is not available. Please run setup.exe"
             "InstallUrl" = "8:"
             }
             "{836E08B8-0285-4809-BA42-01DB6754A45D}:_EA8DBBD1CEB84B1598F7777FAFA6C7C9"
             {
             "Name" = "8:Verify Office Word 2007 PIA availability"
             "Condition" = "8:HASWORDPIA"
-            "Message" = "8:A required component for interacting with Excel 2007 is not available. Please run setup.exe"
+            "Message" = "8:A required component for interacting with Word 2007 is not available. Please run setup.exe"
             "InstallUrl" = "8:"
             }
             "{836E08B8-0285-4809-BA42-01DB6754A45D}:_FB0C630616FD4BAC8CA027500ED5DC73"
