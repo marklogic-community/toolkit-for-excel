@@ -109,7 +109,7 @@ define function map($r as node()*) as node()*
  
           return  ($this, 
              if($count) 
-             then ($r/following-sibling::*[1+$count],map($r/following-sibling::*[2+$count]))
+             then map($r/following-sibling::*[1+$count])
              else ((), map($r/following-sibling::*[1]) ) 
                   ) 
        else (element{fn:name($r)}  {$r/@*,map($r/child::*[1])} ,map($r/following-sibling::*[1])) 
