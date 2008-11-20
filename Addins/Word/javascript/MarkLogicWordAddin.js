@@ -29,7 +29,7 @@ function MLA(){
 }
 */
 /** @ignore */
-MLA.version = { "release" : "1.0-20081110" }; 
+MLA.version = { "release" : "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" }; 
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){
@@ -79,9 +79,33 @@ MLA.createXMLDOM = function(xmlstring)
    var xmlDom = new ActiveXObject("Microsoft.XMLDOM");
        xmlDom.async=false;
        xmlDom.loadXML(xmlstring);
+
+
    return xmlDom;
 }
 
+/** @ignore */
+MLA.unescapeXMLCharEntities = function(stringtoconvert)
+{
+	var unescaped = "";
+	unescaped = stringtoconvert.replace(/&amp;/g,"&");
+	unescaped = unescaped.replace(/&lt;/g,  "<");
+	unescaped = unescaped.replace(/&gt;/g,  ">");
+	unescaped = unescaped.replace(/&quot;/g,"\"");
+	unescaped = unescaped.replace(/&apos;/g,"\'");
+	return unescaped;
+}
+/** @ignore */
+MLA.escapeXMLCharEntities = function(stringtoconvert)
+{
+	var escaped = "";
+	escaped = stringtoconvert.replace(/&/g,"&amp;");
+	escaped = escaped.replace(/</g, "&lt;");
+	escaped = escaped.replace(/>/g, "&gt;");
+	escaped = escaped.replace(/\"/g,"&quot;");
+	escaped = escaped.replace(/'/g, "&apos;");
+	return escaped;
+}
 /** Utility function to create a default WordprocessingML paragraph <w:p>, with no styles, for a given string.
  *
  *@param textstring the string to be converted into a WordprocessingML paragraph
@@ -89,9 +113,10 @@ MLA.createXMLDOM = function(xmlstring)
  *@throws Exception if unable to create the paragraph
  */
 MLA.createParagraph = function(textstring)
-{
+{ 
+	var cleanstring = MLA.escapeXMLCharEntities(textstring);
 	var newParagraphString = "<w:p xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'><w:r><w:t>"+
-		                    textstring+
+		                    cleanstring+
 			         "</w:t></w:r></w:p>";
 	var newPara = MLA.createXMLDOM(newParagraphString);
 	return newPara;
