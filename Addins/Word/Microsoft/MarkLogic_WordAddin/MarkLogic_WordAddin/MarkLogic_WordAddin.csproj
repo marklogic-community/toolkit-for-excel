@@ -30,6 +30,7 @@
     <ManifestKeyFile>MarkLogic_WordAddin_TemporaryKey.pfx</ManifestKeyFile>
     <SignManifests>true</SignManifests>
     <IsWebBootstrapper>False</IsWebBootstrapper>
+    <SignAssembly>false</SignAssembly>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <PublishUrl>C:\cygwin\home\paven\MLOS\Office2007\builds\Word\</PublishUrl>
     <InstallUrl>

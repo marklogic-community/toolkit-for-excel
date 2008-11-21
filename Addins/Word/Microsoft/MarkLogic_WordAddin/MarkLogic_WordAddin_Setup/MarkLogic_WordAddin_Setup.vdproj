@@ -33,8 +33,32 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
+        "OwnerKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_3C758A2843FB2A31A1FFA01D9DF37FB1"
         "OwnerKey" = "8:_9D0F69714F3D451F8B4C5D2A8D5D7442"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3C758A2843FB2A31A1FFA01D9DF37FB1"
+        "OwnerKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3C758A2843FB2A31A1FFA01D9DF37FB1"
+        "OwnerKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -88,6 +112,24 @@
         "Entry"
         {
         "MsmKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
+        "OwnerKey" = "8:_A0319A15E481055CFA0893706DB22092"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
+        "OwnerKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
+        "OwnerKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
         "OwnerKey" = "8:_066D5F184F31A0DCE89079641E0371C8"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -107,6 +149,18 @@
         {
         "MsmKey" = "8:_9D0F69714F3D451F8B4C5D2A8D5D7442"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A0319A15E481055CFA0893706DB22092"
+        "OwnerKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A0319A15E481055CFA0893706DB22092"
+        "OwnerKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -149,6 +203,24 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_9D0F69714F3D451F8B4C5D2A8D5D7442"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_A0319A15E481055CFA0893706DB22092"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -292,6 +364,62 @@
     {
         "CustomAction"
         {
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_0FD0D3A372A0476389EB6FC332B05D03"
+            {
+            "Name" = "8:Remove Addin from Inclusion List"
+            "Condition" = "8:"
+            "Object" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
+            "FileType" = "3:1"
+            "InstallAction" = "3:4"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_69583A94_56C5_4884_9A94_C07ED0B26F0F"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_A770425A245E4C0A85784D33416A37C2"
+            {
+            "Name" = "8:Primary output from InclusionListCustomActions (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
+            "FileType" = "3:1"
+            "InstallAction" = "3:2"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_DA89DF53_D8F7_49BB_8D2D_4D12D2AD55C4"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_D4BA38E03ECB48AE8D6A863746B3C140"
+            {
+            "Name" = "8:Primary output from InclusionListCustomActions (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
+            "FileType" = "3:1"
+            "InstallAction" = "3:3"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_919789A8_D8DC_4F3F_A80B_DED807058064"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_F71489AA1AC84AAFA5F94C3542026824"
+            {
+            "Name" = "8:Add Addin to Inclusion List"
+            "Condition" = "8:"
+            "Object" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
+            "FileType" = "3:1"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_EE7B20F6_84E3_49E7_9972_B687CC1F1DDC"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:/deploymentManifestLocation=\"[TARGETDIR]MarkLogic_WordAddin.vsto\""
+            }
         }
         "DefaultFeature"
         {
@@ -360,6 +488,37 @@
                     }
                 }
             "SourcePath" = "8:Microsoft.Office.Tools.v9.0.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B58A056769CB45EA95D5564DDCA69A1B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1594960FDD8B8ADB0F7C48404CB668AD"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.VisualStudio.Tools.Office.Runtime.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_1594960FDD8B8ADB0F7C48404CB668AD"
+                    {
+                    "Name" = "8:Microsoft.VisualStudio.Tools.Office.Runtime.v9.0.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.VisualStudio.Tools.Office.Runtime.v9.0.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B58A056769CB45EA95D5564DDCA69A1B"
@@ -535,6 +694,37 @@
                     }
                 }
             "SourcePath" = "8:Microsoft.VisualStudio.Tools.Applications.Runtime.v9.0.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B58A056769CB45EA95D5564DDCA69A1B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A0319A15E481055CFA0893706DB22092"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.VisualStudio.Tools.Applications.Hosting.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_A0319A15E481055CFA0893706DB22092"
+                    {
+                    "Name" = "8:Microsoft.VisualStudio.Tools.Applications.Hosting.v9.0.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.VisualStudio.Tools.Applications.Hosting.v9.0.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B58A056769CB45EA95D5564DDCA69A1B"
@@ -732,7 +922,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MarkLogic_WordAddin"
         "ProductCode" = "8:{40D875B9-AF8C-456F-BC8E-107A5095C42E}"
-        "PackageCode" = "8:{444F4478-8967-4ECD-ADD6-384410689987}"
+        "PackageCode" = "8:{3D44CB91-4A97-44EC-A766-52E5CF3FBB81}"
         "UpgradeCode" = "8:{BA58D1F8-2509-467D-A6A5-C6982D44FE7A}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -1400,6 +1590,34 @@
         }
         "ProjectOutput"
         {
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_1C263BDE5C0B44819D10F31F9C0C8EF4"
+            {
+            "SourcePath" = "8:..\\InclusionListCustomActions\\obj\\Release\\InclusionListCustomActions.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B58A056769CB45EA95D5564DDCA69A1B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{12FDB396-30E6-48EF-9A09-6F5E3D8E2417}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9D0F69714F3D451F8B4C5D2A8D5D7442"
             {
             "SourcePath" = "8:..\\MarkLogic_WordAddin\\obj\\Release\\MarkLogic_WordAddin.dll"
