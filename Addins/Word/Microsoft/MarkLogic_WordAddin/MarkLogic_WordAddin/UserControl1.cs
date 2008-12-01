@@ -7,12 +7,14 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+
 using Word=Microsoft.Office.Interop.Word;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.IO;
 using Office = Microsoft.Office.Core;
 using Microsoft.Win32;
+using System.Windows.Forms.Integration;
 
 
 namespace MarkLogic_WordAddin
@@ -31,12 +33,12 @@ namespace MarkLogic_WordAddin
         private bool debugMsg = false;
         private string color = "";
         private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";
-
-
+        HtmlDocument htmlDoc;
+      
         public UserControl1()
         {
             InitializeComponent();
-           // AddinConfiguration ac = AddinConfiguration.GetInstance();
+            //AddinConfiguration ac = AddinConfiguration.GetInstance();
             //bool regEntryExists = checkUrlInRegistry();
             webUrl = ac.getWebURL();
             //MessageBox.Show(webUrl);
@@ -59,11 +61,42 @@ namespace MarkLogic_WordAddin
                 webBrowser1.Navigate(webUrl);
                 webBrowser1.ScriptErrorsSuppressed = true;
 
-            }
-
+                //this.webBrowser1.GotFocus += new EventHandler(webBrowser1_GotFocus);
+                //works, kinda, the selected area loses focus quickly
+                this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted); 
+               
+            }   
 
         }
-/*
+
+        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+           
+            if (webBrowser1.Document != null)
+            {
+                htmlDoc = webBrowser1.Document;
+
+                htmlDoc.Click += htmlDoc_Click;
+
+            }
+
+        }
+
+        private void htmlDoc_Click(object sender, HtmlElementEventArgs e)
+        {
+             if (!(webBrowser1.Parent.Focused))
+             {
+               // MessageBox.Show("HERE");
+               //webBrowser1.Focus();
+               webBrowser1.Parent.Focus();
+               webBrowser1.Document.Focus();
+               //webBrowser1.Document.GetElementsByTagName("input")[0].Focus();
+
+              }
+        }
+
+
+        /*
         private bool checkUrlInRegistry()
         {
             RegistryKey regKey1 = Registry.CurrentUser;

@@ -3,7 +3,7 @@
     <PublishUrlHistory>C:\cygwin\home\paven\MLOS\Office2007\builds\Word\</PublishUrlHistory>
     <InstallUrlHistory>
     </InstallUrlHistory>
-    <ProjectView>ShowAllFiles</ProjectView>
+    <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
