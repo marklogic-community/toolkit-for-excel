@@ -98,13 +98,13 @@ or
 
 2) you can export the table for update yourself by executing:
 
-MsiDb -f "<directory where idt is located>" -d "C:\MyAddin\MarkLogic_WordAddin_Setup.msi" -e Registry
+MsiDb -f "<directory where idt is to be exported>" -d "C:\MyAddin\MarkLogic_WordAddin_Setup.msi" -e Registry
 
 this command produces Registry.idt. You can then open this file in WordPad, 
 edit the values, save, and then import the file to your .msi, 
 similar to how we did in step 1:
 
-MsiDb -f "<directory where idt is located>" -d "MarkLogic_WordAddin_Setup.msi" -i config.idt
+MsiDb -f "<directory where idt is to be  located>" -d "MarkLogic_WordAddin_Setup.msi" -i config.idt
 
 This will update the msi with your new values. 
 
