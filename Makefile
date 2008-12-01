@@ -28,10 +28,14 @@ JSDOCS = $(DOCS)/jsdocs
 SAMPLES_JS = $(SAMPLES)/js
 
 BUILDS = builds
-PUB_BUILD = $(BUILDS)/Word
+#PUB_BUILD = $(BUILDS)/$(ZIP_PREFIX)-$(SUFFIX)
+PUB_BUILD = $(ZIP_PREFIX)-$(SUFFIX)
+#PUB_BUILD = $(BUILDS)/Word
+ZIP_FILE = $(ZIP_PREFIX)-$(SUFFIX)
 
 BUILD_DOCS = $(PUB_BUILD)/docs
 BUILD_DOCS_JSDOC = $(BUILD_DOCS)/jsdocs
+BUILD_JS = $(PUB_BUILD)/js
 
 BUILD_SAMPLES = $(PUB_BUILD)/Samples
 BUILD_SAMPLES_JS = $(PUB_BUILD)/Samples/js
@@ -62,6 +66,7 @@ package:
 	mkdir $(BUILDS) 
 	mkdir $(PUB_BUILD)
 	mkdir $(BUILD_DOCS)
+	mkdir $(BUILD_JS)
 	mkdir $(BUILD_DOCS_JSDOC)
 	mkdir $(BUILD_SAMPLES)
 	mkdir $(BUILD_SAMPLES_JS)
@@ -86,10 +91,10 @@ package:
 	mv $(TEMP)/UserControl1.cs.bak  $(MS_ROOT)/$(MSS)/UserControl1.cs
 	#here
 	cp -r   $(MS_BUILD)/* $(MS_PUB_BUILD)/.
-	./setVersion patch $(JS)/MarkLogicWordAddin.js $(PUB_BUILD)/MarkLogicWordAddin.js
+	./setVersion patch $(JS)/MarkLogicWordAddin.js $(BUILD_JS)/MarkLogicWordAddin.js
 	./setVersion patch $(JS)/MarkLogicWordAddin.js $(SAMPLES_JS)/MarkLogicWordAddin.js
-	./setVersion patch $(ML)/word-processing-ml.xqy $(PUB_BUILD)/word-processing-ml.xqy
-	./setVersion patch $(ML)/package.xqy $(PUB_BUILD)/package.xqy
+#	./setVersion patch $(ML)/word-processing-ml.xqy $(PUB_BUILD)/word-processing-ml.xqy
+#	./setVersion patch $(ML)/package.xqy $(PUB_BUILD)/package.xqy
 	#cp -r $(SAMPLES)/* $(BUILD_SAMPLES) 
 	cp $(SAMPLES)/default.xqy $(BUILD_SAMPLES)
 	cp $(SAMPLES)/js/*.js $(BUILD_SAMPLES_JS) 
@@ -106,8 +111,10 @@ package:
 	cp $(JSDOCS)/*.html $(BUILD_DOCS_JSDOC)
 	#cp -r $(SAMPLES)/modules/*.js $(BUILD_SAMPLES_JS) 
 	@echo Create zip file $(ZIP_PREFIX)_$(SUFFIX).zip
-	(cd builds; zip -r ../$(ZIP_PREFIX).zip Word/*)
-	mv $(ZIP_PREFIX).zip $(ZIP_PREFIX)-$(SUFFIX).zip
+#	(cd builds; zip -r ../$(ZIP_FILE).zip $(PUB_BUILD)/*)
+	zip -r $(ZIP_FILE).zip $(PUB_BUILD)/*
+	mv $(PUB_BUILD) $(BUILDS)
+#	mv $(ZIP_PREFIX).zip $(ZIP_PREFIX)-$(SUFFIX).zip
 
 clean:
 	  rm -rf $(BUILDS)
