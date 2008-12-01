@@ -25,8 +25,6 @@ Files Required:
 MarkLogic Server:
 
 MarkLogic-Addin.js
-word-processing-ml.xqy
-package.xqy
 
 
 Windows Client:
@@ -127,11 +125,7 @@ Directions for Installation:
 
 MarkLogic Server:
 
-1) Copy word-processing-ml.xqy, package.xqy to 
-          <MARKLOGIC>/Modules/MarkLogic/openxml
-   (if you are using 4.0, the openxml directory will exist; 
-    otherwise, you may need to add it.)
-2) Copy MarkLogic-WordAddin.js to whichever directory you will be
+1) Copy MarkLogic-WordAddin.js to whichever directory you will be
    creating your solution in.
 
 
@@ -190,7 +184,7 @@ Uninstall
 Control Panel -> Add/Remove Programs -> MarkLogic_WordAddin -> Remove
    This will remove the registry entries for the Addin configuration.
 
-Additionally, remove .xqy and .js support sor the Addin from the server.
+Additionally, remove .js support for the Addin from the server.
 
 
 Troubleshooting
