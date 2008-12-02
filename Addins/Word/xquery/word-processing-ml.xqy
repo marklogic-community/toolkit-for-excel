@@ -15,14 +15,6 @@ declare namespace wne="http://schemas.microsoft.com/office/word/2006/wordml";
 
 import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy";
 
-declare variable $ooxml:wml-format-support-version := "4.0-3";
-(: "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" ; :)
- 
-declare function ooxml:ooxml-version() as xs:string
-{
-    $ooxml:wml-format-support-version
-};
-
 (: START MERGE RUNS ========================================================================== :)
 declare function update-document-xml($document as node()*) as node()*
 {
@@ -285,9 +277,15 @@ declare function ooxml:replace-custom-xml-element($content as element(), $oldtag
 declare function ooxml:get-custom-xml-ancestor($doc as element()) as element()?
 {
 
-   if($doc/parent::w:sdtContent) then ooxml:get-custom-xml-ancestor($doc/../..) 
-   else if($doc/parent::w:customXml) then ooxml:get-custom-xml-ancestor($doc/..)
-   else $doc
+    let $uri := "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    let $tmp := $doc
+    let $ancestor := 
+         if($tmp/parent::w:sdtContent) then ooxml:get-custom-xml-ancestor($tmp/../..) 
+         else if($tmp/parent::w:customXml) then ooxml:get-custom-xml-ancestor($tmp/..)
+         else  $tmp
+    let $nodename := fn:node-name($ancestor)
+    let $final :=  if($nodename eq fn:QName($uri,"customXml") or $nodename eq fn:QName($uri,"sdt")) then $ancestor else ()
+    return $final
  
 };
 
@@ -338,7 +336,7 @@ declare function ooxml:dispatch-chlt($x as node()*) as node()*
     case document-node() return ooxml:passthru-chlt($x)
     case text() return $x
     case element(w:r) return (if(fn:exists($x//child::*//w:p)) then ooxml:passthru-chlt($x) 
-                              else ooxml:map(<w:rPr>{$x/w:rPr/node()}</w:rPr>, $x/w:t/node()))
+                              else ooxml:map((if(fn:empty($x/w:rPr/node())) then () else <w:rPr>{$x/w:rPr/node()}</w:rPr>), $x/w:t/node()))
     case element() return  element{fn:name($x)} {$x/@*,ooxml:passthru-chlt($x)} 
     default return $x
 };

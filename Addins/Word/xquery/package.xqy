@@ -13,15 +13,6 @@ declare namespace dc="http://purl.org/dc/elements/1.1/";
 declare namespace dcterms ="http://purl.org/dc/terms/";
 declare namespace rels = "http://schemas.openxmlformats.org/package/2006/relationships";
 
-declare variable $ooxml:openxml-format-support-version := "4.0-3";
-(: "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" ; :) 
-
-(: BEGIN USED BY PIPELINES :)
-declare function ooxml:ooxml-package-version() as xs:string
-{
-    $ooxml:openxml-format-support-version
-};
-
 declare function ooxml:list-length-error()
 {
    fn:error("ListLengthsNotEqual: ","The lengths of the lists that are dependant on each other differ.")
