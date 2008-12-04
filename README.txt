@@ -6,9 +6,9 @@ Word Authoring Kit Add-In
 
 Prerequisites
 ============================================================
-MarkLogic Server:
- version 3.2 or greater
-
+MarkLogic Server 4.0
+ libaries found in openxml/word-processing-ml.xqy and openxml/package.xqy include functions for manipulation Open XML documents.
+ there are also pipelines built-in for extraction and update of Word documents.
 
 Windows Client: 
  Office 2007 Installed   
@@ -17,6 +17,8 @@ Windows Client:
  .net Framework 3.5
  Visual Studio Tools For Office Runtime 3.0
  Windows Installer 3.1 
+
+Developers additionally will require Windows SDK v6.0 or greater to configure their solutions by modifying the properties of the MarkLogic_WordAddin_Setup.msi.
 
 
 
