@@ -341,7 +341,7 @@ declare function ooxml:dispatch-chlt($x as node()*) as node()*
     default return $x
 };
 
-declare function ooxml:makerun($x as text(), $runProps as element(w:rPr)) as element(w:r)
+declare function ooxml:makerun($x as text(), $runProps as element(w:rPr)?) as element(w:r)
 { 
     <w:r>{$runProps}<w:t xml:space="preserve">{$x}</w:t></w:r>
 };
@@ -373,7 +373,7 @@ declare function ooxml:custom-xml-highlight-exec($orig as node()*, $query as cts
                                     <w:r><w:t>{$cts:text}</w:t></w:r>
                                </w:customXml>)
      let $newdocument := ooxml:dispatch-chlt($highlightedbody)
-     return $newdocument/*
+     return $newdocument/* 
 };
 
 
