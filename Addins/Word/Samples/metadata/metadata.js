@@ -1,3 +1,4 @@
+/*  Copyright 2002-2008 Mark Logic Corporation.  All Rights Reserved. */
 document.observe(
 	"dom:loaded",
 	function() {

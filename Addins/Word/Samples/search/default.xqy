@@ -1,4 +1,5 @@
 xquery version "1.0-ml";
+(: Copyright 2002-2008 Mark Logic Corporation.  All Rights Reserved. :)
 declare namespace w    ="http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 declare namespace q    ="http://marklogic.com/beta/searchbox";
 declare namespace xlink="http://www.w3.org/1999/xlink";

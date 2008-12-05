@@ -1,4 +1,5 @@
-/* $Id: debug.js,v 1.4 2008-10-03 05:15:33 jmakeig Exp $ */
+/* Copyright 2002-2008 Mark Logic Corporation.  All Rights Reserved. */
+/* $Id: debug.js,v 1.5 2008-12-05 18:05:59 paven Exp $ */
 
 // Last resort error handler
 Event.observe(window, "error", function(ex) {

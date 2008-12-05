@@ -1,4 +1,4 @@
-/* $Id: search.js,v 1.4 2008-10-02 23:21:57 jmakeig Exp $ */
+/* Copyright 2002-2008 Mark Logic Corporation.  All Rights Reserved. */
 
 document.observe("dom:loaded", function() {
 	// Listen to all double-click events on the ML-Results list container.
