@@ -162,10 +162,20 @@ MLA.getCustomXMLPartIds = function()
 	var partIds = window.external.getCustomXMLPartIds();
 
 	var errMsg = MLA.errorCheck(partIds);
+
 	if(errMsg!=null)
 	  throw("Error: Not able to get CustomXMLPartIds; "+errMsg);
 
 	var customPartIds = partIds.split(" ");
+
+	if(customPartIds.length ==1)
+	{
+		if (customPartIds[0] == null || customPartIds[0] == "")
+		{
+			customPartIds.length = 0;
+		}
+	}
+
 	return customPartIds;
 }
 
@@ -181,13 +191,21 @@ MLA.getCustomXMLPart = function(customXMLPartId)
 	var customXMLPart = window.external.getCustomXMLPart(customXMLPartId);
 
 	var errMsg = MLA.errorCheck(customXMLPart);
-	if(errMsg!=null)
+
+	if(errMsg!=null){
 	   throw("Error: Not able to getCustomXMLPart; "+errMsg);
+	}
+        
+	var v_cp;
 
 	if(customXMLPart=="")
-	  customXMLPart=null;
-
-        var v_cp = MLA.createXMLDOM(customXMLPart); 
+	{
+		v_cp=null;
+	}
+        else
+	{
+        	v_cp = MLA.createXMLDOM(customXMLPart); 
+	}
 
 	return v_cp;
 }
@@ -238,34 +256,6 @@ MLA.deleteCustomXMLPart = function(customXMLPartId)
 	  deletedPart = null;
 
 }
-
-
-
-/*
-MLA.getSelection = function()
-{
-	var selection = window.external.getSelection();
-
-        var errStr = selection.substring(0,6);
-	var len = selection.length;
-        var errMsg = selection.substring(7,len);
-
-	if(errStr == "error:")
-   	   throw("Unable to getSelection: "+errMsg);
-
-	var selections;
-        if(selections == "")
-	{
-	   selections=null;
-	}
-	else
-	{
-	   selections = selection.split("U+016000");
-	}
-
-	return selections;
-}
-*/
 
 /** Returns the XML that represents what is currently selected (highlighted) by the user in the ActiveDocument as an XMLDOM object.  Whatever is highlighted by the user will be returned in this function as a block level element.  A user may highlight text that will be materialized as multiple sibling block elements in the XML.  For this reason, the function returns an array, where each element of the array is an XMLDOM object that contains the XML for the blocks highlighted by the user in the ActiveDocument.  The order of elements in the array represents the order of items that are highlighted in the ActiveDocument.
  *@return the blocks of XML currently selected by the user in the ActiveDocument as XMLDOM objects. If nothing is selected, an empty array is returned.
@@ -320,6 +310,14 @@ MLA.getSelection = function()
 	for(i=0;i<selections.length;i++)
 	{
          	domSelections[i] = MLA.createXMLDOM(selections[i]);
+	}
+	
+	if(domSelections.length == 1) 
+	{
+        	if (domSelections[0] == null ||domSelections[0].text == "")
+		{
+			domSelections.length = 0;
+		}
 	}
 
 	return domSelections;
@@ -500,158 +498,3 @@ MLA.getConfiguration = function()
 
         return MLA.config;	
 }
-
-//FOLLOWING ARE NOT OFFICIALLY SANCTIONED, USE AT OWN RISK, THEY MAY CHANGE/BE REMOVED 
-/** @ignore */
-MLA.getRangesForTerm = function(searchText)
-{
-       var ranges = window.external.getRangesForTerm(searchText);
-
-       var errMsg = MLA.errorCheck(ranges);
-       if(errMsg!=null)
-	   throw("Error: Not able to get ranges for text; "+errMsg);
-
-       //alert("RANGES" +ranges);
-       var rngArray = new Array(); 
-       var tmpArray = ranges.split(" ");
-       //alert("TMP ARRAY LENGTH"+tmpArray.length);
-
-       if(tmpArray[0].length >1 )
-       {	
-         for(var i=0;i<tmpArray.length;i++)
-         {
-            var pieces = tmpArray[i].split(":");
-   	    var finRng = new MLA.SimpleRange(pieces[0],pieces[1]);
-	    rngArray[i]=finRng;
-	    //alert("pieces "+pieces[0]+" OSLO "+pieces[1]); 
-         }
-       }
-
-	return rngArray;
-
-}
-/** @ignore */
-MLA.getRangeForSelection = function()
-{
-   var sel = window.external.getRangeForSelection();
-   var finRng=null;
-   var errMsg = MLA.errorCheck(sel);
-       if(errMsg!=null)
-	   throw("Error: Not able to get ranges for text; "+errMsg);
-
-   var pieces = sel.split(":");
-
-   if(pieces.length==2)
-        finRng = new MLA.SimpleRange(pieces[0],pieces[1]);
-
-   return finRng;
-
-}
-/** @ignore */
-MLA.addCommentToRange = function(ranges,commentText)
-{
-	if(ranges.length > 0)
-	{
-
-	  var stringRange="";
-	  for(var i=0;i<ranges.length;i++)
-	  {
-		// alert("TESTIN LOOP");
-		 var x = new MLA.SimpleRange(0,0);
-		 x=ranges[i];
-		 stringRange = stringRange+x.start+":"+x.end+" ";
-
-
-	  }
-		 stringRange = stringRange.trim();
-	  //alert("RANGE: "+stringRange+" : END TEST");
-	 var commentsAdded =  window.external.addCommentToRange(stringRange, commentText);
-
-	 var errMsg = MLA.errorCheck(commentsAdded);
-         if(errMsg!=null)
-	   throw("Error: Not able to add comments to ranges; "+errMsg)
-
-	}
-}
-/** @ignore */
-MLA.addContentControlToRange = function(ranges,title,tag,lockstatus)
-{
-	if(ranges.length > 0)
-	{
-
-	  var stringRange="";
-	  for(var i=0;i<ranges.length;i++)
-	  {
-		// alert("TESTIN LOOP");
-		 var x = new MLA.SimpleRange(0,0);
-		 x=ranges[i];
-		 stringRange = stringRange+x.start+":"+x.end+" ";
-
-
-	  }
-		 stringRange = stringRange.trim();
-	  //alert("RANGE: "+stringRange+" : END TEST");
-	 var controlsAdded =  window.external.addContentControlToRange(stringRange, title,tag,lockstatus);
-
-	 var errMsg = MLA.errorCheck(controlsAdded);
-         if(errMsg!=null)
-	   throw("Error: Not able to add comments to ranges; "+errMsg)
-
-	}
-}
-/** @ignore */
-MLA.addCommentForText = function(searchText, commentText)
-{
-	var commentAdded = window.external.addCommentForText(searchText, commentText);
-
-        var errMsg = MLA.errorCheck(commentAdded);
-	if(errMsg!=null)
-	   throw("Error: Not able to add Comment for text "+errMsg);
-     
-	if(commentAdded=="")
-	  commentAdded = null;
-}
-/** @ignore */
-MLA.addContentControlForText = function(searchTerm, ccTitle, ccTag,lockStatus)
-{
-	var controlAdded = window.external.addContentControlForText(searchTerm, ccTitle, ccTag,lockStatus);
-	var errMsg = MLA.errorCheck(controlAdded);
-	if(errMsg!=null)
-	   throw("Error: Not able to insert text "+errMsg);
-     
-	if(controlAdded=="")
-	  controlAdded = null;
-}
-
-//USE WITH CAUTION - IF EMBEDDED CONTROL, PARENT CONTROL WILL LOSE ITS TEXT, AS IT WAS IN THIS CHILD - UNDER CONSTRUCTION ...
-/** @ignore */
-MLA.deleteContentControl = function()
-{
-	window.external.deleteContentControl();
-}
-
-/** @ignore */
-MLA.insertTextInControl = function(textToInsert,tagName,isLocked)
-{
-	var textAdded = window.external.insertTextInControl(textToInsert,tagName,isLocked);
-	var errMsg = MLA.errorCheck(textAdded);
-	if(errMsg!=null)
-	   throw("Error: Not able to insert text "+errMsg);
-     
-	if(textAdded=="")
-	  textAdded = null;
-}
-/** @ignore */
-MLA.addContentControlToSelection = function(tagName, isLocked)
-{
-        var sdtAdded = window.external.addContentControlToSelection(tagName,isLocked);
-	var errMsg = MLA.errorCheck(sdtAdded);
-	if(errMsg!=null)
-	   throw("Error: Not able to insert text "+errMsg);
-     
-	if(sdtAdded=="")
-	  sdtAdded = null;
-
-}
-
-
