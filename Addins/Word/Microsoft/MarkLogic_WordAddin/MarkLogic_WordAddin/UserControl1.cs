@@ -465,10 +465,15 @@ namespace MarkLogic_WordAddin
 
                 if (stTst < edTst)
                 {
-
+                    object startLocation = stTst;
+                    object endLocation = edTst;
+                    int count = Globals.ThisAddIn.Application.Selection.Range.Sentences.Count;
+                    rng = Globals.ThisAddIn.Application.Selection.Range.Sentences[count];
                     rng.Select();
-                    xmlizable = Globals.ThisAddIn.Application.Selection.WordOpenXML; // wordApp.Selection.WordOpenXML;  //instead of .Text
-                    wpml = Transform.ConvertToWPMLFromTextFinalNode(xmlizable);
+                    xmlizable = Globals.ThisAddIn.Application.Selection.WordOpenXML;
+                    wpml = Transform.ConvertToWPMLFromText(xmlizable);
+                    rng = Globals.ThisAddIn.Application.ActiveDocument.Range(ref startLocation, ref endLocation);
+                    rng.Select();
                 }
                 else
                 {

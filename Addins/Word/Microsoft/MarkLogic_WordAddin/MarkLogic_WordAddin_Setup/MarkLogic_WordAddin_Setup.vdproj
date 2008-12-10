@@ -46,18 +46,6 @@
         "Entry"
         {
         "MsmKey" = "8:_3C758A2843FB2A31A1FFA01D9DF37FB1"
-        "OwnerKey" = "8:_9D0F69714F3D451F8B4C5D2A8D5D7442"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3C758A2843FB2A31A1FFA01D9DF37FB1"
-        "OwnerKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3C758A2843FB2A31A1FFA01D9DF37FB1"
         "OwnerKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -65,6 +53,18 @@
         {
         "MsmKey" = "8:_3C758A2843FB2A31A1FFA01D9DF37FB1"
         "OwnerKey" = "8:_A118B0E0EFA249D018EE0ADAC3914F42"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3C758A2843FB2A31A1FFA01D9DF37FB1"
+        "OwnerKey" = "8:_9D0F69714F3D451F8B4C5D2A8D5D7442"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3C758A2843FB2A31A1FFA01D9DF37FB1"
+        "OwnerKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -106,25 +106,13 @@
         "Entry"
         {
         "MsmKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
-        "OwnerKey" = "8:_9D0F69714F3D451F8B4C5D2A8D5D7442"
+        "OwnerKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
         "OwnerKey" = "8:_A0319A15E481055CFA0893706DB22092"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
-        "OwnerKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
-        "OwnerKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -142,6 +130,18 @@
         "Entry"
         {
         "MsmKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
+        "OwnerKey" = "8:_9D0F69714F3D451F8B4C5D2A8D5D7442"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
+        "OwnerKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
         "OwnerKey" = "8:_3C758A2843FB2A31A1FFA01D9DF37FB1"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -154,13 +154,13 @@
         "Entry"
         {
         "MsmKey" = "8:_A0319A15E481055CFA0893706DB22092"
-        "OwnerKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
+        "OwnerKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_A0319A15E481055CFA0893706DB22092"
-        "OwnerKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
+        "OwnerKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -208,18 +208,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_A0319A15E481055CFA0893706DB22092"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -233,18 +221,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_066D5F184F31A0DCE89079641E0371C8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3C758A2843FB2A31A1FFA01D9DF37FB1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -275,6 +251,30 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_74E6C433FAAA20AB760B95A11CC7F5DF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_1C263BDE5C0B44819D10F31F9C0C8EF4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_1594960FDD8B8ADB0F7C48404CB668AD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3C758A2843FB2A31A1FFA01D9DF37FB1"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_92D4168835E7DD7FB1B42D0AEFE270B6"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -920,9 +920,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:MarkLogic_WordAddin"
+        "ProductName" = "8:MarkLogic Word Add-in"
         "ProductCode" = "8:{40D875B9-AF8C-456F-BC8E-107A5095C42E}"
-        "PackageCode" = "8:{3D44CB91-4A97-44EC-A766-52E5CF3FBB81}"
+        "PackageCode" = "8:{024341BB-6640-421D-92F1-B89CAA5B6192}"
         "UpgradeCode" = "8:{BA58D1F8-2509-467D-A6A5-C6982D44FE7A}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -1262,7 +1262,7 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:0"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -1512,8 +1512,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1203"
+                            "Setting" = "3:2"
+                            "Value" = "8:The installer will guide you through the steps required to install the [ProductName] on your computer."
                             "DefaultValue" = "8:#1203"
                             "UsePlugInResources" = "11:TRUE"
                             }
