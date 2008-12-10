@@ -323,7 +323,7 @@ MLA.getSelection = function()
 	return domSelections;
 }
 
-/** Returns the final XML block that represents the Sentence at the current cursor position.  Nothing is required to be highlighted in the ActiveDocument.  If a selection is highlighted, this returns the XML for the Sentence immediately preceding the cursor.  If there is no selection, the XML for the sentence immediately preceding the cursor position is still returned. 
+/** Returns the final XML block that represents the Sentence at the current cursor position.  Nothing is required to be highlighted in the ActiveDocument.  If a selection is highlighted, this returns the XML for the sentence at the the current cursor position.  If there is no selection, the XML for the sentence at the current cursor position is still returned. 
  *@return the block of XML, as XMLDOM object,  for the Sentence immediately preceding the cursor position.
  *@type Microsoft.XMLDOM object
  *@throws Exception if unable to retrieve the XML for the Sentence.
