@@ -139,8 +139,9 @@ namespace MarkLogic_WordAddin
 
         public ColorScheme TryGetColorScheme()
         {
-            
-            ColorScheme CurrentColorScheme = 0;
+            //assume default - theme registry key not always set on install of Office
+            //set for sureo once user sets color scheme manually from button
+            ColorScheme CurrentColorScheme = (ColorScheme)Enum.Parse(typeof(ColorScheme), "1");
             try
             {
                 Microsoft.Win32.RegistryKey rootKey = Microsoft.Win32.Registry.CurrentUser;
@@ -446,7 +447,7 @@ namespace MarkLogic_WordAddin
 
             if (debug)
                 stylesxml = "error: TESTING ERRORS";
-
+            
             return stylesxml;
 
         }
