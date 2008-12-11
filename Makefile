@@ -9,7 +9,8 @@ MAJ_VER := `cat MAJOR_VERSION`
 MIN_VER := `cat MINOR_VERSION`
 DATE := `date +%Y%m%d`
 SUFFIX := $(MAJ_VER).$(MIN_VER)-$(DATE)
-ZIP_PREFIX = MarkLogic_WordAddin
+#ZIP_PREFIX = MarkLogic_WordAddin
+ZIP_PREFIX = MarkLogic-Framework-for-Word
 
 # Build machine path to MS compiler
 # Optional developer machine path to MS compiler
@@ -21,6 +22,7 @@ ML = Addins/Word/xquery
 MS = Addins/Word/Microsoft
 MSS = MarkLogic_WordAddin
 JS = Addins/Word/javascript
+XQY = Addins/Word/xquery
 CF = Addins/Word/config
 SAMPLES = Addins/Word/Samples
 DOCS = Addins/Word/docs
@@ -36,6 +38,7 @@ ZIP_FILE = $(ZIP_PREFIX)-$(SUFFIX)
 BUILD_DOCS = $(PUB_BUILD)/docs
 BUILD_DOCS_JSDOC = $(BUILD_DOCS)/jsdocs
 BUILD_JS = $(PUB_BUILD)/js
+BUILD_XQY =  $(PUB_BUILD)/xquery
 
 BUILD_SAMPLES = $(PUB_BUILD)/Samples
 BUILD_SAMPLES_JS = $(PUB_BUILD)/Samples/js
@@ -67,6 +70,7 @@ package:
 	mkdir $(PUB_BUILD)
 	mkdir $(BUILD_DOCS)
 	mkdir $(BUILD_JS)
+	mkdir $(BUILD_XQY)
 	mkdir $(BUILD_DOCS_JSDOC)
 	mkdir $(BUILD_SAMPLES)
 	mkdir $(BUILD_SAMPLES_JS)
@@ -96,6 +100,7 @@ package:
 #	./setVersion patch $(ML)/word-processing-ml.xqy $(PUB_BUILD)/word-processing-ml.xqy
 #	./setVersion patch $(ML)/package.xqy $(PUB_BUILD)/package.xqy
 	#cp -r $(SAMPLES)/* $(BUILD_SAMPLES) 
+	cp $(XQY)/word-processing-ml-support.xqy $(BUILD_XQY)
 	cp $(SAMPLES)/default.xqy $(BUILD_SAMPLES)
 	cp $(SAMPLES)/js/*.js $(BUILD_SAMPLES_JS) 
 	cp $(SAMPLES)/css/*.css $(BUILD_SAMPLES_CSS) 
