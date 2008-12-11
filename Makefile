@@ -102,6 +102,8 @@ package:
 	#cp -r $(SAMPLES)/* $(BUILD_SAMPLES) 
 	cp $(XQY)/word-processing-ml-support.xqy $(BUILD_XQY)
 	cp $(SAMPLES)/default.xqy $(BUILD_SAMPLES)
+	cp $(SAMPLES)/README.txt $(BUILD_SAMPLES)
+	cp $(SAMPLES)/samples-license.txt $(BUILD_SAMPLES)
 	cp $(SAMPLES)/js/*.js $(BUILD_SAMPLES_JS) 
 	cp $(SAMPLES)/css/*.css $(BUILD_SAMPLES_CSS) 
 	cp $(SAMPLES)/img/*.png $(BUILD_SAMPLES_IMG) 
