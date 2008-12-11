@@ -61,8 +61,6 @@ namespace MarkLogic_WordAddin
                 webBrowser1.Navigate(webUrl);
                 webBrowser1.ScriptErrorsSuppressed = true;
 
-                //this.webBrowser1.GotFocus += new EventHandler(webBrowser1_GotFocus);
-                //works, kinda, the selected area loses focus quickly
                 this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted); 
                
             }   
@@ -86,12 +84,8 @@ namespace MarkLogic_WordAddin
         {
              if (!(webBrowser1.Parent.Focused))
              {
-               // MessageBox.Show("HERE");
-               //webBrowser1.Focus();
                webBrowser1.Parent.Focus();
                webBrowser1.Document.Focus();
-               //webBrowser1.Document.GetElementsByTagName("input")[0].Focus();
-
               }
         }
 
@@ -181,8 +175,6 @@ namespace MarkLogic_WordAddin
             {
                 Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
                 int count = doc.CustomXMLParts.Count;
-
-                //ADDED THIS
 
                 foreach (Office.CustomXMLPart c in doc.CustomXMLParts)
                 {
@@ -296,48 +288,6 @@ namespace MarkLogic_WordAddin
              
         }
 
-        //currently no way to replace without delete,add, get new id
-/*
-        public String getSelection()
-        {
-            string wpml = "";
-            try
-            {
-                Word.Range rng = Globals.ThisAddIn.Application.Selection.Range;
-                int stTst = rng.Start;
-                int edTst = rng.End;
-                string xmlizable = "";
-               
-
-                if (stTst < edTst)
-                {
-                    rng.Select();
-                    xmlizable = Globals.ThisAddIn.Application.Selection.WordOpenXML; // wordApp.Selection.WordOpenXML;  //instead of .Text
-                    wpml = Transform.ConvertToWPMLDelimitedFromText(xmlizable);
-                }
-                else
-                {
-                    wpml = "";
-                }
-            }
-
-
-            catch (Exception e)
-            {
-                string errorMsg = e.Message;
-                wpml = "error: "+errorMsg;
-            }
-            
-            if(debugMsg)
-               MessageBox.Show("returning wpml: " + wpml);
-
-            if (debug)
-                wpml = "error: Testing errors";
-
-            return wpml;
-
-        }
-*/
         public String getSelection(int idx)
         {
             string wpml = "";
@@ -382,7 +332,6 @@ namespace MarkLogic_WordAddin
         {
             string docxml = "";
             object missing = System.Reflection.Missing.Value;
-            //MessageBox.Show(wpml);
 
             try
             {
@@ -452,42 +401,64 @@ namespace MarkLogic_WordAddin
 
         }
 
-        //returns the style for the current block
+        //used to return the style xml for the current block
         public String getSentenceAtCursor()
         {
+            //first get SentenceCount, 
+            //next check to see if last thing selected is in a table.
+            //if selection exists
+            //   for table, return xml for last selected cell, else, return xml for last selected sentence
+            //else (no selection)
+            //   for table, retun xml for cell cursor is in, else, return xml for sentence cursor is on
+
             string wpml = "";
             try
             {
 
-                Word.Range rng = Globals.ThisAddIn.Application.Selection.Range;
-                int stTst = rng.Start;
-                int edTst = rng.End;
-                string xmlizable = "";
-                //int rowCount = rng.Rows.Count;
+               int count = Globals.ThisAddIn.Application.Selection.Range.Sentences.Count;
+               Word.Range rng = Globals.ThisAddIn.Application.Selection.Range;
+               int stTst = rng.Start;
+               int edTst = rng.End;
+               string xmlizable = "";
+
+               Word.Table testTbl = null;
+               Word.Cell cell = null;
+               bool tblExists = false;
+
+               //check for existance of table at cursor
+               try
+               {
+                   testTbl = rng.Tables[1];
+                   tblExists = true;
+                   int cellCount = Globals.ThisAddIn.Application.Selection.Cells.Count;
+                   cell = Globals.ThisAddIn.Application.Selection.Cells[cellCount];
+               }
+               catch (Exception e)
+               {
+                   tblExists = false;
+               }
 
                 if (stTst < edTst)
                 {
                     object startLocation = stTst;
                     object endLocation = edTst;
-                    int count = Globals.ThisAddIn.Application.Selection.Range.Sentences.Count;
-                   //MessageBox.Show("SENTENCE COUNT IS" + count);
-                   //MessageBox.Show("ROW COUNT IS" + rowCount);
-
-                    /*
-                    if (rowCount > 0)
-                    {
-                        int sentCount = Globals.ThisAddIn.Application.Selection.Tables[1].Range.Sentences.Count;
-                        MessageBox.Show("Table sentence count " + sentCount);
-                    }
-                    */
 
                     rng = Globals.ThisAddIn.Application.Selection.Range.Sentences[count];
                     rng.Select();
-                    //MessageBox.Show("HERE 1");
-                    xmlizable = Globals.ThisAddIn.Application.Selection.WordOpenXML;
-                    //MessageBox.Show("XMLIZABLE:"+ xmlizable);
-                    wpml = Transform.ConvertToWPMLFromText(xmlizable);
-                    //MessageBox.Show("HERE 2");
+
+                    if (tblExists)
+                    {
+                        //MessageBox.Show("Using Cell Range for XML");
+                        xmlizable = cell.Range.WordOpenXML;
+                        //tables always append empty paragraph; remove and return table only
+                        wpml = Transform.ConvertToWPMLFromTextIdx(xmlizable,0);
+                    }
+                    else
+                    {
+                        xmlizable = Globals.ThisAddIn.Application.Selection.WordOpenXML;
+                        wpml = Transform.ConvertToWPMLFromText(xmlizable);
+                    }
+
                     rng = Globals.ThisAddIn.Application.ActiveDocument.Range(ref startLocation, ref endLocation);
                     rng.Select();
                 }
@@ -500,12 +471,24 @@ namespace MarkLogic_WordAddin
                     object startLocation = newStart;
                     object endLocation = newEnd;
 
-                    //need to grab range where cursor is for property preview
+                    //need to grab range where cursor is for xml preview
                     rng = Globals.ThisAddIn.Application.Selection.Range.Sentences[1];
                     rng.Select();
-                    xmlizable = Globals.ThisAddIn.Application.Selection.WordOpenXML;
-                    wpml = Transform.ConvertToWPMLFromText(xmlizable);
 
+                    //check if cursor is in table
+                    if (tblExists)
+                    {
+                        xmlizable = cell.Range.WordOpenXML;
+                        //tables always append empty paragraph; remove and return table only
+                        wpml = Transform.ConvertToWPMLFromTextIdx(xmlizable, 0);
+                    }
+                    else
+                    {
+                        xmlizable = Globals.ThisAddIn.Application.Selection.WordOpenXML;
+                        wpml = Transform.ConvertToWPMLFromText(xmlizable);
+                    }
+
+                    //return range to original state (selection or cursor position)
                     rng = Globals.ThisAddIn.Application.ActiveDocument.Range(ref startLocation, ref endLocation);
                     rng.Select();
 
@@ -596,8 +579,7 @@ namespace MarkLogic_WordAddin
             }
             catch (Exception e)
             {
-                string errMsg = e.Message;
-                //System.Windows.Forms.MessageBox.Show("Error in InsertBlock.\r\n\r\nUnable To Insert At This Location.\r\n\r\n" + ef.Message + ef.StackTrace);
+                string errMsg = e.Message; 
                 message = "error: "+errMsg;
             }
 

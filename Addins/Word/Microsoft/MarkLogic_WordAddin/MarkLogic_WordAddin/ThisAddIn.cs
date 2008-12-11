@@ -32,16 +32,7 @@ namespace MarkLogic_WordAddin
 
         public void AddAllTaskPanes()
         {
-            // First check if there are any open documents.
-           
-           // opening existing doc has doc.count of 0 ??
-           // probably because addin loads before document does, how to handle?
-           // MessageBox.Show(""+Globals.ThisAddIn.Application.Documents.Count);
-           // if (Globals.ThisAddIn.Application.Documents.Count == 0)
-           // {
-           //  Document d = Globals.ThisAddIn.Application.ActiveDocument;
-           //  Globals.ThisAddIn.Application.ActiveDocument = d;
-           // }else
+            
             if (Globals.ThisAddIn.Application.Documents.Count >= 0)
             {
                 // If Show all windows in the Taskbar is selected then 
@@ -77,9 +68,6 @@ namespace MarkLogic_WordAddin
             // The third argument, which is optional, specifies the 
             // parent window for the custom task pane. 
             ctpML = this.CustomTaskPanes.Add(new UserControl1(), ac.getCTPTitleLabel(), doc.ActiveWindow);
-
-            // Display the custom task pane.
-          
             ctpML.Visible = true;
             ctpML.Width = 400;
         }
@@ -119,7 +107,6 @@ namespace MarkLogic_WordAddin
 
         private void Application_DocumentOpen(Document Doc)
         {
-            //MessageBox.Show("IN DOCUMENT OPEN");
             RemoveOrphanedTaskPanes();
             if (mlPaneDisplayed && this.Application.ShowWindowsInTaskbar)
             {
@@ -129,7 +116,6 @@ namespace MarkLogic_WordAddin
 
         private void Application_NewDocument(Document Doc)
         {
-            //MessageBox.Show("IN NEW DOCUMENT");
             if (mlPaneDisplayed && this.Application.ShowWindowsInTaskbar)
             {
 
@@ -139,22 +125,14 @@ namespace MarkLogic_WordAddin
 
         private void Application_DocumentChange()
         {
-
-            
             RemoveOrphanedTaskPanes();
-           // MessageBox.Show("IN DOCUMENT CHANGE");
         }
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            //MessageBox.Show("IN STARTUP");
             string ribbonBtnLabel = ac.getRibbonButtonLabel();
             string ribbonGroupLabel = ac.getRibbonGroupLabel();
             string ribbonTabLabel = ac.getRibbonTabLabel();
-            //Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = true;
-            //Globals.ThisAddIn.CTPManager.ManageToggleButton(Globals.Ribbons.Ribbon1.viewTaskPaneButton);
-            //Globals.ThisAddIn.CTPManager.ToggleTaskPane(Globals.ThisAddIn.Application.ActiveWindow);
-            //Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = true;
             if(!(ribbonBtnLabel.Equals("") || ribbonBtnLabel==null)) 
                Globals.Ribbons.Ribbon1.viewTaskPaneButton.Label = ribbonBtnLabel;
 
@@ -210,9 +188,7 @@ namespace MarkLogic_WordAddin
             this.Shutdown += new System.EventHandler(ThisAddIn_Shutdown);
         }
 
-       //added for testing
-
-
+        //added for testing
         /*
                public void OnConnection(object application,
                                  Extensibility.ext_ConnectMode connectMode,
@@ -223,13 +199,8 @@ namespace MarkLogic_WordAddin
                     Microsoft.VisualBasic.Interaction.CallByName(addInInst, "Object", Microsoft.VisualBasic.CallType.Let, this);
 
                 }
-         * */
-/*
-        public string SomeMethod(string inString)
-        { 
-            return "Connect.SomeMethod(\"" + inString + "\") called!";
-        }
-*/
+         */
+
         #endregion
     }
 }

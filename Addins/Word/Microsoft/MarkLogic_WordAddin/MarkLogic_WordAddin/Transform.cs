@@ -109,41 +109,6 @@ namespace MarkLogic_WordAddin
             return response.ToString();
         }
 
-  /*      public static string ConvertToWPMLFromTextFinalNode(string wordprocessingML)
-        {
-            StringBuilder response = new StringBuilder();
-            try
-            {
-                XmlDocument document = new XmlDocument();
-                document.LoadXml(wordprocessingML);
-                XmlNode content = document.SelectSingleNode(bodyXPath, NamespaceManager);
-                if (content.ChildNodes.Count > 0)
-                {
-                    content.RemoveChild(content.LastChild);
-                }
-
-                int length = 0;
-                int counter = 0;
-                length = content.ChildNodes.Count;
-
-                foreach (XmlNode n in content.ChildNodes)
-                {
-                    // System.Windows.Forms.MessageBox.Show(n.OuterXml);
-
-                    
-                    counter++;
-                    if (counter == length)
-                        response.Append(n.OuterXml);
-
-                }
-            }
-            catch (Exception e)
-            {
-                response.Append("Error " + e.Message);
-            }
-            return response.ToString();
-        }
-        */
         public static string ConvertToWPMLFromTextIdx(string wordprocessingML, int idx)
         {
             StringBuilder newResponse = new StringBuilder();
@@ -180,6 +145,7 @@ namespace MarkLogic_WordAddin
             {
                 newResponse.Append("Error " + e.Message);
             }
+
             return newResponse.ToString();
         }
 
