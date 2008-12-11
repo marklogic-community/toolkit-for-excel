@@ -33,28 +33,6 @@ namespace MarkLogic_WordAddin
                 "w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
         }
 
-      /*  public static string GetActiveDocXML()
-        {
-            //Get current Selected Range
-            Word.Range tmprng = Globals.ThisAddIn.Application.Selection.Range;
-            int tmpRangeStart = tmprng.Start;
-            int tmpRangeEnd = tmprng.End;
-
-
-            //Get docxml for current doc, which will shift range to entire doc
-            Globals.ThisAddIn.Application.ActiveDocument.Content.Select();
-            string docxml = Globals.ThisAddIn.Application.Selection.WordOpenXML;
-
-            //reset range
-            object tmpstart = tmpRangeStart;
-            object tmpend = tmpRangeEnd;
-            Word.Range rng = Globals.ThisAddIn.Application.ActiveDocument.Range(ref tmpstart, ref tmpend);
-            rng.Select();
-
-            return docxml;
-        }
-       * */
-
         public static string GetActiveDocumentXml(string wordprocessingML)
         {
             StringBuilder response = new StringBuilder();
@@ -110,6 +88,7 @@ namespace MarkLogic_WordAddin
                 XmlDocument document = new XmlDocument();
                 document.LoadXml(wordprocessingML);
                 XmlNode content = document.SelectSingleNode(bodyXPath, NamespaceManager);
+                //System.Windows.Forms.MessageBox.Show("CONTENT XML: "+content.InnerXml);
                 if (content.ChildNodes.Count > 0)
                 {
                     content.RemoveChild(content.LastChild);
@@ -125,10 +104,12 @@ namespace MarkLogic_WordAddin
             {
                 response.Append("Error " + e.Message);
             }
+
+            //System.Windows.Forms.MessageBox.Show("RESPONSE IS:"+response.ToString());
             return response.ToString();
         }
-       
-        public static string ConvertToWPMLFromTextFinalNode(string wordprocessingML)
+
+  /*      public static string ConvertToWPMLFromTextFinalNode(string wordprocessingML)
         {
             StringBuilder response = new StringBuilder();
             try
@@ -162,7 +143,7 @@ namespace MarkLogic_WordAddin
             }
             return response.ToString();
         }
-
+        */
         public static string ConvertToWPMLFromTextIdx(string wordprocessingML, int idx)
         {
             StringBuilder newResponse = new StringBuilder();
@@ -201,56 +182,7 @@ namespace MarkLogic_WordAddin
             }
             return newResponse.ToString();
         }
-/*
-        public static string ConvertToWPMLDelimitedFromText(string wordprocessingML)
-        {
-            //StringBuilder tmpResponse = new StringBuilder();
-            StringBuilder newResponse = new StringBuilder();
-            //StringBuilder response = new StringBuilder();
-            try
-            {
-                XmlDocument document = new XmlDocument();
-                document.LoadXml(wordprocessingML);
-                XmlNode content = document.SelectSingleNode(bodyXPath, NamespaceManager);
-                //removes w:sectPr
-                if (content.ChildNodes.Count > 0)
-                {
-                    content.RemoveChild(content.LastChild);
-                }
 
-                int length = 0;
-                int counter = 0;
-                length = content.ChildNodes.Count;
-
-                foreach (XmlNode n in content.ChildNodes)
-                {
-                   // System.Windows.Forms.MessageBox.Show(n.OuterXml);
-                  
-                    newResponse.Append(n.OuterXml);
-                    counter++;
-                    if (counter < length)
-                        newResponse.Append("U+016000");
-
-                }
-           
-
-        //        System.Windows.Forms.MessageBox.Show("FULL STRING: " + newResponse.ToString());
-
-        //        using (XmlTextWriter writer = new XmlTextWriter(
-        //            new StringWriter(response)))
-        //        {
-        //            writer.Formatting = Formatting.Indented;
-        //            content.WriteContentTo(writer);
-        //        }
-         }
-           catch (Exception e)
-            {
-               newResponse.Append("Error " + e.Message);
-           }
-            return newResponse.ToString();
-        }
-
-*/
         //USING THIS TO INSERT FINAL 2
         //UPDATED THIS, USED FOR RETAINING SOURCE FORMATTING
         //USING FOR INSERTING WITH STYLES
@@ -316,7 +248,6 @@ namespace MarkLogic_WordAddin
                 document.LoadXml(docx);
 
                 XmlNode doc = document.SelectSingleNode(documentXPath, NamespaceManager);
-                //System.Windows.Forms.MessageBox.Show("DOCUMENT INNERXML" + doc.InnerXml);
                 doc.InnerXml = documentXml;
 
                 using (StringWriter writer = new StringWriter(builder))

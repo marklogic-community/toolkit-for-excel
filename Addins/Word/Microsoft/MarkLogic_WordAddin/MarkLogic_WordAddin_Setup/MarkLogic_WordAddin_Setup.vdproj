@@ -920,9 +920,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:MarkLogic Word Add-in"
+        "ProductName" = "8:MarkLogic Add-in for Word"
         "ProductCode" = "8:{40D875B9-AF8C-456F-BC8E-107A5095C42E}"
-        "PackageCode" = "8:{024341BB-6640-421D-92F1-B89CAA5B6192}"
+        "PackageCode" = "8:{DAE39E96-B6BE-4CD3-8B4A-C4B3A37AC1FE}"
         "UpgradeCode" = "8:{BA58D1F8-2509-467D-A6A5-C6982D44FE7A}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"

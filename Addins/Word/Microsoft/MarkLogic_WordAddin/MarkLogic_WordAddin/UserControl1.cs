@@ -463,16 +463,31 @@ namespace MarkLogic_WordAddin
                 int stTst = rng.Start;
                 int edTst = rng.End;
                 string xmlizable = "";
+                //int rowCount = rng.Rows.Count;
 
                 if (stTst < edTst)
                 {
                     object startLocation = stTst;
                     object endLocation = edTst;
                     int count = Globals.ThisAddIn.Application.Selection.Range.Sentences.Count;
+                   //MessageBox.Show("SENTENCE COUNT IS" + count);
+                   //MessageBox.Show("ROW COUNT IS" + rowCount);
+
+                    /*
+                    if (rowCount > 0)
+                    {
+                        int sentCount = Globals.ThisAddIn.Application.Selection.Tables[1].Range.Sentences.Count;
+                        MessageBox.Show("Table sentence count " + sentCount);
+                    }
+                    */
+
                     rng = Globals.ThisAddIn.Application.Selection.Range.Sentences[count];
                     rng.Select();
+                    //MessageBox.Show("HERE 1");
                     xmlizable = Globals.ThisAddIn.Application.Selection.WordOpenXML;
+                    //MessageBox.Show("XMLIZABLE:"+ xmlizable);
                     wpml = Transform.ConvertToWPMLFromText(xmlizable);
+                    //MessageBox.Show("HERE 2");
                     rng = Globals.ThisAddIn.Application.ActiveDocument.Range(ref startLocation, ref endLocation);
                     rng.Select();
                 }
@@ -524,7 +539,7 @@ namespace MarkLogic_WordAddin
             tmp = tmp.Replace(" xmlns:w10=\"urn:schemas-microsoft-com:office:word\"", "");
             tmp = tmp.Replace(" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"", "");
             tmp = tmp.Replace(" xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\"", "");
-          //  tmp = tmp.Replace("   ", "");
+            //tmp = tmp.Replace("   ", "");
 
             return tmp;
 
@@ -592,475 +607,6 @@ namespace MarkLogic_WordAddin
             return message;
         }
 
-
-        //FOLLOWING ARE UNDOCUMENTED AND NOT OFFICIALLY SANCTIONED METHODS
-        //THESE MAY BE REMOVED, OR CHANGE
-        //====================================================================
-        public String getRangeForSelection()
-        {
-            string message="";
-            try
-            {
-
-                Word.Range rng = Globals.ThisAddIn.Application.Selection.Range;
-                int stTst = rng.Start;
-                int edTst = rng.End;
-
-                if (stTst < edTst)
-                    message = stTst + ":" + edTst;
-            }
-            catch (Exception e)
-            {
-                string errMsg = e.Message; 
-                message = "error: " + errMsg;
-            }
-
-            if (debug)
-                message = "error: TESTING ERRORS";
-
-            return message;
-        }
-
-        public String getRangesForTerm(string searchTerm)
-        {
-            string message = "";
-            object searchText = searchTerm;
-            object missing = System.Reflection.Missing.Value;
-            object start = 0;
-
-            Word.Range rng = Globals.ThisAddIn.Application.ActiveDocument.Content;
-            try
-            {
-                rng.Find.ClearFormatting();
-                rng.Find.Forward = true;
-                rng.Find.MatchWholeWord = true;   //parameterize (as well as case?sounds like?)   
-                rng.Find.Text = searchTerm;
-
-                rng.Find.Execute(
-                    ref missing, ref missing, ref missing, ref missing, ref missing,
-                    ref missing, ref missing, ref missing, ref missing, ref missing,
-                    ref missing, ref missing, ref missing, ref missing, ref missing);
-
-                while (rng.Find.Found)
-                {
-
-                    MessageBox.Show("RANGE" + rng.Start + " " + rng.End);
-                    message = message + rng.Start + ":" + rng.End + " ";
-
-                        rng.Find.Execute(
-                        ref missing, ref missing, ref missing, ref missing, ref missing,
-                        ref missing, ref missing, ref missing, ref missing, ref missing,
-                        ref missing, ref missing, ref missing, ref missing, ref missing);
-                }
-                message=message.Trim();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("IN ERROR");
-                string errMsg = e.Message;
-                message = "error: " + errMsg;
-            }
-
-            if (debug)
-                message = "error: TESTING ERRORS";
-
-            //MessageBox.Show("RETURNING: " + message);
-            return message;
-        }
-
-
-        public String addContentControlToRange(string ranges, string title, string tag, bool lockStatus)
-        {
-            string message = "";
-            object missing = System.Reflection.Missing.Value;
-            ranges = ranges.Trim();
-            char[] delimiter = { ' ' };
-
-            if (!(ranges.Equals("") || ranges == null))
-            {
-                string[] tmp1 = ranges.Split(delimiter);
-                if (tmp1.Length > 0)
-                {
-                    char[] delimiter2 = { ':' };
-                    int count = 0;
-                    try
-                    {
-                        foreach (string x in tmp1)
-                        {
-                            string[] tmp2 = x.Split(delimiter2);
-                            int start = System.Convert.ToInt32(tmp2[0], 10);
-                            int end = System.Convert.ToInt32(tmp2[1], 10);
-                            object s = start + count;
-                            object e = end + count;
-
-                            //count++; //range shifts as each comment added (i know, wtf?)
-                            Word.Range rng = Globals.ThisAddIn.Application.ActiveDocument.Range(ref s, ref e);
-
-                            //can't add comment to plain text control, or to control that's locked
-                            //how bout adding other control???
-                            //which leads to question - unlock, add comment, relock???
-                            bool locked = false;
-                            bool plainText = false;
-                            Word.Range rngSection = rng.Sections[1].Range;
-                            Word.ContentControls cs = rngSection.ContentControls;
-
-                            foreach (Word.ContentControl cc in cs)
-                            {
-                                // MessageBox.Show("TYPE IS" + cc.Type);
-                                if (rng.InRange(cc.Range) && locked == false && plainText == false)
-                                {
-                                    if (cc.LockContents == true)
-                                        locked = true;
-
-                                    if (cc.Type.Equals(Microsoft.Office.Interop.Word.WdContentControlType.wdContentControlText))
-                                        plainText = true;
-                                }
-                            }
-                            //added if around comments.add line
-                            if (!locked && !plainText)
-                            {
-                                //rng.Comments.Add(rng, ref cmt);
-
-                                Word.ContentControl cControl = rng.ContentControls.Add(Microsoft.Office.Interop.Word.WdContentControlType.wdContentControlRichText, ref missing);
-                                cControl.Title = title;
-                                cControl.Tag = tag;
-                                string t = rng.Text;
-                                cControl.Range.Text = t;
-                                cControl.LockContents = lockStatus;
-                                cControl.LockContents = lockStatus;
-
-                                int len = t.Length + 1;
-
-                                //Have to shift range manually to get out of new Content Control
-                                rng.Start = rng.End + len;
-                                //have to add 2 to range for controls, 1 to range for comments
-                                //in this if as we only increase if we add a control
-                                count++;
-                                count++;
-                            }
-                            // MessageBox.Show("VALUE OF start" + start + "end " + end);
-                            // MessageBox.Show("TRUE" + rng.StoryLength + " " + rng.StoryType + "");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        string errMsg = ex.Message;
-                        message = "error: " + errMsg;
-                    }
-
-
-                    if (debug)
-                        message = "error: TESTING ERRORS";
-
-
-                }
-            }
-            return message;
-
-        }
-
-        //can't add comment to locked content controls - change this? (we can make the change)
-        //noting for discussion later
-        public String addCommentToRange(string ranges, string comment)
-        {
-            string message = "";
-            ranges = ranges.Trim();
-            //MessageBox.Show("IN FUNCTION  ranges:"  +ranges + " comment: "+comment);
-            char[] delimiter = { ' ' };
-            if (!(ranges.Equals("") || ranges == null))
-            {
-
-              string[] tmp1 = ranges.Split(delimiter);
-              if (tmp1.Length > 0)
-              {
-                char[] delimiter2 = { ':' };
-                int count = 0;
-                try
-                {
-                    foreach (string x in tmp1)
-                    {
-                        string[] tmp2 = x.Split(delimiter2);
-                        int start = System.Convert.ToInt32(tmp2[0], 10);
-                        int end = System.Convert.ToInt32(tmp2[1], 10);
-                        object s = start + count;
-                        object e = end + count;
-
-                       //count++; //range shifts as each comment added (i know, wtf?)
-                        Word.Range rng = Globals.ThisAddIn.Application.ActiveDocument.Range(ref s, ref e);
-
-                        object cmt = comment;
-
-                        //added from here to next comment to check for rang in control with lock
-                        //can't add comment to plain text control, or to control that's locked
-                        //which leads to question - unlock, add comment, relock???
-                        bool locked = false;
-                        bool plainText = false;
-                        Word.Range rngSection = rng.Sections[1].Range;
-                        Word.ContentControls cs = rngSection.ContentControls;
-                       
-                        foreach (Word.ContentControl cc in cs)
-                        {
-                            // MessageBox.Show("TYPE IS" + cc.Type);
-                            if (rng.InRange(cc.Range) && locked == false && plainText == false)
-                            {
-                                if (cc.LockContents == true)
-                                    locked = true;
-
-                                if (cc.Type.Equals(Microsoft.Office.Interop.Word.WdContentControlType.wdContentControlText))
-                                    plainText = true;
-                            }
-                        }
-                        //added if around comments.add line
-                        if (!locked && !plainText)
-                        {
-                            rng.Comments.Add(rng, ref cmt);
-                            count++;
-                        }
-                        // MessageBox.Show("VALUE OF start" + start + "end " + end);
-                        // MessageBox.Show("TRUE" + rng.StoryLength + " " + rng.StoryType + "");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    string errMsg = ex.Message;
-                    message = "error: " + errMsg;
-                }
-             
-
-                    if (debug)
-                        message = "error: TESTING ERRORS";
-
-                    
-              }
-            }
-            return message;
-        }
-
-        //orig, broke this up into 2 functions, one to get ranges, on too add comment based on ranges
-        public String addCommentForText(string searchTerm, string comment)//(string comment, string text)
-        {
-           
-            string message = "";
-            object searchText = searchTerm;
-            object commentText = comment;
-            object missing = System.Reflection.Missing.Value;
-
-            object start = 0;
-
-            Word.Range rng = Globals.ThisAddIn.Application.ActiveDocument.Content;
-            try
-            {
-                rng.Find.ClearFormatting();
-                rng.Find.Forward = true;
-                rng.Find.MatchWholeWord = true;   //parameterize (as well as case?sounds like?)   
-                rng.Find.Text = searchTerm;
-
-                rng.Find.Execute(
-                    ref missing, ref missing, ref missing, ref missing, ref missing,
-                    ref missing, ref missing, ref missing, ref missing, ref missing,
-                    ref missing, ref missing, ref missing, ref missing, ref missing);
-
-                while (rng.Find.Found)
-                {
-                    bool locked = false;
-                    bool plainText = false;
-                    Word.Range rngSection = rng.Sections[1].Range;
-                    Word.ContentControls cs = rngSection.ContentControls;
-                    
-                    foreach (Word.ContentControl cc in cs)
-                    {
-                      // MessageBox.Show("TYPE IS" + cc.Type);
-                        if (rng.InRange(cc.Range) && locked == false && plainText ==false)
-                        {
-                            if (cc.LockContents == true)
-                                locked = true;
-
-                            if (cc.Type.Equals(Microsoft.Office.Interop.Word.WdContentControlType.wdContentControlText))
-                                plainText = true;
-                        }
-                    }
-
-                    //MessageBox.Show("LOCKED: " + locked + "  PLAINTEXT: " + plainText);
-
-                    if (!locked && !plainText)
-                    {
-                        try
-                        {
-                            rng.Comments.Add(rng, ref commentText);
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show("unable to add comment" + e.Message);
-                        }
-                    }
-
-                    rng.Find.Execute(
-                        ref missing, ref missing, ref missing, ref missing, ref missing,
-                        ref missing, ref missing, ref missing, ref missing, ref missing,
-                        ref missing, ref missing, ref missing, ref missing, ref missing);
-                }
-            }catch(Exception e)
-            {
-                string errMsg = e.Message;
-                message = "error: " + errMsg;
-            }
-
-            if (debug)
-                message = "error: TESTING ERRORS";
-         
-            return message;
-
-        }
-
-
-        //will only add control to text that is not in locked control already
-        //we can change this, not even sure how useful this function is though
-        //noting here for later
-        public String addContentControlForText(string searchTerm, string title, string tag, bool lockstatus)//(string comment, string text)
-        {
-            string message = "";
-            object missing = System.Reflection.Missing.Value;
-            object start = 0;
-            Word.Range rng = Globals.ThisAddIn.Application.ActiveDocument.Content;
-           
-            try
-            {
-                rng.Find.ClearFormatting();
-                rng.Find.Forward = true;
-                rng.Find.MatchWholeWord = true;   //parameterize (as well as case?sounds like?)   
-                rng.Find.Text = searchTerm;
-
-                rng.Find.Execute(
-                    ref missing, ref missing, ref missing, ref missing, ref missing,
-                    ref missing, ref missing, ref missing, ref missing, ref missing,
-                    ref missing, ref missing, ref missing, ref missing, ref missing);
-
-                while (rng.Find.Found)
-                {
-                    bool identical = false;
-                    bool found = false;
-                    bool lockedcontent = false;
-                    bool plainText = false;
-
-                    string foundtag = "";
-                    string foundtitle = "";
-                    Word.Range rngSection = rng.Sections[1].Range;
-                    Word.ContentControls cs = rngSection.ContentControls;
-
-
-                   // MessageBox.Show("COUNT" + cs.Count);
-
-                    foreach (Word.ContentControl cc in cs)
-                    {
-
-                        if (rng.InRange(cc.Range) && found==false  && identical==false && lockedcontent ==false  && plainText==false)
-                        {
-                            found = true;
-                            foundtag = cc.Tag;
-                            foundtitle = cc.Title;
-                           // MessageBox.Show("CONTROL TAG: " + cc.Tag + "CONTROL TITLE: " + cc.Title);
-                          //  MessageBox.Show("TAG: " + tag + "TITLE: " + title);
-                            if (foundtag.Equals(tag) && foundtitle.Equals(title))
-                            {
-                             //   MessageBox.Show("THEYRE EQUAL");
-                                identical = true;
-                            }
-                            else
-                            {
-                                //MessageBox.Show("They're not equal");
-                                found = false;
-                            }
-
-                            if (cc.LockContents.Equals(true))
-                            {
-                                lockedcontent = true;
-                            }
-
-                            if (cc.Type.Equals(Microsoft.Office.Interop.Word.WdContentControlType.wdContentControlRichText))
-                                plainText = true;
-
-
-
-                        }
-
-                    }
-                    
-                    //the control doesn't exist and is not identical to the existing control
-                    if (!found && !identical  && !lockedcontent  && !plainText)
-                    {
-                        Word.ContentControl cControl = rng.ContentControls.Add(Microsoft.Office.Interop.Word.WdContentControlType.wdContentControlRichText, ref missing);
-                        cControl.Title = title;
-                        cControl.Tag = tag;
-                        MessageBox.Show("LOCKSTATUS" + lockstatus);
-                        string t = rng.Text;
-                        cControl.Range.Text = t;
-                        cControl.LockContentControl = lockstatus;
-                        cControl.LockContents = lockstatus;
-
-
-                        int len = t.Length + 1;
-
-                        //Have to shift range manually to get out of new Content Control
-                        rng.Start = rng.End + len;
-                        //MessageBox.Show("Adding controls");
-                    }
-                    else
-                    {
-                        //MessageBox.Show("Already in control");
-                    }
-
-                    rng.Find.Execute(
-                        ref missing, ref missing, ref missing, ref missing, ref missing,
-                        ref missing, ref missing, ref missing, ref missing, ref missing,
-                        ref missing, ref missing, ref missing, ref missing, ref missing);
-                }
-            }
-            catch (Exception e)
-            {
-                string errMsg = e.Message;
-                message = "error: " + errMsg;
-                MessageBox.Show(errMsg);
-            }
-
-            if (debug)
-                message = "error: TESTING ERRORS";
-
-            return message;
-
-        }
-
-        //have to think about this one, if you delete, you remove the content
-        //but what if this control is child of another
-        //want to remove control, but not content if parent is content control
-        //need to update this to remove control, leaving parents
-        //noting for discussion later
-
-        public String deleteContentControl()
-        {
-            MessageBox.Show("IN FUNCTION");
-            string message = "";
-            string tag = "5TAGFORCONTROL";
-            Word.ContentControls wccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
-            Word.Document wd = Globals.ThisAddIn.Application.ActiveDocument;
-          
-
-            foreach(Word.ContentControl cc in wccs)
-            {
-                MessageBox.Show("TAG IS: " + cc.Tag);
-                if (cc.Tag.Equals(tag))
-                {
-                    cc.LockContentControl = false;
-                    cc.LockContents = false;
-                    cc.Delete(true);
-                 
-                    MessageBox.Show("REMOVING CONTROL");
-
-                }
-            }
-
-            return message;
-        }
-
         public String insertText(string text)
         {
             string message = "";
@@ -1088,128 +634,51 @@ namespace MarkLogic_WordAddin
             object missing = System.Reflection.Missing.Value;
             Word.Selection selection = Globals.ThisAddIn.Application.Selection;//((Word.Window)control.Context).Application.Selection;
             int selectionLength = selection.Range.End - selection.Range.Start;
+            //int rowCount;
 
-            if (selectionLength > 0)
-            {
-
-                message = selection.Text;
-            }
-
-            return message;
-
-        }
-
-        public String insertTextInControl(string text, string tag, bool lockStatus)
-        {
-            string message = "";
-            object missing = System.Reflection.Missing.Value;
-
+            //check to see if we are in a table
+            /*
             try
             {
-                Word.Range rng = Globals.ThisAddIn.Application.Selection.Range;
-                //rng.Text = text;
-                Word.ContentControl cControl = rng.ContentControls.Add(Microsoft.Office.Interop.Word.WdContentControlType.wdContentControlRichText, ref missing);
-                cControl.Title = tag;
-                cControl.Tag = tag;
-                cControl.Range.Text = text;
-                cControl.LockContentControl = lockStatus;
-                cControl.LockContents = lockStatus;
-
+                Word.Rows rows = Globals.ThisAddIn.Application.Selection.Rows;
+                rowCount = rows.Count;
+                //MessageBox.Show("ROW COUNT" + rowCount);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                string errMsg = e.Message;
-                message = "error: " + errMsg;
+                //MessageBox.Show("IN THE EXCEPTION");
+                rowCount = 0;
             }
+            */
 
-            if (debug)
-                message = "error: TESTING ERRORS";
+            /*if (rowCount > 0)
+            {
+                Word.Tables theseTables = Globals.ThisAddIn.Application.Selection.Tables;
+                int tableCount = theseTables.Count;
+                object ns = true;
+                object separator = Word.WdTableFieldSeparator.wdSeparateByParagraphs;
+                if (tableCount > 1) MessageBox.Show("MULTIPLE TABLES");
+               
+                Word.Table thisTable = Globals.ThisAddIn.Application.Selection.Tables[1];
+                Word.Range tr = thisTable.ConvertToText(ref separator,ref ns);
+                MessageBox.Show("TABLE TEXT"+tr.Text);
 
-            return message;
-
-        }
-
-
-        //issue?  seem to lose comments if you add control around commented text
-        public String addContentControlToSelection(string tagName, bool lockStatus)
-        {
-            string message = "";
-            object missing = System.Reflection.Missing.Value;
-            Word.Selection selection = Globals.ThisAddIn.Application.Selection;//((Word.Window)control.Context).Application.Selection;
-            int selectionLength = selection.Range.End - selection.Range.Start;
-
+            }
+            else */
             if (selectionLength > 0)
             {
+                //MessageBox.Show("selection length "+selectionLength);
+                //MessageBox.Show("selection text " + selection.Text);
 
-                if (CreateContentControlInSelection(
-                    selection,
-                    tagName,
-                    tagName,
-                    lockStatus) != null)
-                    //DateTime.Now.ToString()) != null)
-                {
-                    object oUnit = Word.WdUnits.wdCharacter;
-                    object oCount = selectionLength + 1;
-
-                    //Gets out of the content control
-                   
-                    selection.MoveRight(ref oUnit, ref oCount, ref missing);
-                }
+                string tmp = selection.Text;
+                message = selection.Text;
+              
             }
-            
 
             return message;
-        }
 
-        //currently limited to 1 paragraph
-        //need to examine plain text vs. rich text controls
-        private Word.ContentControl CreateContentControlInSelection(
-            Word.Selection selection, string controlName, string controlTag, bool lockStatus)
-        {
-            Word.ContentControl contentControl = null;
-
-           
-            if (selection.Paragraphs.Count > 1)
-            {
-                MessageBox.Show(
-                    "Content control cannot be inserted around multiple paragraphs.",
-                    "Microsoft Office Word", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            else
-            {
-                object oRng = (object)selection.Range;
-                contentControl = selection.Range.ContentControls.Add(
-                    Word.WdContentControlType.wdContentControlRichText, ref oRng);
-                if (contentControl != null)
-                {
-                    contentControl.Range.Text = selection.Text.Replace("\r", "");
-                    contentControl.Tag = controlTag;
-                    contentControl.Title = controlName;
-                    contentControl.LockContents = lockStatus;
-                    contentControl.LockContents = lockStatus;
-                }
-            }
-
-            return contentControl;
         }
        
-       
-        
-/*     public static void AddImagePart(string document, string fileName)
-        {
-            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(document, true))
-            {
-                MainDocumentPart mainPart = wordDoc.MainDocumentPart;
-
-                ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
-
-                using (FileStream stream = new FileStream(fileName, FileMode.Open))
-                {
-                    imagePart.FeedData(stream);
-                }
-            }
-        }
- */
 
     }
 }
