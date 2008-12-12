@@ -614,53 +614,45 @@ namespace MarkLogic_WordAddin
         {
             string message = "";
             object missing = System.Reflection.Missing.Value;
-            Word.Selection selection = Globals.ThisAddIn.Application.Selection;//((Word.Window)control.Context).Application.Selection;
-            int selectionLength = selection.Range.End - selection.Range.Start;
-            //int rowCount;
+            Word.Selection selection = Globals.ThisAddIn.Application.Selection; 
+            int stTst = selection.Range.Start;
+            int edTst = selection.Range.End;
+            int selectionLength = edTst - stTst;
 
-            //check to see if we are in a table
-            /*
-            try
-            {
-                Word.Rows rows = Globals.ThisAddIn.Application.Selection.Rows;
-                rowCount = rows.Count;
-                //MessageBox.Show("ROW COUNT" + rowCount);
-            }
-            catch (Exception ex)
-            {
-                //MessageBox.Show("IN THE EXCEPTION");
-                rowCount = 0;
-            }
-            */
+            Word.Table testTbl = null;
+            bool tblExists = false;
 
-            /*if (rowCount > 0)
-            {
-                Word.Tables theseTables = Globals.ThisAddIn.Application.Selection.Tables;
-                int tableCount = theseTables.Count;
-                object ns = true;
-                object separator = Word.WdTableFieldSeparator.wdSeparateByParagraphs;
-                if (tableCount > 1) MessageBox.Show("MULTIPLE TABLES");
-               
-                Word.Table thisTable = Globals.ThisAddIn.Application.Selection.Tables[1];
-                Word.Range tr = thisTable.ConvertToText(ref separator,ref ns);
-                MessageBox.Show("TABLE TEXT"+tr.Text);
-
-            }
-            else */
             if (selectionLength > 0)
             {
-                //MessageBox.Show("selection length "+selectionLength);
-                //MessageBox.Show("selection text " + selection.Text);
+                //check for table
+                try
+                {   
+                    testTbl = selection.Tables[1];
+                    tblExists = true;
+                }
+                catch (Exception e)
+                {
+                    // no table
+                    tblExists = false;
+                }
 
-                string tmp = selection.Text;
-                message = selection.Text;
-              
+                if (tblExists)
+                {
+                    string wpml = Globals.ThisAddIn.Application.Selection.WordOpenXML;
+                    message = Transform.ExtractTextValuesFromXML(wpml);
+
+                }
+                else  //no table
+                {
+                   string tmp = selection.Text;
+                   message = selection.Text;
+
+                }
+
             }
-
             return message;
-
         }
-       
+
 
     }
 }

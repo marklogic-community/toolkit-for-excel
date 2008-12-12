@@ -109,6 +109,83 @@ namespace MarkLogic_WordAddin
             return response.ToString();
         }
 
+        public static string getRows(XmlNodeList nodes)
+        {
+            string response = "";
+            foreach (XmlNode n in nodes)
+            {
+                 switch (n.NodeType)
+                {
+
+                    case XmlNodeType.Element:
+                        if (n.Name.Equals("w:tr"))
+                        {
+                            XmlNodeList cells = n.SelectNodes("w:tc", NamespaceManager);
+                            foreach (XmlNode cell in cells)
+                                response += cell.InnerText + " ";
+
+                        }
+
+                        break;
+                }
+            }
+
+            return response + "\n"; ;
+        }
+        public static string ExtractTextValuesFromXML(string wordprocessingML)
+        {
+             StringBuilder response = new StringBuilder();
+            
+            try
+            {
+
+                XmlDocument document = new XmlDocument();
+                document.LoadXml(wordprocessingML);
+                XmlNode content = document.SelectSingleNode(bodyXPath, NamespaceManager);
+
+                int nodeCount = content.ChildNodes.Count;
+                //removes w:sectPr
+                if (content.ChildNodes.Count > 0)
+                {
+                    content.RemoveChild(content.LastChild);
+                }
+
+                int length = content.ChildNodes.Count;
+
+                foreach (XmlNode n in content.ChildNodes)
+                {              
+                   switch(n.NodeType)
+                   { 
+
+                     case XmlNodeType.Element:
+                            if(n.Name.Equals("w:tbl")){
+                                response.Append(getRows(n.ChildNodes));
+                            }
+                            else if (n.Name.Equals("w:p"))
+                            {
+                                response.Append(n.InnerText+"\n");
+                            }
+                           break;
+
+                     case XmlNodeType.Text:  
+                           //System.Windows.Forms.MessageBox.Show("TEXT IS:" + n.Value);
+                           break;
+  
+                   }
+
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                response.Append("Error " + e.Message);
+            }
+
+            return response.ToString();
+
+        }
+
         public static string ConvertToWPMLFromTextIdx(string wordprocessingML, int idx)
         {
             StringBuilder newResponse = new StringBuilder();
