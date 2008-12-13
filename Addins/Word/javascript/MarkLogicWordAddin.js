@@ -76,10 +76,18 @@ MLA.errorCheck = function(message)
  */
 MLA.createXMLDOM = function(xmlstring)
 {
-   var xmlDom = new ActiveXObject("Microsoft.XMLDOM");
-       xmlDom.async=false;
-       xmlDom.loadXML(xmlstring);
+	try{
+		var xmlDom = new ActiveXObject("Microsoft.XMLDOM");
+       		xmlDom.async=false;
+       		xmlDom.loadXML(xmlstring);
+	}
+	catch(err)
+ 	{
+                throw("Error: Not able to create XMLDOM from string ");
+	}
 
+        if(xmlDom.text=="" && xmlDom.xml == "")
+                throw("Error: Not able to create XMLDOM from string ");
 
    return xmlDom;
 }
@@ -103,7 +111,7 @@ MLA.escapeXMLCharEntities = function(stringtoconvert)
 	escaped = escaped.replace(/</g, "&lt;");
 	escaped = escaped.replace(/>/g, "&gt;");
 	escaped = escaped.replace(/\"/g,"&quot;");
-	escaped = escaped.replace(/'/g, "&apos;");
+	escaped = escaped.replace(/\'/g, "&apos;");
 	return escaped;
 }
 /** Utility function to create a default WordprocessingML paragraph <w:p>, with no styles, for a given string.
