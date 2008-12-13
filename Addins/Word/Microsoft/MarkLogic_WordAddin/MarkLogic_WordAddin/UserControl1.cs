@@ -610,7 +610,7 @@ namespace MarkLogic_WordAddin
 
         }
 
-        public String getSelectionText()
+        public String getSelectionText(string delimiter)
         {
             string message = "";
             object missing = System.Reflection.Missing.Value;
@@ -639,7 +639,7 @@ namespace MarkLogic_WordAddin
                 if (tblExists)
                 {
                     string wpml = Globals.ThisAddIn.Application.Selection.WordOpenXML;
-                    message = Transform.ExtractTextValuesFromXML(wpml);
+                    message = Transform.ExtractTextValuesFromXML(wpml,delimiter);
 
                 }
                 else  //no table

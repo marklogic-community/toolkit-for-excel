@@ -109,9 +109,14 @@ namespace MarkLogic_WordAddin
             return response.ToString();
         }
 
-        public static string getRows(XmlNodeList nodes)
+        public static string getRows(XmlNodeList nodes, string delimiter)
         {
             string response = "";
+            string delim = "";
+            if (delimiter.Equals(""))
+                delim = "\t";
+            else delim = delimiter;
+
             foreach (XmlNode n in nodes)
             {
                  switch (n.NodeType)
@@ -122,7 +127,7 @@ namespace MarkLogic_WordAddin
                         {
                             XmlNodeList cells = n.SelectNodes("w:tc", NamespaceManager);
                             foreach (XmlNode cell in cells)
-                                response += cell.InnerText + " ";
+                                response += cell.InnerText + delim;
 
                         }
 
@@ -132,7 +137,7 @@ namespace MarkLogic_WordAddin
 
             return response + "\n"; ;
         }
-        public static string ExtractTextValuesFromXML(string wordprocessingML)
+        public static string ExtractTextValuesFromXML(string wordprocessingML, string delimiter)
         {
              StringBuilder response = new StringBuilder();
             
@@ -159,7 +164,7 @@ namespace MarkLogic_WordAddin
 
                      case XmlNodeType.Element:
                             if(n.Name.Equals("w:tbl")){
-                                response.Append(getRows(n.ChildNodes));
+                                response.Append(getRows(n.ChildNodes, delimiter));
                             }
                             else if (n.Name.Equals("w:p"))
                             {

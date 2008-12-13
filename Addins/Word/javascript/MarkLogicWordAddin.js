@@ -148,9 +148,12 @@ MLA.insertText = function(textToInsert)
  * @returns text currently highlighted in ActiveDocument as string
  * @type String
  */
-MLA.getSelectionText = function()
+MLA.getSelectionText = function(delimiter)
 {
-	var selText = window.external.getSelectionText();
+	if(delimiter == null) 
+	    delimiter = "";
+
+	var selText = window.external.getSelectionText(delimiter);
 	var errMsg = MLA.errorCheck(selText);
 	if(errMsg!=null)
 	   throw("Error: Not able to get selection text "+errMsg);
