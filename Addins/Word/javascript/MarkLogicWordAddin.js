@@ -360,18 +360,23 @@ MLA.getSelection = function()
 	}
 
 
-
-	for(i=0;i<selections.length;i++)
+        if(!(selections[0]==null || selections[0]==""))
 	{
-         	domSelections[i] = MLA.createXMLDOM(selections[i]);
-	}
-	
-	if(domSelections.length == 1) 
-	{
-        	if (domSelections[0] == null ||domSelections[0].text == "")
+		for(i=0;i<selections.length;i++)
 		{
-			domSelections.length = 0;
+         		domSelections[i] = MLA.createXMLDOM(selections[i]);
 		}
+	
+		if(domSelections.length == 1) 
+		{
+        		if (domSelections[0] == null ||domSelections[0].text == "")
+			{
+				domSelections.length = 0;
+			}
+		}
+	}else
+	{ 
+		domSelections.length = 0; 
 	}
 
 	return domSelections;
