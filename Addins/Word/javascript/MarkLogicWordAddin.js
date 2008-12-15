@@ -14,10 +14,9 @@
 
 
 /**
- * The MLA namespace is used for global attribution. The methods within this namespace provide ways of interacting with an Active OpenXML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
+ * The MLA namespace is used for global attribution. The methods within this namespace provide ways of interacting with an active Open XML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
  *
- * The methods here are mostly for Word; however, the functions getCustomXMLPart(), getCustomXMLPartIds(), addCustomXMLPart(), and deleteCustomXMLPart() will work for any Open XML package.
- * This object has methods for accessing an ActiveDocument in Word.
+ * The functions here provide ways for interacting with the ActiveDocument in Word; however, the functions getCustomXMLPart(), getCustomXMLPartIds(), addCustomXMLPart(), and deleteCustomXMLPart() will work for any Open XML package, provided they are used within the context of an Addin for the appropriate Office application.
  */
 var MLA = {};
 /*
@@ -83,11 +82,11 @@ MLA.createXMLDOM = function(xmlstring)
 	}
 	catch(err)
  	{
-                throw("Error: Not able to create XMLDOM from string ");
+                throw("Error: Not able to create XMLDOM from string.  Make sure XML is well formed. ");
 	}
 
         if(xmlDom.text=="" && xmlDom.xml == "")
-                throw("Error: Not able to create XMLDOM from string ");
+                throw("Error: Not able to create XMLDOM from string.  Make sure XML is well formed. ");
 
    return xmlDom;
 }
@@ -144,27 +143,12 @@ MLA.insertText = function(textToInsert)
 	  textAdded = null;
 }
 /**
- *  Returns the text currently selected (highlighted) by the user in the ActiveDocument.  Whatever is highlighted by the user will be returned in this function as a string.  A user may highlight text from multiple paragraphs or from tables.  For this reason, the function returns an array, where each element of the array is a string that contains the text for the structure highlighted by the user in the ActiveDocument.  The order of elements in the array represents the order of items that are highlighted in the ActiveDocument.
+ *  Returns the text currently selected (highlighted) by the user in the ActiveDocument.  Whatever is highlighted by the user will be returned in this function as a string.  A user may highlight text from multiple paragraphs or from tables.  For this reason, the function returns an array, where each element of the array is a string that contains the text contained by the structure highlighted by the user in the ActiveDocument.  The order of elements in the array represents the order of items that are highlighted in the ActiveDocument.
  *@return the text selected by the user in the ActiveDocument as strings. If nothing is selected, an empty array is returned.
  *@type Array
  *@param delimiter (optional) Text from tables will be returned as a single string, with cells delimited by tabs (default).  This param may be used to assign a different delimiter.  Note: there is no delimiter for text from paragraphs, as each paragraph will be captured in separate array elements.
  *@throws Exception if unable to retrieve the Selection
  */
-/*MLA.getSelectionText = function(delimiter)
-{
-	if(delimiter == null) 
-	    delimiter = "";
-
-	var selText = window.external.getSelectionText(delimiter);
-	var errMsg = MLA.errorCheck(selText);
-	if(errMsg!=null)
-	   throw("Error: Not able to get selection text "+errMsg);
-     
-	if(selText=="")
-	  selText = null;
-
-	return selText;
-}*/
 MLA.getSelectionText = function(delimiter)
 {
         if(delimiter == null) 
@@ -223,8 +207,8 @@ MLA.getSelectionText = function(delimiter)
 	return selections;
 }
 /**
- * Returns ids for custom parts (not built-in) that are part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
- * @returns the ids for custom XML parts in active OpenXML package as array of string
+ * Returns ids for custom parts (not built-in) that are part of the active Open XML package. (.docx, .xlsx, .pptx, etc.)
+ * @returns the ids for custom XML parts in active Open XML package as array of string
  * @type Array 
  */
 MLA.getCustomXMLPartIds = function()
@@ -250,7 +234,7 @@ MLA.getCustomXMLPartIds = function()
 }
 
 /**
- * Returns the custom XML part, identified by customXMLPartId, that is part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
+ * Returns the custom XML part, identified by customXMLPartId, that is part of the active Open XML package. (.docx, .xlsx, .pptx, etc.)
  * @param customXMLPartId the id of the custom part to be fetched from the active package
  * @return the XML for the custom part as a DOM object. 
  * @type Microsoft.XMLDOM object 
@@ -280,7 +264,7 @@ MLA.getCustomXMLPart = function(customXMLPartId)
 	return v_cp;
 }
 
-/** Adds custom part to active OpenXML package.  Returns the id of the part added.
+/** Adds custom part to active Open XML package.  Returns the id of the part added.
  *@param customPartXML Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. )
  *@return id for custom part added 
  *@type String
@@ -310,8 +294,8 @@ MLA.addCustomXMLPart = function(customPartXml)
 	return newId;
 }
 
-/** Deletes custom part from Active OpenXML package identified by id.
- *@param customXMLPartId the id of the custom part to be deleted from the active OpenXML package.
+/** Deletes custom part from Active Open XML package identified by id.
+ *@param customXMLPartId the id of the custom part to be deleted from the active Open XML package.
  *@throws Exception if unable to delete custom part
  */
 MLA.deleteCustomXMLPart = function(customXMLPartId)
@@ -548,7 +532,7 @@ MLA.insertBlockContent = function(blockContentXml,stylesXml)
 /**
  *
  *Returns MLA.config. The fields for this object are version, url, and theme.  
-version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color of Office. 
+version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color scheme used by Office. 
  *@throws Exception if unable to create MLA.config object
  */
 MLA.getConfiguration = function()
