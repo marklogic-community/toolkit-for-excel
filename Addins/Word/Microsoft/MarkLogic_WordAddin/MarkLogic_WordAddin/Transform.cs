@@ -137,14 +137,16 @@ namespace MarkLogic_WordAddin
 
             return response + "\n"; ;
         }
-        public static string ExtractTextValuesFromXML(string wordprocessingML, string delimiter)
+
+        public static string ExtractTextValuesFromXML(string wordprocessingML, int idx, string delimiter)
         {
-             StringBuilder response = new StringBuilder();
-            
+            StringBuilder response = new StringBuilder();
+
             try
             {
 
                 XmlDocument document = new XmlDocument();
+
                 document.LoadXml(wordprocessingML);
                 XmlNode content = document.SelectSingleNode(bodyXPath, NamespaceManager);
 
@@ -156,29 +158,67 @@ namespace MarkLogic_WordAddin
                 }
 
                 int length = content.ChildNodes.Count;
-
+                int counter = 0;
                 foreach (XmlNode n in content.ChildNodes)
-                {              
-                   switch(n.NodeType)
-                   { 
+                {
+                if (counter == idx)
+                {
+                        switch (n.NodeType)
+                        {
 
-                     case XmlNodeType.Element:
-                            if(n.Name.Equals("w:tbl")){
-                                response.Append(getRows(n.ChildNodes, delimiter));
-                            }
-                            else if (n.Name.Equals("w:p"))
-                            {
-                                response.Append(n.InnerText+"\n");
-                            }
-                           break;
-
-                     case XmlNodeType.Text:  
-                           //System.Windows.Forms.MessageBox.Show("TEXT IS:" + n.Value);
-                           break;
-  
+                            case XmlNodeType.Element:
+                                if (n.Name.Equals("w:tbl"))
+                                {
+                                    response.Append(getRows(n.ChildNodes, delimiter));
+                                }
+                                else if (n.Name.Equals("w:p"))
+                                {
+                                    response.Append(n.InnerText+"\n");
+                                }
+                                else if (n.Name.Equals("w:sdt"))
+                                {   //original, doesn't account for tables, embedded w:sdt, etc.
+                                    //response.Append(n.InnerText);
+                             //BEGIN
+                                    XmlNodeList xl = n.SelectNodes("descendant::w:sdtContent[1]", NamespaceManager);
+                                    XmlNodeList tmp = xl;
+                                Found:
+                                    foreach (XmlNode xn in tmp)
+                                    {
+                                        foreach (XmlNode child in xn.ChildNodes)
+                                        {
+                                            if (child.Name.Equals("w:sdt"))
+                                            {
+                                                tmp = child.SelectNodes("descendant::w:sdtContent[1]", NamespaceManager);
+                                                goto Found;
+                                            }
+                                            else if (child.Name.Equals("w:tbl"))
+                                            { 
+                                                response.Append(getRows(child.ChildNodes, delimiter));
+                                            }
+                                            else if (child.Name.Equals("w:p"))
+                                            {
+                                                response.Append(child.InnerText + "\n");
+                                            }
+                                            else if (child.Name.Equals("w:customXml"))
+                                            {
+                                                response.Append(child.InnerText + "\n");
+                                                //tmp = child.ChildNodes;
+                                                //goto Found;
+                                            }
+   
+                                        }
+                                    }
+                                
+                             //END
+                                }
+                                else if (n.Name.Equals("w:customXml"))
+                                {
+                                    response.Append(n.InnerText);
+                                }
+                                break;
+                        }
                    }
-
-
+                   counter++;
                 }
 
             }

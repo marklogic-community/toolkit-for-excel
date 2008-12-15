@@ -144,11 +144,13 @@ MLA.insertText = function(textToInsert)
 	  textAdded = null;
 }
 /**
- * Returns the text currently highlighted in the ActiveDocument. If nothing is selected, null is returned. 
- * @returns text currently highlighted in ActiveDocument as string
- * @type String
+ *  Returns the text currently selected (highlighted) by the user in the ActiveDocument.  Whatever is highlighted by the user will be returned in this function as a string.  A user may highlight text from multiple paragraphs or from tables.  For this reason, the function returns an array, where each element of the array is a string that contains the text for the structure highlighted by the user in the ActiveDocument.  The order of elements in the array represents the order of items that are highlighted in the ActiveDocument.
+ *@return the text selected by the user in the ActiveDocument as strings. If nothing is selected, an empty array is returned.
+ *@type Array
+ *@param delimiter (optional) Text from tables will be returned as a single string, with cells delimited by tabs (default).  This param may be used to assign a different delimiter.  Note: there is no delimiter for text from paragraphs, as each paragraph will be captured in separate array elements.
+ *@throws Exception if unable to retrieve the Selection
  */
-MLA.getSelectionText = function(delimiter)
+/*MLA.getSelectionText = function(delimiter)
 {
 	if(delimiter == null) 
 	    delimiter = "";
@@ -162,6 +164,63 @@ MLA.getSelectionText = function(delimiter)
 	  selText = null;
 
 	return selText;
+}*/
+MLA.getSelectionText = function(delimiter)
+{
+        if(delimiter == null) 
+	    delimiter = "";
+
+	var arrCount=0;
+	var selCount =0;
+	var selections = new Array();
+        
+	var selection =  window.external.getSelectionText(selCount,delimiter);
+
+	var err = false;
+	var errMsg = MLA.errorCheck(selection);
+	if(errMsg!=null)
+	{
+		err=true;
+		selection="";
+	}
+
+
+	selections[arrCount]=selection;
+
+	while(selection!="")
+	{
+  	  selCount++;
+          arrCount++;
+	  selection = window.external.getSelectionText(selCount,delimiter);
+
+
+	  var errMsg = MLA.errorCheck(selection);
+	  if(errMsg!=null){
+   	    err=true;
+	    selection="";
+	  }
+
+	  if(selection!="")
+	      selections[arrCount] = selection;
+
+	}
+
+	if(err==true)
+	{
+	   throw("Error: Not able to getSelection; "+errMsg);
+	}
+
+
+
+	if(selections.length == 1) 
+	{
+        	if (selections[0] == null ||selections[0].text == "")
+		{
+			selections.length = 0;
+		}
+	}
+
+	return selections;
 }
 /**
  * Returns ids for custom parts (not built-in) that are part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)

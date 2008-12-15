@@ -610,47 +610,44 @@ namespace MarkLogic_WordAddin
 
         }
 
-        public String getSelectionText(string delimiter)
+        public String getSelectionText(int idx, string delimiter)
         {
-            string message = "";
-            object missing = System.Reflection.Missing.Value;
-            Word.Selection selection = Globals.ThisAddIn.Application.Selection; 
-            int stTst = selection.Range.Start;
-            int edTst = selection.Range.End;
-            int selectionLength = edTst - stTst;
-
-            Word.Table testTbl = null;
-            bool tblExists = false;
-
-            if (selectionLength > 0)
+            string wpml = "";
+            try
             {
-                //check for table
-                try
-                {   
-                    testTbl = selection.Tables[1];
-                    tblExists = true;
-                }
-                catch (Exception e)
+                Word.Range rng = Globals.ThisAddIn.Application.Selection.Range;
+                int stTst = rng.Start;
+                int edTst = rng.End;
+                string xmlizable = "";
+
+
+                if (stTst < edTst)
                 {
-                    // no table
-                    tblExists = false;
+                    rng.Select();
+                    xmlizable = Globals.ThisAddIn.Application.Selection.WordOpenXML; // wordApp.Selection.WordOpenXML;  //instead of .Text
+                    wpml = Transform.ExtractTextValuesFromXML(xmlizable, idx, delimiter);
                 }
-
-                if (tblExists)
+                else
                 {
-                    string wpml = Globals.ThisAddIn.Application.Selection.WordOpenXML;
-                    message = Transform.ExtractTextValuesFromXML(wpml,delimiter);
-
+                    wpml = "";
                 }
-                else  //no table
-                {
-                   string tmp = selection.Text;
-                   message = selection.Text;
-
-                }
-
             }
-            return message;
+
+
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                wpml = "error: " + errorMsg;
+            }
+
+            if (debugMsg)
+                MessageBox.Show("returning wpml: " + wpml);
+
+            if (debug)
+                wpml = "error: Testing errors";
+
+            return wpml;
+
         }
 
 
