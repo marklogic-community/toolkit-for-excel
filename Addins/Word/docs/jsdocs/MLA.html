@@ -155,7 +155,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Adds custom part to active OpenXML package.
+	 Adds custom part to active Open XML package.
       </TD>
    </TR>
 
@@ -206,7 +206,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Deletes custom part from Active OpenXML package identified by id.
+	 Deletes custom part from Active Open XML package identified by id.
       </TD>
    </TR>
 
@@ -274,7 +274,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Returns the custom XML part, identified by customXMLPartId, that is part of the active OpenXML package.
+	 Returns the custom XML part, identified by customXMLPartId, that is part of the active Open XML package.
       </TD>
    </TR>
 
@@ -291,7 +291,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Returns ids for custom parts (not built-in) that are part of the active OpenXML package.
+	 Returns ids for custom parts (not built-in) that are part of the active Open XML package.
       </TD>
    </TR>
 
@@ -315,17 +315,17 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	    <CODE>&lt;static&gt;&nbsp;Array</CODE>
 	 </FONT>
       </TD>
       <TD>
 	 <CODE>
 	    <B>
-	       <A HREF="#!s!getSelectionText">getSelectionText</A></B>()
+	       <A HREF="#!s!getSelectionText">getSelectionText</A></B>(delimiter)
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Returns the text currently highlighted in the ActiveDocument.
+	 Returns the text currently selected (highlighted) by the user in the ActiveDocument.
       </TD>
    </TR>
 
@@ -445,10 +445,9 @@ MLA</H3>
 
 
 <UL>
-   The MLA namespace is used for global attribution. The methods within this namespace provide ways of interacting with an Active OpenXML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
+   The MLA namespace is used for global attribution. The methods within this namespace provide ways of interacting with an active Open XML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
 
- The methods here are mostly for Word; however, the functions getCustomXMLPart(), getCustomXMLPartIds(), addCustomXMLPart(), and deleteCustomXMLPart() will work for any Open XML package.
- This object has methods for accessing an ActiveDocument in Word.
+ The functions here provide ways for interacting with the ActiveDocument in Word; however, the functions getCustomXMLPart(), getCustomXMLPartIds(), addCustomXMLPart(), and deleteCustomXMLPart() will work for any Open XML package, provided they are used within the context of an Addin for the appropriate Office application.
 </UL>
 
 
@@ -485,7 +484,7 @@ MLA</H3>
    <H3>addCustomXMLPart</H3>
    <PRE>&lt;static&gt; String <B>addCustomXMLPart</B>(customPartXml)</PRE>
    
-      <UL>Adds custom part to active OpenXML package.  Returns the id of the part added.</UL>
+      <UL>Adds custom part to active Open XML package.  Returns the id of the part added.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -596,7 +595,7 @@ MLA</H3>
    <H3>deleteCustomXMLPart</H3>
    <PRE>&lt;static&gt; void <B>deleteCustomXMLPart</B>(customXMLPartId)</PRE>
    
-      <UL>Deletes custom part from Active OpenXML package identified by id.</UL>
+      <UL>Deletes custom part from Active Open XML package identified by id.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -604,7 +603,7 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>customXMLPartId</CODE> -  the id of the custom part to be deleted from the active OpenXML package. 
+     <UL><CODE>customXMLPartId</CODE> -  the id of the custom part to be deleted from the active Open XML package. 
       </UL> 
    
    </UL>
@@ -685,7 +684,7 @@ MLA</H3>
    <PRE>&lt;static&gt; Object <B>getConfiguration</B>()</PRE>
    
       <UL>Returns MLA.config. The fields for this object are version, url, and theme.  
-version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color of Office.</UL>
+version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color scheme used by Office.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -707,7 +706,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <H3>getCustomXMLPart</H3>
    <PRE>&lt;static&gt; Microsoft.XMLDOM object <B>getCustomXMLPart</B>(customXMLPartId)</PRE>
    
-      <UL>Returns the custom XML part, identified by customXMLPartId, that is part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)</UL>
+      <UL>Returns the custom XML part, identified by customXMLPartId, that is part of the active Open XML package. (.docx, .xlsx, .pptx, etc.)</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -744,7 +743,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <H3>getCustomXMLPartIds</H3>
    <PRE>&lt;static&gt; Array <B>getCustomXMLPartIds</B>()</PRE>
    
-      <UL>Returns ids for custom parts (not built-in) that are part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)</UL>
+      <UL>Returns ids for custom parts (not built-in) that are part of the active Open XML package. (.docx, .xlsx, .pptx, etc.)</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -755,7 +754,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Returns:</B>
         <UL>
-        the ids for custom XML parts in active OpenXML package as array of string   
+        the ids for custom XML parts in active Open XML package as array of string   
         </UL>
    </UL>
    
@@ -796,12 +795,20 @@ version - the version of the Addin library, url - the url used by the Addin WebB
 
    <A NAME="!s!getSelectionText"><!-- --></A>
    <H3>getSelectionText</H3>
-   <PRE>&lt;static&gt; String <B>getSelectionText</B>()</PRE>
+   <PRE>&lt;static&gt; Array <B>getSelectionText</B>(delimiter)</PRE>
    
-      <UL>Returns the text currently highlighted in the ActiveDocument. If nothing is selected, null is returned.</UL>
+      <UL>Returns the text currently selected (highlighted) by the user in the ActiveDocument.  Whatever is highlighted by the user will be returned in this function as a string.  A user may highlight text from multiple paragraphs or from tables.  For this reason, the function returns an array, where each element of the array is a string that contains the text contained by the structure highlighted by the user in the ActiveDocument.  The order of elements in the array represents the order of items that are highlighted in the ActiveDocument.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>delimiter</CODE> -  (optional) Text from tables will be returned as a single string, with cells delimited by tabs (default).  This param may be used to assign a different delimiter.  Note: there is no delimiter for text from paragraphs, as each paragraph will be captured in separate array elements. 
+      </UL> 
+   
+   </UL>
    
    <!-- METHOD PARAMETERS END -->
 
@@ -809,12 +816,16 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Returns:</B>
         <UL>
-        text currently highlighted in ActiveDocument as string   
+        the text selected by the user in the ActiveDocument as strings. If nothing is selected, an empty array is returned.  
         </UL>
    </UL>
    
 
    <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to retrieve the Selection</UL>
+   </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
@@ -823,7 +834,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <H3>getSentenceAtCursor</H3>
    <PRE>&lt;static&gt; Microsoft.XMLDOM object <B>getSentenceAtCursor</B>()</PRE>
    
-      <UL>Returns the final XML block that represents the sentence at the current cursor position.  Nothing is required to be highlighted in the ActiveDocument.  If a selection is highlighted, this returns the XML for the sentence at the the current cursor position.  If there is no selection, the XML for the sentence at the current cursor position is still returned.</UL>
+      <UL>Returns the final XML block that represents the Sentence at the current cursor position.  Nothing is required to be highlighted in the ActiveDocument.  If a selection is highlighted, this returns the XML for the sentence at the the current cursor position.  If there is no selection, the XML for the sentence at the current cursor position is still returned.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -1036,6 +1047,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 <FONT SIZE="-1">
 
 </FONT>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Mon Nov 10 15:28:07 2008</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sun Dec 14 10:43:40 2008</div>
 </BODY>
 </HTML>

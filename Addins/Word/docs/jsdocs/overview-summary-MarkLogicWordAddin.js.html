@@ -131,12 +131,11 @@ function asd() {
 
 
 <span class="comment">/**
- * The MLA namespace is used for global attribution. The methods within this namespace provide ways of interacting with an Active OpenXML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
+ * The MLA namespace is used for global attribution. The methods within this namespace provide ways of interacting with an active Open XML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
  *
- * The methods here are mostly for Word; however, the functions getCustomXMLPart(), getCustomXMLPartIds(), addCustomXMLPart(), and deleteCustomXMLPart() will work for any Open XML package.
- * This object has methods for accessing an ActiveDocument in Word.
+ * The functions here provide ways for interacting with the ActiveDocument in Word; however, the functions getCustomXMLPart(), getCustomXMLPartIds(), addCustomXMLPart(), and deleteCustomXMLPart() will work for any Open XML package, provided they are used within the context of an Addin for the appropriate Office application.
  */</span>
-<span class="comment">//var MLA = {};</span>
+<span class="comment">/* var MLA = {}; */</span>
 
 <span class="reserved">function</span> MLA(){
       <span class="reserved">this</span>.getClassName = <span class="reserved">function</span>(){
@@ -146,7 +145,7 @@ function asd() {
 }
 
 <span class="comment">/** <span class="attrib">@ignore</span> */</span>
-MLA.version = { <span class="literal">"release"</span> : <span class="literal">"1.0-20081110"</span> }; 
+MLA.version = { <span class="literal">"release"</span> : <span class="literal">"@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION"</span> }; 
 
 <span class="comment">/** <span class="attrib">@ignore</span> */</span>
 MLA.SimpleRange = <span class="reserved">function</span>(begin,finish){
@@ -193,12 +192,44 @@ MLA.errorCheck = <span class="reserved">function</span>(message)
  */</span>
 MLA.createXMLDOM = <span class="reserved">function</span>(xmlstring)
 {
-   var xmlDom = new ActiveXObject(<span class="literal">"Microsoft.XMLDOM"</span>);
-       xmlDom.async=false;
-       xmlDom.loadXML(xmlstring);
+	try{
+		var xmlDom = new ActiveXObject(<span class="literal">"Microsoft.XMLDOM"</span>);
+       		xmlDom.async=false;
+       		xmlDom.loadXML(xmlstring);
+	}
+	catch(err)
+ 	{
+                throw(<span class="literal">"Error: Not able to create XMLDOM from string "</span>);
+	}
+
+        <span class="reserved">if</span>(xmlDom.text==<span class="literal">""</span> &amp;&amp; xmlDom.xml == <span class="literal">""</span>)
+                throw(<span class="literal">"Error: Not able to create XMLDOM from string "</span>);
+
    <span class="reserved">return</span> xmlDom;
 }
 
+<span class="comment">/** <span class="attrib">@ignore</span> */</span>
+MLA.unescapeXMLCharEntities = <span class="reserved">function</span>(stringtoconvert)
+{
+	var unescaped = <span class="literal">""</span>;
+	unescaped = stringtoconvert.replace(/&amp;amp;/g,<span class="literal">"&amp;"</span>);
+	unescaped = unescaped.replace(/&amp;lt;/g,  <span class="literal">"&lt;"</span>);
+	unescaped = unescaped.replace(/&amp;gt;/g,  <span class="literal">"&gt;"</span>);
+	unescaped = unescaped.replace(/&amp;quot;/g,<span class="literal">"\"</span><span class="literal">");
+	unescaped = unescaped.replace(/&amp;apos;/g,"</span>\<span class="literal">'");
+	return unescaped;
+}
+/** @ignore */
+MLA.escapeXMLCharEntities = function(stringtoconvert)
+{
+	var escaped = "";
+	escaped = stringtoconvert.replace(/&amp;/g,"&amp;amp;");
+	escaped = escaped.replace(/&lt;/g, "&amp;lt;");
+	escaped = escaped.replace(/&gt;/g, "&amp;gt;");
+	escaped = escaped.replace(/\"/g,"&amp;quot;");
+	escaped = escaped.replace(/\'</span>/g, <span class="literal">"&amp;apos;"</span>);
+	<span class="reserved">return</span> escaped;
+}
 <span class="comment">/** Utility function to create a default WordprocessingML paragraph &lt;w:p&gt;, with no styles, for a given string.
  *
  *<span class="attrib">@param</span> textstring the string to be converted into a WordprocessingML paragraph
@@ -206,9 +237,10 @@ MLA.createXMLDOM = <span class="reserved">function</span>(xmlstring)
  *<span class="attrib">@throws</span> Exception if unable to create the paragraph
  */</span>
 MLA.createParagraph = <span class="reserved">function</span>(textstring)
-{
+{ 
+	var cleanstring = MLA.escapeXMLCharEntities(textstring);
 	var newParagraphString = <span class="literal">"&lt;w:p xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'&gt;&lt;w:r&gt;&lt;w:t&gt;"</span>+
-		                    textstring+
+		                    cleanstring+
 			         <span class="literal">"&lt;/w:t&gt;&lt;/w:r&gt;&lt;/w:p&gt;"</span>;
 	var newPara = MLA.createXMLDOM(newParagraphString);
 	<span class="reserved">return</span> newPara;
@@ -228,25 +260,72 @@ MLA.insertText = <span class="reserved">function</span>(textToInsert)
 	  textAdded = null;
 }
 <span class="comment">/**
- * Returns the text currently highlighted in the ActiveDocument. If nothing is selected, null is returned. 
- * <span class="attrib">@returns</span> text currently highlighted in ActiveDocument as string
- * <span class="attrib">@type</span> String
+ *  Returns the text currently selected (highlighted) by the user in the ActiveDocument.  Whatever is highlighted by the user will be returned in this function as a string.  A user may highlight text from multiple paragraphs or from tables.  For this reason, the function returns an array, where each element of the array is a string that contains the text contained by the structure highlighted by the user in the ActiveDocument.  The order of elements in the array represents the order of items that are highlighted in the ActiveDocument.
+ *<span class="attrib">@return</span> the text selected by the user in the ActiveDocument as strings. If nothing is selected, an empty array is returned.
+ *<span class="attrib">@type</span> Array
+ *<span class="attrib">@param</span> delimiter (optional) Text from tables will be returned as a single string, with cells delimited by tabs (default).  This param may be used to assign a different delimiter.  Note: there is no delimiter for text from paragraphs, as each paragraph will be captured in separate array elements.
+ *<span class="attrib">@throws</span> Exception if unable to retrieve the Selection
  */</span>
-MLA.getSelectionText = <span class="reserved">function</span>()
+MLA.getSelectionText = <span class="reserved">function</span>(delimiter)
 {
-	var selText = window.external.getSelectionText();
-	var errMsg = MLA.errorCheck(selText);
-	<span class="reserved">if</span>(errMsg!=null)
-	   throw(<span class="literal">"Error: Not able to get selection text "</span>+errMsg);
-     
-	<span class="reserved">if</span>(selText==<span class="literal">""</span>)
-	  selText = null;
+        <span class="reserved">if</span>(delimiter == null) 
+	    delimiter = <span class="literal">""</span>;
 
-	<span class="reserved">return</span> selText;
+	var arrCount=0;
+	var selCount =0;
+	var selections = new Array();
+        
+	var selection =  window.external.getSelectionText(selCount,delimiter);
+
+	var err = false;
+	var errMsg = MLA.errorCheck(selection);
+	<span class="reserved">if</span>(errMsg!=null)
+	{
+		err=true;
+		selection=<span class="literal">""</span>;
+	}
+
+
+	selections[arrCount]=selection;
+
+	<span class="reserved">while</span>(selection!=<span class="literal">""</span>)
+	{
+  	  selCount++;
+          arrCount++;
+	  selection = window.external.getSelectionText(selCount,delimiter);
+
+
+	  var errMsg = MLA.errorCheck(selection);
+	  <span class="reserved">if</span>(errMsg!=null){
+   	    err=true;
+	    selection=<span class="literal">""</span>;
+	  }
+
+	  <span class="reserved">if</span>(selection!=<span class="literal">""</span>)
+	      selections[arrCount] = selection;
+
+	}
+
+	<span class="reserved">if</span>(err==true)
+	{
+	   throw(<span class="literal">"Error: Not able to getSelection; "</span>+errMsg);
+	}
+
+
+
+	<span class="reserved">if</span>(selections.length == 1) 
+	{
+        	<span class="reserved">if</span> (selections[0] == null ||selections[0].text == <span class="literal">""</span>)
+		{
+			selections.length = 0;
+		}
+	}
+
+	<span class="reserved">return</span> selections;
 }
 <span class="comment">/**
- * Returns ids for custom parts (not built-in) that are part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
- * <span class="attrib">@returns</span> the ids for custom XML parts in active OpenXML package as array of string
+ * Returns ids for custom parts (not built-in) that are part of the active Open XML package. (.docx, .xlsx, .pptx, etc.)
+ * <span class="attrib">@returns</span> the ids for custom XML parts in active Open XML package as array of string
  * <span class="attrib">@type</span> Array 
  */</span>
 MLA.getCustomXMLPartIds = <span class="reserved">function</span>()
@@ -254,15 +333,25 @@ MLA.getCustomXMLPartIds = <span class="reserved">function</span>()
 	var partIds = window.external.getCustomXMLPartIds();
 
 	var errMsg = MLA.errorCheck(partIds);
+
 	<span class="reserved">if</span>(errMsg!=null)
 	  throw(<span class="literal">"Error: Not able to get CustomXMLPartIds; "</span>+errMsg);
 
 	var customPartIds = partIds.split(<span class="literal">" "</span>);
+
+	<span class="reserved">if</span>(customPartIds.length ==1)
+	{
+		<span class="reserved">if</span> (customPartIds[0] == null || customPartIds[0] == <span class="literal">""</span>)
+		{
+			customPartIds.length = 0;
+		}
+	}
+
 	<span class="reserved">return</span> customPartIds;
 }
 
 <span class="comment">/**
- * Returns the custom XML part, identified by customXMLPartId, that is part of the active OpenXML package. (.docx, .xlsx, .pptx, etc.)
+ * Returns the custom XML part, identified by customXMLPartId, that is part of the active Open XML package. (.docx, .xlsx, .pptx, etc.)
  * <span class="attrib">@param</span> customXMLPartId the id of the custom part to be fetched from the active package
  * <span class="attrib">@return</span> the XML for the custom part as a DOM object. 
  * <span class="attrib">@type</span> Microsoft.XMLDOM object 
@@ -273,18 +362,26 @@ MLA.getCustomXMLPart = <span class="reserved">function</span>(customXMLPartId)
 	var customXMLPart = window.external.getCustomXMLPart(customXMLPartId);
 
 	var errMsg = MLA.errorCheck(customXMLPart);
-	<span class="reserved">if</span>(errMsg!=null)
+
+	<span class="reserved">if</span>(errMsg!=null){
 	   throw(<span class="literal">"Error: Not able to getCustomXMLPart; "</span>+errMsg);
+	}
+        
+	var v_cp;
 
 	<span class="reserved">if</span>(customXMLPart==<span class="literal">""</span>)
-	  customXMLPart=null;
-
-        var v_cp = MLA.createXMLDOM(customXMLPart); 
+	{
+		v_cp=null;
+	}
+        <span class="reserved">else</span>
+	{
+        	v_cp = MLA.createXMLDOM(customXMLPart); 
+	}
 
 	<span class="reserved">return</span> v_cp;
 }
 
-<span class="comment">/** Adds custom part to active OpenXML package.  Returns the id of the part added.
+<span class="comment">/** Adds custom part to active Open XML package.  Returns the id of the part added.
  *<span class="attrib">@param</span> customPartXML Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. )
  *<span class="attrib">@return</span> id for custom part added 
  *<span class="attrib">@type</span> String
@@ -314,8 +411,8 @@ MLA.addCustomXMLPart = <span class="reserved">function</span>(customPartXml)
 	<span class="reserved">return</span> newId;
 }
 
-<span class="comment">/** Deletes custom part from Active OpenXML package identified by id.
- *<span class="attrib">@param</span> customXMLPartId the id of the custom part to be deleted from the active OpenXML package.
+<span class="comment">/** Deletes custom part from Active Open XML package identified by id.
+ *<span class="attrib">@param</span> customXMLPartId the id of the custom part to be deleted from the active Open XML package.
  *<span class="attrib">@throws</span> Exception if unable to delete custom part
  */</span>
 MLA.deleteCustomXMLPart = <span class="reserved">function</span>(customXMLPartId)
@@ -330,7 +427,6 @@ MLA.deleteCustomXMLPart = <span class="reserved">function</span>(customXMLPartId
 	  deletedPart = null;
 
 }
-
 
 <span class="comment">/** Returns the XML that represents what is currently selected (highlighted) by the user in the ActiveDocument as an XMLDOM object.  Whatever is highlighted by the user will be returned in this function as a block level element.  A user may highlight text that will be materialized as multiple sibling block elements in the XML.  For this reason, the function returns an array, where each element of the array is an XMLDOM object that contains the XML for the blocks highlighted by the user in the ActiveDocument.  The order of elements in the array represents the order of items that are highlighted in the ActiveDocument.
  *<span class="attrib">@return</span> the blocks of XML currently selected by the user in the ActiveDocument as XMLDOM objects. If nothing is selected, an empty array is returned.
@@ -386,11 +482,19 @@ MLA.getSelection = <span class="reserved">function</span>()
 	{
          	domSelections[i] = MLA.createXMLDOM(selections[i]);
 	}
+	
+	<span class="reserved">if</span>(domSelections.length == 1) 
+	{
+        	<span class="reserved">if</span> (domSelections[0] == null ||domSelections[0].text == <span class="literal">""</span>)
+		{
+			domSelections.length = 0;
+		}
+	}
 
 	<span class="reserved">return</span> domSelections;
 }
 
-<span class="comment">/** Returns the final XML block that represents the Sentence at the current cursor position.  Nothing is required to be highlighted in the ActiveDocument.  If a selection is highlighted, this returns the XML for the Sentence immediately preceding the cursor.  If there is no selection, the XML for the sentence at the current cursor position is still returned. 
+<span class="comment">/** Returns the final XML block that represents the Sentence at the current cursor position.  Nothing is required to be highlighted in the ActiveDocument.  If a selection is highlighted, this returns the XML for the sentence at the the current cursor position.  If there is no selection, the XML for the sentence at the current cursor position is still returned. 
  *<span class="attrib">@return</span> the block of XML, as XMLDOM object,  for the Sentence immediately preceding the cursor position.
  *<span class="attrib">@type</span> Microsoft.XMLDOM object
  *<span class="attrib">@throws</span> Exception if unable to retrieve the XML for the Sentence.
@@ -545,7 +649,7 @@ MLA.insertBlockContent = <span class="reserved">function</span>(blockContentXml,
 <span class="comment">/**
  *
  *Returns MLA.config. The fields for this object are version, url, and theme.  
-version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color of Office. 
+version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color scheme used by Office. 
  *<span class="attrib">@throws</span> Exception if unable to create MLA.config object
  */</span>
 MLA.getConfiguration = <span class="reserved">function</span>()
@@ -565,8 +669,6 @@ MLA.getConfiguration = <span class="reserved">function</span>()
 
         <span class="reserved">return</span> MLA.config;	
 }
-
-
 </pre>
 	<hr>
 
@@ -625,6 +727,6 @@ MLA.getConfiguration = <span class="reserved">function</span>()
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Mon Nov 10 15:28:07 2008</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sun Dec 14 10:43:40 2008</div>
 </body>
 </html>
