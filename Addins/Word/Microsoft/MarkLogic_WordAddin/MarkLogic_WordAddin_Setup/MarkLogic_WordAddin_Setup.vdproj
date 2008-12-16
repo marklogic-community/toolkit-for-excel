@@ -843,7 +843,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_B58A056769CB45EA95D5564DDCA69A1B"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFilesFolder]\\MarkLogic Add-in for Word"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -920,9 +920,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:MarkLogic Add-in for Word"
+        "ProductName" = "8:MarkLogic Add-in for Word®"
         "ProductCode" = "8:{40D875B9-AF8C-456F-BC8E-107A5095C42E}"
-        "PackageCode" = "8:{15E77752-C634-45CB-9D9A-63AFD846A9F2}"
+        "PackageCode" = "8:{3E74D4BF-89A2-4110-BB9F-299765E0D32F}"
         "UpgradeCode" = "8:{BA58D1F8-2509-467D-A6A5-C6982D44FE7A}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"

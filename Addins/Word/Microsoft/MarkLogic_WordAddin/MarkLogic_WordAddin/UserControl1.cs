@@ -20,10 +20,6 @@ using System.Windows.Forms.Integration;
 namespace MarkLogic_WordAddin
 {   
     [ComVisible(true)]
-  //  [ClassInterfaceAttribute(ClassInterfaceType.AutoDispatch)]
-  //  [DockingAttribute(DockingBehavior.AutoDock)]
-  //  [PermissionSetAttribute(SecurityAction.InheritanceDemand, Name = "FullTrust")]
-  //  [PermissionSetAttribute(SecurityAction.LinkDemand, Name = "FullTrust")]
 
     public partial class UserControl1 : UserControl
     {
