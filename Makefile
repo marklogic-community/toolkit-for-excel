@@ -10,7 +10,7 @@ MIN_VER := `cat MINOR_VERSION`
 DATE := `date +%Y%m%d`
 SUFFIX := $(MAJ_VER).$(MIN_VER)-$(DATE)
 #ZIP_PREFIX = MarkLogic_WordAddin
-ZIP_PREFIX = MarkLogic-Framework-for-Word
+ZIP_PREFIX = MarkLogic-Toolkit-for-Word
 
 # Build machine path to MS compiler
 # Optional developer machine path to MS compiler
