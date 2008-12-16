@@ -116,7 +116,7 @@ package:
 	cp $(SAMPLES)/search/*.css $(BUILD_SAMPLES_SEARCH) 
 	cp $(JSDOCS)/*.css $(BUILD_DOCS_JSDOC)
 	cp $(JSDOCS)/*.html $(BUILD_DOCS_JSDOC)
-	cp $(DOCS)/FrameworkForWordGuide.pdf $(BUILD_DOCS)
+	cp $(DOCS)/ToolkitForWordGuide.pdf $(BUILD_DOCS)
 	#cp -r $(SAMPLES)/modules/*.js $(BUILD_SAMPLES_JS) 
 	@echo Create zip file $(ZIP_PREFIX)_$(SUFFIX).zip
 #	(cd builds; zip -r ../$(ZIP_FILE).zip $(PUB_BUILD)/*)
