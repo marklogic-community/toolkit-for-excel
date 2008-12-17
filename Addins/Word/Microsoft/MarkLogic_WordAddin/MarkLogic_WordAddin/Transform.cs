@@ -80,35 +80,6 @@ namespace MarkLogic_WordAddin
             return response.ToString();
         }
 
-        public static string ConvertToWPMLFromText(string wordprocessingML)
-        {
-            StringBuilder response = new StringBuilder();
-            try
-            {
-                XmlDocument document = new XmlDocument();
-                document.LoadXml(wordprocessingML);
-                XmlNode content = document.SelectSingleNode(bodyXPath, NamespaceManager);
-                //System.Windows.Forms.MessageBox.Show("CONTENT XML: "+content.InnerXml);
-                if (content.ChildNodes.Count > 0)
-                {
-                    content.RemoveChild(content.LastChild);
-                }
-                using (XmlTextWriter writer = new XmlTextWriter(
-                    new StringWriter(response)))
-                {
-                    writer.Formatting = Formatting.Indented;
-                    content.WriteContentTo(writer);
-                }
-            }
-            catch (Exception e)
-            {
-                response.Append("Error " + e.Message);
-            }
-
-            //System.Windows.Forms.MessageBox.Show("RESPONSE IS:"+response.ToString());
-            return response.ToString();
-        }
-
         public static string getRows(XmlNodeList nodes, string delimiter)
         {
             string response = "";
@@ -176,9 +147,7 @@ namespace MarkLogic_WordAddin
                                     response.Append(n.InnerText+"\n");
                                 }
                                 else if (n.Name.Equals("w:sdt"))
-                                {   //original, doesn't account for tables, embedded w:sdt, etc.
-                                    //response.Append(n.InnerText);
-                             //BEGIN
+                                {   
                                     XmlNodeList xl = n.SelectNodes("descendant::w:sdtContent[1]", NamespaceManager);
                                     XmlNodeList tmp = xl;
                                 Found:
@@ -202,14 +171,11 @@ namespace MarkLogic_WordAddin
                                             else if (child.Name.Equals("w:customXml"))
                                             {
                                                 response.Append(child.InnerText + "\n");
-                                                //tmp = child.ChildNodes;
-                                                //goto Found;
                                             }
    
                                         }
                                     }
                                 
-                             //END
                                 }
                                 else if (n.Name.Equals("w:customXml"))
                                 {
@@ -231,6 +197,35 @@ namespace MarkLogic_WordAddin
 
         }
 
+        //get selected xml as text
+        public static string ConvertToWPMLFromText(string wordprocessingML)
+        {
+            StringBuilder response = new StringBuilder();
+            try
+            {
+                XmlDocument document = new XmlDocument();
+                document.LoadXml(wordprocessingML);
+                XmlNode content = document.SelectSingleNode(bodyXPath, NamespaceManager);
+                if (content.ChildNodes.Count > 0)
+                {
+                    content.RemoveChild(content.LastChild);
+                }
+                using (XmlTextWriter writer = new XmlTextWriter(
+                    new StringWriter(response)))
+                {
+                    writer.Formatting = Formatting.Indented;
+                    content.WriteContentTo(writer);
+                }
+            }
+            catch (Exception e)
+            {
+                response.Append("Error " + e.Message);
+            }
+
+            return response.ToString();
+        }
+
+        //get selected xml as text by index
         public static string ConvertToWPMLFromTextIdx(string wordprocessingML, int idx)
         {
             StringBuilder newResponse = new StringBuilder();
@@ -242,8 +237,7 @@ namespace MarkLogic_WordAddin
                 XmlNode content = document.SelectSingleNode(bodyXPath, NamespaceManager);
 
                 int nodeCount = content.ChildNodes.Count;
-                //System.Windows.Forms.MessageBox.Show("NODE COUNT" + nodeCount);
-                //removes w:sectPr
+
                 if (content.ChildNodes.Count > 0)
                 {
                     content.RemoveChild(content.LastChild);
@@ -271,9 +265,7 @@ namespace MarkLogic_WordAddin
             return newResponse.ToString();
         }
 
-        //USING THIS TO INSERT FINAL 2
-        //UPDATED THIS, USED FOR RETAINING SOURCE FORMATTING
-        //USING FOR INSERTING WITH STYLES
+        //used to insert block level element into body
         internal static string ConvertToWPMLBlock(string stylesXml, string blockXml, int idxStart, int idxEnd)
         {
             StringBuilder builder = new StringBuilder();
@@ -314,16 +306,15 @@ namespace MarkLogic_WordAddin
                     document.Save(writer);
                 }
 
-              
             }
             catch (Exception e)
             {
                 string errMsg = e.Message;
-                //System.Windows.Forms.MessageBox.Show("Error in ConvertToWordprocessingMLPara" + e.Message + " " + e.StackTrace);
             }
             return builder.ToString();
         }
 
+        //used to set document.xml
         internal static string ConvertToWPML(string documentXml)
         {
             StringBuilder builder = new StringBuilder();
@@ -352,7 +343,6 @@ namespace MarkLogic_WordAddin
             return builder.ToString();
         }
 
-        //USING THIS TO INSERT FINAL 1
         internal static string ConvertToWPMLBlock(string stylesXml, string paraXml, int paraIdx, int sentIdx, int charidx)
         {
             StringBuilder builder = new StringBuilder();
@@ -365,7 +355,6 @@ namespace MarkLogic_WordAddin
 
             try
             {
-                
                 Globals.ThisAddIn.Application.ActiveDocument.Content.Select();
                 string docxml = Globals.ThisAddIn.Application.Selection.WordOpenXML;
                 document.LoadXml(docxml);
@@ -386,13 +375,11 @@ namespace MarkLogic_WordAddin
                 else if (charidx < tmpend)
                 {
                     charstartrange = charidx - tmpstart;
-                    //System.Windows.Forms.MessageBox.Show("Charrange(moving) : " + charstartrange + "tmpstart : " + tmpstart + "tmpend " + tmpend);
                 }
                 else
                 {
                     charstartrange = diff;
                 }
-
 
                 object start = tmpstart;
                 object end = tmpend;
@@ -421,12 +408,9 @@ namespace MarkLogic_WordAddin
             catch (Exception e)
             {
                 string errMsg = e.Message;
-                //System.Windows.Forms.MessageBox.Show("Error in ConvertToWordprocessingMLPara" + e.Message + " " + e.StackTrace);
             }
             return builder.ToString();
         }
-        //END USING THIS TO INSERT WITH STYLES
-
   
     }
 

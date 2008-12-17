@@ -16,19 +16,17 @@ namespace MarkLogic_WordAddin
 
         private void Ribbon1_Load(object sender, RibbonUIEventArgs e)
         {
-           //Globals.ThisAddIn.CTPManager.ManageToggleButton(viewTaskPaneButton);
+
         }
 
         private void viewTaskPaneButton_Click(object sender, RibbonControlEventArgs e)
         {
             if (!Globals.ThisAddIn.mlPaneDisplayed)
             {
-                // Add the calendar task pane to all open documents
                 Globals.ThisAddIn.AddAllTaskPanes();
             }
             else
             {
-                // Remove the calendar task pane from all open documents
                 Globals.ThisAddIn.RemoveAllTaskPanes();
             }
 

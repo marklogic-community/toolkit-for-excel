@@ -23,10 +23,8 @@ namespace MarkLogic_WordAddin
     public partial class ThisAddIn
     {
         private AddinConfiguration ac = AddinConfiguration.GetInstance();
-        //ctpCalendar
         private Microsoft.Office.Tools.CustomTaskPane ctpML = null;
         private Microsoft.Office.Tools.CustomTaskPane ctp = null;
-        //private Window ctpWindow = null;
         public bool mlPaneDisplayed = false;
       
 
@@ -35,16 +33,10 @@ namespace MarkLogic_WordAddin
             
             if (Globals.ThisAddIn.Application.Documents.Count >= 0)
             {
-                // If Show all windows in the Taskbar is selected then 
-                // each open document has its own window.  
-                // If Show all windows in the Taskbar is not selected  
-                // then Word displays each open document in the same window.  
                 if (this.Application.ShowWindowsInTaskbar == true)
                 {
-                    // Loop through each open document window
                     foreach (Document _doc in this.Application.Documents)
                     {
-                        // Pass this document as a parameter to AddCustomTaskPane
                         AddTaskPane(_doc);
                     }
                 }
@@ -61,12 +53,6 @@ namespace MarkLogic_WordAddin
 
         public void AddTaskPane(Document doc)
         {
-            // Create a new custom task pane and add it to the 
-            // collection of custom task panes belonging to this add-in
-            // The first two arguments of the Add method specify a control to add
-            // to the custom task pane and the title to display on the task pane. 
-            // The third argument, which is optional, specifies the 
-            // parent window for the custom task pane. 
             ctpML = this.CustomTaskPanes.Add(new UserControl1(), ac.getCTPTitleLabel(), doc.ActiveWindow);
             ctpML.Visible = true;
             ctpML.Width = 400;
@@ -74,16 +60,13 @@ namespace MarkLogic_WordAddin
 
         public void RemoveAllTaskPanes()
         {
-            // First check if there are any open documents.
             if (Globals.ThisAddIn.Application.Documents.Count > 0)
             {
-                // Loop through each custom task pane belonging to the add-in
                 for (int i = this.CustomTaskPanes.Count; i > 0; i--)
                 {
                     ctp = this.CustomTaskPanes[i - 1];
                     if (ctp.Title == ac.getCTPTitleLabel())
                     {
-                        // If this is a ml task pane, remove it
                         this.CustomTaskPanes.RemoveAt(i - 1);
                     }
                 }
@@ -93,11 +76,9 @@ namespace MarkLogic_WordAddin
 
         private void RemoveOrphanedTaskPanes()
         {
-            // Loop through each custom task pane belonging to the add-in
             for (int i = this.CustomTaskPanes.Count; i > 0; i--)
             {
                 ctp = this.CustomTaskPanes[i - 1];
-                // If this task pane has no associated window, remove it
                 if (ctp.Window == null)
                 {
                     this.CustomTaskPanes.Remove(ctp);
@@ -157,7 +138,6 @@ namespace MarkLogic_WordAddin
                 ApplicationEvents4_DocumentChangeEventHandler(
                 Application_DocumentChange);
 
-           //If we add this, then have to set 
             if (this.Application.ShowWindowsInTaskbar == true)
             {
                 if (ac.getPaneEnabled())
@@ -188,16 +168,14 @@ namespace MarkLogic_WordAddin
             this.Shutdown += new System.EventHandler(ThisAddIn_Shutdown);
         }
 
-        //added for testing
+        //test
         /*
                public void OnConnection(object application,
                                  Extensibility.ext_ConnectMode connectMode,
                                  object addInInst, ref System.Array custom)
                 {
                    // addInInst = this;
-                    System.Windows.Forms.MessageBox.Show("ADDIN");
                     Microsoft.VisualBasic.Interaction.CallByName(addInInst, "Object", Microsoft.VisualBasic.CallType.Let, this);
-
                 }
          */
 

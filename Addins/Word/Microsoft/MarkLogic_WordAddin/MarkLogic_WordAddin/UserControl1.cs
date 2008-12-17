@@ -34,14 +34,10 @@ namespace MarkLogic_WordAddin
         public UserControl1()
         {
             InitializeComponent();
-            //AddinConfiguration ac = AddinConfiguration.GetInstance();
-            //bool regEntryExists = checkUrlInRegistry();
             webUrl = ac.getWebURL();
-            //MessageBox.Show(webUrl);
 
             if (webUrl.Equals(""))
             {
-                //MessageBox.Show("Unable to find configuration info. Please insure OfficeProperties.txt exists in your system temp directory.  If problems persist, please contact your system administrator.");
                 MessageBox.Show("                                            Unable to find configuration info. \n\r "+
                                 " Please see the installation instructions for how to add configuration info to your system. \n\r "+
                                 "                   If problems persist, please contact your system administrator.");
@@ -85,38 +81,11 @@ namespace MarkLogic_WordAddin
               }
         }
 
+      //public Word.Document Document { get; set; }
 
-        /*
-        private bool checkUrlInRegistry()
-        {
-            RegistryKey regKey1 = Registry.CurrentUser;
-            regKey1 = regKey1.OpenSubKey(@"MarkLogicAddinConfiguration\Word");
-            bool keyExists = false;
-            if (regKey1 == null)
-            {
-                if(debugMsg)
-                   MessageBox.Show("KEY IS NULL");
-
-            }
-            else
-            {
-                if(debugMsg)
-                    MessageBox.Show("KEY IS: "+regKey1.GetValue("URL"));
-
-                webUrl = (string)regKey1.GetValue("URL");
-                if(!((webUrl.Equals(""))||(webUrl==null)))
-                        keyExists = true;
-            }
-            return keyExists;
-        }
-        */
-        //used by CTPManager
-        public Word.Document Document { get; set; }
-
-        //used by CTPManager
-        internal void Clear()
-        {
-        }
+      //internal void Clear()
+      //{
+      //}
 
         //configuration info
         public enum ColorScheme : int
@@ -130,7 +99,7 @@ namespace MarkLogic_WordAddin
         public ColorScheme TryGetColorScheme()
         {
             //assume default - theme registry key not always set on install of Office
-            //set for sureo once user sets color scheme manually from button
+            //set once user sets color scheme manually from button
             ColorScheme CurrentColorScheme = (ColorScheme)Enum.Parse(typeof(ColorScheme), "1");
             try
             {
@@ -210,7 +179,7 @@ namespace MarkLogic_WordAddin
                 if (cx != null)
                     custompiecexml = cx.XML;
 
-                /*another way (used until I discovered SelectByID(id) above)
+                /*another way; how should we expose built-ins? do we want to?
                   foreach (Office.CustomXMLPart c in doc.CustomXMLParts)
                   {
                       if (c.BuiltIn.Equals(false) && c.Id.Equals(id))
@@ -265,7 +234,6 @@ namespace MarkLogic_WordAddin
                 {
                     if (c.BuiltIn.Equals(false) && c.Id.Equals(id))
                     {
-                        //Office.CustomXMLNode x = c.DocumentElement;
                         c.Delete();
                     }
 
@@ -324,6 +292,9 @@ namespace MarkLogic_WordAddin
 
         }
 
+        //this works great if you're positive all references for the other pieces in
+        //package are already resolved (templates).  Useful for enriching entire doc with
+        //w:customXml, etc.  
         public String setActiveDocXml(string wpml)
         {
             string docxml = "";
@@ -397,7 +368,6 @@ namespace MarkLogic_WordAddin
 
         }
 
-        //used to return the style xml for the current block
         public String getSentenceAtCursor()
         {
             //first get SentenceCount, 
@@ -444,7 +414,6 @@ namespace MarkLogic_WordAddin
 
                     if (tblExists)
                     {
-                        //MessageBox.Show("Using Cell Range for XML");
                         xmlizable = cell.Range.WordOpenXML;
                         //tables always append empty paragraph; remove and return table only
                         wpml = Transform.ConvertToWPMLFromTextIdx(xmlizable,0);
@@ -505,7 +474,8 @@ namespace MarkLogic_WordAddin
             return wpml;
         }
 
-        //have to remove namespace to be able to insert
+        //have to remove namespaces to be able to insert; 
+        //Office is very particular about where namespaces located in XML.
         public String removeNamespaces(string xml)
         {   
             string tmp = "";
@@ -518,7 +488,6 @@ namespace MarkLogic_WordAddin
             tmp = tmp.Replace(" xmlns:w10=\"urn:schemas-microsoft-com:office:word\"", "");
             tmp = tmp.Replace(" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"", "");
             tmp = tmp.Replace(" xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\"", "");
-            //tmp = tmp.Replace("   ", "");
 
             return tmp;
 
@@ -534,14 +503,20 @@ namespace MarkLogic_WordAddin
 
         }
 
+        //insert block level element into document.xml. 
+        //If we want to add a style, we have to update styles.xml simultaneously.
+        //If we update styles, and there's no reference to the added style in document.xml, Word will
+        //consume the xml without error, but not retain the style.  Likewise, we can feed a block
+        //level element to Word with a style that doesn't exist in styles.xml.  
+        //Word will consume the block without error and assing the block the 
+        //default/currently selected style.
+        //For future, would like finer grained updates for styles.  Pass block and style defintion, instead of entire styles.xml 
         public String insertBlock(String blockContent, String stylesXml)
         {
             string message = "";
             string wpml = blockContent;
             string newStyle = stylesXml;
             object missing = System.Reflection.Missing.Value;
-
-            //Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
 
             //check to see if range selected
             Word.Range testrng = Globals.ThisAddIn.Application.Selection.Range;
