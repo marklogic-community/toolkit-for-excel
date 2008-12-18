@@ -464,7 +464,7 @@ MLA.setActiveDocXml = function(documentXml)
 
 	var errMsg = MLA.errorCheck(inserted);
 	if(errMsg!=null)
-	   throw("Error: Not able to setActiveDocXml; "+errMsg);
+	   throw("Error: Not able to setActiveDocXml. Make sure XML is well-formed and valid wordprocessingML; "+errMsg);
 
 	if(inserted=="")
 	  inserted = null;
