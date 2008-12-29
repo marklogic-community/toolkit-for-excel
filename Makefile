@@ -1,7 +1,21 @@
 #
+#Copyright 2008 Mark Logic Corporation
+#
+#Licensed under the Apache License, Version 2.0 (the "License");
+#you may not use this file except in compliance with the License.
+#You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+#Unless required by applicable law or agreed to in writing, software
+#distributed under the License is distributed on an "AS IS" BASIS,
+#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#ee the License for the specific language governing permissions and
+#limitations under the License.
+#
 # Makefile
 #
-# Instructions:
+# Instructions: 'make package' compiles Addin, zips up necessary files for Addin, XQuery, javascript, documentation
 #  
 #
 
@@ -97,8 +111,8 @@ package:
 	cp -r   $(MS_BUILD)/* $(MS_PUB_BUILD)/.
 	./setVersion patch $(JS)/MarkLogicWordAddin.js $(BUILD_JS)/MarkLogicWordAddin.js
 	./setVersion patch $(JS)/MarkLogicWordAddin.js $(SAMPLES_JS)/MarkLogicWordAddin.js
-#	./setVersion patch $(ML)/word-processing-ml.xqy $(PUB_BUILD)/word-processing-ml.xqy
-#	./setVersion patch $(ML)/package.xqy $(PUB_BUILD)/package.xqy
+	#./setVersion patch $(ML)/word-processing-ml.xqy $(PUB_BUILD)/word-processing-ml.xqy
+	#./setVersion patch $(ML)/package.xqy $(PUB_BUILD)/package.xqy
 	#cp -r $(SAMPLES)/* $(BUILD_SAMPLES) 
 	cp $(XQY)/word-processing-ml-support.xqy $(BUILD_XQY)
 	cp $(SAMPLES)/default.xqy $(BUILD_SAMPLES)
@@ -119,10 +133,10 @@ package:
 	cp $(DOCS)/ToolkitForWordGuide.pdf $(BUILD_DOCS)
 	#cp -r $(SAMPLES)/modules/*.js $(BUILD_SAMPLES_JS) 
 	@echo Create zip file $(ZIP_PREFIX)_$(SUFFIX).zip
-#	(cd builds; zip -r ../$(ZIP_FILE).zip $(PUB_BUILD)/*)
+	#(cd builds; zip -r ../$(ZIP_FILE).zip $(PUB_BUILD)/*)
 	zip -r $(ZIP_FILE).zip $(PUB_BUILD)/*
 	mv $(PUB_BUILD) $(BUILDS)
-#	mv $(ZIP_PREFIX).zip $(ZIP_PREFIX)-$(SUFFIX).zip
+	#mv $(ZIP_PREFIX).zip $(ZIP_PREFIX)-$(SUFFIX).zip
 
 clean:
 	  rm -rf $(BUILDS)
