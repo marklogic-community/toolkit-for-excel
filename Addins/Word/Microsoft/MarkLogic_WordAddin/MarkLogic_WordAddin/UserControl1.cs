@@ -11,6 +11,9 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+ * 
+ * UserControl1.cs - the api called from MarkLogicWordAddin.js.  The methods here map directly to functions in the .js.
+ * 
 */
 using System;
 using System.Collections.Generic;

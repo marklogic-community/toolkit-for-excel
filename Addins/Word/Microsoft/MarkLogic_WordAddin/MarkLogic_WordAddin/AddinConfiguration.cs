@@ -12,6 +12,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+ * 
+ * AddinConfiguration.cs - labels/descriptions/configurations for configurable components of Addin
  */
 using System;
 using System.Collections.Generic;

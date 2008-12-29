@@ -11,6 +11,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+ * 
+ * ThisAddIn.cs - The host for the Custom Task Pane and management of the pane within multiple Word instances
 */
 using System;
 using System.Collections.Generic;
