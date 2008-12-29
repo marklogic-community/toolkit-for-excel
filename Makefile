@@ -22,7 +22,7 @@
 MAJ_VER := `cat MAJOR_VERSION`
 MIN_VER := `cat MINOR_VERSION`
 DATE := `date +%Y%m%d`
-SUFFIX := $(MAJ_VER).$(MIN_VER)-$(DATE)
+SUFFIX := $(MAJ_VER).$(MIN_VER)-1
 #$(DATE)
 #ZIP_PREFIX = MarkLogic_WordAddin
 ZIP_PREFIX = MarkLogic-Toolkit-for-Word
@@ -60,7 +60,6 @@ BUILD_SAMPLES_JS = $(PUB_BUILD)/Samples/js
 BUILD_SAMPLES_CSS = $(PUB_BUILD)/Samples/css
 BUILD_SAMPLES_IMG = $(PUB_BUILD)/Samples/img
 BUILD_SAMPLES_METADATA = $(PUB_BUILD)/Samples/metadata
-BUILD_SAMPLES_MODULES = $(PUB_BUILD)/Samples/modules
 BUILD_SAMPLES_SEARCH = $(PUB_BUILD)/Samples/search
 
 MS_PUB_BUILD = $(PUB_BUILD)/addin.deploy
@@ -92,7 +91,6 @@ package:
 	mkdir $(BUILD_SAMPLES_CSS)
 	mkdir $(BUILD_SAMPLES_IMG)
 	mkdir $(BUILD_SAMPLES_METADATA)
-	mkdir $(BUILD_SAMPLES_MODULES)
 	mkdir $(BUILD_SAMPLES_SEARCH)
 	mkdir $(PUB_BUILD)/config
 	mkdir $(MS_PUB_BUILD)
@@ -120,7 +118,6 @@ package:
 	cp $(XQY)/word-processing-ml-support.xqy $(BUILD_XQY)
 	cp $(SAMPLES)/default.xqy $(BUILD_SAMPLES)
 	cp $(SAMPLES)/README.txt $(BUILD_SAMPLES)
-	cp $(SAMPLES)/samples-license.txt $(BUILD_SAMPLES)
 	cp $(SAMPLES)/js/*.js $(BUILD_SAMPLES_JS) 
 	cp $(SAMPLES)/css/*.css $(BUILD_SAMPLES_CSS) 
 	cp $(SAMPLES)/img/*.png $(BUILD_SAMPLES_IMG) 
