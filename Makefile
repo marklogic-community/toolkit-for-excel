@@ -23,6 +23,7 @@ MAJ_VER := `cat MAJOR_VERSION`
 MIN_VER := `cat MINOR_VERSION`
 DATE := `date +%Y%m%d`
 SUFFIX := $(MAJ_VER).$(MIN_VER)-$(DATE)
+#$(DATE)
 #ZIP_PREFIX = MarkLogic_WordAddin
 ZIP_PREFIX = MarkLogic-Toolkit-for-Word
 
@@ -97,6 +98,8 @@ package:
 	mkdir $(MS_PUB_BUILD)
 	cp $(CF)/*.idt $(PUB_BUILD)/config/.
 	cp README.txt $(PUB_BUILD)
+	cp LICENSE.txt $(PUB_BUILD)
+	cp NOTICE.txt $(PUB_BUILD)
 	cp  $(MS_ROOT)/$(MSS)/UserControl1.cs  $(TEMP)/UserControl1.cs.bak
 	./setVersion patch $(MS_ROOT)/$(MSS)/UserControl1.cs  $(MS_ROOT)/$(MSS)/UserControl2.cs
 	rm $(MS_ROOT)/$(MSS)/UserControl1.cs
