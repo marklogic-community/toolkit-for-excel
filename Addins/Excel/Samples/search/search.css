@@ -1,0 +1,40 @@
+#ML-Search {
+	width: 90%;	
+	
+}
+#ML-Submit {
+	position: absolute;
+	right: 0;
+	width: 8%;
+}
+.ML-control {
+	margin: 0.5em 0;
+}
+.ML-label {
+	margin-bottom: 0.25em;
+}
+.ML-input {
+	position: relative;
+}
+#ML-Results {
+	line-height: 1.25;
+}
+#ML-Results li {
+	margin: 1em 0;
+	cursor: pointer;
+}
+.ML-hit-metadata {
+	margin-top: 0.25em;
+}
+.ML-hit-metadata li {
+	display: inline;
+	margin: 0 0.5;
+	font-size: 80%;
+}
+#ML-Message {
+	margin: 2em 0;
+	padding: 1em 2em;
+	text-align: center;
+
+	font-size: 120%;
+}
