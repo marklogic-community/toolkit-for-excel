@@ -20,7 +20,8 @@ namespace MarkLogic_ExcelAddin
 
         private void toggleButton1_Click(object sender, RibbonControlEventArgs e)
         {
-            Globals.ThisAddIn.myPane.Visible = ((RibbonToggleButton)sender).Checked;
+            Globals.ThisAddIn.TaskPane.Visible = ((RibbonToggleButton)sender).Checked;
         }
+
     }
 }

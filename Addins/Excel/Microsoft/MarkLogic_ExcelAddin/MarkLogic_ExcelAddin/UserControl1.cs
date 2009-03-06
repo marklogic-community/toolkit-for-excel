@@ -38,6 +38,7 @@ namespace MarkLogic_ExcelAddin
                 InitializeComponent();
                 //bool regEntryExists = checkUrlInRegistry();
                 webUrl = ac.getWebURL();
+                //MessageBox.Show("URL" + webUrl);
 
                 if (webUrl.Equals(""))
                 {

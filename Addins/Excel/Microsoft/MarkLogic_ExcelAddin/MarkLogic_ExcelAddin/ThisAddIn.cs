@@ -15,10 +15,25 @@ namespace MarkLogic_ExcelAddin
 {
     public partial class ThisAddIn
     {
-        public Microsoft.Office.Tools.CustomTaskPane myPane;
-        private UserControl1 uc;
         private AddinConfiguration ac = AddinConfiguration.GetInstance();
-       
+        public bool mlPaneDisplayed = false;
+        private UserControl1 taskPaneControl1;
+        private Microsoft.Office.Tools.CustomTaskPane ctpML;
+
+        private void ctpML_VisibleChanged(object sender, System.EventArgs e)
+        {
+            Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked =
+                ctpML.Visible;
+        }
+
+        public Microsoft.Office.Tools.CustomTaskPane TaskPane
+        {
+            get
+            {
+                return ctpML;
+            }
+        }
+
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             string ribbonBtnLabel = ac.getRibbonButtonLabel();
@@ -33,25 +48,22 @@ namespace MarkLogic_ExcelAddin
             if (!(ribbonGroupLabel.Equals("") || ribbonGroupLabel == null))
                 Globals.Ribbons.Ribbon1.group2.Label = ribbonGroupLabel;
 
-            UserControl1 uc = new UserControl1();
-            myPane = this.CustomTaskPanes.Add(uc, ac.getCTPTitleLabel()); //"Mark Logic Excelerator");
-            myPane.Width = 325;
-            myPane.Visible = ac.getPaneEnabled();
 
-            myPane.VisibleChanged += new EventHandler(taskPaneValue_VisibleChanged);
+            taskPaneControl1 = new UserControl1();
+            ctpML = this.CustomTaskPanes.Add(
+                 taskPaneControl1, ac.getCTPTitleLabel());
+            ctpML.VisibleChanged +=
+                new EventHandler(ctpML_VisibleChanged);
+            ctpML.Width = 350;
+            ctpML.Visible = ac.getPaneEnabled();
+
 
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
-         
+        
         }
-
-        private void taskPaneValue_VisibleChanged(object sender, System.EventArgs e)
-        {
-            Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = myPane.Visible;
-        }
-
 
         #region VSTO generated code
 
@@ -64,7 +76,18 @@ namespace MarkLogic_ExcelAddin
             this.Startup += new System.EventHandler(ThisAddIn_Startup);
             this.Shutdown += new System.EventHandler(ThisAddIn_Shutdown);
         }
-        
+
+        //test
+        /*
+               public void OnConnection(object application,
+                                 Extensibility.ext_ConnectMode connectMode,
+                                 object addInInst, ref System.Array custom)
+                {
+                   // addInInst = this;
+                    Microsoft.VisualBasic.Interaction.CallByName(addInInst, "Object", Microsoft.VisualBasic.CallType.Let, this);
+                }
+         */
+
         #endregion
     }
 }

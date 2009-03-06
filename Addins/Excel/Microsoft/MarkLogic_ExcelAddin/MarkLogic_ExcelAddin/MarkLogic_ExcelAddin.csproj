@@ -164,7 +164,6 @@
   -->
   <ItemGroup>
     <Compile Include="AddinConfiguration.cs" />
-    <Compile Include="CTPManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
