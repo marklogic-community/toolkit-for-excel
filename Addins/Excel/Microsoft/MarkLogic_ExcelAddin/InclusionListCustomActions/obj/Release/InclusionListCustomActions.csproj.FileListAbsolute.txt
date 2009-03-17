@@ -1,0 +1,5 @@
+C:\cygwin\home\paven\MLOS\Office2007\Addins\Word\Microsoft\MarkLogic_WordAddin\InclusionListCustomActions\bin\Release\InclusionListCustomActions.dll
+C:\cygwin\home\paven\MLOS\Office2007\Addins\Word\Microsoft\MarkLogic_WordAddin\InclusionListCustomActions\bin\Release\InclusionListCustomActions.pdb
+C:\cygwin\home\paven\MLOS\Office2007\Addins\Word\Microsoft\MarkLogic_WordAddin\InclusionListCustomActions\obj\Release\ResolveAssemblyReference.cache
+C:\cygwin\home\paven\MLOS\Office2007\Addins\Word\Microsoft\MarkLogic_WordAddin\InclusionListCustomActions\obj\Release\InclusionListCustomActions.dll
+C:\cygwin\home\paven\MLOS\Office2007\Addins\Word\Microsoft\MarkLogic_WordAddin\InclusionListCustomActions\obj\Release\InclusionListCustomActions.pdb
