@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkLogic_ExcelAddin", "MarkLogic_ExcelAddin\MarkLogic_ExcelAddin.csproj", "{7C868A5A-697F-4CCB-8308-B2884E5CBCC0}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MarkLogic_ExcelAddin_Setup", "MarkLogic_ExcelAddin_Setup\MarkLogic_ExcelAddin_Setup.vdproj", "{378FD495-43FD-4DC6-BFF7-D62DE4BD8E6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,8 @@ Global
 		{7C868A5A-697F-4CCB-8308-B2884E5CBCC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C868A5A-697F-4CCB-8308-B2884E5CBCC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C868A5A-697F-4CCB-8308-B2884E5CBCC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{378FD495-43FD-4DC6-BFF7-D62DE4BD8E6E}.Debug|Any CPU.ActiveCfg = Debug
+		{378FD495-43FD-4DC6-BFF7-D62DE4BD8E6E}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

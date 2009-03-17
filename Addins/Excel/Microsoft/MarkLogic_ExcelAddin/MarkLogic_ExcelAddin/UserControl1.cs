@@ -591,7 +591,8 @@ namespace MarkLogic_ExcelAddin
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("problem" + e.Message + "   " + e.StackTrace);
+                    MessageBox.Show("You are attempting to download a workbook that you already have open.  Would you like to replace the workbook you have open?");
+                   // MessageBox.Show("problem" + e.Message + "   " + e.StackTrace);
                 }
 
 
@@ -713,12 +714,35 @@ namespace MarkLogic_ExcelAddin
                 return "foo";
             }
 */
+            static bool FileInUse(string path)
+            {
+                string __message = "";
+                try
+                {
+                    //Just opening the file as open/create
+                    using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+                    {
+                        //If required we can check for read/write by using fs.CanRead or fs.CanWrite
+                    }
+                    return false;
+                }
+                catch (IOException ex)
+                {
+                    //check if message is for a File IO
+                    __message = ex.Message.ToString();
+                    if (__message.Contains("The process cannot access the file"))
+                        return true;
+                    else
+                        throw;
+                }
+            }
 
             public String saveActiveWorkbook(string path, string title, string url, string user, string pwd)
             {
+                //MessageBox.Show("IN Save ActiveWorkbook");
                 object missing = Type.Missing;
                 string newtitle = path + title;
-                MessageBox.Show("NEW PATH" + newtitle);
+               // MessageBox.Show("NEW PATH" + newtitle);
                 string tmptitle = "copyof_" + title;
 
                 object t = newtitle;
@@ -727,12 +751,39 @@ namespace MarkLogic_ExcelAddin
                 Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
                 try
                 {
-                    wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
+                    
+                    //MessageBox.Show("NAME" + wb.Name);
+                    if (FileInUse(newtitle))
+                    {
+                        //in use
+                        //need to save to copy, delete orig, save to orig, delete copy?
+                        //dont' think if/else needed, just treat the same
+                        //lame, but may work til i come up with something else
+                        if (wb.Name.Equals(title))
+                        {
+                            //MessageBox.Show("file in use: ok to save");
+                            //need to save to copy, delete orig, save to orig, delete copy?
+                            wb.Save();
+                        }
+                        else
+                        {
 
+                            //MessageBox.Show("file in use: need to do something else here");
+                        }
+                        //MessageBox.Show("file is in use");
+                        //wb.Save();
+                    }
+                    else
+                    {
+                       // MessageBox.Show("IN SAVE AS");
+
+                        wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
+                    }
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("that shizz didn't work?!?!?" + e.Message + "===" + e.StackTrace);
+                    
+                    MessageBox.Show("that didn't work-try again" + e.Message + "===" + e.StackTrace);
                 }
 
                 System.Net.WebClient Client = new System.Net.WebClient();

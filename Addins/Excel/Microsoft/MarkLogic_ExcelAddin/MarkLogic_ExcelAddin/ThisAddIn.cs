@@ -54,7 +54,7 @@ namespace MarkLogic_ExcelAddin
                  taskPaneControl1, ac.getCTPTitleLabel());
             ctpML.VisibleChanged +=
                 new EventHandler(ctpML_VisibleChanged);
-            ctpML.Width = 350;
+            ctpML.Width = 400;
             ctpML.Visible = ac.getPaneEnabled();
 
 
