@@ -31,6 +31,7 @@ using System.IO;
 using Office = Microsoft.Office.Core;
 using Microsoft.Win32;
 using System.Windows.Forms.Integration;
+using DocumentFormat.OpenXml.Packaging;
 
 
 namespace MarkLogic_WordAddin
@@ -83,6 +84,7 @@ namespace MarkLogic_WordAddin
                 htmlDoc = webBrowser1.Document;
 
                 htmlDoc.Click += htmlDoc_Click;
+                
 
             }
 
@@ -92,8 +94,14 @@ namespace MarkLogic_WordAddin
         {
              if (!(webBrowser1.Parent.Focused))
              {
-               webBrowser1.Parent.Focus();
-               webBrowser1.Document.Focus();
+                 
+                 {
+                     webBrowser1.Parent.Focus();
+                     webBrowser1.Document.Focus();
+                  
+
+                 }
+                 
               }
         }
 
@@ -595,6 +603,131 @@ namespace MarkLogic_WordAddin
             return message;
 
 
+        }
+
+        public String getTempPath()
+        {
+            string tmpPath = System.IO.Path.GetTempPath();
+            MessageBox.Show("returning " + tmpPath);
+            return tmpPath;
+        }
+
+        public Image byteArrayToImage(byte[] byteArrayIn)
+        {
+            MemoryStream ms = new MemoryStream(byteArrayIn);
+            Image returnImage = Image.FromStream(ms);
+            return returnImage;
+        }
+
+        public byte[] imageToByteArray(System.Drawing.Image imageIn)
+        {
+            MemoryStream ms = new MemoryStream();
+            imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
+            return ms.ToArray();
+        }
+
+        //TODO:
+                           //pass filename, imagename, uri - want to use client download to tmp file
+                           //insert image
+                           //delete tmp file
+        public String insertImage(string imageuri, string imagename)
+        {
+        MessageBox.Show("Adding Image");
+        string message="";
+        //byte[] byteArray = File.ReadAllBytes(@"C:\test.docx");
+        // byte[] byteArray = Globals.ThisAddIn.Application.Active
+
+        Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
+
+            /*
+             * 
+             * 
+             */
+
+        System.Net.WebClient Client = new System.Net.WebClient();
+        //Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
+        Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
+      // Client.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
+ //  string tmppath = getTempPath();
+ //  string tmpdoc = tmppath + imagename;
+        //MessageBox.Show("TMPDOC: " + tmpdoc);
+        //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
+        //Client.DownloadFile("http://localhost:8000/test.xqy?uid=" + imageuri, tmpdoc);//@"C:\test2.xlsx");
+            
+            //gets the byte[]
+        //byte[] bytearray = Client.DownloadData("http://localhost:8000/test.xqy?uid=" + imageuri);
+        byte[] bytearray = Client.DownloadData(imageuri);
+            //call byteToImage function above
+        Image img = byteArrayToImage(bytearray);
+      
+
+            //place on clipboard
+        System.Windows.Forms.Clipboard.SetImage(img); 
+
+            //Paste at current range
+        //Globals.ThisAddIn.Application.Selection.Sentences[Globals.ThisAddIn.Application.Selection.Sentences.Count].Paste();
+
+        Globals.ThisAddIn.Application.Selection.Range.Paste();
+            /*
+             * 
+             * 
+             * 
+             */
+/*
+             object missing =  System.Reflection.Missing.Value;
+             string fileName = tmpdoc; // @"C:\ml-small.jpeg"; //the picture file to be inserted
+
+             //object oMissed = doc.Paragraphs[1].Range; //the position you want to insert
+             object oMissed = Globals.ThisAddIn.Application.Selection.Range.Sentences[1];
+             object oLinkToFile = false; //default
+             object oSaveWithDocument = true;//default
+             object oLeft = 20;
+             object oTop = 20;
+             object oWidth = 70;
+             object oHeight = 70;
+
+
+           //Image.FromStream
+             Word.Shape shp = doc.Shapes.AddPicture(fileName, ref oLinkToFile, ref oSaveWithDocument, ref missing, ref missing, ref missing, ref missing,ref oMissed); 
+            // Word.Shape shp = doc.Shapes.AddPicture(fileName,ref missing, ref missing, ref missing, ref missing, ref missing,ref missing,ref missing); // doc.Shapes.AddPicture(fileName, ref missing, ref missing, ref 20f, ref 20f, ref missing, ref missing,ref missing);
+
+             shp.WrapFormat.Type = Word.WdWrapType.wdWrapThrough;
+             shp.RelativeHorizontalPosition = Word.WdRelativeHorizontalPosition.wdRelativeHorizontalPositionMargin;
+*/
+             //shp.Left = Word.WdShapePosition.wdShapeRight;
+            
+            /*
+             * 
+             * 
+             * 
+             */
+
+            /*  below lets you add the piece, but won't expose in the document
+        using (MemoryStream mem = new MemoryStream())
+        {
+            mem.Write(byteArray, 0, (int)byteArray.Length);
+
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(mem, true))
+            {
+                MainDocumentPart mainPart = wordDoc.MainDocumentPart;
+
+                ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
+
+                using (FileStream stream = new FileStream(@"C:\ml-small.jpeg", FileMode.Open))
+                {
+                    imagePart.FeedData(stream);
+                }
+            }
+
+            using (FileStream fileStream = new FileStream(@"C:\test2.docx",System.IO.FileMode.CreateNew))
+            {
+
+                mem.WriteTo(fileStream);
+
+            }
+        }
+            */
+            return message;
         }
 
         public String getSelectionText(int idx, string delimiter)
