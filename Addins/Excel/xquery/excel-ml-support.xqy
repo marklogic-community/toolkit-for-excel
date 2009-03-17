@@ -22,11 +22,17 @@ declare namespace zip = "xdmp:zip";
 
 
 (: import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy"; :)
-
-
-
-(:doesn't exist in other package :)
 declare function excel:get-mimetype(
+  $filename as xs:string
+) as xs:string?
+{
+           xdmp:uri-content-type($filename)	
+};
+
+(: mimetypes.xml - xdmp:get-mimetype ?:)
+(:  xdmp:uri-content-type() :)
+(:doesn't exist in other package :)
+(:declare function excel:get-mimetype(
   $filename as xs:string
 ) as xs:string?
 {
@@ -59,7 +65,7 @@ declare function excel:get-mimetype(
 
   	return $mime-type
 };
-
+:)
 
 (: this returns uris from directory, without directory, so they can be used in open xml package manifest :)
 (: we have a function in package.xqy ooxml:package-uris(package as binary), which returns the uris from a package, not the dir) :)
@@ -67,11 +73,14 @@ declare function excel:directory-uris(
   $directory as xs:string
 ) as xs:string*
 {
+   (: get rid of let return if possible :)
     let $uris := cts:uris("","document",cts:directory-query($directory,"infinity"))
     return $uris
 };
 
 (:not sure about these next two, useful, but theres also a sheet1.xml.rels in there for some sheets, assumes we modify the sheet, but rest of pkg stays the same:)
+
+(:look at uri-match //cts:uri-match? :)
 declare function excel:directory-uris(
   $directory as xs:string, 
   $includesheets as xs:boolean
@@ -106,6 +115,7 @@ declare function excel:sheet-uris(
 };
 
 (: we have a convert function for this, but not sure we want to import. See Open XML Extract pipeline for details. :)
+(: look at convert , spaces in names? check for dangerous chars mapped away:)
 declare function excel:directory-to-filename(
   $directory as xs:string
 ) as xs:string
@@ -134,7 +144,7 @@ as element(zip:parts)
 (: ============================================================================================================== :)
 declare function excel:map-shared-strings(
   $sheet as node()*, 
-  $shared-strings as xs:string*
+  $shared-strings as xs:string*  (: pass in node  explicit element type and return type :)
 ) 
 {
                   (: for $sheet in $sheets :)
@@ -153,7 +163,7 @@ declare function excel:map-shared-strings(
                   let $page-setup :=  $sheet/ms:worksheet/ms:pageSetup 
                   let $table-parts :=  $sheet/ms:worksheet/ms:tableParts
                   let $sheet-data  :=  $sheet/ms:worksheet/ms:sheetData
-
+(: get rid of lets , use element contstructor for start, or pass in directlly :)
                   let $ws := element ms:worksheet {  $sheet/ms:worksheet/@*, $worksheet, element ms:sheetData{ $sheet-data/@*, $rows },  $page-setup ,$table-parts  }
                   return $ws
 (: return $rows :)
@@ -161,18 +171,20 @@ declare function excel:map-shared-strings(
 };
 
 (: ============================================================================================================== :)
+(:srs work here!:)
 declare function excel:validate-child(
   $seq as node()*
 ) as xs:boolean
 {
-    let $original := ($seq except ())
+    let $original := ($seq )(: except () why original? , collapse away , if/else not required, just return count($disctinct-child) eq 1) :)
     let $children :=  $original/fn:local-name(child::*[1])
-    let $distinct-child := fn:distinct-values(if($children eq "") then () else $children)
+    let $distinct-child := fn:distinct-values(if($children eq ""(: how is this possible:) ) then () else $children)
     let $child-count := fn:count($distinct-child) (: fn:count(fn:normalize-space(text{$distinct-child})) :)
     let $result := if($child-count eq 1) then xs:boolean("true")  else xs:boolean("false")
     return $result
 };
 (: ============================================================================================================== :)
+(:   feed a (), tell by xml type, assume give in right order :)
 declare function excel:generate-simple-xl-pkg(
   $content-types as node(),
   $workbook as node(),
@@ -197,6 +209,7 @@ declare function excel:generate-simple-xl-pkg(
  	xdmp:zip-create($manifest, $parts)
 };
 
+(: assumes one table , could become node* , be precise about types:)
 declare function excel:generate-simple-xl-pkg(
     $content-types as node(),
     $workbook as node(),
@@ -231,7 +244,7 @@ declare function excel:create-row(
 { 
     <ms:row>
     {
-           for $val at $v in $values
+           for $val at $v in $values  (: check for dates :)
            return if($val castable as xs:integer or $val castable as xs:double) then     
                        <ms:c><ms:v>{$val}</ms:v></ms:c>
                   else
@@ -252,12 +265,13 @@ declare function excel:create-row(
 
     let $rows := for $i at $d in $keys
                  let $val := map:get($map,$i)
-                 let $return := if(fn:empty($val)) then "" else $val
+                 let $return := if(fn:empty($val)) then "" else $val (: if empty, still create cell, string ? :)
                  return $return
     return excel:create-row($rows)
 };
 
 (: currently limited to 702 columns :)
+(: base 26 arithmetic, want sequence numbers, each 0-25 (1-26), take number, repeatedly div mod til end :)(: mary function for hex , recursively mod til < 26 :)
 declare function excel:r1c1-to-a1(
   $rowcount as xs:integer, 
   $colcount as xs:integer
@@ -305,7 +319,7 @@ declare function excel:r1c1-to-a1(
    
 };
 :)
-
+(:rename col-width :)
 declare function excel:worksheet-cols(
 $widths as xs:string*
 ) as element(ms:cols)
@@ -317,10 +331,10 @@ $widths as xs:string*
     }
     </ms:cols>
 };
-
+(: single table, do for multiple :)
 declare function excel:create-simple-content-types(
   $worksheet-count as xs:integer,
-  $tbl as xs:boolean
+  $tbl as xs:boolean (:table-count :)
 ) as element(types:Types)
 {
     let $content-types := 
@@ -329,7 +343,7 @@ declare function excel:create-simple-content-types(
 	<Default Extension="xml" ContentType="application/xml"/>
 	<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
         {
-           for $i at $d in 1 to $worksheet-count
+           for $i at $d in 1 to $worksheet-count (: d is redundant :)
            let $sheet-name := fn:concat("/xl/worksheets/sheet", $d )
            return
 	     <Override PartName={$sheet-name} ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
@@ -374,7 +388,7 @@ declare function excel:create-simple-workbook-rels($worksheet-count as xs:intege
     let $workbookrels :=
        <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
         {
-          for $i at $d in 1 to $worksheet-count
+          for $i at $d in 1 to $worksheet-count (: d redundant, STAMP OUT LET!! :)
           let $target := fn:concat("worksheets/sheet", $d,".xml")
           let $rId := fn:concat("rId",$d) 
 	  return <Relationship Id={$rId} Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target={$target}/>
@@ -382,7 +396,7 @@ declare function excel:create-simple-workbook-rels($worksheet-count as xs:intege
        </Relationships>
     return $workbookrels
 };
-
+(: NAMING create - or constructor , look in triggers.xqy ?  triggerdataevent excel:worksheet-rels :)
 declare function excel:create-simple-worksheet-rels() as element(pr:Relationships)
 {
     let $worksheetrels:=
@@ -403,14 +417,14 @@ declare function excel:create-simple-table(
     let $table :=
       <table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id="1" name="Table1" displayName="Table1" ref="{$tablerange}"  totalsRowShown="0" >
          <autoFilter ref="{$tablerange}"/>
-         <tableColumns count={$column-count}>
+         <tableColumns count={$column-count}> (: put quotes :)
          {
            for $i at $d in $column-names
            return <tableColumn id={$d} name={$i}/>
          }
          </tableColumns>
          {
-          let $t-style := if($style eq xs:boolean("true")) then
+          let $t-style := if($style eq xs:boolean("true")) then  (: if($style) :)
            <tableStyleInfo name="TableStyleMedium10" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/>
           else ()
           return $t-style
@@ -449,7 +463,7 @@ declare function excel:create-simple-worksheet(
                       }
                       </sheetData>
                       {
-                        if($tablepart eq xs:boolean("true")) then
+                        if($tablepart eq xs:boolean("true")) then (: get rid of eq boolean :)
                           <tableParts count="1">
                            <tablePart r:id="rId1" />
                           </tableParts>
@@ -464,7 +478,7 @@ declare function excel:create-simple-pkg(
 ) as binary()
 {
     let $ws-count := fn:count($worksheets)
-    let $content-types := excel:create-simple-content-types($ws-count, xs:boolean("false"))
+    let $content-types := excel:create-simple-content-types($ws-count, (:fn:false()/fn:true:)xs:boolean("false"))
     let $workbook := excel:create-simple-workbook($ws-count)
     let $rels :=  excel:create-simple-pkg-rels()
     let $workbookrels :=  excel:create-simple-workbook-rels($ws-count)
