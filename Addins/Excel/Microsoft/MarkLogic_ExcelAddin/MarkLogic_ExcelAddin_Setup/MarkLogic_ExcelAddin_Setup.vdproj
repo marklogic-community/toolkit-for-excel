@@ -738,7 +738,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_C01C3443D38F40479341D3B70EC54551"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFilesFolder]\\MarkLogic Add-in for Excel"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
