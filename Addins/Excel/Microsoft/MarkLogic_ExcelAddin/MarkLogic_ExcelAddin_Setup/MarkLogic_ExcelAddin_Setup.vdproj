@@ -284,6 +284,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5"
+                    {
+                    "Name" = "8:.NET Framework 3.5"
+                    "ProductCode" = "8:Microsoft.Net.Framework.3.5"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
         "Release"
@@ -749,9 +762,50 @@
         }
         "LaunchCondition"
         {
+            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_16B6ABDDB6BB45DAAFF8E47B82C0224B"
+            {
+            "Name" = "8:Verify VSTO 3.0 Runtime availability"
+            "Condition" = "8:VSTORUNTIME = \"#1\""
+            "Message" = "8:The Visual Studio Tools for Office 3.0 Runtime is not installed. Please run Setup.exe."
+            "InstallUrl" = "8:"
+            }
+            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_189B0062414F45129070162A0ACD4B2E"
+            {
+            "Name" = "8:Verify Office 2007 Shared PIA availability"
+            "Condition" = "8:HASSHAREDPIA"
+            "Message" = "8:A required component for interacting with Excel 2007 is not available. Please run setup.exe."
+            "InstallUrl" = "8:"
+            }
+            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_2FDB8202CC1C4DDF99CE0FFD99FC7520"
+            {
+            "Name" = "8:Verify Excel 2007 PIA availability"
+            "Condition" = "8:HASEXCELPIA"
+            "Message" = "8:A required component for interacting with Excel 2007 is not available. Please run setup.exe."
+            "InstallUrl" = "8:"
+            }
         }
         "Locator"
         {
+            "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_1D3F347592554D7B84410BB227CE24BA"
+            {
+            "Name" = "8:Search for VSTO 3.0 Runtime"
+            "Root" = "2:1"
+            "RegKey" = "8:Software\\Microsoft\\vsto runtime Setup\\v9.0.21022"
+            "Value" = "8:Install"
+            "Property" = "8:VSTORUNTIME"
+            }
+            "{B8A5E33E-1082-4FE2-AC2E-1197791E9409}:_33DB4D8089A643519070F72FEC50068D"
+            {
+            "Name" = "8:Search for Office Excel 2007 PIA"
+            "ComponentId" = "8:{1ABEAF09-435F-47D6-9FEB-0AD05D4EF3EA}"
+            "Property" = "8:HASEXCELPIA"
+            }
+            "{B8A5E33E-1082-4FE2-AC2E-1197791E9409}:_B8CEDFBE9D3040C18A18F74FF00E98FA"
+            {
+            "Name" = "8:Search for Office 2007 Shared PIA"
+            "ComponentId" = "8:{FAB10E66-B22C-4274-8647-7CA1BA5EF30F}"
+            "Property" = "8:HASSHAREDPIA"
+            }
         }
         "MsiBootstrapper"
         {
@@ -763,7 +817,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MarkLogic_ExcelAddin_Setup"
         "ProductCode" = "8:{3A9F5E2C-168B-4D58-94F6-1FD5853E13C4}"
-        "PackageCode" = "8:{818374DD-27B6-4725-9F8B-231D02DCBD9C}"
+        "PackageCode" = "8:{18E46F82-E92C-45A8-9AEB-90F26BBA1FF1}"
         "UpgradeCode" = "8:{22E7B61D-7682-4C8B-9ABE-840C0364115D}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
