@@ -1,15 +1,15 @@
 function testOpen(docuri)
 {
-	 alert("docuri for testOpen():"+ docuri);
+	// alert("docuri for testOpen():"+ docuri);
         var tokens = docuri.split("/");
 	var filename = tokens[tokens.length-1];
-         alert("filename"+filename);
+         //alert("filename"+filename);
        var tmpPath = MLA.getTempPath(); 
 
        var config = MLA.getConfiguration();
        var fullurl= config.url;
        var url = fullurl + "/search/download-support.xqy?uid="+docuri;
-       alert("URL: "+url);
+       //alert("URL: "+url);
 	//window.external.openXlsx(filename,docuri);
       var msg = window.external.OpenXlsx(tmpPath, docuri, url, "zeke","zeke");
 }

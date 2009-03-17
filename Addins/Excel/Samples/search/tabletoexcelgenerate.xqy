@@ -2,19 +2,16 @@ xquery version "1.0-ml";
 
 declare namespace excel = "http://marklogic.com/openxml/excel";
 import module "http://marklogic.com/openxml/excel" at "/MarkLogic/openxml/excel-ml-support.xqy";
-(:declare namespace ooxml = "http://marklogic.com/ooxml";:)
 declare namespace html = "http://www.w3.org/1999/xhtml";
 declare namespace ms = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 declare namespace r="http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+declare namespace xladd="http://marklogic.com/openxl/exceladdin";
 
 let $wrapperelem := xdmp:get-request-field("elemname") 
 let $docuri := xdmp:get-request-field("docuri")
-(: let $wrapperelem := "CATALOG"
-let $doc := "fn:doc('/music-catalog.xml')" :)
 let $doc := "fn:doc($docuri)"
 
 let $path := fn:concat($doc,"//",$wrapperelem)
-(: return xdmp:unpath($path) :)
 
 let $testname := $wrapperelem 
 let $tabstyle := xs:boolean("true")
@@ -25,13 +22,8 @@ let $wbname := if($testname eq "") then "Default"
                   else $testname
 
 let $xlsxname := fn:concat($wbname,".xlsx")
-(: let $wrapper := fn:concat("//",$wrapperelem) :)
 let $original := xdmp:unpath($path)
 let $valid1 := excel:validate-child($original)
-(: ============================================== :)
-(: return $valid1  break here if $valid1 eq false :)
-(: ============================================== :)
-(: return $valid1 :)
 
 let $final := if($valid1 eq xs:boolean("false")) then
 
@@ -57,7 +49,7 @@ let $body :=
      <p> That doesn't appear to be a table,<br/> 
       Please search for something else.</p>
       <br/><br/>
-      <a href="default.xqy">Try Again.</a>
+      <a href="default.xqy?xladd:bsv={$wrapperelem}">Try Again.</a>
 </div>
 </div>
       </body>
