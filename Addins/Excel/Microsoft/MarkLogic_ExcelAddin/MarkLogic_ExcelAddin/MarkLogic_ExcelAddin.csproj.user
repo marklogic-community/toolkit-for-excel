@@ -3,6 +3,7 @@
     <PublishUrlHistory>publish\</PublishUrlHistory>
     <InstallUrlHistory>
     </InstallUrlHistory>
+    <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
