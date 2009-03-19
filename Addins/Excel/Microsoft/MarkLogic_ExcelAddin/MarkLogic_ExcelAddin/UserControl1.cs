@@ -882,7 +882,7 @@ namespace MarkLogic_ExcelAddin
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("that shizz didn't work?!?!?" + e.Message + "===" + e.StackTrace);
+                   // MessageBox.Show("that shizz didn't work?!?!?" + e.Message + "===" + e.StackTrace);
                 }
 
                 System.Net.WebClient Client = new System.Net.WebClient();
