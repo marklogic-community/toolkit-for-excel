@@ -550,6 +550,7 @@ namespace MarkLogic_ExcelAddin
                 // MessageBox.Show("in the addin filename:"+filename+ "   uri: "+uri);
                 string message = "";
                 object missing = Type.Missing;
+                string tmpdoc = "";
 
                 try
                 {
@@ -557,7 +558,7 @@ namespace MarkLogic_ExcelAddin
                     //Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
                     Client.Credentials = new System.Net.NetworkCredential(user, pwd);
                     //string tmppath = getTempPath();
-                    string tmpdoc = path + title;
+                    tmpdoc = path + title;
                     //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
                     Client.DownloadFile(url, tmpdoc);//@"C:\test2.xlsx");
                     Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
@@ -591,7 +592,40 @@ namespace MarkLogic_ExcelAddin
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("You are attempting to download a workbook that you already have open.  Would you like to replace the workbook you have open?");
+                    string origmsg = "A document with the name 'Default.xlsx' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
+                    string caption = "Microsoft Office Excel";
+                    MessageBox.Show(origmsg,caption,MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+
+                    //MessageBox.Show(origmsg);
+                        /* string choiceMessage = "It looks like you are attempting to open a workbook that you  already have open.\nWould you like to replace the open workbook with the workbook you've selected?";
+                    string caption = "workbook with same title already open";
+                    MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                    DialogResult result;
+
+                    // Displays the MessageBox.
+
+                    result = MessageBox.Show(choiceMessage, caption, buttons);
+
+                    if (result == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        string wbname = getActiveWorkbookName();
+                        setActiveWorkbook(title);
+                        Globals.ThisAddIn.Application.ActiveWorkbook.Close(false,missing,missing);
+                        Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
+
+                        // Closes the parent form.
+
+                        MessageBox.Show("YES");
+
+                    }
+                    * */
+
+
+                    //MessageBox.Show("You are attempting to download a workbook that you already have open.  Would you like to replace the workbook you have open?");
+                    //MessageBox.Show("TEST");
                    // MessageBox.Show("problem" + e.Message + "   " + e.StackTrace);
                 }
 
@@ -645,7 +679,9 @@ namespace MarkLogic_ExcelAddin
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("problem"+e.Message+"   "+e.StackTrace);
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                    //MessageBox.Show("problem"+e.Message+"   "+e.StackTrace);
                 }
 
 
@@ -739,11 +775,12 @@ namespace MarkLogic_ExcelAddin
 
             public String saveActiveWorkbook(string path, string title, string url, string user, string pwd)
             {
-                //MessageBox.Show("IN Save ActiveWorkbook");
+                string message = "";
+                //MessageBox.Show("TITLE IS:"+title);
                 object missing = Type.Missing;
                 string newtitle = path + title;
-               // MessageBox.Show("NEW PATH" + newtitle);
-                string tmptitle = "copyof_" + title;
+                //MessageBox.Show("NEW PATH" + newtitle);
+                string tmptitle = path + "copyof_" + title;
 
                 object t = newtitle;
                 object tmpt = tmptitle;
@@ -751,39 +788,37 @@ namespace MarkLogic_ExcelAddin
                 Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
                 try
                 {
-                    
-                    //MessageBox.Show("NAME" + wb.Name);
                     if (FileInUse(newtitle))
                     {
                         //in use
                         //need to save to copy, delete orig, save to orig, delete copy?
-                        //dont' think if/else needed, just treat the same
                         //lame, but may work til i come up with something else
                         if (wb.Name.Equals(title))
                         {
-                            //MessageBox.Show("file in use: ok to save");
-                            //need to save to copy, delete orig, save to orig, delete copy?
-                            wb.Save();
-                        }
-                        else
-                        {
+                             //MessageBox.Show("file in use: will try tmp copy madness");
+                             wb.SaveAs(tmpt, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
+                             wb.Close(false, missing, missing);
+                             File.Delete(newtitle);
+    
+                             Excel.Workbook wb2 = Globals.ThisAddIn.Application.Workbooks.Open(tmptitle, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);     
+                             wb2.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
+                             
+                             File.Delete(tmptitle);
 
-                            //MessageBox.Show("file in use: need to do something else here");
                         }
-                        //MessageBox.Show("file is in use");
-                        //wb.Save();
+
                     }
                     else
                     {
-                       // MessageBox.Show("IN SAVE AS");
-
+                        //MessageBox.Show("IN SAVE AS");
                         wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
                     }
                 }
                 catch (Exception e)
                 {
-                    
-                    MessageBox.Show("that didn't work-try again" + e.Message + "===" + e.StackTrace);
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                     MessageBox.Show("that didn't work-try again" + e.Message + "===" + e.StackTrace);
                 }
 
                 System.Net.WebClient Client = new System.Net.WebClient();
@@ -803,9 +838,6 @@ namespace MarkLogic_ExcelAddin
                     byte[] content = new byte[length];
                     fs.Read(content, 0, length);
 
-
-
-
                     try
                     {
                         // MessageBox.Show("URL: " + url);
@@ -820,15 +852,22 @@ namespace MarkLogic_ExcelAddin
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show("ERROR" + e.Message + "      " + e.StackTrace);
+                        MessageBox.Show("HERE");
+                        //MessageBox.Show("ERROR" + e.Message + "      " + e.StackTrace);
+                        string errorMsg = e.Message;
+                        message = "error: " + errorMsg;
                     }
 
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show("THIS BLEW UP:" + e.Message + "                 " + e.StackTrace);
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
                 }
-                return "foo";
+                //MessageBox.Show("Workbook: " + title + " saved."); 
+                MessageBox.Show("MESSAGE IS: " + message);
+                return message;
             }
 
             public String saveXlsx(string title, string url)

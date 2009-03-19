@@ -693,7 +693,7 @@ MLA.clearWorksheet = function()
 
 MLA.getTempPath = function()
 {
-	alert("IN HERE");
+	//alert("IN HERE");
 	var msg=window.external.getTempPath();
 	return msg;
 }
