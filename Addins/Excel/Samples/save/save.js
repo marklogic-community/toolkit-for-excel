@@ -1,4 +1,4 @@
-function saveXlsxToMarkLogic()
+function saveXlsxToML()
 {
        var ele = document.getElementById("ML-Save");
        var doctitle = ele.value;
@@ -16,10 +16,11 @@ function saveXlsxToMarkLogic()
        var config = MLA.getConfiguration();
        var fullurl= config.url;
        var url = fullurl + "/save/upload2.xqy?uid="+doctitle;
-       //alert("URL: "+url);
+
        var saveas = tmpPath+doctitle;
 
-       var msg = window.external.saveActiveWorkbook(tmpPath, doctitle, url, "zeke","zeke");
+       var msg = MLA.saveActiveWorkbook(tmpPath, doctitle, url, "zeke","zeke");
+
        if(msg=="")
 	       alert("workbook:" + doctitle + " saved.");
 }

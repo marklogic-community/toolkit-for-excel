@@ -16,7 +16,7 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
                           <div>Save As: &nbsp;&nbsp;
                              <input id="ML-Save" name="q" type="text" value=""/>&nbsp;&nbsp;
                              <!--<img src="save-48x48.png" style="vertical-align:bottom;" onclick="saveXlsxToMarkLogic()" />-->
-                             <img src="save-48x48.png" style="vertical-align:middle;" onclick="saveXlsxToMarkLogic()" />
+                             <img src="save-48x48.png" style="vertical-align:middle;" onclick="saveXlsxToML()" />
                           </div>
 <br/>
 <br/>

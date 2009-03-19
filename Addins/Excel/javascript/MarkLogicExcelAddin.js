@@ -698,6 +698,19 @@ MLA.getTempPath = function()
 	return msg;
 }
 
+MLA.saveActiveWorkbook = function(tmpPath, doctitle, url, uname,pwd)
+{
+       var msg = window.external.saveActiveWorkbook(tmpPath, doctitle, url,uname,pwd);
+       return msg;
+}
+
+MLA.openXlsx = function(tmpPath, docuri, url, uname, pwd)
+{
+   var msg =  window.external.OpenXlsx(tmpPath, docuri, url, uname,pwd);
+   return msg;
+}
+     // var msg = window.external.OpenXlsx(tmpPath, docuri, url, "zeke","zeke")
+     //
 
 /*
 MLA.setCellValueR1C1 = function(cells)

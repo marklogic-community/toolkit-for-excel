@@ -78,7 +78,7 @@ let $html := for $d in $distinct
                                              <tr>
                                               <td>{$sum}</td>
                                               <td>&nbsp;&nbsp;</td>
-                                              <td><a href="#" onclick="testOpen('{$d}')">{$d}</a></td>
+                                              <td><a href="#" onclick="openXlsx('{$d}')">{$d}</a></td>
                                              </tr>
                                              </table>
                             let $metadata := <table border="0">

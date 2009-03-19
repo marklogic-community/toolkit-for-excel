@@ -1,4 +1,4 @@
-function testOpen(docuri)
+function openXlsx(docuri)
 {
 	// alert("docuri for testOpen():"+ docuri);
         var tokens = docuri.split("/");
@@ -11,5 +11,6 @@ function testOpen(docuri)
        var url = fullurl + "/search/download-support.xqy?uid="+docuri;
        //alert("URL: "+url);
 	//window.external.openXlsx(filename,docuri);
-      var msg = window.external.OpenXlsx(tmpPath, docuri, url, "zeke","zeke");
+     var msg = MLA.openXlsx(tmpPath, docuri, url, "zeke","zeke");
+     // var msg = window.external.OpenXlsx(tmpPath, docuri, url, "zeke","zeke");
 }

@@ -866,7 +866,7 @@ namespace MarkLogic_ExcelAddin
                     message = "error: " + errorMsg;
                 }
                 //MessageBox.Show("Workbook: " + title + " saved."); 
-                MessageBox.Show("MESSAGE IS: " + message);
+                //MessageBox.Show("MESSAGE IS: " + message);
                 return message;
             }
 
