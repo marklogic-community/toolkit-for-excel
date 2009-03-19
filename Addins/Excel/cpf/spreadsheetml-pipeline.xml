@@ -1,0 +1,52 @@
+<!-- Copyright 2002-2008 Mark Logic Corporation. All Rights Reserved.
+-->
+<?xml-stylesheet href="/cpf/pipelines.css" type="text/css"?>
+<pipeline xmlns="http://marklogic.com/cpf/pipelines"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://marklogic.com/cpf/pipelines pipelines.xsd"
+>
+<pipeline-name>SpreadsheetML Process</pipeline-name>
+     <pipeline-description>Update Sheet.xml parts ( extracted from .xlsx pkg ) by mapping strings from SharedData.xml to Sheet.xml
+     </pipeline-description>
+     <success-action>
+       <module>/MarkLogic/cpf/actions/success-action.xqy</module>
+     </success-action>
+     <failure-action>
+       <module>/MarkLogic/cpf/actions/failure-action.xqy</module>
+     </failure-action>
+     <state-transition>
+       <annotation>
+   	  Map SharedTable for Sheet.xml of Excel package only
+       </annotation>
+       <state>http://marklogic.com/states/initial</state>
+       <on-success>http://marklogic.com/states/sharedmapped</on-success>
+       <on-failure>http://marklogic.com/states/error</on-failure>
+       <priority>9300</priority>
+        <execute>
+	<condition>
+            <module>/MarkLogic/cpf/actions/namespace-condition.xqy</module>
+            <options xmlns="/MarkLogic/cpf/actions/namespace-condition.xqy">
+               <namespace>http://schemas.openxmlformats.org/spreadsheetml/2006/main</namespace>
+	       <root-element>worksheet</root-element>
+            </options>
+         </condition>
+       <action>
+	       <module>/MarkLogic/conversion/actions/map-shared-action.xqy</module>
+       </action>
+     </execute>
+     </state-transition>
+
+      <state-transition>
+      <annotation>
+      Document has been updated: reprocess if need be.
+      Note: the preconditions will avoid reprocessing of active documents,
+      so we will avoid falling into a processing loop when the processing
+      updates a document.
+      </annotation>
+
+      <state>http://marklogic.com/states/updated</state>
+      <on-success>http://marklogic.com/states/initial</on-success>
+      <on-failure>http://marklogic.com/states/error</on-failure>
+      <priority>9300</priority>
+   </state-transition>
+</pipeline>
