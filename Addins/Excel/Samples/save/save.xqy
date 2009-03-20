@@ -16,12 +16,13 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
                           <div>Save As: &nbsp;&nbsp;
                              <input id="ML-Save" name="q" type="text" value=""/>&nbsp;&nbsp;
                              <!--<img src="save-48x48.png" style="vertical-align:bottom;" onclick="saveXlsxToMarkLogic()" />-->
-                             <img src="save-48x48.png" style="vertical-align:middle;" onclick="saveXlsxToML()" />
+                             <!-- <img src="save-48x48.png" style="vertical-align:middle;" onclick="saveXlsxToML()" /> -->
+	                          <button id="ML-Save" class="ML-action" onclick="saveXlsxToML()">Save</button>
                           </div>
 <br/>
 <br/>
 <div id="ML-Intro">
-			<h1>Save The Active Workbook</h1>
+			<h1>Save To MarkLogic Server</h1>
 			<p>Enter a title for the Excel Workbook currently being authored.  Click the Save Icon to save the document to MarkLogic Server.  The document will be saved to the database that is configured with the Add-in.</p>
 			<p>You don't have to append the .xlsx extension, it will be provided automatically. If you don't enter a title, the document will be saved as Default.xlsx.</p>
 		</div>
