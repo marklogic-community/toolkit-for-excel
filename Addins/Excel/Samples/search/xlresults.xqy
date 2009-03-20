@@ -110,7 +110,10 @@ let $html := for $d in $distinct
                                                <div id="results">
                                                    <table border="0">
                                                     <tr>
-                                                     <td>{$sum}</td>
+                                                     <td>{ (: will fix later , if 0, then we know element name generated table, only 1 :)
+                                                            if($sum = 0) then 1 else $sum 
+                                                         }
+                                                     </td>
                                                      <td>&nbsp;&nbsp;</td>
                                                      <td><a href="tabletoexcelgenerate.xqy?elemname={$searchparam}&amp;docuri={$d}">{$d} </a></td>
                                                     </tr>
@@ -121,7 +124,7 @@ let $html := for $d in $distinct
                                                <div id="results">
                                                 <table border="0">
                                                     <tr>
-                                                     <td>{$sum}</td>
+                                                     <td>{if($sum = 0) then 1 else $sum}</td>
                                                      <td>&nbsp;&nbsp;</td>
                                                      <td><a href="tabletoexcelgenerate.xqy?elemname={$parent}&amp;docuri={$d}">{$d} </a></td>
                                                     </tr>
