@@ -26,8 +26,10 @@ let $original := xdmp:unpath($path)
 let $valid1 := excel:validate-child($original)
 
 let $final := if($valid1 eq xs:boolean("false")) then
-
- <html xmlns="http://www.w3.org/1999/xhtml">
+(
+xdmp:set-response-content-type('text/html;charset=utf-8'),
+'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Create Worksheet from XML Table</title>
@@ -42,20 +44,25 @@ let $body :=
       <br/>
       <img src="ackbar2.jpg"/>
 <div id="ML-Add-in">
-<div id="ML-Message">
+<!-- <div id="ML-Message"> -->
      <!-- <h1>ACK! It's A Trap!!!</h1> -->
      <p><strong>ACK! It's A Trap!!!</strong></p>
+<br/><br/>
        
      <p> That doesn't appear to be a table,<br/> 
-      Please search for something else.</p>
+      Please try to open another document.</p>
       <br/><br/>
-      <a href="default.xqy?xladd:bsv={$wrapperelem}">Try Again.</a>
+      <a href="default.xqy?xladd:bsv={$wrapperelem}">Go Back</a>
+<!--</div> -->
 </div>
-</div>
+	<div id="ML-Navigation">
+	   <a href="../default.xqy">« Samples</a>
+        </div>
       </body>
 return $body
 }
 </html>
+) 
 else
 (
 let $worksheetname := $original/fn:local-name(child::*[1])

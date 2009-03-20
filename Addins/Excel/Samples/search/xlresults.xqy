@@ -74,7 +74,7 @@ let $html := for $d in $distinct
                             let $sum := fn:sum($count)
                              
                            (:need to work on html:)                           
-                            let $link :=     <table border="0">
+                            let $link :=    <table border="0">
                                              <tr>
                                               <td>{$sum}</td>
                                               <td>&nbsp;&nbsp;</td>
