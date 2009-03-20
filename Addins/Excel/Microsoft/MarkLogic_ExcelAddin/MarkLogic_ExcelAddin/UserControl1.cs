@@ -417,27 +417,7 @@ namespace MarkLogic_ExcelAddin
 
                 return message;
             }
-        /*
-            public String setCell(string coordinate, string value, string name)
-            {
-                object missing = Type.Missing;
-                string message = "";
 
-                try
-                {
-                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks["Book1"];
-                    Excel.Worksheet w = (Excel.Worksheet)wb.Sheets[name]; // (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name];
-                    Excel.Range r2 = w.get_Range(coordinate, missing);
-                    r2.Value2 = value;
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("IN ERROR" + e.Message + "----" + e.StackTrace);
-                }
-
-                return message;
-            }
-        */
             public String setActiveWorksheet(string name)
             {
                 string message = "";
@@ -552,7 +532,6 @@ namespace MarkLogic_ExcelAddin
 
             }
 
-            //HERE2
             public String setActiveRangeByName(string rngName)
             {
                 String message = "";
@@ -692,8 +671,6 @@ namespace MarkLogic_ExcelAddin
                 return message;
 
             }
-
-        //HERE3
 
             public String removeNamedRange(string rngName)
             {
@@ -991,9 +968,6 @@ namespace MarkLogic_ExcelAddin
                 return text;
 
             }
-
-        //HERE4
-
             //simple function, may be redundant as we have setCellValueA1
             public String setActiveCellValue(string value)
             {
@@ -1011,7 +985,30 @@ namespace MarkLogic_ExcelAddin
                 }
                 return message;
             }
+        /*Testing for background setting
+            public String setCellValueA1(string coordinate, string value, string sheetname)
+            {
+                MessageBox.Show("setting for sheet: " + sheetname);
+                object missing = Type.Missing;
+                string message = "";
 
+                try
+                {
+                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks["Book1"];
+                    Excel.Worksheet w = (Excel.Worksheet)wb.Sheets[sheetname]; // (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name];
+                    Excel.Range r2 = w.get_Range(coordinate, missing);
+                    r2.Value2 = value;
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                    //MessageBox.Show("IN ERROR" + e.Message + "----" + e.StackTrace);
+                }
+
+                return message;
+            }
+        */
             //how we set cell values currently
             //may want to use entire cell object
             public String setCellValueA1(string coordinate, string value)
@@ -1076,8 +1073,6 @@ namespace MarkLogic_ExcelAddin
                 return message;
             }
 
-        //HERE5
-
             public String clearActiveWorksheet()
             {
                 string message = "FOO";
@@ -1098,11 +1093,6 @@ namespace MarkLogic_ExcelAddin
                 return message;
 
             }
-
-        //HERE6
-
-        //NOT ACCOUNTED FOR
-
 
             public String getTempPath()
             {
