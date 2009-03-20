@@ -508,6 +508,7 @@ MLA.setActiveWorksheet = function(sheetname)
 	//return saw;
 }
 
+// HERE
 
 MLA.addNamedRange = function(coord1,coord2,rngName)
 {
@@ -534,12 +535,23 @@ MLA.addAutoFilter = function(coord1, coord2, criteria1, operator, criteria2)
 	}
 
 	var rng = window.external.addAutoFilter(coord1,coord2,criteria1,operator,criteria2);
+	var errMsg = MLA.errorCheck(rng);
+	
+        if(errMsg!=null)
+        	throw("Error: Not able to addAutoFilter; "+errMsg);
+
 	return rng;
 }
 
 MLA.getNamedRangeRangeNames = function()
 {
 	var nrs = window.external.getNamedRangeRangeNames();
+
+        var errMsg = MLA.errorCheck(nrs);
+	
+        if(errMsg!=null)
+        	throw("Error: Not able to getNamedRangeRangeNames; "+errMsg);
+
 	var nrsArray = nrs.split(":");
 	return nrsArray;
 }
@@ -547,36 +559,68 @@ MLA.getNamedRangeRangeNames = function()
 MLA.setActiveRangeByName = function(name)
 {
 	var msg = window.external.setActiveRangeByName(name);
+	var errMsg = MLA.errorCheck(msg);
+	
+        if(errMsg!=null)
+        	throw("Error: Not able to setActiveRangeByName; "+errMsg);
+
 	return msg;
 }
 
 MLA.clearNamedRange = function(name)
 {
 	var msg=window.external.clearNamedRange(name);
+	var errMsg = MLA.errorCheck(msg);
+	
+        if(errMsg!=null)
+        	throw("Error: Not able to clearNamedRange; "+errMsg);
+
 	return msg;
 }
 
 MLA.clearRange = function(scoord,ecoord)
 {
 	var msg=window.external.clearRange(scoord,ecoord);
+        var errMsg = MLA.errorCheck(msg);
+	
+        if(errMsg!=null)
+        	throw("Error: Not able to clearRange; "+errMsg);
+
 	return msg;
 }
 
 MLA.removeNamedRange = function(name)
 {
 	var msg = window.external.removeNamedRange(name);
+        var errMsg = MLA.errorCheck(msg);
+
+	if(errMsg!=null)
+        	throw("Error: Not able to removeNamedRange; "+errMsg);
+
 	return msg;
 }
 
 MLA.getSelectedRangeCoordinates = function()
 {
-        var r = window.external.getSelectedRangeCoordinates();
-	return r;
+        var msg = window.external.getSelectedRangeCoordinates();
+
+        var errMsg = MLA.errorCheck(msg);
+
+	if(errMsg!=null)
+        	throw("Error: Not able to setSelectedRangeCoordinates; "+errMsg);
+
+	return msg;
 }
 
 MLA.getSelectedCells = function()
 {
      var cellresults = window.external.getSelectedCells();
+
+     var errMsg = MLA.errorCheck(cellresults);
+
+     if(errMsg!=null) 
+        throw("Error: Not able to getSelectedCells; "+errMsg);
+
      var cellstring = "{ \"cells\" : "+cellresults+"}";
      //alert (cellstring);
      var cells = eval('('+cellstring+')');
@@ -598,6 +642,11 @@ MLA.getSelectedCells = function()
 MLA.getActiveCell = function()
 {
 	var cellinfo = window.external.getActiveCell();
+        var errMsg = MLA.errorCheck(cellinfo);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getActiveCell; "+errMsg);
+
 	var cellValues = cellinfo.split(":");
 	var rowIdx = cellValues[0];
 	var colIdx = cellValues[1];
@@ -626,6 +675,10 @@ MLA.getActiveCell = function()
 MLA.getActiveCellRange = function()
 {
 	var cell = window.external.getActiveCellRange();
+        var errMsg = MLA.errorCheck(cell);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getActiveCellRange; "+errMsg);
 	return cell;
 }
 
@@ -638,6 +691,11 @@ MLA.getActiveCellRange = function()
 MLA.getActiveCellText = function()
 {
 	var cellstring = window.external.getActiveCellText();
+	var errMsg = MLA.errorCheck(cellstring);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getActiveCellText; "+errMsg);
+
 	var cell = eval('('+cellstring+')');
 	var mlaCell = new MLA.Cell();
 	mlaCell = cell;
@@ -645,13 +703,18 @@ MLA.getActiveCellText = function()
 }
 
 /**
- * Set the Text for the cell at the current cursor position.
- * @param value - the text to be inserted in the active cell
+ * Set the value for the cell at the current cursor position.
+ * @param value - the value to be inserted in the active cell
  * @throws Exception if unable to set the active cell text
  */
 MLA.setActiveCellValue = function(value)
 {
 	var msg = window.external.setActiveCellValue(value);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to setActiveCellValue; "+errMsg);
+
         return msg;
 }
 
@@ -667,6 +730,11 @@ MLA.setCellValue = function(cells)
 		for(var i =0; i<cells.length; i++)
 		{
           		var msg = window.external.setCellValueA1(cells[i].coordinate, cells[i].value2);
+		        var errMsg = MLA.errorCheck(msg);
+
+                        if(errMsg!=null) 
+        	        	throw("Error: Not able to setCellValue; "+errMsg);
+
 		}
 	}
 
@@ -676,38 +744,68 @@ MLA.setCellValue = function(cells)
 MLA.convertA1ToR1C1 = function(coord)
 {
 	var msg=window.external.convertA1ToR1C1(coord);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to convertA1toR1C1; "+errMsg);
+
 	return msg;
 }
 
 MLA.convertR1C1ToA1 = function(rowIdx, colIdx)
 {
 	var msg=window.external.convertR1C1ToA1(rowIdx, colIdx);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to convertR1C1toA1; "+errMsg);
+
 	return msg;
 }
 
 MLA.clearWorksheet = function()
 {
 	var msg=window.external.clearActiveWorksheet();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to clearWorksheet; "+errMsg);
+
         return msg;
 }
 
+//NEW
 MLA.getTempPath = function()
 {
 	//alert("IN HERE");
 	var msg=window.external.getTempPath();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getTempPath; "+errMsg);
+
 	return msg;
 }
 
 MLA.saveActiveWorkbook = function(tmpPath, doctitle, url, uname,pwd)
 {
        var msg = window.external.saveActiveWorkbook(tmpPath, doctitle, url,uname,pwd);
+      	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to saveActiveWorkbook; "+errMsg);
+
        return msg;
 }
 
 MLA.openXlsx = function(tmpPath, docuri, url, uname, pwd)
 {
-   var msg =  window.external.OpenXlsx(tmpPath, docuri, url, uname,pwd);
-   return msg;
+        var msg =  window.external.OpenXlsx(tmpPath, docuri, url, uname,pwd);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to openXlsx; "+errMsg);
+        return msg;
 }
      // var msg = window.external.OpenXlsx(tmpPath, docuri, url, "zeke","zeke")
      //

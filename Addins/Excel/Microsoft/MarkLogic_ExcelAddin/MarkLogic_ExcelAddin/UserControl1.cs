@@ -417,6 +417,7 @@ namespace MarkLogic_ExcelAddin
 
                 return message;
             }
+        /*
             public String setCell(string coordinate, string value, string name)
             {
                 object missing = Type.Missing;
@@ -436,6 +437,7 @@ namespace MarkLogic_ExcelAddin
 
                 return message;
             }
+        */
             public String setActiveWorksheet(string name)
             {
                 string message = "";
@@ -454,610 +456,6 @@ namespace MarkLogic_ExcelAddin
                 }
 
                 return message;
-            }
-
-            public String getTempPath()
-            {
-                string tmpPath = System.IO.Path.GetTempPath();
-               //MessageBox.Show("returning "+tmpPath);
-                return tmpPath;
-            }
-            public String openXlsxWebDAV(string documenturi)
-            {
-                //MessageBox.Show("IN ADDIN");
-                string message="";
-                object missing = Type.Missing;
-                object f = false;
-                //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
-                Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(documenturi, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-                   
-                return message;
-
-            }
-
-            public String openXlsx2(string path, string title, string url, string user, string pwd)
-            {
-                // MessageBox.Show("in the addin filename:"+filename+ "   uri: "+uri);
-                string message = "";
-                object missing = Type.Missing;
-                Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
-
-                try
-                {
-                    using (MemoryStream memoryStream = new MemoryStream())
-                    {
-                      System.Net.WebClient Client = new System.Net.WebClient();
-                      //Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
-                      Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-                      //string tmppath = getTempPath();
-                      string tmpdoc = path + title;
-                      //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
-                      byte[] byteArray = Client.DownloadData(url);
-                      //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-                      memoryStream.Write(byteArray, 0, byteArray.Length);
-
-                        //no way to open Excel from memory stream at this point, can do this in Word/powerpoint by serializing as base64 string, or just returning xml for document
-                        //and using insertXML
-                      using (OpenXmlPkg.SpreadsheetDocument xldoc = OpenXmlPkg.SpreadsheetDocument.Open(memoryStream, true))
-                      {
-                        
-                      }
-                      
-
-                       
-                    }
-                     
-                    //OpenXmlPkg.SpreadsheetDocument sd
-                    /*
-                     * another way 
-                                        byte[] byteArray =  Client.DownloadData("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx");//File.ReadAllBytes("Test.docx");
-                                        using (MemoryStream mem = new MemoryStream())
-                                        {
-
-                                            mem.Write(byteArray, 0, (int)byteArray.Length);
-
-                                            // using (OpenXmlPkg.SpreadsheetDocument sd = OpenXmlPkg.SpreadsheetDocument.Open(mem, true))
-                                            // {
-                                            // }
-                        
-                                            using (FileStream fileStream = new FileStream(@"C:\Test2.docx", System.IO.FileMode.CreateNew))
-                                            {
-
-                                                mem.WriteTo(fileStream);
-
-                                            }
-
-                       
-                        
-                                        }
-                     * */
-
-                    //OpenXmlPkg.SpreadsheetDocument xlPackage;
-                    //xlPackage = OpenXmlPkg.SpreadsheetDocument.Open(strm, false);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("problem" + e.Message + "   " + e.StackTrace);
-                }
-
-
-                return message;
-            }
-
-
-            public String openXlsx(string path, string title, string url, string user, string pwd)
-            {
-                // MessageBox.Show("in the addin filename:"+filename+ "   uri: "+uri);
-                string message = "";
-                object missing = Type.Missing;
-                string tmpdoc = "";
-
-                try
-                {
-                    System.Net.WebClient Client = new System.Net.WebClient();
-                    //Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
-                    Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-                    //string tmppath = getTempPath();
-                    tmpdoc = path + title;
-                    //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
-                    Client.DownloadFile(url, tmpdoc);//@"C:\test2.xlsx");
-                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-
-                    /*
-                     * another way 
-                                        byte[] byteArray =  Client.DownloadData("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx");//File.ReadAllBytes("Test.docx");
-                                        using (MemoryStream mem = new MemoryStream())
-                                        {
-
-                                            mem.Write(byteArray, 0, (int)byteArray.Length);
-
-                                            // using (OpenXmlPkg.SpreadsheetDocument sd = OpenXmlPkg.SpreadsheetDocument.Open(mem, true))
-                                            // {
-                                            // }
-                        
-                                            using (FileStream fileStream = new FileStream(@"C:\Test2.docx", System.IO.FileMode.CreateNew))
-                                            {
-
-                                                mem.WriteTo(fileStream);
-
-                                            }
-
-                       
-                        
-                                        }
-                     * */
-
-                    //OpenXmlPkg.SpreadsheetDocument xlPackage;
-                    //xlPackage = OpenXmlPkg.SpreadsheetDocument.Open(strm, false);
-                }
-                catch (Exception e)
-                {
-                    string origmsg = "A document with the name 'Default.xlsx' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
-                    string caption = "Microsoft Office Excel";
-                    MessageBox.Show(origmsg,caption,MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                    string errorMsg = e.Message;
-                    message = "error: " + errorMsg;
-
-                    //MessageBox.Show(origmsg);
-                        /* string choiceMessage = "It looks like you are attempting to open a workbook that you  already have open.\nWould you like to replace the open workbook with the workbook you've selected?";
-                    string caption = "workbook with same title already open";
-                    MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                    DialogResult result;
-
-                    // Displays the MessageBox.
-
-                    result = MessageBox.Show(choiceMessage, caption, buttons);
-
-                    if (result == System.Windows.Forms.DialogResult.Yes)
-                    {
-                        string wbname = getActiveWorkbookName();
-                        setActiveWorkbook(title);
-                        Globals.ThisAddIn.Application.ActiveWorkbook.Close(false,missing,missing);
-                        Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-
-                        // Closes the parent form.
-
-                        MessageBox.Show("YES");
-
-                    }
-                    * */
-
-
-                    //MessageBox.Show("You are attempting to download a workbook that you already have open.  Would you like to replace the workbook you have open?");
-                    //MessageBox.Show("TEST");
-                   // MessageBox.Show("problem" + e.Message + "   " + e.StackTrace);
-                }
-
-
-                return message;
-            }
-
-            public String openXlsx(string filename, string uri)
-            {
-               // MessageBox.Show("in the addin filename:"+filename+ "   uri: "+uri);
-                string message = "";
-                object missing = Type.Missing;
-
-                try
-                {
-                    System.Net.WebClient Client = new System.Net.WebClient();
-                    //Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
-                    Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
-                    string tmppath = getTempPath();
-                    string tmpdoc = tmppath + filename;
-                    //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
-                    Client.DownloadFile("http://localhost:8000/test.xqy?uid="+uri, tmpdoc);//@"C:\test2.xlsx");
-                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-                   
-/*
- * another way 
-                    byte[] byteArray =  Client.DownloadData("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx");//File.ReadAllBytes("Test.docx");
-                    using (MemoryStream mem = new MemoryStream())
-                    {
-
-                        mem.Write(byteArray, 0, (int)byteArray.Length);
-
-                        // using (OpenXmlPkg.SpreadsheetDocument sd = OpenXmlPkg.SpreadsheetDocument.Open(mem, true))
-                        // {
-                        // }
-                        
-                        using (FileStream fileStream = new FileStream(@"C:\Test2.docx", System.IO.FileMode.CreateNew))
-                        {
-
-                            mem.WriteTo(fileStream);
-
-                        }
-
-                       
-                        
-                    }
- * */
-
-                    //OpenXmlPkg.SpreadsheetDocument xlPackage;
-                    //xlPackage = OpenXmlPkg.SpreadsheetDocument.Open(strm, false);
-                }
-                catch (Exception e)
-                {
-                    string errorMsg = e.Message;
-                    message = "error: " + errorMsg;
-                    //MessageBox.Show("problem"+e.Message+"   "+e.StackTrace);
-                }
-
-
-                return message;
-            }
-/*
-            public String saveActiveWorkbook(string path, string title, string url, string user, string pwd)
-            {
-                object missing = Type.Missing;
-                string newtitle = path + title;
-                MessageBox.Show("NEW PATH" + newtitle);
-                object t = title;
-                Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
-                try
-                {
-                    wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
-
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("that shizz didn't work?!?!?" + e.Message + "===" + e.StackTrace);
-                }
-
-                System.Net.WebClient Client = new System.Net.WebClient();
-                //Client.Headers.AllKeys;
-                Client.Headers.Add("enctype", "multipart/form-data");
-                //Client.Headers.Add("Content-Type","application/x-www-form-urlencoded");
-                Client.Headers.Add("Content-Type", "application/octet-stream");
-
-                //Client.Headers.Add("Content-Transfer-Encoding","application/octet-stream");
-
-                try
-                {
-
-                    // FileStream fs = new FileStream(@"C:\Default.xlsx", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                    FileStream fs = new FileStream(title, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    int length = (int)fs.Length;
-                    byte[] content = new byte[length];
-                    fs.Read(content, 0, length);
-
-
-
-
-                    try
-                    {
-                        // MessageBox.Show("URL: " + url);
-                        // MessageBox.Show("TITLE " + title);
-                        //Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
-                        Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-                        //Client.UploadFile("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST", @"c:\Default.xlsx");//@"c:\tmp.xml");
-
-                        //Client.UploadData("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST",content);
-                        Client.UploadData(url, "POST", content);
-                        //Client.UploadFile(url, "POST", title);
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show("ERROR" + e.Message + "      " + e.StackTrace);
-                    }
-
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("THIS BLEW UP:" + e.Message + "                 " + e.StackTrace);
-                }
-                return "foo";
-            }
-*/
-            static bool FileInUse(string path)
-            {
-                string __message = "";
-                try
-                {
-                    //Just opening the file as open/create
-                    using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
-                    {
-                        //If required we can check for read/write by using fs.CanRead or fs.CanWrite
-                    }
-                    return false;
-                }
-                catch (IOException ex)
-                {
-                    //check if message is for a File IO
-                    __message = ex.Message.ToString();
-                    if (__message.Contains("The process cannot access the file"))
-                        return true;
-                    else
-                        throw;
-                }
-            }
-
-            public String saveActiveWorkbook(string path, string title, string url, string user, string pwd)
-            {
-                string message = "";
-                //MessageBox.Show("TITLE IS:"+title);
-                object missing = Type.Missing;
-                string newtitle = path + title;
-                //MessageBox.Show("NEW PATH" + newtitle);
-                string tmptitle = path + "copyof_" + title;
-
-                object t = newtitle;
-                object tmpt = tmptitle;
-
-                Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
-                try
-                {
-                    if (FileInUse(newtitle))
-                    {
-                        //in use
-                        //need to save to copy, delete orig, save to orig, delete copy?
-                        //lame, but may work til i come up with something else
-                        if (wb.Name.Equals(title))
-                        {
-                             //MessageBox.Show("file in use: will try tmp copy madness");
-                             wb.SaveAs(tmpt, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
-                             wb.Close(false, missing, missing);
-                             File.Delete(newtitle);
-    
-                             Excel.Workbook wb2 = Globals.ThisAddIn.Application.Workbooks.Open(tmptitle, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);     
-                             wb2.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
-                             
-                             File.Delete(tmptitle);
-
-                        }
-
-                    }
-                    else
-                    {
-                        //MessageBox.Show("IN SAVE AS");
-                        wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
-                    }
-                }
-                catch (Exception e)
-                {
-                    string errorMsg = e.Message;
-                    message = "error: " + errorMsg;
-                     MessageBox.Show("that didn't work-try again" + e.Message + "===" + e.StackTrace);
-                }
-
-                System.Net.WebClient Client = new System.Net.WebClient();
-                //Client.Headers.AllKeys;
-                Client.Headers.Add("enctype", "multipart/form-data");
-                //Client.Headers.Add("Content-Type","application/x-www-form-urlencoded");
-                Client.Headers.Add("Content-Type", "application/octet-stream");
-
-                //Client.Headers.Add("Content-Transfer-Encoding","application/octet-stream");
-
-                try
-                {
-
-                    // FileStream fs = new FileStream(@"C:\Default.xlsx", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                    FileStream fs = new FileStream(newtitle, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    int length = (int)fs.Length;
-                    byte[] content = new byte[length];
-                    fs.Read(content, 0, length);
-
-                    try
-                    {
-                        // MessageBox.Show("URL: " + url);
-                        // MessageBox.Show("TITLE " + title);
-                        //Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
-                        Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-                        //Client.UploadFile("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST", @"c:\Default.xlsx");//@"c:\tmp.xml");
-
-                        //Client.UploadData("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST",content);
-                        Client.UploadData(url, "POST", content);
-                        //Client.UploadFile(url, "POST", title);
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show("HERE");
-                        //MessageBox.Show("ERROR" + e.Message + "      " + e.StackTrace);
-                        string errorMsg = e.Message;
-                        message = "error: " + errorMsg;
-                    }
-
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("THIS BLEW UP:" + e.Message + "                 " + e.StackTrace);
-                    string errorMsg = e.Message;
-                    message = "error: " + errorMsg;
-                }
-                //MessageBox.Show("Workbook: " + title + " saved."); 
-                //MessageBox.Show("MESSAGE IS: " + message);
-                return message;
-            }
-
-            public String saveXlsx(string title, string url)
-            {
-                object missing = Type.Missing;
-                object t = title;
-                Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
-                try
-                {
-                    wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
-                    
-                }
-                catch (Exception e)
-                {
-                   // MessageBox.Show("that shizz didn't work?!?!?" + e.Message + "===" + e.StackTrace);
-                }
-
-                System.Net.WebClient Client = new System.Net.WebClient();
-                //Client.Headers.AllKeys;
-                Client.Headers.Add("enctype", "multipart/form-data");
-               //Client.Headers.Add("Content-Type","application/x-www-form-urlencoded");
-                Client.Headers.Add("Content-Type", "application/octet-stream");
-
-              //Client.Headers.Add("Content-Transfer-Encoding","application/octet-stream");
-
-               try
-               {
-                   
-                  // FileStream fs = new FileStream(@"C:\Default.xlsx", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                   FileStream fs = new FileStream(title, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                   int length = (int)fs.Length;
-                   byte[] content = new byte[length];
-                   fs.Read(content, 0, length);
-
-
-
-
-                   try
-                   {
-                      // MessageBox.Show("URL: " + url);
-                      // MessageBox.Show("TITLE " + title);
-                       //Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
-                       Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
-                       //Client.UploadFile("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST", @"c:\Default.xlsx");//@"c:\tmp.xml");
-                       
-                       //Client.UploadData("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST",content);
-                       Client.UploadData(url, "POST", content);
-                       //Client.UploadFile(url, "POST", title);
-                   }
-                   catch (Exception e)
-                   {
-                       MessageBox.Show("ERROR" + e.Message + "      " + e.StackTrace);
-                   }
-
-               }
-               catch (Exception e)
-               {
-                   MessageBox.Show("THIS BLEW UP:" +e.Message+"                 "+ e.StackTrace);
-               }
-                return "foo";
-            }
-
-            public String saveXlsxWebDAV(string title)
-            {
-                string message = "";
-                object missing = Type.Missing;
-                //string  tmp = System.IO.Path.GetTempPath(); 
-                MessageBox.Show("document: "+title);
-                object t = title;
-               Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
-               try
-               {
-                   wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
-               }
-               catch (Exception e)
-               {
-                   MessageBox.Show("that shizz didn't work?!?!?" + e.Message + "===" + e.StackTrace);
-               }
-  /*
-    Object Filename,
-    Object FileFormat,
-    Object Password,
-    Object WriteResPassword,
-    Object ReadOnlyRecommended,
-    Object CreateBackup,
-    XlSaveAsAccessMode AccessMode,
-    Object ConflictResolution,
-    Object AddToMru,
-    Object TextCodepage,
-    Object TextVisualLayout,
-    Object Local
-  */
-
-                return message;
-            }
-            
-
-            public String openDoc()
-            {
-                try
-                {
-                    object missing = Type.Missing;
-                               // Excel.Application excelApp;
-                               // excelApp = new Microsoft.Office.Interop.Excel.Application();
-                               // excelApp.Visible = true;
-                    /*these 2 work, but overwrite existing try add new workbook first below
-                    Excel.Workbook wb =  Globals.ThisAddIn.Application.Workbooks.Open("http://localhost:8011/openinml.xlsx", missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing);
-                    wb.Activate();
-                    */
-                               // excelApp.Workbooks.Open("http://localhost:8011/openinml.xlsx", missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing);
-
-
-
-                    //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
-                    object f = false;
-                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
-                    wb = Globals.ThisAddIn.Application.Workbooks.Open("http://localhost:8011/openinml.xlsx", missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-                   
-                    //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
-                   //wb.ChangeFileAccess(Excel.XlFileAccess.xlReadWrite, missing, true);
-                    
-                   // Excel.Workbook wb2 = Globals.ThisAddIn.Application.ActiveWorkbook;
-                   // wb2.ChangeFileAccess(Excel.XlFileAccess.xlReadWrite, missing, true);
-                  
-                    //Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
-                    //app.Workbooks.Open("http://localhost:8011/openinml.xlsx", missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-                    //wb = app.Workbooks[1];
-                   // wb.Activate();
-
-                   
-
-
-                    
-
-
-
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("Error" + e.Message + "=====" + e.StackTrace);
-                }
-
-                return "foo";
-            }
-
-            //TESTER
-            //functions we may want
-            //clearNamedRange
-            //addComment
-            //clear workbook
-            //clear sheet
-            //clear range
-
-            public String clearActiveWorksheet()
-            {
-                string message = "FOO";
-                object missing = Type.Missing;
-
-                //could do it by name, but then do we reset if user on different sheet?
-                //plus, we have other functions for getting/setting active worksheet
-                //can just loop through to delete all contents
-
-                //Excel.Worksheet ws =   (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]; // ((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]).Select( missing);
-                Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
-                //ws.Select(missing);
-                ws.Cells.Select();
-                ws.Cells.Clear();
-                Excel.Range r = (Excel.Range)ws.Cells[1, 1];
-                r.Select();
-
-                return message;
-
-            }
-
-
-            public String addAutoFilter(string coordinate1, string coordinate2, string criteria1, string v_operator, string criteria2)
-            {
-                MessageBox.Show("c1: " + coordinate1 + " c2: " + coordinate2 + " crit1: " + criteria1 + " op: " + v_operator + " crit2: " + criteria2);
-                string message = "";
-                object missing = Type.Missing;
-
-                Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
-                Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
-
-                //rg.AutoFilter(1,missing,Excel.XlAutoFilterOperator.xlAnd,missing, true);
-                rg.AutoFilter(1, "<>", Excel.XlAutoFilterOperator.xlOr, missing, true);
-
-                return message;
-
-
             }
 
             public String addNamedRange(string coordinate1, string coordinate2, string rngName)
@@ -1114,6 +512,23 @@ namespace MarkLogic_ExcelAddin
                 return message;
             }
 
+            public String addAutoFilter(string coordinate1, string coordinate2, string criteria1, string v_operator, string criteria2)
+            {
+                MessageBox.Show("c1: " + coordinate1 + " c2: " + coordinate2 + " crit1: " + criteria1 + " op: " + v_operator + " crit2: " + criteria2);
+                string message = "";
+                object missing = Type.Missing;
+
+                Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
+
+                //rg.AutoFilter(1,missing,Excel.XlAutoFilterOperator.xlAnd,missing, true);
+                rg.AutoFilter(1, "<>", Excel.XlAutoFilterOperator.xlOr, missing, true);
+
+                return message;
+
+
+            }
+
             public String getNamedRangeRangeNames()
             {
                 string message = "";
@@ -1137,25 +552,43 @@ namespace MarkLogic_ExcelAddin
 
             }
 
-            //remove named range?
-
-            public String removeNamedRange(string rngName)
+            //HERE2
+            public String setActiveRangeByName(string rngName)
             {
-                string message = "";
+                String message = "";
+
+                //first get activeworksheet name (don't need this, unless we reset to original page
+                //Excel.Worksheet w = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
+                //MessageBox.Show("NAME OF SHEET"+w.Name+"NAME OF RANGE "+rngName);
+                //get all worksheet names
                 object missing = Type.Missing;
+                Excel.Sheets ws = Globals.ThisAddIn.Application.ActiveWorkbook.Worksheets;//Globals.ThisAddIn.Application.Worksheets;
+                Excel.Range r = null;
 
-                Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
-                foreach (Excel.Name nDel in ns)
+                //loop thru all sheets til we find range, return first, else, give up
+                //names have to be unique, so this seems like a safe bet
+                foreach (Excel.Worksheet n in ws)
                 {
-                    // MessageBox.Show("NAME" + nDel.Name);
-                    if (nDel.Name.EndsWith(rngName))
+                    string wsname = n.Name;
+                    setActiveWorksheet(wsname);
+                    try
                     {
-                        //MessageBox.Show("deleting name");
-                        nDel.Delete();
+                        // MessageBox.Show("IN TRY");
+                        r = n.get_Range(rngName, missing);
+                        if (r != null)
+                        {
+                            r.Activate();
+                            break;
+                        }
                     }
+                    catch
+                    {
+                        MessageBox.Show("IN CATCH");
+                        r = null;
+                    }
+
+
                 }
-
-
                 return message;
             }
 
@@ -1247,46 +680,6 @@ namespace MarkLogic_ExcelAddin
                 return message;
             }
 
-            public String setActiveRangeByName(string rngName)
-            {
-                String message = "";
-
-                //first get activeworksheet name (don't need this, unless we reset to original page
-                //Excel.Worksheet w = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
-                //MessageBox.Show("NAME OF SHEET"+w.Name+"NAME OF RANGE "+rngName);
-                //get all worksheet names
-                object missing = Type.Missing;
-                Excel.Sheets ws = Globals.ThisAddIn.Application.ActiveWorkbook.Worksheets;//Globals.ThisAddIn.Application.Worksheets;
-                Excel.Range r = null;
-
-                //loop thru all sheets til we find range, return first, else, give up
-                //names have to be unique, so this seems like a safe bet
-                foreach (Excel.Worksheet n in ws)
-                {
-                    string wsname = n.Name;
-                    setActiveWorksheet(wsname);
-                    try
-                    {
-                        // MessageBox.Show("IN TRY");
-                        r = n.get_Range(rngName, missing);
-                        if (r != null)
-                        {
-                            r.Activate();
-                            break;
-                        }
-                    }
-                    catch
-                    {
-                        MessageBox.Show("IN CATCH");
-                        r = null;
-                    }
-
-
-                }
-
-                return message;
-            }
-
             public String clearRange(string startcoord, string endcoord)
             {
                 MessageBox.Show("HERE");
@@ -1298,6 +691,28 @@ namespace MarkLogic_ExcelAddin
 
                 return message;
 
+            }
+
+        //HERE3
+
+            public String removeNamedRange(string rngName)
+            {
+                string message = "";
+                object missing = Type.Missing;
+
+                Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
+                foreach (Excel.Name nDel in ns)
+                {
+                    // MessageBox.Show("NAME" + nDel.Name);
+                    if (nDel.Name.EndsWith(rngName))
+                    {
+                        //MessageBox.Show("deleting name");
+                        nDel.Delete();
+                    }
+                }
+
+
+                return message;
             }
 
             public String getSelectedRangeCoordinates()
@@ -1577,6 +992,48 @@ namespace MarkLogic_ExcelAddin
 
             }
 
+        //HERE4
+
+            //simple function, may be redundant as we have setCellValueA1
+            public String setActiveCellValue(string value)
+            {
+                string message = "";
+                try
+                {
+                    object txt = value;
+                    Excel.Range r = Globals.ThisAddIn.Application.ActiveCell;
+                    r.Value2 = txt;
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+                return message;
+            }
+
+            //how we set cell values currently
+            //may want to use entire cell object
+            public String setCellValueA1(string coordinate, string value)
+            {
+                //MessageBox.Show("IN STRING METHOD");
+                object missing = Type.Missing;
+                string message = "";
+
+                try
+                {
+                    Excel.Range r2 = Globals.ThisAddIn.Application.get_Range(coordinate, missing);
+                    r2.Value2 = value;
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+                return message;
+            }
+
+
             //utility, using so cell objects have both coordinate references
             public String convertA1ToR1C1(string coordinate)
             {
@@ -1619,49 +1076,609 @@ namespace MarkLogic_ExcelAddin
                 return message;
             }
 
+        //HERE5
+
+            public String clearActiveWorksheet()
+            {
+                string message = "FOO";
+                object missing = Type.Missing;
+
+                //could do it by name, but then do we reset if user on different sheet?
+                //plus, we have other functions for getting/setting active worksheet
+                //can just loop through to delete all contents
+
+                //Excel.Worksheet ws =   (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]; // ((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]).Select( missing);
+                Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
+                //ws.Select(missing);
+                ws.Cells.Select();
+                ws.Cells.Clear();
+                Excel.Range r = (Excel.Range)ws.Cells[1, 1];
+                r.Select();
+
+                return message;
+
+            }
+
+        //HERE6
+
+        //NOT ACCOUNTED FOR
+
+
+            public String getTempPath()
+            {
+                string tmpPath = "";
+                try
+                {
+                    tmpPath = System.IO.Path.GetTempPath();
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    tmpPath = "error: " + errorMsg;
+                }
+
+                return tmpPath;
+            }
+
+            static bool FileInUse(string path)
+            {
+                string __message = "";
+                try
+                {
+                    //Just opening the file as open/create
+                    using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+                    {
+                        //If required we can check for read/write by using fs.CanRead or fs.CanWrite
+                    }
+                    return false;
+                }
+                catch (IOException ex)
+                {
+                    //check if message is for a File IO
+                    __message = ex.Message.ToString();
+                    if (__message.Contains("The process cannot access the file"))
+                        return true;
+                    else
+                        throw;
+                }
+            }
+
+            public String saveActiveWorkbook(string path, string title, string url, string user, string pwd)
+            {
+                string message = "";
+                object missing = Type.Missing;
+                string newtitle = path + title;
+                string tmptitle = path + "copyof_" + title;
+
+                object t = newtitle;
+                object tmpt = tmptitle;
+
+                Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
+                try
+                {
+                    if (FileInUse(newtitle))
+                    {
+                        //in use
+                        //need to save to copy, delete orig, save to orig, delete copy?
+                        //lame, but may work til i come up with something else
+                        if (wb.Name.Equals(title))
+                        {
+                            wb.SaveAs(tmpt, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
+                            wb.Close(false, missing, missing);
+                            File.Delete(newtitle);
+
+                            Excel.Workbook wb2 = Globals.ThisAddIn.Application.Workbooks.Open(tmptitle, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
+                            wb2.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
+
+                            File.Delete(tmptitle);
+                        }
+
+                    }
+                    else
+                    {
+                        wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
+                    }
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.Headers.Add("enctype", "multipart/form-data");
+                Client.Headers.Add("Content-Type", "application/octet-stream");
+
+                try
+                {
+                    // FileStream fs = new FileStream(@"C:\Default.xlsx", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                    FileStream fs = new FileStream(newtitle, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    int length = (int)fs.Length;
+                    byte[] content = new byte[length];
+                    fs.Read(content, 0, length);
+
+                    try
+                    {
+                        Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+                        Client.UploadData(url, "POST", content);
+                    }
+                    catch (Exception e)
+                    {
+                        string errorMsg = e.Message;
+                        message = "error: " + errorMsg;
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+
+                return message;
+            }
+
+            public String openXlsx(string path, string title, string url, string user, string pwd)
+            {
+                // MessageBox.Show("in the addin filename:"+filename+ "   uri: "+uri);
+                string message = "";
+                object missing = Type.Missing;
+                string tmpdoc = "";
+
+                try
+                {
+                    System.Net.WebClient Client = new System.Net.WebClient();
+                    //Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
+                    Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+                    //string tmppath = getTempPath();
+                    tmpdoc = path + title;
+                    //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
+                    Client.DownloadFile(url, tmpdoc);//@"C:\test2.xlsx");
+                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
+
+                    /*
+                     * another way 
+                                        byte[] byteArray =  Client.DownloadData("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx");//File.ReadAllBytes("Test.docx");
+                                        using (MemoryStream mem = new MemoryStream())
+                                        {
+
+                                            mem.Write(byteArray, 0, (int)byteArray.Length);
+
+                                            // using (OpenXmlPkg.SpreadsheetDocument sd = OpenXmlPkg.SpreadsheetDocument.Open(mem, true))
+                                            // {
+                                            // }
+                        
+                                            using (FileStream fileStream = new FileStream(@"C:\Test2.docx", System.IO.FileMode.CreateNew))
+                                            {
+
+                                                mem.WriteTo(fileStream);
+
+                                            }
+
+                       
+                        
+                                        }
+                     * */
+
+                    //OpenXmlPkg.SpreadsheetDocument xlPackage;
+                    //xlPackage = OpenXmlPkg.SpreadsheetDocument.Open(strm, false);
+                }
+                catch (Exception e)
+                {
+                    string origmsg = "A document with the name 'Default.xlsx' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
+                    string caption = "Microsoft Office Excel";
+                    MessageBox.Show(origmsg, caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+
+                    //MessageBox.Show(origmsg);
+                    /* string choiceMessage = "It looks like you are attempting to open a workbook that you  already have open.\nWould you like to replace the open workbook with the workbook you've selected?";
+                string caption = "workbook with same title already open";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                DialogResult result;
+
+                // Displays the MessageBox.
+
+                result = MessageBox.Show(choiceMessage, caption, buttons);
+
+                if (result == System.Windows.Forms.DialogResult.Yes)
+                {
+                    string wbname = getActiveWorkbookName();
+                    setActiveWorkbook(title);
+                    Globals.ThisAddIn.Application.ActiveWorkbook.Close(false,missing,missing);
+                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
+
+                    // Closes the parent form.
+
+                    MessageBox.Show("YES");
+
+                }
+                * */
+
+
+                    //MessageBox.Show("You are attempting to download a workbook that you already have open.  Would you like to replace the workbook you have open?");
+                    //MessageBox.Show("TEST");
+                    // MessageBox.Show("problem" + e.Message + "   " + e.StackTrace);
+                }
+
+
+                return message;
+            }
+
+        //NOT ACCOUNTED FOR
+
+            public String openXlsxWebDAV(string documenturi)
+            {
+                //MessageBox.Show("IN ADDIN");
+                string message="";
+                object missing = Type.Missing;
+                object f = false;
+                try
+                {
+                    //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
+                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(documenturi, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+                return message;
+
+            }
+
+       /*   
+        * public String openXlsx2(string path, string title, string url, string user, string pwd)
+            {
+                // MessageBox.Show("in the addin filename:"+filename+ "   uri: "+uri);
+                string message = "";
+                object missing = Type.Missing;
+                Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
+
+                try
+                {
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                      System.Net.WebClient Client = new System.Net.WebClient();
+                      //Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
+                      Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+                      //string tmppath = getTempPath();
+                      string tmpdoc = path + title;
+                      //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
+                      byte[] byteArray = Client.DownloadData(url);
+                      //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
+                      memoryStream.Write(byteArray, 0, byteArray.Length);
+
+                        //no way to open Excel from memory stream at this point, can do this in Word/powerpoint by serializing as base64 string, or just returning xml for document
+                        //and using insertXML
+                      using (OpenXmlPkg.SpreadsheetDocument xldoc = OpenXmlPkg.SpreadsheetDocument.Open(memoryStream, true))
+                      {
+                        
+                      }
+                      
+
+                       
+                    }
+                     
+                    //OpenXmlPkg.SpreadsheetDocument sd
+                    /*
+                     * another way 
+                                        byte[] byteArray =  Client.DownloadData("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx");//File.ReadAllBytes("Test.docx");
+                                        using (MemoryStream mem = new MemoryStream())
+                                        {
+
+                                            mem.Write(byteArray, 0, (int)byteArray.Length);
+
+                                            // using (OpenXmlPkg.SpreadsheetDocument sd = OpenXmlPkg.SpreadsheetDocument.Open(mem, true))
+                                            // {
+                                            // }
+                        
+                                            using (FileStream fileStream = new FileStream(@"C:\Test2.docx", System.IO.FileMode.CreateNew))
+                                            {
+
+                                                mem.WriteTo(fileStream);
+
+                                            }
+
+                       
+                        
+                                        }
+                     
+
+                    //OpenXmlPkg.SpreadsheetDocument xlPackage;
+                    //xlPackage = OpenXmlPkg.SpreadsheetDocument.Open(strm, false);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("problem" + e.Message + "   " + e.StackTrace);
+                }
+
+
+                return message;
+            }
+        */
+
+            
+/*
+            public String openXlsx(string filename, string uri)
+            {
+               // MessageBox.Show("in the addin filename:"+filename+ "   uri: "+uri);
+                string message = "";
+                object missing = Type.Missing;
+
+                try
+                {
+                    System.Net.WebClient Client = new System.Net.WebClient();
+                    //Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
+                    Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
+                    string tmppath = getTempPath();
+                    string tmpdoc = tmppath + filename;
+                    //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
+                    Client.DownloadFile("http://localhost:8000/test.xqy?uid="+uri, tmpdoc);//@"C:\test2.xlsx");
+                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
+                   
+/*
+ * another way 
+                    byte[] byteArray =  Client.DownloadData("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx");//File.ReadAllBytes("Test.docx");
+                    using (MemoryStream mem = new MemoryStream())
+                    {
+
+                        mem.Write(byteArray, 0, (int)byteArray.Length);
+
+                        // using (OpenXmlPkg.SpreadsheetDocument sd = OpenXmlPkg.SpreadsheetDocument.Open(mem, true))
+                        // {
+                        // }
+                        
+                        using (FileStream fileStream = new FileStream(@"C:\Test2.docx", System.IO.FileMode.CreateNew))
+                        {
+
+                            mem.WriteTo(fileStream);
+
+                        }
+
+                       
+                        
+                    }
+
+
+                    //OpenXmlPkg.SpreadsheetDocument xlPackage;
+                    //xlPackage = OpenXmlPkg.SpreadsheetDocument.Open(strm, false);
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                    //MessageBox.Show("problem"+e.Message+"   "+e.StackTrace);
+                }
+
+
+                return message;
+            }
+ * */
+/*
+            public String saveActiveWorkbook(string path, string title, string url, string user, string pwd)
+            {
+                object missing = Type.Missing;
+                string newtitle = path + title;
+                MessageBox.Show("NEW PATH" + newtitle);
+                object t = title;
+                Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
+                try
+                {
+                    wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
+
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("that shizz didn't work?!?!?" + e.Message + "===" + e.StackTrace);
+                }
+
+                System.Net.WebClient Client = new System.Net.WebClient();
+                //Client.Headers.AllKeys;
+                Client.Headers.Add("enctype", "multipart/form-data");
+                //Client.Headers.Add("Content-Type","application/x-www-form-urlencoded");
+                Client.Headers.Add("Content-Type", "application/octet-stream");
+
+                //Client.Headers.Add("Content-Transfer-Encoding","application/octet-stream");
+
+                try
+                {
+
+                    // FileStream fs = new FileStream(@"C:\Default.xlsx", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                    FileStream fs = new FileStream(title, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    int length = (int)fs.Length;
+                    byte[] content = new byte[length];
+                    fs.Read(content, 0, length);
+
+
+
+
+                    try
+                    {
+                        // MessageBox.Show("URL: " + url);
+                        // MessageBox.Show("TITLE " + title);
+                        //Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
+                        Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+                        //Client.UploadFile("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST", @"c:\Default.xlsx");//@"c:\tmp.xml");
+
+                        //Client.UploadData("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST",content);
+                        Client.UploadData(url, "POST", content);
+                        //Client.UploadFile(url, "POST", title);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("ERROR" + e.Message + "      " + e.StackTrace);
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("THIS BLEW UP:" + e.Message + "                 " + e.StackTrace);
+                }
+                return "foo";
+            }
+*/
+            
+/*
+            public String saveXlsx(string title, string url)
+            {
+                object missing = Type.Missing;
+                object t = title;
+                Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
+                try
+                {
+                    wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
+                    
+                }
+                catch (Exception e)
+                {
+                   // MessageBox.Show("that shizz didn't work?!?!?" + e.Message + "===" + e.StackTrace);
+                }
+
+                System.Net.WebClient Client = new System.Net.WebClient();
+                //Client.Headers.AllKeys;
+                Client.Headers.Add("enctype", "multipart/form-data");
+               //Client.Headers.Add("Content-Type","application/x-www-form-urlencoded");
+                Client.Headers.Add("Content-Type", "application/octet-stream");
+
+              //Client.Headers.Add("Content-Transfer-Encoding","application/octet-stream");
+
+               try
+               {
+                   
+                  // FileStream fs = new FileStream(@"C:\Default.xlsx", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                   FileStream fs = new FileStream(title, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                   int length = (int)fs.Length;
+                   byte[] content = new byte[length];
+                   fs.Read(content, 0, length);
+
+
+
+
+                   try
+                   {
+                      // MessageBox.Show("URL: " + url);
+                      // MessageBox.Show("TITLE " + title);
+                       //Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
+                       Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
+                       //Client.UploadFile("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST", @"c:\Default.xlsx");//@"c:\tmp.xml");
+                       
+                       //Client.UploadData("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST",content);
+                       Client.UploadData(url, "POST", content);
+                       //Client.UploadFile(url, "POST", title);
+                   }
+                   catch (Exception e)
+                   {
+                       MessageBox.Show("ERROR" + e.Message + "      " + e.StackTrace);
+                   }
+
+               }
+               catch (Exception e)
+               {
+                   MessageBox.Show("THIS BLEW UP:" +e.Message+"                 "+ e.StackTrace);
+               }
+                return "foo";
+            }
+        */
+            public String saveXlsxWebDAV(string title)
+            {
+                string message = "";
+                object missing = Type.Missing;
+                //string  tmp = System.IO.Path.GetTempPath(); 
+                MessageBox.Show("document: "+title);
+                object t = title;
+               Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
+               try
+               {
+                   wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
+               }
+               catch (Exception e)
+               {
+                   string errorMsg = e.Message;
+                   message = "error: " + errorMsg;
+               }
+  /*
+    Object Filename,
+    Object FileFormat,
+    Object Password,
+    Object WriteResPassword,
+    Object ReadOnlyRecommended,
+    Object CreateBackup,
+    XlSaveAsAccessMode AccessMode,
+    Object ConflictResolution,
+    Object AddToMru,
+    Object TextCodepage,
+    Object TextVisualLayout,
+    Object Local
+  */
+                    return message;
+            }
+            
+
+            public String openDoc()
+            {
+                try
+                {
+                    object missing = Type.Missing;
+                               // Excel.Application excelApp;
+                               // excelApp = new Microsoft.Office.Interop.Excel.Application();
+                               // excelApp.Visible = true;
+                    /*these 2 work, but overwrite existing try add new workbook first below
+                    Excel.Workbook wb =  Globals.ThisAddIn.Application.Workbooks.Open("http://localhost:8011/openinml.xlsx", missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing);
+                    wb.Activate();
+                    */
+                               // excelApp.Workbooks.Open("http://localhost:8011/openinml.xlsx", missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing);
+
+
+
+                    //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
+                    object f = false;
+                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
+                    wb = Globals.ThisAddIn.Application.Workbooks.Open("http://localhost:8011/openinml.xlsx", missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
+                   
+                    //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
+                   //wb.ChangeFileAccess(Excel.XlFileAccess.xlReadWrite, missing, true);
+                    
+                   // Excel.Workbook wb2 = Globals.ThisAddIn.Application.ActiveWorkbook;
+                   // wb2.ChangeFileAccess(Excel.XlFileAccess.xlReadWrite, missing, true);
+                  
+                    //Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
+                    //app.Workbooks.Open("http://localhost:8011/openinml.xlsx", missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
+                    //wb = app.Workbooks[1];
+                   // wb.Activate();
+
+                   
+
+
+                    
+
+
+
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Error" + e.Message + "=====" + e.StackTrace);
+                }
+
+                return "foo";
+            }
+
+            //TESTER
+            //functions we may want
+            //clearNamedRange
+            //addComment
+            //clear workbook
+            //clear sheet
+            //clear range
+
+
+            //remove named range?
+
             //stubbed out, but not currently used. 
             public String setCellValueR1C1(int rowIndex, int colIndex, string value)
             {
                 string message = "";
-                return message;
-            }
-
-            //how we set cell values currently
-            //may want to use entire cell object
-            public String setCellValueA1(string coordinate, string value)
-            {
-                //MessageBox.Show("IN STRING METHOD");
-                object missing = Type.Missing;
-                string message = "";
-
-                try
-                {
-                    Excel.Range r2 = Globals.ThisAddIn.Application.get_Range(coordinate, missing);
-                    r2.Value2 = value;
-                }
-                catch (Exception e)
-                {
-                    string errorMsg = e.Message;
-                    message = "error: " + errorMsg;
-                }
-                return message;
-            }
-
-            //simple function, may be redundant as we have setCellValueA1
-            public String setActiveCellValue(string value)
-            {
-                string message = "";
-                try
-                {
-                    object txt = value;
-                    Excel.Range r = Globals.ThisAddIn.Application.ActiveCell;
-                    r.Value2 = txt;
-                }
-                catch (Exception e)
-                {
-                    string errorMsg = e.Message;
-                    message = "error: " + errorMsg;
-                }
                 return message;
             }
 
