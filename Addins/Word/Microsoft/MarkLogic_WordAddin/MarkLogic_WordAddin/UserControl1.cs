@@ -607,8 +607,17 @@ namespace MarkLogic_WordAddin
 
         public String getTempPath()
         {
-            string tmpPath = System.IO.Path.GetTempPath();
-            MessageBox.Show("returning " + tmpPath);
+            string tmpPath = "";
+            try
+            {
+                tmpPath = System.IO.Path.GetTempPath();
+
+            }catch(Exception e)
+            {
+                string errMsg = e.Message;
+                tmpPath = "error: " + errMsg;
+            }
+
             return tmpPath;
         }
 
@@ -626,107 +635,40 @@ namespace MarkLogic_WordAddin
             return ms.ToArray();
         }
 
-        //TODO:
-                           //pass filename, imagename, uri - want to use client download to tmp file
-                           //insert image
-                           //delete tmp file
-        public String insertImage(string imageuri, string imagename)
+        public String insertImage(string imageuri, string username, string pwd)
         {
-        MessageBox.Show("Adding Image");
-        string message="";
-        //byte[] byteArray = File.ReadAllBytes(@"C:\test.docx");
-        // byte[] byteArray = Globals.ThisAddIn.Application.Active
-
-        Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
-
-            /*
-             * 
-             * 
-             */
-
-        System.Net.WebClient Client = new System.Net.WebClient();
-        //Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
-        Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
-      // Client.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
- //  string tmppath = getTempPath();
- //  string tmpdoc = tmppath + imagename;
-        //MessageBox.Show("TMPDOC: " + tmpdoc);
-        //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
-        //Client.DownloadFile("http://localhost:8000/test.xqy?uid=" + imageuri, tmpdoc);//@"C:\test2.xlsx");
-            
-            //gets the byte[]
-        //byte[] bytearray = Client.DownloadData("http://localhost:8000/test.xqy?uid=" + imageuri);
-        byte[] bytearray = Client.DownloadData(imageuri);
-            //call byteToImage function above
-        Image img = byteArrayToImage(bytearray);
-      
-
-            //place on clipboard
-        System.Windows.Forms.Clipboard.SetImage(img); 
-
-            //Paste at current range
-        //Globals.ThisAddIn.Application.Selection.Sentences[Globals.ThisAddIn.Application.Selection.Sentences.Count].Paste();
-
-        Globals.ThisAddIn.Application.Selection.Range.Paste();
-            /*
-             * 
-             * 
-             * 
-             */
-/*
-             object missing =  System.Reflection.Missing.Value;
-             string fileName = tmpdoc; // @"C:\ml-small.jpeg"; //the picture file to be inserted
-
-             //object oMissed = doc.Paragraphs[1].Range; //the position you want to insert
-             object oMissed = Globals.ThisAddIn.Application.Selection.Range.Sentences[1];
-             object oLinkToFile = false; //default
-             object oSaveWithDocument = true;//default
-             object oLeft = 20;
-             object oTop = 20;
-             object oWidth = 70;
-             object oHeight = 70;
-
-
-           //Image.FromStream
-             Word.Shape shp = doc.Shapes.AddPicture(fileName, ref oLinkToFile, ref oSaveWithDocument, ref missing, ref missing, ref missing, ref missing,ref oMissed); 
-            // Word.Shape shp = doc.Shapes.AddPicture(fileName,ref missing, ref missing, ref missing, ref missing, ref missing,ref missing,ref missing); // doc.Shapes.AddPicture(fileName, ref missing, ref missing, ref 20f, ref 20f, ref missing, ref missing,ref missing);
-
-             shp.WrapFormat.Type = Word.WdWrapType.wdWrapThrough;
-             shp.RelativeHorizontalPosition = Word.WdRelativeHorizontalPosition.wdRelativeHorizontalPositionMargin;
-*/
-             //shp.Left = Word.WdShapePosition.wdShapeRight;
-            
-            /*
-             * 
-             * 
-             * 
-             */
-
-            /*  below lets you add the piece, but won't expose in the document
-        using (MemoryStream mem = new MemoryStream())
-        {
-            mem.Write(byteArray, 0, (int)byteArray.Length);
-
-            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(mem, true))
+            string message="";
+            try
             {
-                MainDocumentPart mainPart = wordDoc.MainDocumentPart;
+                Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
 
-                ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.Credentials = new System.Net.NetworkCredential(username, pwd);
+                byte[] bytearray = Client.DownloadData(imageuri);
+                Image img = byteArrayToImage(bytearray);
 
-                using (FileStream stream = new FileStream(@"C:\ml-small.jpeg", FileMode.Open))
+                //backup clipboard
+                IDataObject bak = Clipboard.GetDataObject();
+                string text = "";
+                if (bak.GetDataPresent(DataFormats.Text))
                 {
-                    imagePart.FeedData(stream);
+                    text = (String)bak.GetData(DataFormats.Text);
                 }
-            }
+          
+                //place on clipboard
+                System.Windows.Forms.Clipboard.SetImage(img); 
+                Globals.ThisAddIn.Application.Selection.Range.Paste();
+                if(!(text.Equals("")))
+                   Clipboard.SetText(text);
+                
 
-            using (FileStream fileStream = new FileStream(@"C:\test2.docx",System.IO.FileMode.CreateNew))
+
+            }catch(Exception e)
             {
-
-                mem.WriteTo(fileStream);
-
+                string errMsg = e.Message;
+                message = "error: " + errMsg;
             }
-        }
-            */
+
             return message;
         }
 
