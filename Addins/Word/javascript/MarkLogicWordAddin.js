@@ -572,3 +572,20 @@ MLA.getConfiguration = function()
 
         return MLA.config;	
 }
+/**
+ *
+/** Inserts image into the ActiveDocument at current cursor position.  
+ *@param picurl a url to an XQuery module that will return the image when evaluated.  
+ *@param uname username for Server
+ *@param pwd password for Server
+ *@throws Exception if unable to insert text
+ */
+MLA.insertImage = function(picuri,uname,pwd)
+{
+	
+	var inserted = window.external.InsertImage(picuri,uname,pwd);
+	var errMsg = MLA.errorCheck(inserted);
+	if(errMsg!=null)
+	   throw("Error: Not able to insertImage; "+errMsg);
+
+}
