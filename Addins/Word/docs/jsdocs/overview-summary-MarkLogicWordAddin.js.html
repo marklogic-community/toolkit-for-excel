@@ -115,7 +115,24 @@ function asd() {
 <!-- ========== END METHOD SUMMARY =========== -->
 
 
-        <pre class="sourceview"><span class="comment">//Copyright 2002-2008 Mark Logic Corporation.  All Rights Reserved.</span>
+        <pre class="sourceview"><span class="comment">/* 
+Copyright 2008 Mark Logic Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+MarkLogicWordAddin.js - javascript api for interacting with webBrowser control within Custom Task Pane enabled in Word.
+*/</span>
+
 <span class="comment">/** 
  * <span class="attrib">@fileoverview</span>  API documentation for MarkLogicWordAddin.js
  *
@@ -126,8 +143,6 @@ function asd() {
  * <span class="attrib">@author</span> Pete Aven pete.aven<span class="attrib">@marklogic</span>.com
  * <span class="attrib">@version</span> 0.1 
  */</span>
-<span class="comment">//Copyright 2002-2008 Mark Logic Corporation.  All Rights Reserved.</span>
-<span class="comment">//var MLA = {};</span>
 
 
 <span class="comment">/**
@@ -135,7 +150,7 @@ function asd() {
  *
  * The functions here provide ways for interacting with the ActiveDocument in Word; however, the functions getCustomXMLPart(), getCustomXMLPartIds(), addCustomXMLPart(), and deleteCustomXMLPart() will work for any Open XML package, provided they are used within the context of an Addin for the appropriate Office application.
  */</span>
-<span class="comment">/* var MLA = {}; */</span>
+<span class="comment">//var MLA = {};</span>
 
 <span class="reserved">function</span> MLA(){
       <span class="reserved">this</span>.getClassName = <span class="reserved">function</span>(){
@@ -199,11 +214,11 @@ MLA.createXMLDOM = <span class="reserved">function</span>(xmlstring)
 	}
 	catch(err)
  	{
-                throw(<span class="literal">"Error: Not able to create XMLDOM from string "</span>);
+                throw(<span class="literal">"Error: Not able to create XMLDOM from string.  Make sure XML is well formed. "</span>);
 	}
 
         <span class="reserved">if</span>(xmlDom.text==<span class="literal">""</span> &amp;&amp; xmlDom.xml == <span class="literal">""</span>)
-                throw(<span class="literal">"Error: Not able to create XMLDOM from string "</span>);
+                throw(<span class="literal">"Error: Not able to create XMLDOM from string.  Make sure XML is well formed. "</span>);
 
    <span class="reserved">return</span> xmlDom;
 }
@@ -477,18 +492,23 @@ MLA.getSelection = <span class="reserved">function</span>()
 	}
 
 
-
-	<span class="reserved">for</span>(i=0;i&lt;selections.length;i++)
+        <span class="reserved">if</span>(!(selections[0]==null || selections[0]==<span class="literal">""</span>))
 	{
-         	domSelections[i] = MLA.createXMLDOM(selections[i]);
-	}
-	
-	<span class="reserved">if</span>(domSelections.length == 1) 
-	{
-        	<span class="reserved">if</span> (domSelections[0] == null ||domSelections[0].text == <span class="literal">""</span>)
+		<span class="reserved">for</span>(i=0;i&lt;selections.length;i++)
 		{
-			domSelections.length = 0;
+         		domSelections[i] = MLA.createXMLDOM(selections[i]);
 		}
+	
+		<span class="reserved">if</span>(domSelections.length == 1) 
+		{
+        		<span class="reserved">if</span> (domSelections[0] == null ||domSelections[0].text == <span class="literal">""</span>)
+			{
+				domSelections.length = 0;
+			}
+		}
+	}<span class="reserved">else</span>
+	{ 
+		domSelections.length = 0; 
 	}
 
 	<span class="reserved">return</span> domSelections;
@@ -576,7 +596,7 @@ MLA.setActiveDocXml = <span class="reserved">function</span>(documentXml)
 
 	var errMsg = MLA.errorCheck(inserted);
 	<span class="reserved">if</span>(errMsg!=null)
-	   throw(<span class="literal">"Error: Not able to setActiveDocXml; "</span>+errMsg);
+	   throw(<span class="literal">"Error: Not able to setActiveDocXml. Make sure XML is well-formed and valid wordprocessingML; "</span>+errMsg);
 
 	<span class="reserved">if</span>(inserted==<span class="literal">""</span>)
 	  inserted = null;
@@ -669,6 +689,22 @@ MLA.getConfiguration = <span class="reserved">function</span>()
 
         <span class="reserved">return</span> MLA.config;	
 }
+<span class="comment">/**
+ * Inserts image into the ActiveDocument at current cursor position.  
+ *<span class="attrib">@param</span> picurl a url to an XQuery module that will return the image when evaluated.  
+ *<span class="attrib">@param</span> uname username for Server
+ *<span class="attrib">@param</span> pwd password for Server
+ *<span class="attrib">@throws</span> Exception if unable to insert text
+ */</span>
+MLA.insertImage = <span class="reserved">function</span>(picuri,uname,pwd)
+{
+	
+	var inserted = window.external.InsertImage(picuri,uname,pwd);
+	var errMsg = MLA.errorCheck(inserted);
+	<span class="reserved">if</span>(errMsg!=null)
+	   throw(<span class="literal">"Error: Not able to insertImage; "</span>+errMsg);
+
+}
 </pre>
 	<hr>
 
@@ -727,6 +763,6 @@ MLA.getConfiguration = <span class="reserved">function</span>()
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sun Dec 14 10:43:40 2008</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Mon Mar 23 11:00:48 2009</div>
 </body>
 </html>

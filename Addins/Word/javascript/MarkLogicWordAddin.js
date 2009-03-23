@@ -573,8 +573,7 @@ MLA.getConfiguration = function()
         return MLA.config;	
 }
 /**
- *
-/** Inserts image into the ActiveDocument at current cursor position.  
+ * Inserts image into the ActiveDocument at current cursor position.  
  *@param picurl a url to an XQuery module that will return the image when evaluated.  
  *@param uname username for Server
  *@param pwd password for Server
