@@ -20,6 +20,8 @@ declare namespace pr = "http://schemas.openxmlformats.org/package/2006/relations
 declare namespace types = "http://schemas.openxmlformats.org/package/2006/content-types";
 declare namespace zip = "xdmp:zip";
 
+declare default element namespace  "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+
 
 (: import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy"; :)
 declare function excel:get-mimetype(
@@ -153,8 +155,11 @@ declare function excel:map-shared-strings(
                                                let $c := if(fn:data($cell/@t) eq "s") 
                                                then 
                                                  element ms:c { $cell/@* except $cell/@t, attribute t{"inlineStr"}, element ms:is { element ms:t { $shared-strings[($cell/ms:v+1 cast as xs:integer)] } } }  
-                                               else 
-                                                  element ms:c { $cell/@*, $cell/ms:f, element ms:v { fn:data($cell/ms:v)} }
+                                               else
+                                                    $cell
+                                                    (: assumes cel is an int, have to account for any cell type :)
+                                                        (: element ms:c { $cell/@*, $cell/ms:f, element ms:v { fn:data($cell/ms:v)} } :)
+                                                           
                                                return $c
                      
                               return element ms:row{ $row/@*, $cells }
@@ -270,6 +275,32 @@ declare function excel:create-row(
     return excel:create-row($rows)
 };
 
+(:check for dates, also, overload function to include formulas, other children of ms:c :)
+declare function excel:cell($a1-ref as xs:string, $value as xs:anyAtomicType)
+{
+    if($value castable as xs:integer) then     
+              <ms:c r={$a1-ref}><ms:v>{$value}</ms:v></ms:c>
+    else
+              <ms:c r={$a1-ref} t="inlineStr"> 
+                    <ms:is>
+                        <ms:t>{$value}</ms:t>
+                    </ms:is>
+              </ms:c>
+};
+
+
+(: when adding cell to worksheet:
+    1. if cell exists in worksheet, just replace
+    2. next look for row
+        a. if row exists, create cell at appropriate position (index based on column)
+        b. if row dne, create row, add cell - done
+    :)
+
+declare function excel:a1-to-r1c1($a1notation as xs:string)
+{
+(: not sure if we need, probably, stubbing out :)
+<foo/>
+};
 (: currently limited to 702 columns :)
 (: base 26 arithmetic, want sequence numbers, each 0-25 (1-26), take number, repeatedly div mod til end :)(: mary function for hex , recursively mod til < 26 :)
 declare function excel:r1c1-to-a1(
@@ -486,4 +517,183 @@ declare function excel:create-simple-pkg(
     return $package
 
 };
+
+
+(:=============ADDED ===================================================== :)
+declare function excel:a1-row($a1)
+{
+       fn:replace($a1,("[A-Z]+"),"")
+};
+
+declare function excel:a1-column($a1)
+{
+       fn:replace($a1,("\d+"),"")
+};
+
+
+declare function excel:passthru($x as node(), $newcell) as node()*
+{
+   for $i in $x/node() return excel:set-row-cell($i,$newcell)
+};
+
+
+declare function excel:insert-cell($origcell, $newcell)
+{
+ if($newcell/@r = $origcell/@r) then 
+    $newcell
+ else if(fn:empty($origcell/preceding-sibling::*))
+ then
+    (
+     if($newcell/@r lt $origcell/@r)
+     then
+        ($newcell,$origcell)
+     else $origcell
+     )
+ else if(fn:not(fn:empty($origcell/following-sibling::*)) and 
+         $newcell/@r > $origcell/@r and 
+         $newcell/@r < $origcell/following-sibling::*/@r) then  
+           ($origcell,$newcell) 
+ else if(fn:not(fn:empty($origcell/following-sibling::*)) and
+         $newcell/@r < $origcell/@r and 
+         $newcell/@r > $origcell/preceding-sibling::*/@r and
+         $newcell/@r < $origcell/following-sibling::*/@r
+        ) then  
+           ($newcell,$origcell)
+ else if(fn:empty($origcell/following-sibling::*) and
+          $newcell/@r > $origcell/@r) then ($origcell,$newcell)
+else $origcell
+
+ 
+};
+
+declare function excel:set-row-cell($x, $newcell)
+{
+ 
+      typeswitch($x)
+       case text() return $x
+       case document-node() return document {$x/@*,excel:passthru($x,$newcell)}
+       case element(ms:c) return excel:insert-cell($x,$newcell)
+       case element() return  element{fn:name($x)} {$x/@*,excel:passthru($x,$newcell)}
+       default return $x
+
+};
+
+
+(:
+declare function excel:row($cell)
+{
+  <ms:row r={excel:a1-row($cell/@r)}>{$cell}</ms:row> 
+ 
+};
+
+declare function excel:passthru-workbook($x as node(), $newSheetData) as node()*
+{
+   for $i in $x/node() return excel:wb-set-sheetdata($i,$newSheetData)
+};
+
+declare function excel:wb-set-sheetdata($x, $newSheetData)
+{
+ 
+      typeswitch($x)
+       case text() return $x
+       case document-node() return document {$x/@*,excel:passthru-workbook($x,$newSheetData)}
+       case element(ms:sheetData) return  $newSheetData
+       case element() return  element{fn:name($x)} {$x/@*,excel:passthru-workbook($x,$newSheetData)}
+       default return $x
+
+};
+
+:)
+
+(:
+declare function excel:ws-set-cells($sheet as node(), $cells as element(ms:c)*) as node()*
+{
+   let $sheetData := $sheet/ms:worksheet/ms:sheetData
+
+   let $finalsheet := (
+   for $c in $cells return xdmp:set($sheetData,(
+   let $refrow := excel:a1-row($c/@r)
+   let $origrow := $sheetData/ms:row[@r=$refrow]
+
+   (: pass multiple cells per row, have to order, send in groups :)
+
+   let $newrow := if(fn:empty($origrow)) then excel:row($c)
+                  else excel:set-row-cell($origrow,$c)
+
+   let $rows := if(fn:exists($sheetData/ms:row[@r=$refrow])) then
+                   for $r at $d in $sheetData/ms:row
+                    (:not likely, but row could exist with no cells
+                      update for that ?:)
+                   let $row := if($r/@r = $newrow/@r) then $newrow 
+                            else $r
+                   return $row
+                else for $newrow in ($sheetData/ms:row,$newrow)             
+                     order by $newrow/@r cast as xs:integer
+                     return $newrow
+                     
+   let $newSheetData := element ms:sheetData{ $sheetData/@*, $rows}   
+   (: return (xdmp:set($sheetData,$newSheetData),$sheetData) :)
+   return $newSheetData )),$sheetData)
+
+return excel:wb-set-sheetdata($sheet/ms:worksheet, $finalsheet)                      
+}; :)
+
+
+declare function excel:row($cell)
+{
+  <ms:row r={excel:a1-row($cell/@r)}>{$cell}</ms:row> 
+ 
+};
+
+declare function excel:passthru-workbook($x as node(), $newSheetData) as node()*
+{
+   for $i in $x/node() return excel:wb-set-sheetdata($i,$newSheetData)
+};
+
+declare function excel:wb-set-sheetdata($x, $newSheetData)
+{
+ 
+      typeswitch($x)
+       case text() return $x
+       case document-node() return document {$x/@*,excel:passthru-workbook($x,$newSheetData)}
+       case element(ms:sheetData) return  $newSheetData
+       case element() return  element{fn:name($x)} {$x/@*,excel:passthru-workbook($x,$newSheetData)}
+       default return $x
+
+};
+
+
+declare function excel:ws-set-cells($sheet as node(), $cells as element(ms:c)*) as node()*
+{
+   let $sheetData := $sheet/ms:worksheet/ms:sheetData
+
+   let $finalsheet := (
+   for $c in $cells return xdmp:set($sheetData,(
+   let $refrow := excel:a1-row($c/@r)
+   let $origrow := $sheetData/ms:row[@r=$refrow]
+
+   (: pass multiple cells per row, have to order, send in groups :)
+
+   let $newrow := if(fn:empty($origrow)) then excel:row($c)
+                  else excel:set-row-cell($origrow,$c)
+
+   let $rows := if(fn:exists($sheetData/ms:row[@r=$refrow])) then
+                   for $r at $d in $sheetData/ms:row
+                    (:not likely, but row could exist with no cells
+                      update for that ?:)
+                   let $row := if($r/@r = $newrow/@r) then $newrow 
+                            else $r
+                   return $row
+                else for $newrow in ($sheetData/ms:row,$newrow)             
+                     order by $newrow/@r cast as xs:integer
+                     return $newrow
+                     
+   let $newSheetData := element ms:sheetData{ $sheetData/@*, $rows}   
+   (: return (xdmp:set($sheetData,$newSheetData),$sheetData) :)
+   return $newSheetData )),$sheetData)
+
+return excel:wb-set-sheetdata($sheet/ms:worksheet, $finalsheet)                    
+
+};
+
 
