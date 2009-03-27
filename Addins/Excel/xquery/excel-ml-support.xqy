@@ -276,6 +276,7 @@ declare function excel:create-row(
 };
 
 (:check for dates, also, overload function to include formulas, other children of ms:c :)
+(: dates are stored as a julian number with an @ for style which indicates display format :)
 declare function excel:cell($a1-ref as xs:string, $value as xs:anyAtomicType)
 {
     if($value castable as xs:integer) then     
@@ -288,6 +289,25 @@ declare function excel:cell($a1-ref as xs:string, $value as xs:anyAtomicType)
               </ms:c>
 };
 
+declare function excel:cell($a1-ref as xs:string, $value as xs:anyAtomicType?, $formula as xs:string)
+{
+    if($value castable as xs:integer or fn:empty($value)) then     
+              <ms:c r={$a1-ref}>
+                   <ms:f>{$formula}</ms:f>
+                   {
+                    if(fn:not($value eq 0) and fn:not(fn:empty($value)))
+                    then
+                       <ms:v>{$value}</ms:v>
+                    else ()
+                   }
+              </ms:c>
+    else
+              <ms:c r={$a1-ref} t="inlineStr"> 
+                    <ms:is>
+                        <ms:t>{$value}</ms:t>
+                    </ms:is>
+              </ms:c>
+};
 
 (: when adding cell to worksheet:
     1. if cell exists in worksheet, just replace
@@ -530,56 +550,6 @@ declare function excel:a1-column($a1)
        fn:replace($a1,("\d+"),"")
 };
 
-
-declare function excel:passthru($x as node(), $newcell) as node()*
-{
-   for $i in $x/node() return excel:set-row-cell($i,$newcell)
-};
-
-
-declare function excel:insert-cell($origcell, $newcell)
-{
- if($newcell/@r = $origcell/@r) then 
-    $newcell
- else if(fn:empty($origcell/preceding-sibling::*))
- then
-    (
-     if($newcell/@r lt $origcell/@r)
-     then
-        ($newcell,$origcell)
-     else $origcell
-     )
- else if(fn:not(fn:empty($origcell/following-sibling::*)) and 
-         $newcell/@r > $origcell/@r and 
-         $newcell/@r < $origcell/following-sibling::*/@r) then  
-           ($origcell,$newcell) 
- else if(fn:not(fn:empty($origcell/following-sibling::*)) and
-         $newcell/@r < $origcell/@r and 
-         $newcell/@r > $origcell/preceding-sibling::*/@r and
-         $newcell/@r < $origcell/following-sibling::*/@r
-        ) then  
-           ($newcell,$origcell)
- else if(fn:empty($origcell/following-sibling::*) and
-          $newcell/@r > $origcell/@r) then ($origcell,$newcell)
-else $origcell
-
- 
-};
-
-declare function excel:set-row-cell($x, $newcell)
-{
- 
-      typeswitch($x)
-       case text() return $x
-       case document-node() return document {$x/@*,excel:passthru($x,$newcell)}
-       case element(ms:c) return excel:insert-cell($x,$newcell)
-       case element() return  element{fn:name($x)} {$x/@*,excel:passthru($x,$newcell)}
-       default return $x
-
-};
-
-
-(:
 declare function excel:row($cell)
 {
   <ms:row r={excel:a1-row($cell/@r)}>{$cell}</ms:row> 
@@ -603,9 +573,57 @@ declare function excel:wb-set-sheetdata($x, $newSheetData)
 
 };
 
-:)
+(:        all about puttin cells in worksheets :)
 
-(:
+declare function excel:passthru($x as node(), $newcell) as node()*
+{
+   for $i in $x/node() return excel:set-row-cell($i,$newcell)
+};
+
+
+declare function excel:insert-cell($origcell, $newcell)
+{
+
+ if($newcell/@r = $origcell/@r) then 
+    $newcell  (: cell exists :)
+ else if(fn:empty($origcell/preceding-sibling::*))
+ then
+    (
+     if($newcell/@r lt $origcell/@r)
+     then
+          ($newcell,$origcell) 
+     else if($newcell/@r gt $origcell/@r and ( ($newcell/@r lt $origcell/following-sibling::*/@r) or fn:not(fn:exists($origcell/following-sibling::*/@r)))) then ($origcell, $newcell) else 
+       ($origcell) 
+     )
+ else if(fn:not(fn:empty($origcell/following-sibling::*)) and 
+         $newcell/@r > $origcell/@r and 
+         $newcell/@r < $origcell/following-sibling::*/@r) then  
+             ($origcell,$newcell)  
+ else if(fn:not(fn:empty($origcell/following-sibling::*)) and
+         $newcell/@r < $origcell/@r and 
+         $newcell/@r > $origcell/preceding-sibling::*/@r and
+         $newcell/@r < $origcell/following-sibling::*/@r
+        ) then  
+          ($newcell,$origcell)
+ else if(fn:empty($origcell/following-sibling::*) and
+          $newcell/@r > $origcell/@r) then ($origcell,$newcell)
+else  $origcell  
+
+ 
+};
+
+declare function excel:set-row-cell($x, $newcell)
+{
+ 
+      typeswitch($x)
+       case text() return $x
+       case document-node() return document {$x/@*,excel:passthru($x,$newcell)}
+       case element(ms:c) return excel:insert-cell($x,$newcell)
+       case element() return  element{fn:name($x)} {$x/@*,excel:passthru($x,$newcell)}
+       default return $x
+
+};
+
 declare function excel:ws-set-cells($sheet as node(), $cells as element(ms:c)*) as node()*
 {
    let $sheetData := $sheet/ms:worksheet/ms:sheetData
@@ -636,64 +654,48 @@ declare function excel:ws-set-cells($sheet as node(), $cells as element(ms:c)*) 
    return $newSheetData )),$sheetData)
 
 return excel:wb-set-sheetdata($sheet/ms:worksheet, $finalsheet)                      
-}; :)
-
-
-declare function excel:row($cell)
-{
-  <ms:row r={excel:a1-row($cell/@r)}>{$cell}</ms:row> 
- 
 };
 
-declare function excel:passthru-workbook($x as node(), $newSheetData) as node()*
+declare function excel:julian-to-gregorian($excel-julian-day)
 {
-   for $i in $x/node() return excel:wb-set-sheetdata($i,$newSheetData)
+   (: formula from http://quasar.as.utexas.edu/BillInfo/JulianDatesG.html :)
+   (: adapted for excel :)
+   (: won't calculate for years < 400 :)
+   let $JD :=  $excel-julian-day - 2 +2415020.5 
+   let $Z :=  $JD+0.5
+   let $W := fn:floor(($Z - 1867216.25) div 36524.25)
+   let $X := fn:floor($W div 4)
+   let $A := $Z + 1 + $W - $X
+   let $B := $A+1524
+   let $C := fn:floor(( $B - 122.1) div 365.25)
+   let $D := fn:floor(365.25 * $C)
+   let $E := fn:floor(($B - $D) div 30.6001)
+   let $F := fn:floor(30.6001 * $E)
+   let $day  := $B - $D - $F
+   let $month := if($E < 13.5) then ($E - 1) else ($E - 13)
+   let $year := if($E <=2) then $C - 4715 else $C - 4716
+   let $finmonth := if(fn:string-length($month cast as xs:string) eq 1) then fn:concat("0",$month) else $month
+   let $findate := fn:concat($year,"-", $finmonth, "-",$day,"T00:00:00")
+
+   (: return  ($day, $month, $year) :)
+   return   xs:dateTime($findate)
+
 };
 
-declare function excel:wb-set-sheetdata($x, $newSheetData)
+declare function excel:gregorian-to-julian($year, $month, $day)
 {
- 
-      typeswitch($x)
-       case text() return $x
-       case document-node() return document {$x/@*,excel:passthru-workbook($x,$newSheetData)}
-       case element(ms:sheetData) return  $newSheetData
-       case element() return  element{fn:name($x)} {$x/@*,excel:passthru-workbook($x,$newSheetData)}
-       default return $x
-
+   (: formula from http://quasar.as.utexas.edu/BillInfo/JulianDatesG.html :)
+   (: adapted for excel :)
+   let $NY := if($year <= 2) then $year + 1 else $year
+   let $NM := if($year<=2) then $month + 12 else $month
+   let $A := fn:floor($NY div 100)
+   let $B :=  fn:floor($A div 4)
+   let $C := (2 - $A + $B)
+   let $E := fn:floor(365.25 * ( $NY + 4716))
+   let $F := fn:floor(30.6001 * ($NM + 1))
+   let $NJD := $C + $day + $E + $F - 1524.5 - 2415020.5 + 2 
+   return $NJD
 };
 
-
-declare function excel:ws-set-cells($sheet as node(), $cells as element(ms:c)*) as node()*
-{
-   let $sheetData := $sheet/ms:worksheet/ms:sheetData
-
-   let $finalsheet := (
-   for $c in $cells return xdmp:set($sheetData,(
-   let $refrow := excel:a1-row($c/@r)
-   let $origrow := $sheetData/ms:row[@r=$refrow]
-
-   (: pass multiple cells per row, have to order, send in groups :)
-
-   let $newrow := if(fn:empty($origrow)) then excel:row($c)
-                  else excel:set-row-cell($origrow,$c)
-
-   let $rows := if(fn:exists($sheetData/ms:row[@r=$refrow])) then
-                   for $r at $d in $sheetData/ms:row
-                    (:not likely, but row could exist with no cells
-                      update for that ?:)
-                   let $row := if($r/@r = $newrow/@r) then $newrow 
-                            else $r
-                   return $row
-                else for $newrow in ($sheetData/ms:row,$newrow)             
-                     order by $newrow/@r cast as xs:integer
-                     return $newrow
-                     
-   let $newSheetData := element ms:sheetData{ $sheetData/@*, $rows}   
-   (: return (xdmp:set($sheetData,$newSheetData),$sheetData) :)
-   return $newSheetData )),$sheetData)
-
-return excel:wb-set-sheetdata($sheet/ms:worksheet, $finalsheet)                    
-
-};
 
 
