@@ -22,67 +22,22 @@ declare namespace zip = "xdmp:zip";
 
 declare default element namespace  "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 
-
 (: import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy"; :)
 declare function excel:get-mimetype(
   $filename as xs:string
 ) as xs:string?
 {
-           xdmp:uri-content-type($filename)	
+     xdmp:uri-content-type($filename)	
 };
 
-(: mimetypes.xml - xdmp:get-mimetype ?:)
-(:  xdmp:uri-content-type() :)
-(:doesn't exist in other package :)
-(:declare function excel:get-mimetype(
-  $filename as xs:string
-) as xs:string?
-{
-	let $mime-type:= 
-        if(fn:contains($filename,"docx")) then 
-               	"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        else if(fn:contains($filename,"pptx")) then
-                "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-        else if(fn:contains($filename,"xlsx")) then
-               	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        else if(fn:contains($filename,"docm")) then
-               	"application/vnd.ms-word.document.macroEnabled.12"
-        else if(fn:contains($filename,"dotm")) then
-                "application/vnd.ms-word.template.macroEnabled.12"
-        else if(fn:contains($filename,"dotx")) then
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.template"
-        else if(fn:contains($filename,"ppsm")) then
-               "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"
-        else if(fn:contains($filename,"ppsx")) then
-              "application/vnd.openxmlformats-officedocument.presentationml.slideshow"
-        else if(fn:contains($filename,"pptm")) then
-              "application/vnd.ms-powerpoint.presentation.macroEnabled.12"
-        else if(fn:contains($filename,"xlsb")) then
-              "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
-        else if(fn:contains($filename,"xlsm")) then
-              "application/vnd.ms-excel.sheet.macroEnabled.12"
-        else if(fn:contains($filename,".xps")) then
-              "application/vnd.ms-xpsdocument"
-        else ()
-
-  	return $mime-type
-};
-:)
-
-(: this returns uris from directory, without directory, so they can be used in open xml package manifest :)
-(: we have a function in package.xqy ooxml:package-uris(package as binary), which returns the uris from a package, not the dir) :)
 declare function excel:directory-uris(
   $directory as xs:string
 ) as xs:string*
 {
-   (: get rid of let return if possible :)
-    let $uris := cts:uris("","document",cts:directory-query($directory,"infinity"))
-    return $uris
+     cts:uris("","document",cts:directory-query($directory,"infinity"))
 };
 
-(:not sure about these next two, useful, but theres also a sheet1.xml.rels in there for some sheets, assumes we modify the sheet, but rest of pkg stays the same:)
 
-(:look at uri-match //cts:uri-match? :)
 declare function excel:directory-uris(
   $directory as xs:string, 
   $includesheets as xs:boolean
@@ -105,15 +60,7 @@ declare function excel:sheet-uris(
   $directory as xs:string
 ) as xs:string*
 {
-
-    let $uris := cts:uris("","document",cts:directory-query($directory,"infinity"))
-    let $finaluris :=  
-                  for $uri in $uris
-                  let $u := $uri
-                  where  fn:matches($uri, "sheet\d+\.xml$")
-                  return $u
-    return $finaluris
-    
+    cts:uri-match(fn:concat($directory,"*sheet*.xml"))
 };
 
 (: we have a convert function for this, but not sure we want to import. See Open XML Extract pipeline for details. :)
@@ -128,7 +75,7 @@ declare function excel:directory-to-filename(
     return $filename
 };
 
-declare function excel:get-manifest(
+declare function excel:xlsx-manifest(
   $directory as xs:string, 
   $uris as xs:string*) 
 as element(zip:parts)
@@ -189,8 +136,8 @@ declare function excel:validate-child(
     return $result
 };
 (: ============================================================================================================== :)
-(:   feed a (), tell by xml type, assume give in right order :)
-declare function excel:generate-simple-xl-pkg(
+(:   for future, feed a (), determine file by xml type, assume given in right order :)
+declare function excel:simple-xl-pkg(
   $content-types as node(),
   $workbook as node(),
   $rels as node(),
@@ -215,14 +162,14 @@ declare function excel:generate-simple-xl-pkg(
 };
 
 (: assumes one table , could become node* , be precise about types:)
-declare function excel:generate-simple-xl-pkg(
+declare function excel:xl-pkg(
     $content-types as node(),
     $workbook as node(),
     $rels as node(),
     $workbookrels as node(),
     $sheets as node()*,
-    $worksheetrels as node(),
-    $table as node()
+    $worksheetrels as node()*,
+    $table as node()*
 ) as binary()
 {
     let $manifest := <parts xmlns="xdmp:zip">
@@ -234,9 +181,18 @@ declare function excel:generate-simple-xl-pkg(
                           for $i at $d in 1 to fn:count($sheets)
                           let $sheet-name := fn:concat("xl/worksheets/sheet",$d,".xml")
 			  return <part>{$sheet-name}</part>
-                        } 
-			<part>xl/worksheets/_rels/sheet1.xml.rels</part>
-			<part>xl/tables/table1.xml</part>
+                        }
+                        { 
+                          for $i at $d in 1 to fn:count($worksheetrels)
+                          let $sheet-rel-name := fn:concat("xl/worksheets/_rels/sheet", $d,".xml.rels")
+		   	  return <part>{$sheet-rel-name}</part>
+                        }
+                        {
+                          for $i at $d in 1 to fn:count($table)
+                          let $table-name :=  fn:concat("xl/tables/table",$d,".xml")
+                          return <part>{$table-name}</part>
+
+                        }
 		     </parts>
     let $parts := ($content-types, $workbook, $rels, $workbookrels, $sheets ,$worksheetrels,$table) 
     return
@@ -277,6 +233,7 @@ declare function excel:create-row(
 
 (:check for dates, also, overload function to include formulas, other children of ms:c :)
 (: dates are stored as a julian number with an @ for style which indicates display format :)
+(: need to update these to include style :)
 declare function excel:cell($a1-ref as xs:string, $value as xs:anyAtomicType)
 {
     if($value castable as xs:integer) then     
@@ -370,8 +327,8 @@ declare function excel:r1c1-to-a1(
    
 };
 :)
-(:rename col-width :)
-declare function excel:worksheet-cols(
+
+declare function excel:column-width(
 $widths as xs:string*
 ) as element(ms:cols)
 {
@@ -382,10 +339,11 @@ $widths as xs:string*
     }
     </ms:cols>
 };
+
 (: single table, do for multiple :)
-declare function excel:create-simple-content-types(
+declare function excel:content-types(
   $worksheet-count as xs:integer,
-  $tbl as xs:boolean (:table-count :)
+  $tbl-count as xs:integer
 ) as element(types:Types)
 {
     let $content-types := 
@@ -394,22 +352,22 @@ declare function excel:create-simple-content-types(
 	<Default Extension="xml" ContentType="application/xml"/>
 	<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
         {
-           for $i at $d in 1 to $worksheet-count (: d is redundant :)
-           let $sheet-name := fn:concat("/xl/worksheets/sheet", $d )
+           for $i in 1 to $worksheet-count
+           let $sheet-name := fn:concat("/xl/worksheets/sheet", $i )
            return
 	     <Override PartName={$sheet-name} ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
         }
         {
-           if($tbl eq xs:boolean("true")) then 
-             <Override PartName="/xl/tables/table1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml"/>
-            else
-              ()
+            for $j in 1 to $tbl-count
+            let $table-name :=  fn:concat("/xl/tables/table", $j,".xml" )
+            return
+                <Override PartName={$table-name} ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml"/>
         }
        </Types>
     return $content-types
 };
 
-declare function excel:create-simple-workbook($worksheet-count as xs:integer) as element(ms:workbook)
+declare function excel:workbook($worksheet-count as xs:integer) as element(ms:workbook)
 {
     let $workbook := 
        <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
@@ -425,7 +383,7 @@ declare function excel:create-simple-workbook($worksheet-count as xs:integer) as
     return $workbook
 };
 
-declare function excel:create-simple-pkg-rels() as element(pr:Relationships)
+declare function excel:pkg-rels() as element(pr:Relationships)
 {
     let $rels :=
        <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
@@ -434,7 +392,7 @@ declare function excel:create-simple-pkg-rels() as element(pr:Relationships)
     return $rels
 };
 
-declare function excel:create-simple-workbook-rels($worksheet-count as xs:integer) as element(pr:Relationships)
+declare function excel:workbook-rels($worksheet-count as xs:integer) as element(pr:Relationships)
 {
     let $workbookrels :=
        <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
@@ -447,35 +405,45 @@ declare function excel:create-simple-workbook-rels($worksheet-count as xs:intege
        </Relationships>
     return $workbookrels
 };
-(: NAMING create - or constructor , look in triggers.xqy ?  triggerdataevent excel:worksheet-rels :)
-declare function excel:create-simple-worksheet-rels() as element(pr:Relationships)
+
+declare function excel:worksheet-rels($start-ind as xs:integer, $tbl-count as xs:integer) as element(pr:Relationships)
 {
     let $worksheetrels:=
        <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-          <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/table" Target="../tables/table1.xml"/>
+        {
+          for $i in 1 to $tbl-count
+          let $target := fn:concat("../tables/table",($start-ind + $i - 1),".xml")
+          let $id := fn:concat("rId",$i)
+          return
+            <Relationship Id={$id} Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/table" Target={$target}/>
+        }
        </Relationships> 
     return $worksheetrels
 };
 
-declare function excel:create-simple-table(
+declare function excel:table(
+  $table-number as xs:integer,
   $tablerange as xs:string, 
   $column-names as xs:string*, 
   $style as xs:boolean
 ) as element(ms:table)
 {
 
+    let $disp-name := fn:concat("Table",$table-number)
+    let $id := $table-number
+
     let $column-count := fn:count($column-names)
     let $table :=
-      <table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id="1" name="Table1" displayName="Table1" ref="{$tablerange}"  totalsRowShown="0" >
+      <table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id={$id} name={$disp-name} displayName={$disp-name} ref="{$tablerange}"  totalsRowShown="0" >
          <autoFilter ref="{$tablerange}"/>
-         <tableColumns count={$column-count}> (: put quotes :)
+         <tableColumns count={$column-count}> 
          {
            for $i at $d in $column-names
            return <tableColumn id={$d} name={$i}/>
          }
          </tableColumns>
          {
-          let $t-style := if($style eq xs:boolean("true")) then  (: if($style) :)
+          let $t-style := if($style eq xs:boolean("true")) then 
            <tableStyleInfo name="TableStyleMedium10" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/>
           else ()
           return $t-style
@@ -484,7 +452,7 @@ declare function excel:create-simple-table(
     return $table
 };
 
-declare function excel:create-simple-worksheet(
+declare function excel:worksheet(
   $rows as element(ms:row)*
 ) as element(ms:worksheet)
 {
@@ -498,10 +466,10 @@ declare function excel:create-simple-worksheet(
     return $sheet
 };
 
-declare function excel:create-simple-worksheet(
+declare function excel:worksheet(
   $rows as element(ms:row)*,
-  $colwidths as element(ms:cols),
-  $tablepart as xs:boolean
+  $colwidths as element(ms:cols)?,
+  $tbl-count as xs:integer
 ) as element(ms:worksheet)
 {
     let $sheet := <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
@@ -514,26 +482,31 @@ declare function excel:create-simple-worksheet(
                       }
                       </sheetData>
                       {
-                        if($tablepart eq xs:boolean("true")) then (: get rid of eq boolean :)
-                          <tableParts count="1">
-                           <tablePart r:id="rId1" />
+                        if($tbl-count  gt 0) then
+                          <tableParts count={$tbl-count}>
+                           {
+                            for $i in 1 to $tbl-count
+                            let $id := fn:concat("rId",$i)
+                            return 
+                                <tablePart r:id={$id} />
+                           }
                           </tableParts>
-                        else ()
+                        else () 
                       }
                   </worksheet>
     return $sheet
 };
 
-declare function excel:create-simple-pkg(
+declare function excel:create-simple-xlsx(
   $worksheets as element(ms:worksheet)*
 ) as binary()
 {
     let $ws-count := fn:count($worksheets)
-    let $content-types := excel:create-simple-content-types($ws-count, (:fn:false()/fn:true:)xs:boolean("false"))
-    let $workbook := excel:create-simple-workbook($ws-count)
-    let $rels :=  excel:create-simple-pkg-rels()
-    let $workbookrels :=  excel:create-simple-workbook-rels($ws-count)
-    let $package := excel:generate-simple-xl-pkg($content-types, $workbook, $rels, $workbookrels, $worksheets)
+    let $content-types := excel:content-types($ws-count,0)
+    let $workbook := excel:workbook($ws-count)
+    let $rels :=  excel:pkg-rels()
+    let $workbookrels :=  excel:workbook-rels($ws-count)
+    let $package := excel:simple-xl-pkg($content-types, $workbook, $rels, $workbookrels, $worksheets)
     return $package
 
 };
@@ -624,10 +597,16 @@ declare function excel:set-row-cell($x, $newcell)
 
 };
 
-declare function excel:ws-set-cells($sheet as node(), $cells as element(ms:c)*) as node()*
-{
-   let $sheetData := $sheet/ms:worksheet/ms:sheetData
+declare function excel:ws-set-cells($v_sheet as element(ms:worksheet) , $cells as element(ms:c)*) as node()*
+{  
+   let $sheetDataTst := $v_sheet//ms:sheetData
+   let $sheet := if(fn:empty($sheetDataTst)) then
+                        let $row := excel:row(excel:cell("A1",""))
+                        let $tmpSheet := excel:worksheet($row)
+                        return excel:wb-set-sheetdata($v_sheet, $tmpSheet//ms:sheetData)
+                 else $v_sheet
 
+   let $sheetData :=  $sheet//ms:sheetData
    let $finalsheet := (
    for $c in $cells return xdmp:set($sheetData,(
    let $refrow := excel:a1-row($c/@r)
@@ -653,7 +632,7 @@ declare function excel:ws-set-cells($sheet as node(), $cells as element(ms:c)*) 
    (: return (xdmp:set($sheetData,$newSheetData),$sheetData) :)
    return $newSheetData )),$sheetData)
 
-return excel:wb-set-sheetdata($sheet/ms:worksheet, $finalsheet)                      
+return excel:wb-set-sheetdata($sheet(:/ms:worksheet:), $finalsheet)                      
 };
 
 declare function excel:julian-to-gregorian($excel-julian-day)
