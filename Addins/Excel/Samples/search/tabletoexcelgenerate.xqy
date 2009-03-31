@@ -94,22 +94,22 @@ let $rows := for $i in $rowvalues
 
 let $rowcount := fn:count($rows)
             
-let $content-types := excel:create-simple-content-types(1,xs:boolean("true"))
-let $workbook := excel:create-simple-workbook(1)
-let $rels :=  excel:create-simple-pkg-rels()
-let $workbookrels :=  excel:create-simple-workbook-rels(1)
+let $content-types := excel:content-types(1,1)
+let $workbook := excel:workbook(1)
+let $rels :=  excel:pkg-rels()
+let $workbookrels :=  excel:workbook-rels(1)
 
 let $tablerange := fn:concat("A1:",excel:r1c1-to-a1($rowcount+1,$columncount))
 let $styling := $tabstyle (: if($tabstyle eq "mark1") then xs:boolean("true") else xs:boolean("false") :)
-let $tablexml :=  excel:create-simple-table($tablerange, $headerrows, $styling)
+let $tablexml :=  excel:table(1,$tablerange, $headerrows, $styling)
 
-let $worksheetrels := excel:create-simple-worksheet-rels()
+let $worksheetrels := excel:worksheet-rels(1,1)
 let $sheet-col-widths := for $i in 1 to $columncount return $colcustwidths (: ("14","58","16","16","18","24") :)
-let $colwidths := excel:worksheet-cols($sheet-col-widths) 
+let $colwidths := excel:column-width($sheet-col-widths) 
 
-let $sheet1 := excel:create-simple-worksheet(($headers,$rows), $colwidths, xs:boolean("true")) 
+let $sheet1 := excel:worksheet(($headers,$rows), $colwidths, 1) 
 
-let $package := excel:generate-simple-xl-pkg($content-types, $workbook, $rels, $workbookrels, $sheet1, $worksheetrels, $tablexml)
+let $package := excel:xl-pkg($content-types, $workbook, $rels, $workbookrels, $sheet1, $worksheetrels, $tablexml)
 
     let $filename := $xlsxname 
     let $disposition := concat("attachment; filename=""",$filename,"""")
