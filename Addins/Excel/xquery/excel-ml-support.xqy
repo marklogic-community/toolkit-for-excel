@@ -39,7 +39,7 @@ declare function excel:directory-uris(
 
 
 declare function excel:directory-uris(
-  $directory as xs:string, 
+  $directory     as xs:string, 
   $includesheets as xs:boolean
 ) as xs:string*
 {
@@ -77,7 +77,7 @@ declare function excel:directory-to-filename(
 
 declare function excel:xlsx-manifest(
   $directory as xs:string, 
-  $uris as xs:string*) 
+  $uris      as xs:string*) 
 as element(zip:parts)
 {
     <parts xmlns="xdmp:zip"> 
@@ -90,13 +90,15 @@ as element(zip:parts)
     </parts>
 };
 
-(: ============================================================================================================== :)
+(: ====MAP SHARED================================================================================================= :)
+(: Currently only maps SharedStrings, update for formulas? (within ws) or separate function ? :)
+
 declare function excel:map-shared-strings(
-  $sheet as element(ms:worksheet)*, 
-  $shared-strings as element(ms:sst)  (: pass in node  explicit element type and return type :)
+  $sheet          as element(ms:worksheet), 
+  $shared-strings as element(ms:sst)  
 )as element(ms:worksheet)
 {
-                  (: for $sheet in $sheets :)
+                  (: for $sheet in $sheets ?, should just work with function mapping :)
                   let $shared := fn:data($shared-strings//ms:t)
                   let $rows := for $row at $d in $sheet//ms:row
                                let $cells  :=  for $cell at $e in $row/ms:c
@@ -105,8 +107,6 @@ declare function excel:map-shared-strings(
                                                  element ms:c { $cell/@* except $cell/@t, attribute t{"inlineStr"}, element ms:is { element ms:t { $shared[($cell/ms:v+1 cast as xs:integer)] } } }  
                                                else
                                                     $cell
-                                                    (: assumes cel is an int, have to account for any cell type :)
-                                                        (: element ms:c { $cell/@*, $cell/ms:f, element ms:v { fn:data($cell/ms:v)} } :)
                                                            
                                                return $c
                      
@@ -116,28 +116,24 @@ declare function excel:map-shared-strings(
                   let $page-setup :=  $sheet/ms:pageSetup 
                   let $table-parts :=  $sheet/ms:tableParts
                   let $sheet-data  :=  $sheet/ms:sheetData
-(: get rid of lets , use element contstructor for start, or pass in directlly :)
                   let $ws := element ms:worksheet {  $sheet/ms:worksheet/@*, $worksheet, element ms:sheetData{ $sheet-data/@*, $rows },  $page-setup ,$table-parts  }
                   return $ws
-(: return $rows :)
 
 };
 
 (: ============================================================================================================== :)
-(:srs work here!:)
+(: Simple Validation used by tale generation :)
+
 declare function excel:validate-child(
   $seq as node()*
 ) as xs:boolean
 {
-    let $original := ($seq )(: except () why original? , collapse away , if/else not required, just return count($disctinct-child) eq 1) :)
-    let $children :=  $original/fn:local-name(child::*[1])
-    let $distinct-child := fn:distinct-values(if($children eq ""(: how is this possible:) ) then () else $children)
-    let $child-count := fn:count($distinct-child) (: fn:count(fn:normalize-space(text{$distinct-child})) :)
-    let $result := if($child-count eq 1) then xs:boolean("true")  else xs:boolean("false")
-    return $result
+    fn:count(fn:distinct-values($seq/fn:local-name(child::*[1]))) eq 1 
 };
+
 (: ============================================================================================================== :)
-(:   for future, feed a (), determine file by xml type, assume given in right order :)
+(:   for future, pass function a (), determine file by parent element, assume given in right order :)
+
 declare function excel:create-simple-xlsx(
   $worksheets as element(ms:worksheet)*
 ) as binary()
@@ -152,13 +148,13 @@ declare function excel:create-simple-xlsx(
 
 };
 
-(:optional worksheetrels, table parameters :)
+(:optional parameters: worksheetrels, table :)
 declare function excel:xl-pkg(
-  $content-types as node(),
-  $workbook as node(),
-  $rels as node(),
-  $workbookrels as node(),
-  $sheets as node()*
+  $content-types as element(types:Types),
+  $workbook      as element(ms:workbook),
+  $rels          as element(pr:Relationships),
+  $workbookrels  as element(pr:Relationships),
+  $sheets        as element(ms:worksheet)*
 ) as binary()
 {
     let $manifest := <parts xmlns="xdmp:zip">
@@ -179,13 +175,13 @@ declare function excel:xl-pkg(
 
 (: assumes one table , could become node* , be precise about types:)
 declare function excel:xl-pkg(
-    $content-types as node(),
-    $workbook as node(),
-    $rels as node(),
-    $workbookrels as node(),
-    $sheets as node()*,
-    $worksheetrels as node()*,
-    $table as node()*
+  $content-types as element(types:Types),
+  $workbook      as element(ms:workbook),
+  $rels          as element(pr:Relationships),
+  $workbookrels  as element(pr:Relationships),
+  $sheets        as element(ms:worksheet)*,
+  $worksheetrels as element(pr:Relationships)*,
+  $table         as element(ms:table)*
 ) as binary()
 {
     let $manifest := <parts xmlns="xdmp:zip">
@@ -215,7 +211,7 @@ declare function excel:xl-pkg(
          xdmp:zip-create($manifest, $parts)
 };
 
-(: a couple of ways to create-row(s), use excel:row constructor :)
+(: a couple of ways to create-row(s), both use excel:row constructor :)
 declare function excel:create-row(
   $values as xs:anyAtomicType*
 ) as element(ms:row)
@@ -250,7 +246,10 @@ declare function excel:create-row(
 
 (: dates are stored as a julian number with an @ for style which indicates display format :)
 (: need to update these to include style :)
-declare function excel:cell($a1-ref as xs:string, $value as xs:anyAtomicType)
+declare function excel:cell(
+  $a1-ref as xs:string, 
+  $value  as xs:anyAtomicType
+) as node() 
 {
     if($value castable as xs:integer) then     
               <ms:c r={$a1-ref}><ms:v>{$value}</ms:v></ms:c>
@@ -262,7 +261,11 @@ declare function excel:cell($a1-ref as xs:string, $value as xs:anyAtomicType)
               </ms:c>
 };
 
-declare function excel:cell($a1-ref as xs:string, $value as xs:anyAtomicType?, $formula as xs:string)
+declare function excel:cell(
+  $a1-ref  as xs:string, 
+  $value   as xs:anyAtomicType?, 
+  $formula as xs:string
+) as element(ms:cell)
 {
     if($value castable as xs:integer or fn:empty($value)) then     
               <ms:c r={$a1-ref}>
@@ -282,174 +285,81 @@ declare function excel:cell($a1-ref as xs:string, $value as xs:anyAtomicType?, $
               </ms:c>
 };
 
-declare function excel:row($cells)
+declare function excel:row(
+  $cells as node()*
+) as node() 
 {
    
   <ms:row r={excel:a1-row($cells[1]/@r)}>{$cells}</ms:row> 
  
 };
 
-declare function excel:a1-to-r1c1($a1notation as xs:string)
+declare function excel:a1-to-r1c1(
+  $a1notation as xs:string
+) as xs:string
 {
     (: not sure if we need, probably, stubbing out for now :)
     <foo/>
 };
-(: currently limited to 702 columns :)
-(: base 26 arithmetic, want sequence numbers, each 0-25 (1-26), take number, repeatedly div mod til end :)(: mary function for hex , recursively mod til < 26 :)
 
-(:  BUGS!! ORIG BEFORE ONE BELOW
-declare function excel:r1c1-to-a1(
-  $rowcount as xs:integer, 
-  $colcount as xs:integer
-) 
-{
-    let $coldiv := fn:floor($colcount div 26)
-    let $letter := if($colcount <= 26)
-                   then                  
-                     fn:codepoints-to-string($colcount+64)
-                 
-                   else
-                      let $coldiv := fn:floor($colcount div 26)
-                      let $coldiv2 := $colcount div 26
-
-                      let $first-letter := if($coldiv2 eq $coldiv )then 
-                                              fn:codepoints-to-string($coldiv+63) 
-                                           else fn:codepoints-to-string($coldiv+64)
-
-                      let $next-letter-check := $colcount - ($coldiv2 * 26)
-                      let $next-letter := $colcount - ($coldiv * 26)
-
-                      let $final := if($next-letter-check eq 0) 
-                                    then "Z" 
-                                    else fn:codepoints-to-string($next-letter+64) 
-                      return fn:concat($first-letter,$final)  
-
-    return   fn:concat($letter,$rowcount)   
-   
-};
-:)
-
-(: WORKS PROPERLY TO 702 :)
-(:
-declare function excel2:r1c1-to-a1(
-  $rowcount as xs:integer, 
-  $colcount as xs:integer
-) 
-{
-    let $coldiv := fn:floor($colcount div 26)
-    let $letter := if($colcount <= 26)
-                   then                  
-                     fn:codepoints-to-string($colcount+64)
-                 
-                   else
-                      let $coldiv := fn:floor($colcount div 26)
-                      let $coldiv2 := $colcount div 26
-
-                      let $first-letter := if($coldiv2 eq $coldiv )then 
-                                              fn:codepoints-to-string($coldiv+63) 
-                                           else fn:codepoints-to-string($coldiv+64)
-
-                      let $next-letter-check := $colcount - fn:floor($coldiv2 * 26)
-                      let $next-letter := $colcount - ($coldiv * 26)
-
-                     (: let $final := if($next-letter-check eq 0) 
-                                    then "Z"  
-                                    else :) 
-                      let $final := if($next-letter-check = $next-letter and $next-letter-check mod 26 = 0)then 
-                                               fn:codepoints-to-string($next-letter-check +90)   
-                                           else fn:codepoints-to-string($next-letter+64) 
-                      return fn:concat($first-letter,$final)  
-
-    return   fn:concat($letter,$rowcount)   
-   
-};
-
-:)
 (: works for all and then some, excel has limit of WID(16384) for columns and 1048576 for rows 
    should we check and return error for # out of range? :)
 
 declare function excel:r1c1-to-a1(
   $rowcount as xs:integer, 
   $colcount as xs:integer
-) 
-{   let $first-letter := (: "FOO" :)
-                         if($colcount >= 703) then
+) as xs:string 
+{   let $first-letter :=   
+          if($colcount >= 703) then
                 let $newcol := fn:floor($colcount div 702)
-
                 let $flcheck := $colcount - fn:floor($newcol* 702)
                 let $l := $colcount - ($newcol* 702)
-
-
-                let $first-letter := if($flcheck = $l and $flcheck mod 702 = 0) then 
-                     fn:codepoints-to-string($newcol+63)
-                 else
-                 fn:codepoints-to-string($newcol+64)
+                let $first-letter := 
+                         if($flcheck = $l and $flcheck mod 702 = 0) then 
+                             fn:codepoints-to-string($newcol+63)
+                         else
+                             fn:codepoints-to-string($newcol+64)
                 return $first-letter
-                else ""
+          else ""
                     
-    let $ucol := if($colcount >= 703) then
-                    (: $colcount :)
-                     let $delta := $colcount mod 702 
-                     let $ncol := if($delta <= 26 )then 
-                                        $delta + 26 
-                                   else $delta   
-                     return $ncol
-                 else 
-                    $colcount      
+    let $ucol := 
+          if($colcount >= 703) then
+                let $delta := $colcount mod 702 
+                let $ncol := 
+                         if($delta <= 26 )then 
+                             $delta + 26 
+                         else $delta   
+                return $ncol
+          else 
+                $colcount      
 
     let $coldiv := fn:floor($ucol div 26 )
-    let $letter := if($ucol <= 26 and $colcount > 703)
-                     then "ZZ" else 
-                   if($ucol <= 26)
-                    
-                   then                  
-                     fn:codepoints-to-string($ucol+64)
-                 
-                   else
-                      let $coldiv := fn:floor($ucol div 26)
-                      let $coldiv2 := $ucol div 26
+    let $letter := 
+          if($ucol <= 26 and $colcount > 703) then 
+                "ZZ" 
+          else if($ucol <= 26) then                  
+                fn:codepoints-to-string($ucol+64)
+          else
+                let $coldiv := fn:floor($ucol div 26)
+                let $coldiv2 := $ucol div 26
+                let $first-letter := 
+                         if($coldiv2 eq $coldiv )then 
+                             fn:codepoints-to-string($coldiv+63)  
+                         else fn:codepoints-to-string($coldiv+64)
 
-                      let $first-letter := if($coldiv2 eq $coldiv )then 
-                                                fn:codepoints-to-string($coldiv+63)  
-                                           else  fn:codepoints-to-string($coldiv+64)
+                let $next-letter-check := $ucol - fn:floor($coldiv2 * 26)
+                let $next-letter := $ucol - ($coldiv * 26)
+                let $final := 
+                         if($next-letter-check = $next-letter and $next-letter-check mod 26 = 0) then 
+                             fn:codepoints-to-string($next-letter-check +90)   
+                         else fn:codepoints-to-string($next-letter+64) 
+                return fn:concat($first-letter,$final)  
 
-                      let $next-letter-check := $ucol - fn:floor($coldiv2 * 26)
-                      let $next-letter := $ucol - ($coldiv * 26)
-
-                     (: let $final := if($next-letter-check eq 0) 
-                                    then "Z"  
-                                    else :) 
-
-                      let $final := if($next-letter-check = $next-letter and $next-letter-check mod 26 = 0)then 
-                                               fn:codepoints-to-string($next-letter-check +90)   
-                                           else fn:codepoints-to-string($next-letter+64) 
-                      return fn:concat($first-letter,$final)  
-
-    return   fn:concat($first-letter,$letter,$rowcount)   
-   
+    return fn:concat($first-letter,$letter,$rowcount)   
 };
-
-
-(: orig
-declare function excel:r1c1-to-a1(
-  $rowcount as xs:integer, 
-  $colcount as xs:integer
-) as xs:string
-{
-    let $coldiv := fn:floor($colcount div 26)
-    let $colmod := $colcount mod 26
-    let $letter := if($coldiv gt 0)
-                   then                  
-                     fn:codepoints-to-string($colcount+64)
-                   else
-                     fn:codepoints-to-string($colcount+64)
-    return fn:concat($letter,$rowcount)
-   
-};
-:)
 
 declare function excel:column-width(
-$widths as xs:string*
+  $widths as xs:string*
 ) as element(ms:cols)
 {
     <ms:cols>
@@ -507,7 +417,7 @@ declare function excel:content-types(
 };
 
 declare function excel:workbook(
-$worksheet-count as xs:integer
+  $worksheet-count as xs:integer
 ) as element(ms:workbook)
 {
     let $workbook := 
@@ -534,7 +444,7 @@ declare function excel:pkg-rels() as element(pr:Relationships)
 };
 
 declare function excel:workbook-rels(
-$worksheet-count as xs:integer
+  $worksheet-count as xs:integer
 ) as element(pr:Relationships)
 {
     let $workbookrels :=
@@ -551,8 +461,8 @@ $worksheet-count as xs:integer
 
 (: will manifest as sheet1.xml.rels, sheet2.xml.rels, ... sheetN.xml.rels in .xlsx pkg:)
 declare function excel:worksheet-rels(
-$start-ind as xs:integer,
- $tbl-count as xs:integer
+  $start-ind as xs:integer,
+  $tbl-count as xs:integer
 ) as element(pr:Relationships)
 {
     let $worksheetrels:=
@@ -570,9 +480,9 @@ $start-ind as xs:integer,
 (: auto-filter, style are optional - defaults are "true", and no style respectively :)
 declare function excel:table(
   $table-number as xs:integer,
-  $tablerange as xs:string, 
+  $tablerange   as xs:string, 
   $column-names as xs:string*,
-  $auto-filter as xs:boolean 
+  $auto-filter  as xs:boolean 
 ) as element(ms:table)
 {
 
@@ -600,7 +510,7 @@ declare function excel:table(
 
 declare function excel:table(
   $table-number as xs:integer,
-  $tablerange as xs:string, 
+  $tablerange   as xs:string, 
   $column-names as xs:string*
 ) as element(ms:table)
 {
@@ -624,10 +534,10 @@ declare function excel:table(
 
 declare function excel:table(
   $table-number as xs:integer,
-  $tablerange as xs:string, 
+  $tablerange   as xs:string, 
   $column-names as xs:string*,
-  $auto-filter as xs:boolean, 
-  $style as xs:boolean
+  $auto-filter  as xs:boolean, 
+  $style        as xs:boolean
 ) as element(ms:table)
 {
 
@@ -674,7 +584,7 @@ declare function excel:worksheet(
 };
 
 declare function excel:worksheet(
-  $rows as element(ms:row)*,
+  $rows      as element(ms:row)*,
   $colwidths as element(ms:cols)?
 ) as element(ms:worksheet)
 {
@@ -692,7 +602,7 @@ declare function excel:worksheet(
 };
 
 declare function excel:worksheet(
-  $rows as element(ms:row)*,
+  $rows      as element(ms:row)*,
   $colwidths as element(ms:cols)?,
   $tbl-count as xs:integer
 ) as element(ms:worksheet)
@@ -722,14 +632,17 @@ declare function excel:worksheet(
     return $sheet
 };
 
-(:=============ADDED ===================================================== :)
 (:utility functions to grab Column or Row from "A1" notation :)
-declare function excel:a1-row($a1)
+declare function excel:a1-row(
+  $a1 as xs:string
+) as xs:string
 {
        fn:replace($a1,("[A-Z]+"),"")
 };
 
-declare function excel:a1-column($a1)
+declare function excel:a1-column(
+  $a1 as xs:string
+)as xs:string
 {
        fn:replace($a1,("\d+"),"")
 };
@@ -739,7 +652,7 @@ declare function excel:passthru-workbook($x as node(), $newSheetData) as node()*
    for $i in $x/node() return excel:wb-set-sheetdata($i,$newSheetData)
 };
 
-declare function excel:wb-set-sheetdata($x, $newSheetData)
+declare function excel:wb-set-sheetdata($x as node(), $newSheetData as node()) as node()*
 {
  
       typeswitch($x)
@@ -751,7 +664,7 @@ declare function excel:wb-set-sheetdata($x, $newSheetData)
 
 };
 
-declare function excel:passthru($x as node(), $newcell) as node()*
+declare function excel:passthru($x as node(), $newcell as node()) as node()*
 {
    for $i in $x/node() return excel:set-row-cell($i,$newcell)
 };
@@ -788,7 +701,10 @@ else  $origcell
  
 };
 
-declare function excel:set-row-cell($x, $newcell)
+declare function excel:set-row-cell(
+  $x as node()*, 
+  $newcell as node()
+) as node()*
 {
  
       typeswitch($x)
@@ -800,7 +716,10 @@ declare function excel:set-row-cell($x, $newcell)
 
 };
 
-declare function excel:ws-set-cells($v_sheet as element(ms:worksheet) , $cells as element(ms:c)*) as node()*
+declare function excel:ws-set-cells(
+  $v_sheet as element(ms:worksheet), 
+  $cells as element(ms:c)*
+) as element(ms:worksheet)
 {  
    let $sheetDataTst := $v_sheet//ms:sheetData
    let $sheet := if(fn:empty($sheetDataTst)) then
@@ -838,7 +757,9 @@ declare function excel:ws-set-cells($v_sheet as element(ms:worksheet) , $cells a
 return excel:wb-set-sheetdata($sheet(:/ms:worksheet:), $finalsheet)                      
 };
 
-declare function excel:julian-to-gregorian($excel-julian-day)
+declare function excel:julian-to-gregorian(
+  $excel-julian-day as xs:integer
+) as xs:dateTime
 {
    (: formula from http://quasar.as.utexas.edu/BillInfo/JulianDatesG.html :)
    (: adapted for excel :)
@@ -856,15 +777,20 @@ declare function excel:julian-to-gregorian($excel-julian-day)
    let $day  := $B - $D - $F
    let $month := if($E < 13.5) then ($E - 1) else ($E - 13)
    let $year := if($E <=2) then $C - 4715 else $C - 4716
+   let $finday := if(fn:string-length($day cast as xs:string) eq 1) then fn:concat("0",$day) else $day
    let $finmonth := if(fn:string-length($month cast as xs:string) eq 1) then fn:concat("0",$month) else $month
-   let $findate := fn:concat($year,"-", $finmonth, "-",$day,"T00:00:00")
+   let $findate := fn:concat($year,"-", $finmonth, "-",$finday,"T00:00:00")
 
    (: return  ($day, $month, $year) :)
    return   xs:dateTime($findate)
 
 };
 
-declare function excel:gregorian-to-julian($year, $month, $day)
+declare function excel:gregorian-to-julian(
+  $year  as xs:integer, 
+  $month as xs:integer, 
+  $day   as xs:integer
+) as xs:integer
 {
    (: formula from http://quasar.as.utexas.edu/BillInfo/JulianDatesG.html :)
    (: adapted for excel :)
