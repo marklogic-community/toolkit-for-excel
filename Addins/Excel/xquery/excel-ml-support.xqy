@@ -137,7 +137,22 @@ declare function excel:validate-child(
 };
 (: ============================================================================================================== :)
 (:   for future, feed a (), determine file by xml type, assume given in right order :)
-declare function excel:simple-xl-pkg(
+declare function excel:create-simple-xlsx(
+  $worksheets as element(ms:worksheet)*
+) as binary()
+{
+    let $ws-count := fn:count($worksheets)
+    let $content-types := excel:content-types($ws-count,0)
+    let $workbook := excel:workbook($ws-count)
+    let $rels :=  excel:pkg-rels()
+    let $workbookrels :=  excel:workbook-rels($ws-count)
+    let $package := excel:xl-pkg($content-types, $workbook, $rels, $workbookrels, $worksheets)
+    return $package
+
+};
+
+(:optional worksheetrels, table parameters :)
+declare function excel:xl-pkg(
   $content-types as node(),
   $workbook as node(),
   $rels as node(),
@@ -199,6 +214,7 @@ declare function excel:xl-pkg(
          xdmp:zip-create($manifest, $parts)
 };
 
+(: a couple of ways to create-row(s), use excel:row constructor :)
 declare function excel:create-row(
   $values as xs:anyAtomicType*
 ) as element(ms:row)
@@ -231,7 +247,6 @@ declare function excel:create-row(
     return excel:create-row($rows)
 };
 
-(:check for dates, also, overload function to include formulas, other children of ms:c :)
 (: dates are stored as a julian number with an @ for style which indicates display format :)
 (: need to update these to include style :)
 declare function excel:cell($a1-ref as xs:string, $value as xs:anyAtomicType)
@@ -266,20 +281,22 @@ declare function excel:cell($a1-ref as xs:string, $value as xs:anyAtomicType?, $
               </ms:c>
 };
 
-(: when adding cell to worksheet:
-    1. if cell exists in worksheet, just replace
-    2. next look for row
-        a. if row exists, create cell at appropriate position (index based on column)
-        b. if row dne, create row, add cell - done
-    :)
+declare function excel:row($cells)
+{
+   
+  <ms:row r={excel:a1-row($cells[1]/@r)}>{$cells}</ms:row> 
+ 
+};
 
 declare function excel:a1-to-r1c1($a1notation as xs:string)
 {
-(: not sure if we need, probably, stubbing out :)
-<foo/>
+    (: not sure if we need, probably, stubbing out for now :)
+    <foo/>
 };
 (: currently limited to 702 columns :)
 (: base 26 arithmetic, want sequence numbers, each 0-25 (1-26), take number, repeatedly div mod til end :)(: mary function for hex , recursively mod til < 26 :)
+
+(:  BUGS!! ORIG BEFORE ONE BELOW
 declare function excel:r1c1-to-a1(
   $rowcount as xs:integer, 
   $colcount as xs:integer
@@ -309,6 +326,108 @@ declare function excel:r1c1-to-a1(
     return   fn:concat($letter,$rowcount)   
    
 };
+:)
+
+(: WORKS PROPERLY TO 702 :)
+(:
+declare function excel2:r1c1-to-a1(
+  $rowcount as xs:integer, 
+  $colcount as xs:integer
+) 
+{
+    let $coldiv := fn:floor($colcount div 26)
+    let $letter := if($colcount <= 26)
+                   then                  
+                     fn:codepoints-to-string($colcount+64)
+                 
+                   else
+                      let $coldiv := fn:floor($colcount div 26)
+                      let $coldiv2 := $colcount div 26
+
+                      let $first-letter := if($coldiv2 eq $coldiv )then 
+                                              fn:codepoints-to-string($coldiv+63) 
+                                           else fn:codepoints-to-string($coldiv+64)
+
+                      let $next-letter-check := $colcount - fn:floor($coldiv2 * 26)
+                      let $next-letter := $colcount - ($coldiv * 26)
+
+                     (: let $final := if($next-letter-check eq 0) 
+                                    then "Z"  
+                                    else :) 
+                      let $final := if($next-letter-check = $next-letter and $next-letter-check mod 26 = 0)then 
+                                               fn:codepoints-to-string($next-letter-check +90)   
+                                           else fn:codepoints-to-string($next-letter+64) 
+                      return fn:concat($first-letter,$final)  
+
+    return   fn:concat($letter,$rowcount)   
+   
+};
+
+:)
+(: works for all and then some, excel has limit of WID(16384) for columns and 1048576 for rows 
+   should we check and return error for # out of range? :)
+
+declare function excel:r1c1-to-a1(
+  $rowcount as xs:integer, 
+  $colcount as xs:integer
+) 
+{   let $first-letter := (: "FOO" :)
+                         if($colcount >= 703) then
+                let $newcol := fn:floor($colcount div 702)
+
+                let $flcheck := $colcount - fn:floor($newcol* 702)
+                let $l := $colcount - ($newcol* 702)
+
+
+                let $first-letter := if($flcheck = $l and $flcheck mod 702 = 0) then 
+                     fn:codepoints-to-string($newcol+63)
+                 else
+                 fn:codepoints-to-string($newcol+64)
+                return $first-letter
+                else ""
+                    
+    let $ucol := if($colcount >= 703) then
+                    (: $colcount :)
+                     let $delta := $colcount mod 702 
+                     let $ncol := if($delta <= 26 )then 
+                                        $delta + 26 
+                                   else $delta   
+                     return $ncol
+                 else 
+                    $colcount      
+
+    let $coldiv := fn:floor($ucol div 26 )
+    let $letter := if($ucol <= 26 and $colcount > 703)
+                     then "ZZ" else 
+                   if($ucol <= 26)
+                    
+                   then                  
+                     fn:codepoints-to-string($ucol+64)
+                 
+                   else
+                      let $coldiv := fn:floor($ucol div 26)
+                      let $coldiv2 := $ucol div 26
+
+                      let $first-letter := if($coldiv2 eq $coldiv )then 
+                                                fn:codepoints-to-string($coldiv+63)  
+                                           else  fn:codepoints-to-string($coldiv+64)
+
+                      let $next-letter-check := $ucol - fn:floor($coldiv2 * 26)
+                      let $next-letter := $ucol - ($coldiv * 26)
+
+                     (: let $final := if($next-letter-check eq 0) 
+                                    then "Z"  
+                                    else :) 
+
+                      let $final := if($next-letter-check = $next-letter and $next-letter-check mod 26 = 0)then 
+                                               fn:codepoints-to-string($next-letter-check +90)   
+                                           else fn:codepoints-to-string($next-letter+64) 
+                      return fn:concat($first-letter,$final)  
+
+    return   fn:concat($first-letter,$letter,$rowcount)   
+   
+};
+
 
 (: orig
 declare function excel:r1c1-to-a1(
@@ -340,7 +459,26 @@ $widths as xs:string*
     </ms:cols>
 };
 
-(: single table, do for multiple :)
+(:option tbl-count parameter:)
+declare function excel:content-types(
+  $worksheet-count as xs:integer
+) as element(types:Types)
+{
+    let $content-types := 
+       <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+	<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+	<Default Extension="xml" ContentType="application/xml"/>
+	<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+        {
+           for $i in 1 to $worksheet-count
+           let $sheet-name := fn:concat("/xl/worksheets/sheet", $i )
+           return
+	     <Override PartName={$sheet-name} ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+        }
+       </Types>
+    return $content-types
+};
+
 declare function excel:content-types(
   $worksheet-count as xs:integer,
   $tbl-count as xs:integer
@@ -367,7 +505,9 @@ declare function excel:content-types(
     return $content-types
 };
 
-declare function excel:workbook($worksheet-count as xs:integer) as element(ms:workbook)
+declare function excel:workbook(
+$worksheet-count as xs:integer
+) as element(ms:workbook)
 {
     let $workbook := 
        <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
@@ -392,7 +532,9 @@ declare function excel:pkg-rels() as element(pr:Relationships)
     return $rels
 };
 
-declare function excel:workbook-rels($worksheet-count as xs:integer) as element(pr:Relationships)
+declare function excel:workbook-rels(
+$worksheet-count as xs:integer
+) as element(pr:Relationships)
 {
     let $workbookrels :=
        <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
@@ -406,7 +548,11 @@ declare function excel:workbook-rels($worksheet-count as xs:integer) as element(
     return $workbookrels
 };
 
-declare function excel:worksheet-rels($start-ind as xs:integer, $tbl-count as xs:integer) as element(pr:Relationships)
+(: will manifest as sheet1.xml.rels, sheet2.xml.rels, ... sheetN.xml.rels in .xlsx pkg:)
+declare function excel:worksheet-rels(
+$start-ind as xs:integer,
+ $tbl-count as xs:integer
+) as element(pr:Relationships)
 {
     let $worksheetrels:=
        <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
@@ -420,11 +566,66 @@ declare function excel:worksheet-rels($start-ind as xs:integer, $tbl-count as xs
        </Relationships> 
     return $worksheetrels
 };
+(: auto-filter, style are optional - defaults are "true", and no style respectively :)
+declare function excel:table(
+  $table-number as xs:integer,
+  $tablerange as xs:string, 
+  $column-names as xs:string*,
+  $auto-filter as xs:boolean 
+) as element(ms:table)
+{
+
+    let $disp-name := fn:concat("Table",$table-number)
+    let $id := $table-number
+
+    let $column-count := fn:count($column-names)
+    let $table :=
+      <table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id={$id} name={$disp-name} displayName={$disp-name} ref="{$tablerange}"  totalsRowShown="0" >
+         {
+         if($auto-filter)then
+             <autoFilter ref="{$tablerange}"/>
+         else 
+              () 
+         }
+             <tableColumns count={$column-count}> 
+         {
+               for $i at $d in $column-names
+               return <tableColumn id={$d} name={$i}/>
+         }
+             </tableColumns>
+      </table>
+    return $table
+};
 
 declare function excel:table(
   $table-number as xs:integer,
   $tablerange as xs:string, 
-  $column-names as xs:string*, 
+  $column-names as xs:string*
+) as element(ms:table)
+{
+
+    let $disp-name := fn:concat("Table",$table-number)
+    let $id := $table-number
+
+    let $column-count := fn:count($column-names)
+    let $table :=
+      <table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id={$id} name={$disp-name} displayName={$disp-name} ref="{$tablerange}"  totalsRowShown="0" >
+             <autoFilter ref="{$tablerange}"/>
+             <tableColumns count={$column-count}> 
+             {
+               for $i at $d in $column-names
+               return <tableColumn id={$d} name={$i}/>
+             }
+             </tableColumns>
+      </table>
+    return $table
+};
+
+declare function excel:table(
+  $table-number as xs:integer,
+  $tablerange as xs:string, 
+  $column-names as xs:string*,
+  $auto-filter as xs:boolean, 
   $style as xs:boolean
 ) as element(ms:table)
 {
@@ -435,28 +636,51 @@ declare function excel:table(
     let $column-count := fn:count($column-names)
     let $table :=
       <table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id={$id} name={$disp-name} displayName={$disp-name} ref="{$tablerange}"  totalsRowShown="0" >
-         <autoFilter ref="{$tablerange}"/>
-         <tableColumns count={$column-count}> 
          {
-           for $i at $d in $column-names
-           return <tableColumn id={$d} name={$i}/>
+         if($auto-filter)then
+             <autoFilter ref="{$tablerange}"/>
+         else 
+              () 
          }
-         </tableColumns>
+             <tableColumns count={$column-count}> 
          {
-          let $t-style := if($style eq xs:boolean("true")) then 
-           <tableStyleInfo name="TableStyleMedium10" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/>
-          else ()
-          return $t-style
+               for $i at $d in $column-names
+               return <tableColumn id={$d} name={$i}/>
+         }
+             </tableColumns>
+         {
+         if($style) then 
+             <tableStyleInfo name="TableStyleMedium10" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/>
+         else ()
          }
       </table>
     return $table
 };
 
+(: optional col-widths, tbl-count parameters :)
 declare function excel:worksheet(
   $rows as element(ms:row)*
 ) as element(ms:worksheet)
 {
     let $sheet := <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+                      <sheetData>
+                      { 
+                        ($rows) 
+                      }
+                      </sheetData>
+                  </worksheet>
+    return $sheet
+};
+
+declare function excel:worksheet(
+  $rows as element(ms:row)*,
+  $colwidths as element(ms:cols)?
+) as element(ms:worksheet)
+{
+    let $sheet := <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+                      {
+                        ($colwidths)
+                      } 
                       <sheetData>
                       { 
                         ($rows) 
@@ -497,22 +721,8 @@ declare function excel:worksheet(
     return $sheet
 };
 
-declare function excel:create-simple-xlsx(
-  $worksheets as element(ms:worksheet)*
-) as binary()
-{
-    let $ws-count := fn:count($worksheets)
-    let $content-types := excel:content-types($ws-count,0)
-    let $workbook := excel:workbook($ws-count)
-    let $rels :=  excel:pkg-rels()
-    let $workbookrels :=  excel:workbook-rels($ws-count)
-    let $package := excel:simple-xl-pkg($content-types, $workbook, $rels, $workbookrels, $worksheets)
-    return $package
-
-};
-
-
 (:=============ADDED ===================================================== :)
+(:utility functions to grab Column or Row from "A1" notation :)
 declare function excel:a1-row($a1)
 {
        fn:replace($a1,("[A-Z]+"),"")
@@ -521,12 +731,6 @@ declare function excel:a1-row($a1)
 declare function excel:a1-column($a1)
 {
        fn:replace($a1,("\d+"),"")
-};
-
-declare function excel:row($cell)
-{
-  <ms:row r={excel:a1-row($cell/@r)}>{$cell}</ms:row> 
- 
 };
 
 declare function excel:passthru-workbook($x as node(), $newSheetData) as node()*
@@ -545,8 +749,6 @@ declare function excel:wb-set-sheetdata($x, $newSheetData)
        default return $x
 
 };
-
-(:        all about puttin cells in worksheets :)
 
 declare function excel:passthru($x as node(), $newcell) as node()*
 {
@@ -675,6 +877,4 @@ declare function excel:gregorian-to-julian($year, $month, $day)
    let $NJD := $C + $day + $E + $F - 1524.5 - 2415020.5 + 2 
    return $NJD
 };
-
-
 
