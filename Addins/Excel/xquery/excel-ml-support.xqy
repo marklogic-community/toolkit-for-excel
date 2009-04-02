@@ -13,16 +13,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 :)
-module namespace excel = "http://marklogic.com/openxml/excel";
-declare namespace ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main";
-declare namespace r="http://schemas.openxmlformats.org/officeDocument/2006/relationships";
-declare namespace pr = "http://schemas.openxmlformats.org/package/2006/relationships";
+
+module namespace  excel = "http://marklogic.com/openxml/excel";
+
+declare namespace ms    = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+declare namespace r     = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+declare namespace pr    = "http://schemas.openxmlformats.org/package/2006/relationships";
 declare namespace types = "http://schemas.openxmlformats.org/package/2006/content-types";
-declare namespace zip = "xdmp:zip";
+declare namespace zip   = "xdmp:zip";
 
 declare default element namespace  "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 
-(: import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy"; :)
+(: import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy"; ? :)
+
 declare function excel:get-mimetype(
   $filename as xs:string
 ) as xs:string?
@@ -477,6 +480,7 @@ declare function excel:worksheet-rels(
        </Relationships> 
     return $worksheetrels
 };
+
 (: auto-filter, style are optional - defaults are "true", and no style respectively :)
 declare function excel:table(
   $table-number as xs:integer,
@@ -672,33 +676,40 @@ declare function excel:passthru($x as node(), $newcell as node()) as node()*
 
 declare function excel:insert-cell($origcell, $newcell)
 {
-
  if($newcell/@r = $origcell/@r) then 
-    $newcell  (: cell exists :)
+    $newcell 
  else if(fn:empty($origcell/preceding-sibling::*))
  then
     (
      if($newcell/@r lt $origcell/@r)
      then
           ($newcell,$origcell) 
-     else if($newcell/@r gt $origcell/@r and ( ($newcell/@r lt $origcell/following-sibling::*/@r) or fn:not(fn:exists($origcell/following-sibling::*/@r)))) then ($origcell, $newcell) else 
-       ($origcell) 
-     )
- else if(fn:not(fn:empty($origcell/following-sibling::*)) and 
-         $newcell/@r > $origcell/@r and 
-         $newcell/@r < $origcell/following-sibling::*/@r) then  
-             ($origcell,$newcell)  
- else if(fn:not(fn:empty($origcell/following-sibling::*)) and
-         $newcell/@r < $origcell/@r and 
-         $newcell/@r > $origcell/preceding-sibling::*/@r and
-         $newcell/@r < $origcell/following-sibling::*/@r
-        ) then  
-          ($newcell,$origcell)
- else if(fn:empty($origcell/following-sibling::*) and
-          $newcell/@r > $origcell/@r) then ($origcell,$newcell)
-else  $origcell  
-
- 
+     else if($newcell/@r gt $origcell/@r 
+             and (($newcell/@r lt $origcell/following-sibling::*/@r) 
+                   or fn:not(fn:exists($origcell/following-sibling::*/@r)))
+          ) 
+          then 
+             ($origcell, $newcell) 
+          else 
+             ($origcell) 
+    ) 
+ else if(fn:not(fn:empty($origcell/following-sibling::*)) 
+          and $newcell/@r > $origcell/@r 
+          and $newcell/@r < $origcell/following-sibling::*/@r) 
+ then  
+      ($origcell,$newcell)  
+ else if(fn:not(fn:empty($origcell/following-sibling::*)) 
+          and $newcell/@r < $origcell/@r 
+          and $newcell/@r > $origcell/preceding-sibling::*/@r 
+          and $newcell/@r < $origcell/following-sibling::*/@r
+        ) 
+ then  
+      ($newcell,$origcell)
+ else if(fn:empty($origcell/following-sibling::*) 
+          and $newcell/@r > $origcell/@r) 
+ then
+      ($origcell,$newcell)
+ else $origcell  
 };
 
 declare function excel:set-row-cell(
@@ -706,14 +717,12 @@ declare function excel:set-row-cell(
   $newcell as node()
 ) as node()*
 {
- 
       typeswitch($x)
        case text() return $x
        case document-node() return document {$x/@*,excel:passthru($x,$newcell)}
        case element(ms:c) return excel:insert-cell($x,$newcell)
        case element() return  element{fn:name($x)} {$x/@*,excel:passthru($x,$newcell)}
        default return $x
-
 };
 
 declare function excel:ws-set-cells(
@@ -730,31 +739,28 @@ declare function excel:ws-set-cells(
 
    let $sheetData :=  $sheet//ms:sheetData
    let $finalsheet := (
-   for $c in $cells return xdmp:set($sheetData,(
-   let $refrow := excel:a1-row($c/@r)
-   let $origrow := $sheetData/ms:row[@r=$refrow]
+   for $c in $cells
+         return xdmp:set($sheetData,(
+                     let $refrow := excel:a1-row($c/@r)
+                     let $origrow := $sheetData/ms:row[@r=$refrow]
+                     let $newrow := if(fn:empty($origrow)) then 
+                                        excel:row($c)
+                                    else excel:set-row-cell($origrow,$c)
 
-   (: pass multiple cells per row, have to order, send in groups :)
-
-   let $newrow := if(fn:empty($origrow)) then excel:row($c)
-                  else excel:set-row-cell($origrow,$c)
-
-   let $rows := if(fn:exists($sheetData/ms:row[@r=$refrow])) then
-                   for $r at $d in $sheetData/ms:row
-                    (:not likely, but row could exist with no cells
-                      update for that ?:)
-                   let $row := if($r/@r = $newrow/@r) then $newrow 
-                            else $r
-                   return $row
-                else for $newrow in ($sheetData/ms:row,$newrow)             
-                     order by $newrow/@r cast as xs:integer
-                     return $newrow
-                     
-   let $newSheetData := element ms:sheetData{ $sheetData/@*, $rows}   
-   (: return (xdmp:set($sheetData,$newSheetData),$sheetData) :)
+                     let $rows := if(fn:exists($sheetData/ms:row[@r=$refrow])) then
+                                    for $r at $d in $sheetData/ms:row
+                                    let $row := if($r/@r = $newrow/@r) then
+                                                  $newrow 
+                                                else $r
+                                    return $row
+                                  else for $newrow in ($sheetData/ms:row,$newrow)             
+                                       order by $newrow/@r cast as xs:integer
+                                       return $newrow
+                   
+                     let $newSheetData := element ms:sheetData{ $sheetData/@*, $rows}   
    return $newSheetData )),$sheetData)
 
-return excel:wb-set-sheetdata($sheet(:/ms:worksheet:), $finalsheet)                      
+  return excel:wb-set-sheetdata($sheet(:/ms:worksheet:), $finalsheet)                      
 };
 
 declare function excel:julian-to-gregorian(
@@ -783,7 +789,6 @@ declare function excel:julian-to-gregorian(
 
    (: return  ($day, $month, $year) :)
    return   xs:dateTime($findate)
-
 };
 
 declare function excel:gregorian-to-julian(
