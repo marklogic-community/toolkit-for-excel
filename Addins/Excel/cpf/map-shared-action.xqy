@@ -21,7 +21,7 @@ declare variable $cpf:transition as node() external;
 if (cpf:check-transition($cpf:document-uri,$cpf:transition)) then
 try {
   xdmp:trace("Office OpenXML Event", fn:concat("Mapping SharedStrings. DOCUMENT-URI: ",$cpf:document-uri )),
-  let $doc := fn:doc($cpf:document-uri) 
+  let $doc := fn:doc($cpf:document-uri)
   let $ret :=  if(fn:empty($doc)) then ()
 else
 
@@ -37,8 +37,9 @@ else
 
   let $ssuri := fn:concat("/",fn:string-join($sharedstringdir,"/"),"/sharedStrings.xml")
 
-  let $sheet:= fn:doc($uri)
-  let $shared-strings :=  fn:data(fn:doc($ssuri)//ms:t)
+  let $sheet:= fn:doc($uri)/node()
+  (: let $shared-strings :=  fn:data(fn:doc($ssuri)//ms:t) :)
+  let $shared-strings :=  fn:doc($ssuri)/node()
   let $newsheet := if(fn:empty($shared-strings)) then $sheet else excel:map-shared-strings($sheet, $shared-strings)
   
   return xdmp:document-insert($cpf:document-uri,$newsheet)

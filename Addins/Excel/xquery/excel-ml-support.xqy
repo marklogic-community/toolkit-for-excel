@@ -92,16 +92,17 @@ as element(zip:parts)
 
 (: ============================================================================================================== :)
 declare function excel:map-shared-strings(
-  $sheet as node()*, 
-  $shared-strings as xs:string*  (: pass in node  explicit element type and return type :)
-) 
+  $sheet as element(ms:worksheet)*, 
+  $shared-strings as element(ms:sst)  (: pass in node  explicit element type and return type :)
+)as element(ms:worksheet)
 {
                   (: for $sheet in $sheets :)
+                  let $shared := fn:data($shared-strings//ms:t)
                   let $rows := for $row at $d in $sheet//ms:row
                                let $cells  :=  for $cell at $e in $row/ms:c
                                                let $c := if(fn:data($cell/@t) eq "s") 
                                                then 
-                                                 element ms:c { $cell/@* except $cell/@t, attribute t{"inlineStr"}, element ms:is { element ms:t { $shared-strings[($cell/ms:v+1 cast as xs:integer)] } } }  
+                                                 element ms:c { $cell/@* except $cell/@t, attribute t{"inlineStr"}, element ms:is { element ms:t { $shared[($cell/ms:v+1 cast as xs:integer)] } } }  
                                                else
                                                     $cell
                                                     (: assumes cel is an int, have to account for any cell type :)
@@ -111,10 +112,10 @@ declare function excel:map-shared-strings(
                      
                               return element ms:row{ $row/@*, $cells }
                                
-                  let $worksheet   :=  $sheet/ms:worksheet/* except ( $sheet/ms:worksheet/ms:sheetData, $sheet/ms:worksheet/ms:tableParts, $sheet/ms:worksheet/ms:pageMargins, $sheet/ms:worksheet/ms:pageSetup)
-                  let $page-setup :=  $sheet/ms:worksheet/ms:pageSetup 
-                  let $table-parts :=  $sheet/ms:worksheet/ms:tableParts
-                  let $sheet-data  :=  $sheet/ms:worksheet/ms:sheetData
+                  let $worksheet   :=  $sheet/* except ( $sheet/ms:sheetData, $sheet/ms:tableParts, $sheet/ms:pageMargins, $sheet/ms:pageSetup)
+                  let $page-setup :=  $sheet/ms:pageSetup 
+                  let $table-parts :=  $sheet/ms:tableParts
+                  let $sheet-data  :=  $sheet/ms:sheetData
 (: get rid of lets , use element contstructor for start, or pass in directlly :)
                   let $ws := element ms:worksheet {  $sheet/ms:worksheet/@*, $worksheet, element ms:sheetData{ $sheet-data/@*, $rows },  $page-setup ,$table-parts  }
                   return $ws
