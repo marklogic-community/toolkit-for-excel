@@ -80,8 +80,8 @@ declare function excel:directory-to-filename(
 
 declare function excel:xlsx-manifest(
   $directory as xs:string, 
-  $uris      as xs:string*) 
-as element(zip:parts)
+  $uris      as xs:string*
+) as element(zip:parts)
 {
     <parts xmlns="xdmp:zip"> 
     {
@@ -252,7 +252,7 @@ declare function excel:create-row(
 declare function excel:cell(
   $a1-ref as xs:string, 
   $value  as xs:anyAtomicType
-) as node() 
+) as element(ms:c) 
 {
     if($value castable as xs:integer) then     
               <ms:c r={$a1-ref}><ms:v>{$value}</ms:v></ms:c>
@@ -262,13 +262,14 @@ declare function excel:cell(
                         <ms:t>{$value}</ms:t>
                     </ms:is>
               </ms:c>
+              
 };
 
 declare function excel:cell(
   $a1-ref  as xs:string, 
   $value   as xs:anyAtomicType?, 
   $formula as xs:string
-) as element(ms:cell)
+) as element(ms:c)
 {
     if($value castable as xs:integer or fn:empty($value)) then     
               <ms:c r={$a1-ref}>
@@ -289,12 +290,10 @@ declare function excel:cell(
 };
 
 declare function excel:row(
-  $cells as node()*
-) as node() 
+  $cells as element(ms:c)*
+) as element(ms:row)
 {
-   
   <ms:row r={excel:a1-row($cells[1]/@r)}>{$cells}</ms:row> 
- 
 };
 
 declare function excel:a1-to-r1c1(
@@ -651,12 +650,12 @@ declare function excel:a1-column(
        fn:replace($a1,("\d+"),"")
 };
 
-declare function excel:passthru-workbook($x as node(), $newSheetData) as node()*
+declare function excel:passthru-workbook($x as node(), $newSheetData as element(ms:sheetData)) as node()*
 {
    for $i in $x/node() return excel:wb-set-sheetdata($i,$newSheetData)
 };
 
-declare function excel:wb-set-sheetdata($x as node(), $newSheetData as node()) as node()*
+declare function excel:wb-set-sheetdata($x as node(), $newSheetData as element(ms:sheetData)) as node()*
 {
  
       typeswitch($x)
@@ -668,13 +667,16 @@ declare function excel:wb-set-sheetdata($x as node(), $newSheetData as node()) a
 
 };
 
-declare function excel:passthru($x as node(), $newcell as node()) as node()*
+declare function excel:passthru($x as node(), $newcell as element(ms:c)) as node()*
 {
    for $i in $x/node() return excel:set-row-cell($i,$newcell)
 };
 
 
-declare function excel:insert-cell($origcell, $newcell)
+declare function excel:insert-cell(
+  $origcell as element(ms:c), 
+  $newcell as element(ms:c)
+)as element(ms:c)*
 {
  if($newcell/@r = $origcell/@r) then 
     $newcell 
@@ -714,7 +716,7 @@ declare function excel:insert-cell($origcell, $newcell)
 
 declare function excel:set-row-cell(
   $x as node()*, 
-  $newcell as node()
+  $newcell as element(ms:c) 
 ) as node()*
 {
       typeswitch($x)
