@@ -1,7 +1,7 @@
 xquery version "1.0-ml";
 
 declare namespace excel = "http://marklogic.com/openxml/excel";
-import module "http://marklogic.com/openxml/excel" at "/MarkLogic/openxml/excel-ml-support.xqy";
+import module "http://marklogic.com/openxml/excel" at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
 declare namespace html = "http://www.w3.org/1999/xhtml";
 declare namespace ms = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 declare namespace r="http://schemas.openxmlformats.org/officeDocument/2006/relationships";
@@ -65,51 +65,7 @@ return $body
 ) 
 else
 (
-let $worksheetname := $original/fn:local-name(child::*[1])
-(: let $worksheetrows := //submissions/child::*[1] :)
-let $worksheetrows := $original/child::*
-
-(: order of rows?  :)
-let $allrows := for $r at $d in $worksheetrows
-             let $rowhdrs := $r//child::*
-             let $validrownames :=
-                    for $i in $rowhdrs 
-                    let $rowhdrname := fn:local-name($i)
-                    return $rowhdrname
-             return $validrownames
-let $headerrows :=  fn:distinct-values($allrows)
-let $columncount := fn:count($headerrows)
-
-let $headers := excel:create-row($headerrows)
-
-let $rowvalues := for $i at $d in $worksheetrows
-                  let $map := map:map()
-                  let $return := for $x at $z in $i/child::*
-                                 let $put := map:put($map, fn:local-name($x),$x/text())
-                                 return $put 
-                  return $map
-
-let $rows := for $i in $rowvalues
-             return excel:create-row($i,$headerrows) 
-
-let $rowcount := fn:count($rows)
-            
-let $content-types := excel:content-types(1,1)
-let $workbook := excel:workbook(1)
-let $rels :=  excel:pkg-rels()
-let $workbookrels :=  excel:workbook-rels(1)
-
-let $tablerange := fn:concat("A1:",excel:r1c1-to-a1($rowcount+1,$columncount))
-let $styling := $tabstyle (: if($tabstyle eq "mark1") then xs:boolean("true") else xs:boolean("false") :)
-let $tablexml :=  excel:table(1,$tablerange, $headerrows, $styling)
-
-let $worksheetrels := excel:worksheet-rels(1,1)
-let $sheet-col-widths := for $i in 1 to $columncount return $colcustwidths (: ("14","58","16","16","18","24") :)
-let $colwidths := excel:column-width($sheet-col-widths) 
-
-let $sheet1 := excel:worksheet(($headers,$rows), $colwidths, 1) 
-
-let $package := excel:xl-pkg($content-types, $workbook, $rels, $workbookrels, $sheet1, $worksheetrels, $tablexml)
+    let $package := excel:create-xlsx-from-xml-table($original,$colcustwidths,$tabstyle)
 
     let $filename := $xlsxname 
     let $disposition := concat("attachment; filename=""",$filename,"""")

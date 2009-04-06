@@ -6,7 +6,7 @@ declare namespace dc = "http://purl.org/dc/elements/1.1/";
 declare namespace cp = "http://schemas.openxmlformats.org/package/2006/metadata/core-properties";
 declare namespace dcterms="http://purl.org/dc/terms/";
 declare namespace excel = "http://marklogic.com/openxml/excel";
-import module "http://marklogic.com/openxml/excel" at "/MarkLogic/openxml/excel-ml-support.xqy";
+import module "http://marklogic.com/openxml/excel" at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
 
 
 declare variable $xladd:bsv as xs:string external;
