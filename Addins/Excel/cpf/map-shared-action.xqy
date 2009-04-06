@@ -10,7 +10,7 @@ xquery version "1.0-ml";
 import module namespace cpf = "http://marklogic.com/cpf" at "/MarkLogic/cpf/cpf.xqy";
 import module namespace cvt = "http://marklogic.com/cpf/convert" at "/MarkLogic/conversion/convert.xqy";
 declare namespace excel = "http://marklogic.com/openxml/excel";
-import module "http://marklogic.com/openxml/excel" at "/MarkLogic/openxml/excel-ml-support.xqy";
+import module "http://marklogic.com/openxml/excel" at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
 declare namespace html = "http://www.w3.org/1999/xhtml";
 declare namespace ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 declare namespace r="http://schemas.openxmlformats.org/officeDocument/2006/relationships";
