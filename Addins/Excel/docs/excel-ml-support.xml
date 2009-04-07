@@ -1,0 +1,1045 @@
+<apidoc:module name="excel" category="SpreadsheetML" lib="excel" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" xmlns="http://www.w3.org/1999/xhtml">
+  <apidoc:summary>
+      <p>The SpreadsheetML function module is installed as the following 
+		  file:</p>
+    <ul>
+	    <li><code><em>install_dir</em>/Modules/MarkLogic/openxml/spreadsheet-ml-support.xqy</code></li>
+    </ul>
+    <p>where <code><em>install_dir</em></code> is the directory in which 
+	    MarkLogic Server is installed.</p>
+    <p>To use the <code>spreadsheet-ml-support.xqy</code> module in your own 
+    XQuery modules, 
+    include the following line in your XQuery prolog:</p>
+    <p><code>import module namespace excel="http://marklogic.com/openxml/excel" 
+		    at "/MarkLogic/MarkLogic/openxml/spreadsheet-ml-support.xqy"</code></p>
+    <p>The SpreadsheetML functions are used to manipulate Microsoft Office
+    Open XML documents.</p>
+  </apidoc:summary>
+  <apidoc:function name="get-mimetype" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function returns the mimetype for the given URI. Wrapper for xdmp:uri-content-type().</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="uri" type="xs:string">URI reference</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string?</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+
+excel:get-mimetype("Default.xlsx")
+=> 
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="directory-uris" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function returns the URIs for files extracted from .xlsx package using Open XML Extract pipeline.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="directory" type="xs:string">The name of the directory containing the extracted .xlsx parts.</apidoc:param>
+      <apidoc:param name="includesheets" type="xs:boolean" optional="true">Set whether worksheets are returned with URIs.  The Default setting is true.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string*</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";		    
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+	    
+excel:directory-uris("/Default_xlsx_parts/")
+=>
+/Default_xlsx_parts/[Content_Types].xml
+/Default_xlsx_parts/_rels/.rels
+/Default_xlsx_parts/customXml/_rels/item1.xml.rels
+/Default_xlsx_parts/customXml/item1.xml
+/Default_xlsx_parts/customXml/itemProps1.xml
+/Default_xlsx_parts/docProps/app.xml
+/Default_xlsx_parts/docProps/core.xml
+/Default_xlsx_parts/xl/_rels/workbook.xml.rels
+/Default_xlsx_parts/xl/sharedStrings.xml
+/Default_xlsx_parts/xl/styles.xml
+/Default_xlsx_parts/xl/theme/theme1.xml
+/Default_xlsx_parts/xl/workbook.xml
+/Default_xlsx_parts/xl/worksheets/sheet1.xml
+/Default_xlsx_parts/xl/worksheets/sheet2.xml
+/Default_xlsx_parts/xl/worksheets/sheet3.xml
+   
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="sheet-uris" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function returns only the worksheet URIs for files extracted from .xlsx package using Open XML Extract pipeline.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="directory" type="xs:string">The name of the directory containing the extracted .xlsx parts.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string*</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+	    
+excel:sheet-uris("/Default_xlsx_parts/")
+=>
+/Default_xlsx_parts/xl/worksheets/sheet1.xml
+/Default_xlsx_parts/xl/worksheets/sheet2.xml
+/Default_xlsx_parts/xl/worksheets/sheet3.xml
+
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="workbook-sheet-names" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function returns the iworksheet names for the workbook.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="workbook" type="element(ms:workbook)">The workbook.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string*</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+
+let $workbook := fn:doc("/Default_xlsx_parts/xl/workbook.xml")/node()
+return
+  excel:workbook-sheet-names($workbook)
+=>
+Sheet1
+Sheet2
+Sheet3
+
+
+		  
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="sharedstring-uri" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function returns the URI for the sharedString table, extracted from .xlsx using Open XML Extract pipeline.</apidoc:summary>
+	      <apidoc:params>
+      <apidoc:param name="directory" type="xs:string">The name of the directory containing the extracted .xlsx parts.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string*</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml"; 
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+
+excel:sharedstring-uri("/Default_xlsx_parts/")
+=>
+/Default_xlsx_parts/xl/sharedStrings.xml
+       
+       
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="cell-string-value" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function returns the text values for the cells, mapping their values from the sharedStrings table. Cell values that are numbers will be returned as text.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="cells" type="element(ms:c)*">The cells from the worksheet.</apidoc:param>
+      <apidoc:param name="shared-strings" type="element(ms:sst)">The sharedStrings table.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string*</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+<![CDATA[
+
+let $dir := "/Default_xlsx_parts/"
+let $ss := fn:doc(excel:sharedstring-uri($dir))/node()
+let $cels := (<ms:c>
+                <ms:v>1</ms:v>
+              </ms:c>,
+              <ms:c t="s">
+                <ms:v>1</ms:v>
+              </ms:c>)
+return excel:cell-string-value ($cels,$ss)
+]]>
+1
+TEST
+ </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="directory-to-filename" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function converts the directory name, to the name of the .xlsx package.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="directory" type="xs:string">The directory name to be converted.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml"; 
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       
+excel:directory-to-filename("/Default_xlsx_parts/")
+=>
+Default.xlsx       
+       
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="xlsx-manifest" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function constructs a manifest for the given URIs in the directory.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="directory" type="xs:string">The name of the directory.</apidoc:param>
+      <apidoc:param name="uris" type="xs:string*">The URIs within the directory to be listed in the manifest.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(zip:parts)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+    at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+
+let $uris := ("/Default_xlsx_parts/xl/workbook.xml",
+              "/Default_xlsx_parts/xl/worksheets/Sheet1.xml",
+              "/Default_xlsx_parts/[Content_Types].xml",
+              "/Default_xlsx_parts/_rels/.rels")
+
+return excel:xlsx-manifest("/Default_xlsx_parts/",$uris)
+=><![CDATA[
+<parts xmlns="xdmp:zip">
+  <part>xl/workbook.xml</part>
+  <part>xl/worksheets/Sheet1.xml</part>
+  <part>[Content_Types].xml</part>
+  <part>_rels/.rels</part>
+</parts>
+    ]]>
+
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="map-shared-strings" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function dereferences cell text values so text is stored within the worksheet, instead of just a reference sharedStrings table.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="sheet" type="element(ms:worksheet)">The worksheet with cells to be mapped to sharedStrings table.</apidoc:param>
+      <apidoc:param name="shared-strings" type="element(ms:sst)">The sharedStrings table.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(ms:worksheet)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+     at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+declare namespace ms = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+    <![CDATA[    
+let $ss := fn:doc(excel:sharedstring-uri("/Default_xlsx_parts/"))/node()
+
+let $ws:= (<ms:worksheet>
+                <ms:sheetData>
+                 <ms:row>
+                   <ms:c t="s">
+                   <ms:v>1</ms:v>
+                 </ms:c>
+                </ms:row>
+               </ms:sheetData>
+           </ms:worksheet>)
+
+return excel:map-shared-strings($ws,$ss)
+=>
+<ms:worksheet xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <ms:sheetData>
+      <ms:row>
+	<ms:c t="inlineStr">
+	   <ms:is><ms:t>TEST</ms:t></ms:is>
+	</ms:c>
+      </ms:row>
+   </ms:sheetData>
+</ms:worksheet>
+]]>
+    
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="create-simple-xlsx" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function creates a .zip file that is a .xlsx package containing the minimum parts required to be a valid package. The parts include: [Content_Types].xml, .rels, workbook.xml, workbook.xml.rels, and the sheets. Sheets are saved as sheet1.xml, sheet2.xml... to sheetN.xml.  Pass the sheets into the function in the order you'd like them to be displayed in the workbook. </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="worksheets" type="element(ms:worksheet)*">The worksheets to be used with the new workbook (.xlsx)</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>binary()</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+declare namespace ms = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+<![CDATA[
+let $ws:= (<ms:worksheet>
+                <ms:sheetData>
+                 <ms:row>
+                   <ms:c t="s">
+                   <ms:v>1</ms:v>
+                 </ms:c>
+                </ms:row>
+               </ms:sheetData>
+            </ms:worksheet>)
+return xdmp:zip-manifest(excel:create-simple-xlsx($ws))
+=>
+<parts xmlns="xdmp:zip">
+  <part uncompressed-size="499" compressed-size="218" encrypted="false">[Content_Types].xml</part>
+  <part uncompressed-size="229" compressed-size="146" encrypted="false">xl/workbook.xml</part>
+  <part uncompressed-size="241" compressed-size="140" encrypted="false">_rels/.rels</part>
+  <part uncompressed-size="242" compressed-size="144" encrypted="false">xl/_rels/workbook.xml.rels</part>
+  <part uncompressed-size="178" compressed-size="119" encrypted="false">xl/worksheets/sheet1.xml</part>
+</parts>
+]]>
+ </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="xl-pkg" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function creates a .zip file that is the .xlsx package containing the parts passed in as parameters.  It is assumed the parts are properly mapped to one another.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="content-types" type="element(types:Types)">The [Content_Types].xml part.</apidoc:param>
+      <apidoc:param name="workbook" type="element(ms:workbook)">The workbook.xml part.</apidoc:param>
+      <apidoc:param name="rels" type="element(pr:Relationships)">The package Relationships part.</apidoc:param>
+      <apidoc:param name="workbookrels" type="element(pr:Relationships)">The workbook Relationships part.</apidoc:param>
+      <apidoc:param name="sheets" type="element(ms:worksheet)*">The worksheet (sheetN.xml) parts.</apidoc:param>
+      <apidoc:param name="worksheetrels" type="element(pr:Relationships)*" optional="true">The sheetN.xml Relationships parts. (Required when mapping tables to sheets.)</apidoc:param>
+      <apidoc:param name="table" type="element(ms:table)*" optional="true">The table.xml parts. (Used for named ranges, auto-filtering columns, styling, etc.)</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>binary()</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+declare namespace ms = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+<![CDATA[
+let $worksheets:= (<ms:worksheet>
+                    <ms:sheetData>
+                     <ms:row>
+                       <ms:c>
+                        <ms:v>1</ms:v>
+                       </ms:c>
+                     </ms:row>
+                    </ms:sheetData>
+                  </ms:worksheet>)
+
+let $ws-count := fn:count($worksheets)
+let $content-types := excel:content-types($ws-count,0)
+let $workbook := excel:workbook($ws-count)
+let $rels :=  excel:pkg-rels()
+let $workbookrels :=  excel:workbook-rels($ws-count)
+let $package := excel:xl-pkg($content-types, $workbook, $rels, $workbookrels, $worksheets)
+
+return xdmp:zip-manifest($package)
+=>
+<parts xmlns="xdmp:zip">
+  <part uncompressed-size="499" compressed-size="218" encrypted="false">[Content_Types].xml</part>
+  <part uncompressed-size="229" compressed-size="146" encrypted="false">xl/workbook.xml</part>
+  <part uncompressed-size="241" compressed-size="140" encrypted="false">_rels/.rels</part>
+  <part uncompressed-size="242" compressed-size="144" encrypted="false">xl/_rels/workbook.xml.rels</part>
+  <part uncompressed-size="172" compressed-size="115" encrypted="false">xl/worksheets/sheet1.xml</part>
+</parts>
+    ]]>
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="create-row" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function creates a row, populated with cells.  The cell's values are either a number type or of type string and are passed in as a parameter.  This function creates a simple row, containing simple cells; there is no way to set row number explicitly, and there is no way to set cell row/column position. It is assumed that the cells are populated in the row in the order that they are passed to the function. </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="values" type="xs:anyAtomicType*">number or string values that will be used as values for cells populated within row.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(ms:row)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml"; 
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       
+let $vals :=(1,2,3,"TEST")
+return excel:create-row($vals)
+=>
+<![CDATA[<ms:row xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <ms:c><ms:v>1</ms:v></ms:c>
+   <ms:c><ms:v>2</ms:v></ms:c>
+   <ms:c><ms:v>3</ms:v></ms:c>
+   <ms:c t="inlineStr"><ms:is><ms:t>TEST</ms:t></ms:is></ms:c>
+</ms:row>
+]]>
+
+       
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="create-row" lib="excel" category="SpreadsheetML">
+	<apidoc:summary>This function creates a row, populated with cells.  The cell's values are either a number or of type string and are passed in as values for the map. This function creates a simple row, with simple cells; there is no way to set row number explicitly, and there is no way to set cell row/column position. It is assumed that the cells are populated in the row in the order that they are passed to the function within the map.  Keys are passed separately as you may have more keys than are contained within the map, this is done for sparsely populated tables.  If the key doesn't exist within the map, the cell will be created but will not contain any value.   </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="map" type="map:map">Map containing values to be used for cell values within row.</apidoc:param>
+      <apidoc:param name="keys" type="xs:string*">Keys to be used for column values.  If key doesn't exist within map, an empty cell will be created.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(ms:row)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       
+let $map := map:map()
+let $put := (map:put($map, "RequestID",45683),
+             map:put($map, "Customer","Pete"))
+
+let $keys := ("Customer","Address","RequestID")
+return excel:create-row($map,$keys)
+=><![CDATA[
+<ms:row xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <ms:c t="inlineStr"><ms:is><ms:t>Pete</ms:t></ms:is></ms:c>
+   <ms:c t="inlineStr"><ms:is><ms:t/></ms:is></ms:c>
+   <ms:c><ms:v>45683</ms:v></ms:c>
+</ms:row>
+]]>
+       
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="cell" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function creates a cell.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="a1-ref" type="xs:string">The row and column number for the cell provided in A1 notation.</apidoc:param>
+      <apidoc:param name="value" type="xs:anyAtomicType?">The cell value, either a number or a string.</apidoc:param>
+      <apidoc:param name="formula" type="xs:string?" optional="true">The formula for the cell.</apidoc:param>
+      <apidoc:param name="date-style" type="xs:integer?" optional="true">The date style for the cell.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(ms:c)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       
+excel:cell("A1",123) 
+=><![CDATA[
+<ms:c r="A1" xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <ms:v>123</ms:v>
+</ms:c>
+]]>
+
+  </pre>
+  </apidoc:example>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+<![CDATA[
+excel:cell("A3",(),"SUM(A1:A2)")
+=>
+<ms:c r="A3" xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <ms:f>SUM(A1:A2)</ms:f>
+</ms:c>
+
+Note: 
+Above we pass the empty sequence for the value, so only the formula is populated for the cell. 
+This way, when the cell is opened within Excel, the value will be generated by the formula and
+populated within the cell.  It is possible to create a cell with a value and a formula, where
+the value the formula calculates and the value are not equal.  Excel will not automatically correct this disparity
+upon consuming the cell.
+]]>
+  </pre>
+  </apidoc:example>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+<![CDATA[
+excel:cell("A3",32999,(),0)
+=>
+<ms:c r="A3" s="0" xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <ms:v>32999</ms:v>
+</ms:c>
+
+Note:
+Formula and date style assignment only applies to cells containing numeric values. 
+Formula and date style assignment will be ignored in the case that $value is of type xs:string.
+]]>
+
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="row" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function creates a worksheet row.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="cells" type="element(ms:c)+">The cells to be populated within the row.  It is assumed that all cells have an A1 reference and that they are in the same row.  The row number is determined by the row number identified by the cell.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(ms:row)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+
+<![CDATA[
+let $cell1 := excel:cell("A3",32999,(),0)
+let $cell2 := excel:cell("B3",123)
+let $cell3 := excel:cell("C3","Foo")
+return excel:row(($cell1,$cell2,$cell3))
+=>
+<ms:row r="3" xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <ms:c r="A3" s="0"><ms:v>32999</ms:v></ms:c>
+   <ms:c r="B3"><ms:v>123</ms:v></ms:c>
+   <ms:c r="C3" t="inlineStr"><ms:is><ms:t>Foo</ms:t></ms:is></ms:c>
+</ms:row>
+]]>
+
+</pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="r1c1-to-a1" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function converts the row and column numbers from what Excel refers to as R1C1 notation (row/column notation) to the preferred A1 notation.  Excel's limits for rows is 1048756, and for columns is 16384.  This function returns A1 notation for any cell in that range from A1 to WID1048576.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="row-index" type="xs:integer">the row index</apidoc:param>
+      <apidoc:param name="col-index" type="xs:integer">the column index</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+
+excel:r1c1-to-a1(1,2378)
+=>
+CJL1 
+ </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="column-width" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function creates the ms:cols element, which can be added to a worksheet to define custom column widths. </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="widths" type="xs:integer+">A sequence of column widths.  It is assumed that the column widths are set by the order of the items in the sequence.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(ms:cols)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+<![CDATA[
+excel:column-width((15,15,15))
+=>
+<ms:cols xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <ms:col min="1" max="1" width="15" customWidth="1"/>
+   <ms:col min="2" max="2" width="15" customWidth="1"/>
+   <ms:col min="3" max="3" width="15" customWidth="1"/>
+</ms:cols>
+]]>
+
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="content-types" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function creates a content types element for the .xlsx package ([Content_Types].xml)</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="worksheet-count" type="xs:integer">The number of worksheets in the .xlsx package.</apidoc:param>
+      <apidoc:param name="tbl-count" type="xs:integer" optional="true">The number ot tablles in the .xlsx package</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(types:Types)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+		    <![CDATA[
+xquery version "1.0-ml"; 
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       
+excel:content-types(3) 
+=>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+   <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+   <Default Extension="xml" ContentType="application/xml"/>
+   <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+   <Override PartName="/xl/worksheets/sheet1" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+   <Override PartName="/xl/worksheets/sheet2" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+   <Override PartName="/xl/worksheets/sheet3" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+</Types>
+]]>
+ </pre>
+  </apidoc:example>
+    <apidoc:example><pre xml:space="preserve">
+		    <![CDATA[
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       
+excel:content-types(1,1)
+=>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+   <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+   <Default Extension="xml" ContentType="application/xml"/>
+   <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+   <Override PartName="/xl/worksheets/sheet1" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+   <Override PartName="/xl/tables/table1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml"/>
+</Types>
+      ]]>
+ </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="workbook" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function creates a workbook element for the .xlsx package (xl/workbook.xml) </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="worksheet-count" type="xs:integer">The number of worksheets in the workbook.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(ms:workbook)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+		    <![CDATA[
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+excel:workbook(3)
+=>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+   <sheets>
+      <sheet name="Sheet1" sheetId="1" r:id="rId1"/>
+      <sheet name="Sheet2" sheetId="2" r:id="rId2"/>
+      <sheet name="Sheet3" sheetId="3" r:id="rId3"/>
+   </sheets>
+</workbook>
+       ]]>
+       
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="pkg-rels" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function creates a package relationships element for the .xlsx package (_rels/.rels)</apidoc:summary>
+    <apidoc:return>element(pr:Relationships)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+		    <![CDATA[
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+
+excel:pkg-rels()
+       =>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+   <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>
+       ]]>
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="workbook-rels" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function creates a workbook relationships element for the .xlsx package (xl/_rels/workbook.xml.rels)</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="worksheet-count" type="xs:integer">The number of worksheets in the workbook.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(pr:Relationships)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+		    <![CDATA[
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       
+excel:workbook-rels(3) 
+=>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+   <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
+   <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/>
+   <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet3.xml"/>
+</Relationships>
+      ]]>
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="worksheet-rels" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function createts a worksheet relationships element for a .xlsx package (xl/worksheets/_rels/sheet#.xml.rels)</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="start-ind" type="xs:integer">The starting index for tables relating to the worksheet.</apidoc:param>
+      <apidoc:param name="tbl-count" type="xs:integer">The number of tables relating to the worksheet.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(pr:Relationships)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       <![CDATA[
+excel:worksheet-rels(2,2)
+       =>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+   <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/table" Target="../tables/table2.xml"/>
+   <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/table" Target="../tables/table3.xml"/>
+</Relationships>
+       ]]>
+       
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="table" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function creates a table element for a .xlsx package (xl/tables/table#.xml)</apidoc:summary>
+    <apidoc:params>
+	    <apidoc:param name="table-number" type="xs:integer">The number of the table.</apidoc:param>
+      <apidoc:param name="tablerange" type="xs:string">The ranger of the table in Excel notation A1-colon notation. ("A1:C3")</apidoc:param>
+      <apidoc:param name="column-names" type="xs:string+">The names of the columns.  These are the values from the first row in the cells found in $tablerange.</apidoc:param>
+      <apidoc:param name="auto-filter" type="xs:boolean" optional="true">If true, columns will have autofilter enabled.  Default true.</apidoc:param>
+      <apidoc:param name="style" type="xs:boolean" optional="true">If true, simple style of TableStyleMedium10 is applied to table. Default none.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(ms:table)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       <![CDATA[
+excel:table(1,"A1:C3",("Heading1","Heading2","Heading3"))
+=>
+<table id="1" name="Table1" displayName="Table1" ref="A1:C3" totalsRowShown="0" xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <autoFilter ref="A1:C3"/>
+   <tableColumns count="3">
+      <tableColumn id="1" name="Heading1"/>
+      <tableColumn id="2" name="Heading2"/>
+      <tableColumn id="3" name="Heading3"/>
+   </tableColumns>
+</table>
+]]>
+  </pre>
+  </apidoc:example>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       <![CDATA[
+excel:table(1,"A1:C3",("Heading1","Heading2","Heading3"),xs:boolean("false"),xs:boolean("true"))
+=>
+<table id="1" name="Table1" displayName="Table1" ref="A1:C3" totalsRowShown="0" xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <tableColumns count="3">
+       <tableColumn id="1" name="Heading1"/>
+       <tableColumn id="2" name="Heading2"/>
+       <tableColumn id="3" name="Heading3"/></tableColumns>
+   <tableStyleInfo name="TableStyleMedium10" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/>
+</table>
+       ]]>
+       
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="worksheet" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function creates a worksheet for the .xlsx package (xl/worksheets/sheet#.xml)</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="rows" type="element(ms:row)*">The rows for the worksheet.</apidoc:param>
+      <apidoc:param name="colwidths" type="element(ms:cols)?" optional="true">The custom column widths for the worksheet.</apidoc:param>
+      <apidoc:param name="tbl-count" type="xs:integer" optional="true">The number of tables associated with the worksheet.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(ms:worksheet)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       <![CDATA[
+let $cells := ((excel:cell("A1",1), 
+                excel:cell("B1",2), 
+                excel:cell("C1",3)))
+let $row := excel:row($cells)
+return excel:worksheet($row)
+=>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <sheetData>
+      <row r="1" xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+         <c r="A1"><v>1</v></c>
+         <c r="B1"><v>2</v></c>
+         <c r="C1"><v>3</v></c>
+      </row>
+   </sheetData>
+</worksheet> ]]>
+  </pre>
+  </apidoc:example>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       <![CDATA[
+let $cells := ((excel:cell("A1",1), 
+                excel:cell("B1",2), 
+                excel:cell("C1",3)))
+let $row := excel:row($cells)
+let $colwidths := excel:column-width((25,25,25))
+return excel:worksheet($row,$colwidths)
+=>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <sheetData>
+      <cols>
+         <col min="1" max="1" width="25" customWidth="1"/>
+         <col min="2" max="2" width="25" customWidth="1"/>
+         <col min="3" max="3" width="25" customWidth="1"/>
+      </cols>		
+      <row r="1" xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+         <c r="A1"><v>1</v></c>
+         <c r="B1"><v>2</v></c>
+         <c r="C1"><v>3</v></c>
+      </row>
+   </sheetData>
+</worksheet>
+       ]]>
+
+  </pre>
+  </apidoc:example>
+      <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       <![CDATA[
+let $cells := ((excel:cell("A1",1), 
+                excel:cell("B1",2), 
+                excel:cell("C1",3)))
+let $row := excel:row($cells)
+let $colwidths := excel:column-width((25,25,25))
+return excel:worksheet($row,$colwidths,2)
+=>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <cols>
+      <col min="1" max="1" width="25" customWidth="1"/>
+      <col min="2" max="2" width="25" customWidth="1"/>
+      <col min="3" max="3" width="25" customWidth="1"/>
+   </cols>	
+   <sheetData>
+      <row r="1" xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+         <c r="A1"><v>1</v></c>
+         <c r="B1"><v>2</v></c>
+         <c r="C1"><v>3</v></c>
+      </row>
+   </sheetData>
+   <tableParts count="2">
+      <tablePart r:id="rId1"/>
+      <tablePart r:id="rId2"/>
+   </tableParts>
+</worksheet>
+       ]]>
+
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="a1-row" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function returns the row number from A1 notation cell reference.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="a1" type="xs:string">Parameter description...</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       <![CDATA[
+excel:a1-row("D23")
+=>
+23
+       ]]>
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="a1-column" lib="excel" category="SpreadsheetML">
+	  <apidoc:summary>This function returns the column letter from A1 notation cell reference.</apidoc:summary>
+	      <apidoc:params>
+      <apidoc:param name="a1" type="xs:string">Parameter description...</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       <![CDATA[
+excel:a1-column("D23")
+=>
+D
+ ]]>
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="set-cells" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function sets the cells within the provided worksheet.  If the cell exists in the worksheet, it will be replaced.  If the cell doesn't exist, it will be set in the proper order within the proper row.  If the row doesn't exist, the row will be created and populated with the cell.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="worksheet" type="element(ms:worksheet)">The worksheet where to set the cells.</apidoc:param>
+      <apidoc:param name="cells" type="element(ms:c)*">The cells to be set within $worksheet.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(ms:worksheet)</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       <![CDATA[
+declare namespace ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+
+let $cell1 := excel:cell("A1","foo")
+let $cell2 := excel:cell("B3",123)
+let $cell3 := excel:cell("A5",456)
+
+let $worksheet :=
+<ms:worksheet>	
+   <ms:sheetData>
+      <ms:row r="1">
+         <ms:c r="A1"><ms:v>1</ms:v></ms:c>
+      </ms:row>
+      <ms:row r="5">
+         <ms:c r="C5"><ms:v>1</ms:v></ms:c>
+      </ms:row>
+   </ms:sheetData>
+</ms:worksheet>
+return excel:ws-set-cells($worksheet, ($cel1,$cel2,$cel3))
+=>
+<ms:worksheet xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <ms:sheetData>
+      <ms:row r="1">
+         <ms:c r="A1" t="inlineStr"><ms:is><ms:t>foo</ms:t></ms:is></ms:c>
+      </ms:row>
+      <ms:row r="3">
+	 <ms:c r="B3"><ms:v>123</ms:v></ms:c>
+      </ms:row>
+      <ms:row r="5">
+	 <ms:c r="A5"><ms:v>456</ms:v></ms:c>
+	 <ms:c r="C5"><ms:v>1</ms:v></ms:c>
+      </ms:row>
+   </ms:sheetData>
+</ms:worksheet>
+
+       ]]>
+  </pre>
+  </apidoc:example>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+<![CDATA[
+declare namespace ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+
+let $cel1 := excel:cell("G23","bar")
+let $worksheet :=
+<ms:worksheet>	
+   <ms:sheetData>
+   </ms:sheetData>
+</ms:worksheet>
+return excel:ws-set-cells($worksheet, ($cel1))
+=>
+<ms:worksheet xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <ms:sheetData>
+      <ms:row r="23">
+         <ms:c r="G23" t="inlineStr"><ms:is><ms:t>bar</ms:t></ms:is></ms:c>
+      </ms:row>
+   </ms:sheetData>
+</ms:worksheet>
+       ]]>
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="julian-to-gregorian" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function converts and Excel julian day number to a gregorian date.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="excel-julian-day" type="xs:integer">The Excel julian day.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:dateTime</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       <![CDATA[
+excel:julian-to-gregorian(39909)
+=>
+2009-04-06T00:00:00
+       ]]>
+
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="gregorian-to-julian" lib="excel" category="SpreadsheetML">
+    <apidoc:summary>This function converts a gregorian date to an Excel julian day</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="year" type="xs:integer">The year.</apidoc:param>
+      <apidoc:param name="month" type="xs:integer">The month.</apidoc:param>
+      <apidoc:param name="day" type="xs:integer">The day.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:integer</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";		    
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       <![CDATA[
+excel:gregorian-to-julian(2009,4,6)
+=>
+39909
+       ]]>
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+    <apidoc:function name="create-xlsx-from-xml-table" lib="excel" category="SpreadsheetML">
+	    <apidoc:summary>This function will attempt to generate an Excel workbook from an XML table.  An XML table here is defined as 
+		    a single wrapper element, with a single repeating child element.  The children elements of this repeating element may vary in name.  
+		    The names of the children elements will be used as headers for columns, and their values will populate rows.  
+		    It is possible for the children to have different element names, so its possible to generate a sparsely populated table.
+	    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="original-xml" type="node()">The XML to be converted.</apidoc:param>
+      <apidoc:param name="col-cust-widths" type="xs:integer">A custom width for the columns in the worksheet.</apidoc:param>
+      <apidoc:param name="tbl-style" type="xs:boolean">If true, then the table will have style TableStyleMedium10 applied.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>binary()</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";		    
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+       <![CDATA[
+let $xml := <catalog>
+              <item>
+                 <product>beach ball</product>
+                 <sku>123123</sku>
+              </item>
+              <item>
+                 <product>swim fins</product>
+                 <sku>444444</sku>
+              </item>
+              <item>
+                 <product>scuba glasses</product>
+                 <sku>888</sku>
+              </item>
+             </catalog>
+let $package := excel:create-xlsx-from-xml-table($xml,"15",xs:boolean("true"))
+return xdmp:zip-manifest($package)
+=>
+<parts xmlns="xdmp:zip">
+  <part uncompressed-size="627" compressed-size="232" encrypted="false">[Content_Types].xml</part>
+  <part uncompressed-size="229" compressed-size="146" encrypted="false">xl/workbook.xml</part>
+  <part uncompressed-size="241" compressed-size="140" encrypted="false">_rels/.rels</part>
+  <part uncompressed-size="242" compressed-size="144" encrypted="false">xl/_rels/workbook.xml.rels</part>
+  <part uncompressed-size="1034" compressed-size="297" encrypted="false">xl/worksheets/sheet1.xml</part>
+  <part uncompressed-size="237" compressed-size="141" encrypted="false">xl/worksheets/_rels/sheet1.xml.rels</part>
+  <part uncompressed-size="410" compressed-size="229" encrypted="false">xl/tables/table1.xml</part>
+</parts>
+
+       ]]>
+  </pre>
+  </apidoc:example>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";		  
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+<![CDATA[
+
+let $xml := <catalog>
+              <item>
+                 <product>beach ball</product>
+                 <sku>123123</sku>
+              </item>
+              <item>
+                 <product>swim fins</product>
+                 <sku>444444</sku>
+              </item>
+              <item>
+                 <product>scuba glasses</product>
+                 <sku>888</sku>
+              </item>
+             </catalog>
+
+let $package := excel:create-xlsx-from-xml-table($xml,"15",xs:boolean("true"))
+let $doc := xdmp:zip-get($package,"xl/worksheets/sheet1.xml")
+return $doc
+=>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+   <cols xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+      <col min="1" max="1" width="15" customWidth="1"/>
+      <col min="2" max="2" width="15" customWidth="1"/>
+   </cols>
+   <sheetData>
+      <row xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+         <c t="inlineStr"><is><t>product</t></is></c>
+         <c t="inlineStr"><is><t>sku</t></is></c>
+      </row>
+      <row xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+	 <c t="inlineStr"><is><t>beach ball</t></is></c>
+	 <c><v>123123</v></c>
+      </row>
+      <row xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+         <c t="inlineStr"><is><t>swim fins</t></is></c>
+         <c><v>444444</v></c>
+      </row>
+      <row xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+         <c t="inlineStr"><is><t>scuba glasses</t></is></c>
+	 <c><v>888</v></c>
+      </row>
+   </sheetData>
+   <tableParts count="1">
+      <tablePart r:id="rId1" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"/>
+   </tableParts>
+</worksheet>
+       ]]>
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+</apidoc:module>
