@@ -1320,6 +1320,8 @@ namespace MarkLogic_ExcelAddin
 
             }
 
+
+
        /*   
         * public String openXlsx2(string path, string title, string url, string user, string pwd)
             {
@@ -1823,6 +1825,16 @@ namespace MarkLogic_ExcelAddin
 
 
                 return "";
+            }
+
+            public String addCustomProperty(string key, string value)
+            {
+                string message = "";
+                Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                object date = "2009-03-20";
+                ws.CustomProperties.Add("date", date);
+
+                return message;
             }
 
         

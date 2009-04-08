@@ -31,7 +31,7 @@
     <SignManifests>true</SignManifests>
     <IsWebBootstrapper>False</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <PublishUrl>publish\</PublishUrl>
+    <PublishUrl>C:\cygwin\home\paven\MLOS\Office2007\builds\Excel\</PublishUrl>
     <InstallUrl>
     </InstallUrl>
     <TargetCulture>en</TargetCulture>
