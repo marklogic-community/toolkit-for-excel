@@ -113,7 +113,8 @@ this.colIdx=c_values[0];
 }
 
 /** @ignore */
-MLA.version = { "release" : "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" }; 
+//MLA.version = { "release" : "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" }; 
+MLA.version = { "release" : "1.0-20090408" }; 
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){
