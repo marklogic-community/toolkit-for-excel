@@ -38,7 +38,6 @@ namespace MarkLogic_ExcelAddin
                 InitializeComponent();
                 //bool regEntryExists = checkUrlInRegistry();
                 webUrl = ac.getWebURL();
-                //MessageBox.Show("URL" + webUrl);
 
                 if (webUrl.Equals(""))
                 {
@@ -116,7 +115,7 @@ namespace MarkLogic_ExcelAddin
             public ColorScheme TryGetColorScheme()
             {
                 //assume default - theme registry key not always set on install of Office
-                //set for sureo once user sets color scheme manually from button
+                //set for sure once user sets color scheme manually from button
                 ColorScheme CurrentColorScheme = (ColorScheme)Enum.Parse(typeof(ColorScheme), "1");
                 try
                 {
@@ -355,8 +354,6 @@ namespace MarkLogic_ExcelAddin
                     Excel.Worksheet ws = (Excel.Worksheet)wb.Worksheets[1];
                     ws.Name = name;
                     wbname = wb.Name;
-                    //ws.Activate();
-                    //see note above (function sig), name defaults to Sheet1
                 }
                 catch (Exception e)
                 {
@@ -366,15 +363,6 @@ namespace MarkLogic_ExcelAddin
                 return wbname;
             }
 
-            /* public String addWorksheet()
-             {
-                 //add default, return name of added ws
-                 string ws = "FOO";
-                 return ws;
-             }
-             * */
-
-            //have to account for empty string "", what's up with overloaded functions not working?
             public String addWorksheet(string name)//#sheets as param?
             {
                 string message = "";
@@ -382,9 +370,7 @@ namespace MarkLogic_ExcelAddin
                 try
                 {
                     object missing = Type.Missing;
-                    int count = 1;  //see note in function sig
-                    // object after = "Sheet2";
-                    // Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Worksheets.Add(missing,missing,missing,missing);
+                    int count = 1; 
                     ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Worksheets.Add(missing, Globals.ThisAddIn.Application.ActiveWorkbook.Worksheets[/*"Sheet1"*/Globals.ThisAddIn.Application.ActiveWorkbook.Worksheets.Count], count, missing);
 
                     ws.Name = name;
@@ -427,7 +413,6 @@ namespace MarkLogic_ExcelAddin
                     object missing = Type.Missing;
                     ((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]).Select(missing);
 
-                    //Globals.ThisAddIn.Application.Workbooks[name].Activate();
                 }
                 catch (Exception e)
                 {
@@ -440,7 +425,7 @@ namespace MarkLogic_ExcelAddin
 
             public String addNamedRange(string coordinate1, string coordinate2, string rngName)
             {
-                //MessageBox.Show(coordinate1 + " " + coordinate2);
+
                 string message = "";
                 object missing = Type.Missing;
 
@@ -454,42 +439,6 @@ namespace MarkLogic_ExcelAddin
                     Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
                     Excel.Name nm = ws.Names.Add(rngName, rg, true, missing, missing, missing, missing, missing, missing, missing, missing);
 
-                    //test autofilter
-                    //Excel.XlAutoFilterOperator.xlAnd, missing, true
-
-                    //this works, have to break out into own function, also, clearCells for named range removes
-                    //"<>" selects all non empty
-                    //otherwise, use criteria
-                    // offset, criteria1, operator (and/or), criteria2,visibledropdown
-                    //rg.AutoFilter(1,missing,Excel.XlAutoFilterOperator.xlAnd,missing, true);
-                    // rg.AutoFilter(1, "22", Excel.XlAutoFilterOperator.xlAnd, "23", true);
-                    // rg.AutoFilter(1, "Sue", Excel.XlAutoFilterOperator.xlAnd, missing, true);
-
-
-
-                    // MessageBox.Show("NAME: "+nm.Name + "| Refers to: " + nm.RefersTo.ToString());
-
-                    /*  string names = "There are " + ws.Names.Count + " names: ";
-
-                      Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
-                      MessageBox.Show(ns.Count+"");
-
-                      foreach(Excel.Name n in ns)
-                          MessageBox.Show("NAMES ARE: " + n.Name);
-
-                      */
-
-
-                    /*System.Collections.IEnumerator en = ws.Names.GetEnumerator();
-                    while (en.MoveNext())
-                    {
-                        object nameObj = en.Current;
-                        Excel.Name name = nameObj as Excel.Name;
-                        if (name != null)
-                            names += name.Name;
-                    }*/
-                    // Excel.Names ns = ws.Names;
-                    // foreach(Excel.Name n in ns)
                 }
                 catch (Exception e)
                 {
@@ -503,7 +452,6 @@ namespace MarkLogic_ExcelAddin
 
             public String addAutoFilter(string coordinate1, string coordinate2, string criteria1, string v_operator, string criteria2)
             {
-                //MessageBox.Show("c1: " + coordinate1 + " c2: " + coordinate2 + " crit1: " + criteria1 + " op: " + v_operator + " crit2: " + criteria2);
                 string message = "";
                 object missing = Type.Missing;
 
@@ -511,8 +459,6 @@ namespace MarkLogic_ExcelAddin
                 {
                     Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
                     Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
-
-                    //rg.AutoFilter(1,missing,Excel.XlAutoFilterOperator.xlAnd,missing, true);
                     rg.AutoFilter(1, "<>", Excel.XlAutoFilterOperator.xlOr, missing, true);
                 }
                 catch (Exception e)
@@ -532,13 +478,7 @@ namespace MarkLogic_ExcelAddin
                 string names = "";
                 try
                 {
-                    // Excel.Names nnn = Globals.ThisAddIn.Application.Names;
-                    // foreach (Excel.Name x in nnn)
-                    //   MessageBox.Show("name is " + x.Name);
-
                     Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
-                    //Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
-                    //Excel.Names ns = ws.Names;
 
                     foreach (Excel.Name n in ns)
                         names += n.Name + ":";
@@ -560,11 +500,6 @@ namespace MarkLogic_ExcelAddin
             public String setActiveRangeByName(string rngName)
             {
                 String message = "";
-
-                //first get activeworksheet name (don't need this, unless we reset to original page
-                //Excel.Worksheet w = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
-                //MessageBox.Show("NAME OF SHEET"+w.Name+"NAME OF RANGE "+rngName);
-                //get all worksheet names
                 object missing = Type.Missing;
             try{
 
@@ -572,14 +507,14 @@ namespace MarkLogic_ExcelAddin
                 Excel.Range r = null;
 
                 //loop thru all sheets til we find range, return first, else, give up
-                //names have to be unique, so this seems like a safe bet
+                //names have to be unique
                 foreach (Excel.Worksheet n in ws)
                 {
                     string wsname = n.Name;
                     setActiveWorksheet(wsname);
                     try
                     {
-                        // MessageBox.Show("IN TRY");
+
                         r = n.get_Range(rngName, missing);
                         if (r != null)
                         {
@@ -606,88 +541,33 @@ namespace MarkLogic_ExcelAddin
             public String clearNamedRange(string rngName)
             {
                 String message = "";
-                // int ctlIndex = Globals.Sheet1.Controls.IndexOf(nm.NameLocal.ToString());
-                //object ctl = Globals.Sheet1.Controls[ctlIndex];
-                //Microsoft.Office.Tools.Excel.NamedRange nr = ctl as Microsoft.Office.Tools.Excel.NamedRange;
-                //nr.Delete();
-                /////\
-
-                //Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
                 object missing = Type.Missing;
                 try
                 {
-
-                    //try using names first
-                    //Excel.Sheets ws = Globals.ThisAddIn.Application.ActiveWorkbook.Worksheets;//Globals.ThisAddIn.Application.Worksheets;
                     String names = getActiveWorkbookWorkSheetNames();
-
-                    //how to set active worksheet sheet
-                    ///((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]).Select(missing);
-
-                    //int ctlIdx = Globals.ThisAddIn.DataBindings.Control.Controls.
-                    //Globals.ThisAddIn.Application.ThisWorkbook.
-                    //object ctl = Globals.ThisAddIn.DataBindings.Control.Controls[ctlIdx];
-                    //Tools.NamedRange nr = ctl as Tools.NamedRange;
-                    //nr.Delete(); 
-
                     Excel.Range r = null;
 
-                    //loop thru all sheets til we find range, return first, else, give up
-                    //names have to be unique, so this seems like a safe bet
-                    // foreach (Excel.Worksheet n in ws)
                     char x = '|';
                     foreach (String name in names.Split(x))
                     {
-                        // MessageBox.Show("NAME " + name);
-
                         setActiveWorksheet(name);
                         Excel.Worksheet n = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
-
                         try
                         {
-                            // MessageBox.Show("IN TRY");
+
                             r = n.get_Range(rngName, missing);
                             if (r != null)
                             {
-                                //Excel.Name nn = (Excel.Name)r.Name;
-                                //MessageBox.Show("NAME: "+nn.Name);
                                 r.Select();
                                 r.Clear();
-                                //r.Name = "";
-
-                                /*     Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
-                                     foreach (Excel.Name nDel in ns)
-                                     {
-                                         MessageBox.Show("NAME" + nDel.Name);
-                                         if (nDel.Name.EndsWith(rngName))
-                                         {
-                                             MessageBox.Show("deleting name");
-                                             nDel.Delete();
-                                         }
-                                     }
-                                 * */
-                                //r.Name="";
-                                //r.Name = "";
-                                // Tools.NamedRange nr = (Tools.NamedRange)r.Name;
-                                //nr.Delete();
-                                //nr.Delete();
-
-                                //Excel.Name nnn = (Excel.Name)r.Name;
-                                //MessageBox.Show(" HERE"+nnn.Name);
-                                //r.Name = "";
-
-
-
                                 break;
                             }
                         }
 
                         catch (Exception e)
                         {
-                            //MessageBox.Show("IN CATCH"+e.Message+e.StackTrace);
                             r = null;
                         }
-
 
                     }
                 }
@@ -702,7 +582,6 @@ namespace MarkLogic_ExcelAddin
 
             public String clearRange(string startcoord, string endcoord)
             {
-                //MessageBox.Show("HERE");
                 string message = "";
                 object missing = Type.Missing;
                 try
@@ -730,10 +609,8 @@ namespace MarkLogic_ExcelAddin
                 Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
                 foreach (Excel.Name nDel in ns)
                 {
-                    // MessageBox.Show("NAME" + nDel.Name);
                     if (nDel.Name.EndsWith(rngName))
                     {
-                        //MessageBox.Show("deleting name");
                         nDel.Delete();
                     }
                 }
@@ -763,10 +640,7 @@ namespace MarkLogic_ExcelAddin
                     MessageBox.Show("COUNT" + r.Count);
 
                     foreach (Excel.Range r2 in r)
-                    {
-                        //r4.get_Address(true, true, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, null, null)
-                        //MessageBox.Show("" + r2.Column + r2.Row);
-
+                    { 
                         if (count == start)
                         {
                             firstCellCoordinate = r2.get_Address(true, true, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, null, null);
@@ -781,7 +655,6 @@ namespace MarkLogic_ExcelAddin
                     }
 
                     message = firstCellCoordinate + ":" + lastCellCoordinate;
-                    //MessageBox.Show("RANGE: " + message);
                 }
                 catch (Exception e)
                 {
@@ -815,21 +688,6 @@ namespace MarkLogic_ExcelAddin
                         value2 = r.Value2 + "";
                         formula = r.Formula + "";
 
-                        /*               try
-                                          {
-                                              if (rng.Name!=null)
-                                              {
-                                                  Excel.Name name = r.Name as Excel.Name;
-                                                  MessageBox.Show(name.Name);
-                                              }
-                                          }
-                                          catch (Exception exx)
-                                          {
-                                              MessageBox.Show("ERROR"+exx.Message+"      "+exx.StackTrace);
-                                          }
-                       */
-                        // MessageBox.Show("NAME: "+r.Name + "");
-
                         string cell = "";
                         cell = "{ \"rowIdx\": " + "\"" + row + "\""
                              + ",\"colIdx\": " + "\"" + col + "\""
@@ -839,36 +697,14 @@ namespace MarkLogic_ExcelAddin
                              + "}";
 
                         cells += cell + ",";
-
-                        // MessageBox.Show("CELL: "+cell);
                     }
 
                     cells = cells.Substring(0, cells.Length - 1);
                     cells += "]";
-                    MessageBox.Show("message: " + cells);
+                    //MessageBox.Show("message: " + cells);
 
                     message = cells;
 
-                    /*   row = r.Row.ToString();
-                       col = r.Column.ToString();
-                       //cell = r.Column + ":" + r.Row;
-                       r1c1 = "R" + r.Row + "C" + r.Column;
-                       MessageBox.Show("R1C1" + r1c1);
-                       //coordinate=convertR1C1ToA1(r.Row.ToString(),r.Column.ToString());
-                       if (r.Value2 != null)
-                       {
-                           value2 = r.Value2.ToString();
-                       }
-
-                       if (r.Formula != null)
-                       {
-                           formula = r.Formula.ToString();
-                       }
-
-                       message = row + ":" + col + ":" + value2 + ":" + formula;
-                       MessageBox.Show("MESSAGE " + message);
-                       // MessageBox.Show("coordinate: "+coordinate+" r1c1: "+r1c1+" ID: " + r.ID + " value2: " + r.Value2 + " formula: " + r.Formula + " XPATH: " + r.XPath);
-                   */
                 }
                 catch (Exception e)
                 {
@@ -882,7 +718,6 @@ namespace MarkLogic_ExcelAddin
             public String getActiveCell()
             {
                 object missing = Type.Missing;
-                string coordinate = "";
                 string col = "";
                 string row = "";
                 string r1c1 = "";
@@ -896,10 +731,8 @@ namespace MarkLogic_ExcelAddin
 
                     row = r.Row.ToString();
                     col = r.Column.ToString();
-                    //cell = r.Column + ":" + r.Row;
                     r1c1 = "R" + r.Row + "C" + r.Column;
-                    MessageBox.Show("R1C1" + r1c1);
-                    //coordinate=convertR1C1ToA1(r.Row.ToString(),r.Column.ToString());
+                    //MessageBox.Show("R1C1" + r1c1);
                     if (r.Value2 != null)
                     {
                         value2 = r.Value2.ToString();
@@ -912,7 +745,6 @@ namespace MarkLogic_ExcelAddin
 
                     message = row + ":" + col + ":" + value2 + ":" + formula;
                     MessageBox.Show("MESSAGE " + message);
-                    // MessageBox.Show("coordinate: "+coordinate+" r1c1: "+r1c1+" ID: " + r.ID + " value2: " + r.Value2 + " formula: " + r.Formula + " XPATH: " + r.XPath);
                 }
                 catch (Exception e)
                 {
@@ -964,9 +796,9 @@ namespace MarkLogic_ExcelAddin
 
                 r4.Activate();
 
-                MessageBox.Show(r4.get_Address(true, true, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, null, null));
+                //MessageBox.Show(r4.get_Address(true, true, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, null, null));
 
-                MessageBox.Show("PAUSING");
+                //MessageBox.Show("PAUSING");
 
                 //sets active cell using a1
                 Excel.Range r5 = Globals.ThisAddIn.Application.ActiveCell;
@@ -1026,7 +858,6 @@ namespace MarkLogic_ExcelAddin
                 // Excel.Range r = w.get_Range("A1", "B2");
                 // r.Formula = "=AVERAGE(A1,B2)";
                 // r.Calculate();
-
 
                 return text;
 
@@ -1115,8 +946,6 @@ namespace MarkLogic_ExcelAddin
                 try
                 {
                     Excel.Range r2 = Globals.ThisAddIn.Application.get_Range(coordinate, missing);
-                    //string test = r2.get_Address(missing, missing, Excel.XlReferenceStyle.xlR1C1, missing,missing);
-                    //MessageBox.Show("TEST A1toR1C1: " + test);
                     message = r2.Column + ":" + r2.Row;
                 }
                 catch(Exception e)
@@ -1130,10 +959,6 @@ namespace MarkLogic_ExcelAddin
             //utility, using so cell objects have both coordinate references
             public String convertR1C1ToA1(string rowIdx, string colIdx)
             {
-
-                //string r1c1="R"+rowIdx+"C"+colIdx;
-                //MessageBox.Show("R1C1="+r1c1);
-                //try get_Range with r1C1 (type it out R1C1: etc. 
                 string message = "";
                 object missing = Type.Missing;
 
@@ -1145,8 +970,6 @@ namespace MarkLogic_ExcelAddin
                     Excel.Range r2 = Globals.ThisAddIn.Application.get_Range("A1", missing);
                     r2 = r2.get_Offset(r, c);
                     message = r2.get_Address(r, c, Excel.XlReferenceStyle.xlA1, missing, missing);
-
-                    //MessageBox.Show("TEST 2: " + test);
                 }
                 catch (Exception e)
                 {
@@ -1154,7 +977,6 @@ namespace MarkLogic_ExcelAddin
                     message = "error: " + errorMsg;
                 }
 
-                //MessageBox.Show("RETURNING" + message);
                 return message;
             }
 
@@ -1164,13 +986,7 @@ namespace MarkLogic_ExcelAddin
                 object missing = Type.Missing;
                 try
                 {
-                    //could do it by name, but then do we reset if user on different sheet?
-                    //plus, we have other functions for getting/setting active worksheet
-                    //can just loop through to delete all contents
-
-                    //Excel.Worksheet ws =   (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]; // ((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]).Select( missing);
                     Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
-                    //ws.Select(missing);
                     ws.Cells.Select();
                     ws.Cells.Clear();
                     Excel.Range r = (Excel.Range)ws.Cells[1, 1];
@@ -1242,7 +1058,7 @@ namespace MarkLogic_ExcelAddin
                     {
                         //in use
                         //need to save to copy, delete orig, save to orig, delete copy?
-                        //lame, but may work til i come up with something else
+                        //lame, but may work til we come up with something else
                         if (wb.Name.Equals(title))
                         {
                             wb.SaveAs(tmpt, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
@@ -1310,9 +1126,7 @@ namespace MarkLogic_ExcelAddin
                 try
                 {
                     System.Net.WebClient Client = new System.Net.WebClient();
-                    //Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
                     Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-                    //string tmppath = getTempPath();
                     tmpdoc = path + title;
                     //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
                     Client.DownloadFile(url, tmpdoc);//@"C:\test2.xlsx");
@@ -1348,51 +1162,17 @@ namespace MarkLogic_ExcelAddin
                 catch (Exception e)
                 {
                     string origmsg = "A document with the name '"+title+"' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
-                    string caption = "Microsoft Office Excel";
-                   // MessageBox.Show(origmsg, caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
                     string errorMsg = e.Message;
                     message = "error: " + errorMsg;
-
-                    //MessageBox.Show(origmsg);
-                    /* string choiceMessage = "It looks like you are attempting to open a workbook that you  already have open.\nWould you like to replace the open workbook with the workbook you've selected?";
-                string caption = "workbook with same title already open";
-                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                DialogResult result;
-
-                // Displays the MessageBox.
-
-                result = MessageBox.Show(choiceMessage, caption, buttons);
-
-                if (result == System.Windows.Forms.DialogResult.Yes)
-                {
-                    string wbname = getActiveWorkbookName();
-                    setActiveWorkbook(title);
-                    Globals.ThisAddIn.Application.ActiveWorkbook.Close(false,missing,missing);
-                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-
-                    // Closes the parent form.
-
-                    MessageBox.Show("YES");
-
+                   
                 }
-                * */
-
-
-                    //MessageBox.Show("You are attempting to download a workbook that you already have open.  Would you like to replace the workbook you have open?");
-                    //MessageBox.Show("TEST");
-                    // MessageBox.Show("problem" + e.Message + "   " + e.StackTrace);
-                }
-
 
                 return message;
             }
 
-        //NOT ACCOUNTED FOR
-
             public String openXlsxWebDAV(string documenturi)
             {
-                //MessageBox.Show("IN ADDIN");
+
                 string message="";
                 object missing = Type.Missing;
                 object f = false;
@@ -1410,267 +1190,10 @@ namespace MarkLogic_ExcelAddin
 
             }
 
-
-
-       /*   
-        * public String openXlsx2(string path, string title, string url, string user, string pwd)
-            {
-                // MessageBox.Show("in the addin filename:"+filename+ "   uri: "+uri);
-                string message = "";
-                object missing = Type.Missing;
-                Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
-
-                try
-                {
-                    using (MemoryStream memoryStream = new MemoryStream())
-                    {
-                      System.Net.WebClient Client = new System.Net.WebClient();
-                      //Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
-                      Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-                      //string tmppath = getTempPath();
-                      string tmpdoc = path + title;
-                      //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
-                      byte[] byteArray = Client.DownloadData(url);
-                      //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-                      memoryStream.Write(byteArray, 0, byteArray.Length);
-
-                        //no way to open Excel from memory stream at this point, can do this in Word/powerpoint by serializing as base64 string, or just returning xml for document
-                        //and using insertXML
-                      using (OpenXmlPkg.SpreadsheetDocument xldoc = OpenXmlPkg.SpreadsheetDocument.Open(memoryStream, true))
-                      {
-                        
-                      }
-                      
-
-                       
-                    }
-                     
-                    //OpenXmlPkg.SpreadsheetDocument sd
-                    /*
-                     * another way 
-                                        byte[] byteArray =  Client.DownloadData("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx");//File.ReadAllBytes("Test.docx");
-                                        using (MemoryStream mem = new MemoryStream())
-                                        {
-
-                                            mem.Write(byteArray, 0, (int)byteArray.Length);
-
-                                            // using (OpenXmlPkg.SpreadsheetDocument sd = OpenXmlPkg.SpreadsheetDocument.Open(mem, true))
-                                            // {
-                                            // }
-                        
-                                            using (FileStream fileStream = new FileStream(@"C:\Test2.docx", System.IO.FileMode.CreateNew))
-                                            {
-
-                                                mem.WriteTo(fileStream);
-
-                                            }
-
-                       
-                        
-                                        }
-                     
-
-                    //OpenXmlPkg.SpreadsheetDocument xlPackage;
-                    //xlPackage = OpenXmlPkg.SpreadsheetDocument.Open(strm, false);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("problem" + e.Message + "   " + e.StackTrace);
-                }
-
-
-                return message;
-            }
-        */
-
-            
-/*
-            public String openXlsx(string filename, string uri)
-            {
-               // MessageBox.Show("in the addin filename:"+filename+ "   uri: "+uri);
-                string message = "";
-                object missing = Type.Missing;
-
-                try
-                {
-                    System.Net.WebClient Client = new System.Net.WebClient();
-                    //Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
-                    Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
-                    string tmppath = getTempPath();
-                    string tmpdoc = tmppath + filename;
-                    //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
-                    Client.DownloadFile("http://localhost:8000/test.xqy?uid="+uri, tmpdoc);//@"C:\test2.xlsx");
-                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-                   
-/*
- * another way 
-                    byte[] byteArray =  Client.DownloadData("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx");//File.ReadAllBytes("Test.docx");
-                    using (MemoryStream mem = new MemoryStream())
-                    {
-
-                        mem.Write(byteArray, 0, (int)byteArray.Length);
-
-                        // using (OpenXmlPkg.SpreadsheetDocument sd = OpenXmlPkg.SpreadsheetDocument.Open(mem, true))
-                        // {
-                        // }
-                        
-                        using (FileStream fileStream = new FileStream(@"C:\Test2.docx", System.IO.FileMode.CreateNew))
-                        {
-
-                            mem.WriteTo(fileStream);
-
-                        }
-
-                       
-                        
-                    }
-
-
-                    //OpenXmlPkg.SpreadsheetDocument xlPackage;
-                    //xlPackage = OpenXmlPkg.SpreadsheetDocument.Open(strm, false);
-                }
-                catch (Exception e)
-                {
-                    string errorMsg = e.Message;
-                    message = "error: " + errorMsg;
-                    //MessageBox.Show("problem"+e.Message+"   "+e.StackTrace);
-                }
-
-
-                return message;
-            }
- * */
-/*
-            public String saveActiveWorkbook(string path, string title, string url, string user, string pwd)
-            {
-                object missing = Type.Missing;
-                string newtitle = path + title;
-                MessageBox.Show("NEW PATH" + newtitle);
-                object t = title;
-                Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
-                try
-                {
-                    wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
-
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("that shizz didn't work?!?!?" + e.Message + "===" + e.StackTrace);
-                }
-
-                System.Net.WebClient Client = new System.Net.WebClient();
-                //Client.Headers.AllKeys;
-                Client.Headers.Add("enctype", "multipart/form-data");
-                //Client.Headers.Add("Content-Type","application/x-www-form-urlencoded");
-                Client.Headers.Add("Content-Type", "application/octet-stream");
-
-                //Client.Headers.Add("Content-Transfer-Encoding","application/octet-stream");
-
-                try
-                {
-
-                    // FileStream fs = new FileStream(@"C:\Default.xlsx", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                    FileStream fs = new FileStream(title, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    int length = (int)fs.Length;
-                    byte[] content = new byte[length];
-                    fs.Read(content, 0, length);
-
-
-
-
-                    try
-                    {
-                        // MessageBox.Show("URL: " + url);
-                        // MessageBox.Show("TITLE " + title);
-                        //Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
-                        Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-                        //Client.UploadFile("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST", @"c:\Default.xlsx");//@"c:\tmp.xml");
-
-                        //Client.UploadData("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST",content);
-                        Client.UploadData(url, "POST", content);
-                        //Client.UploadFile(url, "POST", title);
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show("ERROR" + e.Message + "      " + e.StackTrace);
-                    }
-
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("THIS BLEW UP:" + e.Message + "                 " + e.StackTrace);
-                }
-                return "foo";
-            }
-*/
-            
-/*
-            public String saveXlsx(string title, string url)
-            {
-                object missing = Type.Missing;
-                object t = title;
-                Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
-                try
-                {
-                    wb.SaveAs(t, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
-                    
-                }
-                catch (Exception e)
-                {
-                   // MessageBox.Show("that shizz didn't work?!?!?" + e.Message + "===" + e.StackTrace);
-                }
-
-                System.Net.WebClient Client = new System.Net.WebClient();
-                //Client.Headers.AllKeys;
-                Client.Headers.Add("enctype", "multipart/form-data");
-               //Client.Headers.Add("Content-Type","application/x-www-form-urlencoded");
-                Client.Headers.Add("Content-Type", "application/octet-stream");
-
-              //Client.Headers.Add("Content-Transfer-Encoding","application/octet-stream");
-
-               try
-               {
-                   
-                  // FileStream fs = new FileStream(@"C:\Default.xlsx", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                   FileStream fs = new FileStream(title, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                   int length = (int)fs.Length;
-                   byte[] content = new byte[length];
-                   fs.Read(content, 0, length);
-
-
-
-
-                   try
-                   {
-                      // MessageBox.Show("URL: " + url);
-                      // MessageBox.Show("TITLE " + title);
-                       //Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
-                       Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
-                       //Client.UploadFile("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST", @"c:\Default.xlsx");//@"c:\tmp.xml");
-                       
-                       //Client.UploadData("http://localhost:8000/addinSampleExcelMeta/upload2.xqy?uid=Default.xlsx", "POST",content);
-                       Client.UploadData(url, "POST", content);
-                       //Client.UploadFile(url, "POST", title);
-                   }
-                   catch (Exception e)
-                   {
-                       MessageBox.Show("ERROR" + e.Message + "      " + e.StackTrace);
-                   }
-
-               }
-               catch (Exception e)
-               {
-                   MessageBox.Show("THIS BLEW UP:" +e.Message+"                 "+ e.StackTrace);
-               }
-                return "foo";
-            }
-        */
             public String saveXlsxWebDAV(string title)
             {
                 string message = "";
                 object missing = Type.Missing;
-                //string  tmp = System.IO.Path.GetTempPath(); 
-                MessageBox.Show("document: "+title);
                 object t = title;
                Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
                try
@@ -1705,40 +1228,9 @@ namespace MarkLogic_ExcelAddin
                 try
                 {
                     object missing = Type.Missing;
-                               // Excel.Application excelApp;
-                               // excelApp = new Microsoft.Office.Interop.Excel.Application();
-                               // excelApp.Visible = true;
-                    /*these 2 work, but overwrite existing try add new workbook first below
-                    Excel.Workbook wb =  Globals.ThisAddIn.Application.Workbooks.Open("http://localhost:8011/openinml.xlsx", missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing);
-                    wb.Activate();
-                    */
-                               // excelApp.Workbooks.Open("http://localhost:8011/openinml.xlsx", missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing);
-
-
-
-                    //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
                     object f = false;
                     Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
                     wb = Globals.ThisAddIn.Application.Workbooks.Open("http://localhost:8011/openinml.xlsx", missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-                   
-                    //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
-                   //wb.ChangeFileAccess(Excel.XlFileAccess.xlReadWrite, missing, true);
-                    
-                   // Excel.Workbook wb2 = Globals.ThisAddIn.Application.ActiveWorkbook;
-                   // wb2.ChangeFileAccess(Excel.XlFileAccess.xlReadWrite, missing, true);
-                  
-                    //Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
-                    //app.Workbooks.Open("http://localhost:8011/openinml.xlsx", missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-                    //wb = app.Workbooks[1];
-                   // wb.Activate();
-
-                   
-
-
-                    
-
-
-
                 }
                 catch (Exception e)
                 {
@@ -1747,17 +1239,6 @@ namespace MarkLogic_ExcelAddin
 
                 return "foo";
             }
-
-            //TESTER
-            //functions we may want
-            //clearNamedRange
-            //addComment
-            //clear workbook
-            //clear sheet
-            //clear range
-
-
-            //remove named range?
 
             //stubbed out, but not currently used. 
             public String setCellValueR1C1(int rowIndex, int colIndex, string value)
@@ -1771,7 +1252,6 @@ namespace MarkLogic_ExcelAddin
             //for those who don't want to create Cell objects, etc.
             public String insertRows(string edgelist1, string edgelist2, string vertices)
             {
-                //  MessageBox.Show("TESTING FROM WITHIN ADDIN");
                 //Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
                 // Excel.Worksheet xls = null;
                 Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
@@ -1916,7 +1396,7 @@ namespace MarkLogic_ExcelAddin
 
                 return "";
             }
-
+        //not used, testing
             public String addCustomProperty(string key, string value)
             {
                 string message = "";
