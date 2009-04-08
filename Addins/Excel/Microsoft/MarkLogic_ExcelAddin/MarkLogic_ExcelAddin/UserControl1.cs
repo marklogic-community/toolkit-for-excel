@@ -447,46 +447,55 @@ namespace MarkLogic_ExcelAddin
                 //add check for name
                 //get range, check name
 
-                Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
-                Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
-                Excel.Name nm = ws.Names.Add(rngName, rg, true, missing, missing, missing, missing, missing, missing, missing, missing);
-
-                //test autofilter
-                //Excel.XlAutoFilterOperator.xlAnd, missing, true
-
-                //this works, have to break out into own function, also, clearCells for named range removes
-                //"<>" selects all non empty
-                //otherwise, use criteria
-                // offset, criteria1, operator (and/or), criteria2,visibledropdown
-                //rg.AutoFilter(1,missing,Excel.XlAutoFilterOperator.xlAnd,missing, true);
-                // rg.AutoFilter(1, "22", Excel.XlAutoFilterOperator.xlAnd, "23", true);
-                // rg.AutoFilter(1, "Sue", Excel.XlAutoFilterOperator.xlAnd, missing, true);
-
-
-
-                // MessageBox.Show("NAME: "+nm.Name + "| Refers to: " + nm.RefersTo.ToString());
-
-                /*  string names = "There are " + ws.Names.Count + " names: ";
-
-                  Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
-                  MessageBox.Show(ns.Count+"");
-
-                  foreach(Excel.Name n in ns)
-                      MessageBox.Show("NAMES ARE: " + n.Name);
-
-                  */
-
-
-                /*System.Collections.IEnumerator en = ws.Names.GetEnumerator();
-                while (en.MoveNext())
+                try
                 {
-                    object nameObj = en.Current;
-                    Excel.Name name = nameObj as Excel.Name;
-                    if (name != null)
-                        names += name.Name;
-                }*/
-                // Excel.Names ns = ws.Names;
-                // foreach(Excel.Name n in ns)
+
+                    Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                    Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
+                    Excel.Name nm = ws.Names.Add(rngName, rg, true, missing, missing, missing, missing, missing, missing, missing, missing);
+
+                    //test autofilter
+                    //Excel.XlAutoFilterOperator.xlAnd, missing, true
+
+                    //this works, have to break out into own function, also, clearCells for named range removes
+                    //"<>" selects all non empty
+                    //otherwise, use criteria
+                    // offset, criteria1, operator (and/or), criteria2,visibledropdown
+                    //rg.AutoFilter(1,missing,Excel.XlAutoFilterOperator.xlAnd,missing, true);
+                    // rg.AutoFilter(1, "22", Excel.XlAutoFilterOperator.xlAnd, "23", true);
+                    // rg.AutoFilter(1, "Sue", Excel.XlAutoFilterOperator.xlAnd, missing, true);
+
+
+
+                    // MessageBox.Show("NAME: "+nm.Name + "| Refers to: " + nm.RefersTo.ToString());
+
+                    /*  string names = "There are " + ws.Names.Count + " names: ";
+
+                      Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
+                      MessageBox.Show(ns.Count+"");
+
+                      foreach(Excel.Name n in ns)
+                          MessageBox.Show("NAMES ARE: " + n.Name);
+
+                      */
+
+
+                    /*System.Collections.IEnumerator en = ws.Names.GetEnumerator();
+                    while (en.MoveNext())
+                    {
+                        object nameObj = en.Current;
+                        Excel.Name name = nameObj as Excel.Name;
+                        if (name != null)
+                            names += name.Name;
+                    }*/
+                    // Excel.Names ns = ws.Names;
+                    // foreach(Excel.Name n in ns)
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
 
 
                 return message;
@@ -494,15 +503,23 @@ namespace MarkLogic_ExcelAddin
 
             public String addAutoFilter(string coordinate1, string coordinate2, string criteria1, string v_operator, string criteria2)
             {
-                MessageBox.Show("c1: " + coordinate1 + " c2: " + coordinate2 + " crit1: " + criteria1 + " op: " + v_operator + " crit2: " + criteria2);
+                //MessageBox.Show("c1: " + coordinate1 + " c2: " + coordinate2 + " crit1: " + criteria1 + " op: " + v_operator + " crit2: " + criteria2);
                 string message = "";
                 object missing = Type.Missing;
 
-                Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
-                Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
+                try
+                {
+                    Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                    Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
 
-                //rg.AutoFilter(1,missing,Excel.XlAutoFilterOperator.xlAnd,missing, true);
-                rg.AutoFilter(1, "<>", Excel.XlAutoFilterOperator.xlOr, missing, true);
+                    //rg.AutoFilter(1,missing,Excel.XlAutoFilterOperator.xlAnd,missing, true);
+                    rg.AutoFilter(1, "<>", Excel.XlAutoFilterOperator.xlOr, missing, true);
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
 
                 return message;
 
@@ -513,21 +530,29 @@ namespace MarkLogic_ExcelAddin
             {
                 string message = "";
                 string names = "";
+                try
+                {
+                    // Excel.Names nnn = Globals.ThisAddIn.Application.Names;
+                    // foreach (Excel.Name x in nnn)
+                    //   MessageBox.Show("name is " + x.Name);
 
-                // Excel.Names nnn = Globals.ThisAddIn.Application.Names;
-                // foreach (Excel.Name x in nnn)
-                //   MessageBox.Show("name is " + x.Name);
+                    Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
+                    //Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                    //Excel.Names ns = ws.Names;
 
-                Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
-                //Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
-                //Excel.Names ns = ws.Names;
+                    foreach (Excel.Name n in ns)
+                        names += n.Name + ":";
 
-                foreach (Excel.Name n in ns)
-                    names += n.Name + ":";
+                    names = names.Substring(0, names.Length - 1);
 
-                names = names.Substring(0, names.Length - 1);
+                    message = names;
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
 
-                message = names;
                 return message;
 
             }
@@ -541,6 +566,8 @@ namespace MarkLogic_ExcelAddin
                 //MessageBox.Show("NAME OF SHEET"+w.Name+"NAME OF RANGE "+rngName);
                 //get all worksheet names
                 object missing = Type.Missing;
+            try{
+
                 Excel.Sheets ws = Globals.ThisAddIn.Application.ActiveWorkbook.Worksheets;//Globals.ThisAddIn.Application.Worksheets;
                 Excel.Range r = null;
 
@@ -562,12 +589,17 @@ namespace MarkLogic_ExcelAddin
                     }
                     catch
                     {
-                        MessageBox.Show("IN CATCH");
+                        
                         r = null;
                     }
-
-
                 }
+            }
+            catch(Exception e)
+            {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+            }
+                
                 return message;
             }
 
@@ -582,78 +614,87 @@ namespace MarkLogic_ExcelAddin
 
                 //Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
                 object missing = Type.Missing;
-
-                //try using names first
-                //Excel.Sheets ws = Globals.ThisAddIn.Application.ActiveWorkbook.Worksheets;//Globals.ThisAddIn.Application.Worksheets;
-                String names = getActiveWorkbookWorkSheetNames();
-
-                //how to set active worksheet sheet
-                ///((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]).Select(missing);
-
-                //int ctlIdx = Globals.ThisAddIn.DataBindings.Control.Controls.
-                //Globals.ThisAddIn.Application.ThisWorkbook.
-                //object ctl = Globals.ThisAddIn.DataBindings.Control.Controls[ctlIdx];
-                //Tools.NamedRange nr = ctl as Tools.NamedRange;
-                //nr.Delete(); 
-
-                Excel.Range r = null;
-
-                //loop thru all sheets til we find range, return first, else, give up
-                //names have to be unique, so this seems like a safe bet
-                // foreach (Excel.Worksheet n in ws)
-                char x = '|';
-                foreach (String name in names.Split(x))
+                try
                 {
-                    // MessageBox.Show("NAME " + name);
 
-                    setActiveWorksheet(name);
-                    Excel.Worksheet n = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                    //try using names first
+                    //Excel.Sheets ws = Globals.ThisAddIn.Application.ActiveWorkbook.Worksheets;//Globals.ThisAddIn.Application.Worksheets;
+                    String names = getActiveWorkbookWorkSheetNames();
 
-                    try
+                    //how to set active worksheet sheet
+                    ///((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]).Select(missing);
+
+                    //int ctlIdx = Globals.ThisAddIn.DataBindings.Control.Controls.
+                    //Globals.ThisAddIn.Application.ThisWorkbook.
+                    //object ctl = Globals.ThisAddIn.DataBindings.Control.Controls[ctlIdx];
+                    //Tools.NamedRange nr = ctl as Tools.NamedRange;
+                    //nr.Delete(); 
+
+                    Excel.Range r = null;
+
+                    //loop thru all sheets til we find range, return first, else, give up
+                    //names have to be unique, so this seems like a safe bet
+                    // foreach (Excel.Worksheet n in ws)
+                    char x = '|';
+                    foreach (String name in names.Split(x))
                     {
-                        // MessageBox.Show("IN TRY");
-                        r = n.get_Range(rngName, missing);
-                        if (r != null)
+                        // MessageBox.Show("NAME " + name);
+
+                        setActiveWorksheet(name);
+                        Excel.Worksheet n = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+
+                        try
                         {
-                            //Excel.Name nn = (Excel.Name)r.Name;
-                            //MessageBox.Show("NAME: "+nn.Name);
-                            r.Select();
-                            r.Clear();
-                            //r.Name = "";
+                            // MessageBox.Show("IN TRY");
+                            r = n.get_Range(rngName, missing);
+                            if (r != null)
+                            {
+                                //Excel.Name nn = (Excel.Name)r.Name;
+                                //MessageBox.Show("NAME: "+nn.Name);
+                                r.Select();
+                                r.Clear();
+                                //r.Name = "";
 
-                            /*     Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
-                                 foreach (Excel.Name nDel in ns)
-                                 {
-                                     MessageBox.Show("NAME" + nDel.Name);
-                                     if (nDel.Name.EndsWith(rngName))
+                                /*     Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
+                                     foreach (Excel.Name nDel in ns)
                                      {
-                                         MessageBox.Show("deleting name");
-                                         nDel.Delete();
+                                         MessageBox.Show("NAME" + nDel.Name);
+                                         if (nDel.Name.EndsWith(rngName))
+                                         {
+                                             MessageBox.Show("deleting name");
+                                             nDel.Delete();
+                                         }
                                      }
-                                 }
-                             * */
-                            //r.Name="";
-                            //r.Name = "";
-                            // Tools.NamedRange nr = (Tools.NamedRange)r.Name;
-                            //nr.Delete();
-                            //nr.Delete();
+                                 * */
+                                //r.Name="";
+                                //r.Name = "";
+                                // Tools.NamedRange nr = (Tools.NamedRange)r.Name;
+                                //nr.Delete();
+                                //nr.Delete();
 
-                            //Excel.Name nnn = (Excel.Name)r.Name;
-                            //MessageBox.Show(" HERE"+nnn.Name);
-                            //r.Name = "";
-
+                                //Excel.Name nnn = (Excel.Name)r.Name;
+                                //MessageBox.Show(" HERE"+nnn.Name);
+                                //r.Name = "";
 
 
-                            break;
+
+                                break;
+                            }
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        //MessageBox.Show("IN CATCH"+e.Message+e.StackTrace);
-                        r = null;
-                    }
+
+                        catch (Exception e)
+                        {
+                            //MessageBox.Show("IN CATCH"+e.Message+e.StackTrace);
+                            r = null;
+                        }
 
 
+                    }
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
                 }
 
                 return message;
@@ -661,12 +702,20 @@ namespace MarkLogic_ExcelAddin
 
             public String clearRange(string startcoord, string endcoord)
             {
-                MessageBox.Show("HERE");
+                //MessageBox.Show("HERE");
                 string message = "";
                 object missing = Type.Missing;
-                Excel.Worksheet w = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;//Globals.ThisAddIn.Application.Worksheets;
-                Excel.Range r = w.get_Range(startcoord, endcoord);
-                r.Clear();
+                try
+                {
+                    Excel.Worksheet w = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;//Globals.ThisAddIn.Application.Worksheets;
+                    Excel.Range r = w.get_Range(startcoord, endcoord);
+                    r.Clear();
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
 
                 return message;
 
@@ -676,6 +725,7 @@ namespace MarkLogic_ExcelAddin
             {
                 string message = "";
                 object missing = Type.Missing;
+                try{
 
                 Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
                 foreach (Excel.Name nDel in ns)
@@ -687,6 +737,12 @@ namespace MarkLogic_ExcelAddin
                         nDel.Delete();
                     }
                 }
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
 
 
                 return message;
@@ -697,34 +753,41 @@ namespace MarkLogic_ExcelAddin
                 string message = "";
                 string firstCellCoordinate = "";
                 string lastCellCoordinate = "";
-
-                Excel.Range r = (Excel.Range)Globals.ThisAddIn.Application.Selection;
-
-                int start = 1;
-                int end = r.Count;
-                int count = 1;
-                MessageBox.Show("COUNT" + r.Count);
-
-                foreach (Excel.Range r2 in r)
+                try
                 {
-                    //r4.get_Address(true, true, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, null, null)
-                    //MessageBox.Show("" + r2.Column + r2.Row);
+                    Excel.Range r = (Excel.Range)Globals.ThisAddIn.Application.Selection;
 
-                    if (count == start)
+                    int start = 1;
+                    int end = r.Count;
+                    int count = 1;
+                    MessageBox.Show("COUNT" + r.Count);
+
+                    foreach (Excel.Range r2 in r)
                     {
-                        firstCellCoordinate = r2.get_Address(true, true, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, null, null);
-                    }
-                    else if (count == end)
-                    {
-                        lastCellCoordinate = r2.get_Address(true, true, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, null, null);
+                        //r4.get_Address(true, true, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, null, null)
+                        //MessageBox.Show("" + r2.Column + r2.Row);
+
+                        if (count == start)
+                        {
+                            firstCellCoordinate = r2.get_Address(true, true, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, null, null);
+                        }
+                        else if (count == end)
+                        {
+                            lastCellCoordinate = r2.get_Address(true, true, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, null, null);
+                        }
+
+                        count++;
+
                     }
 
-                    count++;
-
+                    message = firstCellCoordinate + ":" + lastCellCoordinate;
+                    //MessageBox.Show("RANGE: " + message);
                 }
-
-                message = firstCellCoordinate + ":" + lastCellCoordinate;
-                MessageBox.Show("RANGE: " + message);
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
                 return message;
             }
 
@@ -985,21 +1048,31 @@ namespace MarkLogic_ExcelAddin
                 }
                 return message;
             }
-        /*Testing for background setting
-         * need to update function above,overloading not working
-         * take sheetname,if "", then active worksheet, else sheet specified
+  
             public String setCellValueA1(string coordinate, string value, string sheetname)
             {
-                MessageBox.Show("setting for sheet: " + sheetname);
+                //MessageBox.Show("setting for sheet: " + sheetname);
                 object missing = Type.Missing;
                 string message = "";
 
                 try
                 {
-                    Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks["Book1"];
-                    Excel.Worksheet w = (Excel.Worksheet)wb.Sheets[sheetname]; // (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name];
-                    Excel.Range r2 = w.get_Range(coordinate, missing);
-                    r2.Value2 = value;
+                    Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
+                
+                    if (sheetname.Equals("active"))
+                    {
+                        Excel.Worksheet w = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
+                        Excel.Range r2 = w.get_Range(coordinate, missing);
+                        r2.Value2 = value;
+                    }
+                    else
+                    {
+                        Excel.Worksheet w = (Excel.Worksheet)wb.Sheets[sheetname]; // (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name];
+
+                        Excel.Range r2 = w.get_Range(coordinate, missing);
+                        r2.Value2 = value;
+                    }
+                  
                 }
                 catch (Exception e)
                 {
@@ -1010,7 +1083,8 @@ namespace MarkLogic_ExcelAddin
 
                 return message;
             }
-        */
+
+        /*
             //how we set cell values currently
             //may want to use entire cell object
             public String setCellValueA1(string coordinate, string value)
@@ -1031,17 +1105,25 @@ namespace MarkLogic_ExcelAddin
                 }
                 return message;
             }
-
+        */
 
             //utility, using so cell objects have both coordinate references
             public String convertA1ToR1C1(string coordinate)
             {
                 string message = "";
                 object missing = Type.Missing;
-                Excel.Range r2 = Globals.ThisAddIn.Application.get_Range(coordinate, missing);
-                //string test = r2.get_Address(missing, missing, Excel.XlReferenceStyle.xlR1C1, missing,missing);
-                //MessageBox.Show("TEST A1toR1C1: " + test);
-                message = r2.Column + ":" + r2.Row;
+                try
+                {
+                    Excel.Range r2 = Globals.ThisAddIn.Application.get_Range(coordinate, missing);
+                    //string test = r2.get_Address(missing, missing, Excel.XlReferenceStyle.xlR1C1, missing,missing);
+                    //MessageBox.Show("TEST A1toR1C1: " + test);
+                    message = r2.Column + ":" + r2.Row;
+                }
+                catch(Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
                 return message;
             }
 
@@ -1068,7 +1150,8 @@ namespace MarkLogic_ExcelAddin
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("ERROR :" + e.Message);
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
                 }
 
                 //MessageBox.Show("RETURNING" + message);
@@ -1077,20 +1160,27 @@ namespace MarkLogic_ExcelAddin
 
             public String clearActiveWorksheet()
             {
-                string message = "FOO";
+                string message = "";
                 object missing = Type.Missing;
+                try
+                {
+                    //could do it by name, but then do we reset if user on different sheet?
+                    //plus, we have other functions for getting/setting active worksheet
+                    //can just loop through to delete all contents
 
-                //could do it by name, but then do we reset if user on different sheet?
-                //plus, we have other functions for getting/setting active worksheet
-                //can just loop through to delete all contents
-
-                //Excel.Worksheet ws =   (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]; // ((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]).Select( missing);
-                Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
-                //ws.Select(missing);
-                ws.Cells.Select();
-                ws.Cells.Clear();
-                Excel.Range r = (Excel.Range)ws.Cells[1, 1];
-                r.Select();
+                    //Excel.Worksheet ws =   (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]; // ((Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name]).Select( missing);
+                    Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
+                    //ws.Select(missing);
+                    ws.Cells.Select();
+                    ws.Cells.Clear();
+                    Excel.Range r = (Excel.Range)ws.Cells[1, 1];
+                    r.Select();
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
 
                 return message;
 
@@ -1259,7 +1349,7 @@ namespace MarkLogic_ExcelAddin
                 {
                     string origmsg = "A document with the name '"+title+"' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
                     string caption = "Microsoft Office Excel";
-                    MessageBox.Show(origmsg, caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                   // MessageBox.Show(origmsg, caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                     string errorMsg = e.Message;
                     message = "error: " + errorMsg;
