@@ -1,5 +1,5 @@
 /* 
-Copyright 2008 Mark Logic Corporation
+Copyright 2009 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -44,12 +44,11 @@ function MLA(){
 
 */
 
+
 /**
  * Create a new Cell instance. 
  * @class A basic Cell class.
- * @constructor
  */
-
 MLA.Cell = function(){
  
   var rowIdx;
@@ -113,7 +112,6 @@ this.colIdx=c_values[0];
 }
 
 /** @ignore */
-//MLA.version = { "release" : "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" }; 
 MLA.version = { "release" : "1.0-20090408" }; 
 
 /** @ignore */
@@ -129,7 +127,7 @@ String.prototype.trim = function() {
 }
 
 /**
- * Returns version of MarkLogicExcelAddin.js library
+ * Returns version of MarkLogicExcelAddin.js library.
  * @return the version of MarkLogicExcelAddin.js
  * @type String
  */
@@ -153,9 +151,9 @@ MLA.errorCheck = function(message)
 
 }
 
-/** Utility function for creating Microsoft.XMLDOM object from string
+/** Utility function for creating Microsoft.XMLDOM object from string.
  *
- *@param xmlString the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML.
+ *@param xmlString the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML
  *@return Microsoft.XMLDOM object
  *@throws Exception if unable to create the XMLDOM object
  */
@@ -267,7 +265,7 @@ MLA.getCustomXMLPart = function(customXMLPartId)
 
 /** Adds custom part to active Open XML package.  Returns the id of the part added.
  *@param customPartXML Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. )
- *@return id for custom part added 
+ *@return id for custom part added.
  *@type String
  *@throws Exception if unable to add custom part
  */
@@ -337,14 +335,11 @@ MLA.getConfiguration = function()
 	
 }
 
-//START EXCEL ONLY FUNCTIONS
-//NEED TO ADD ERROR HANDLING, HERE AND IN THE ADDIN (C#)
-
 /**
  * Returns the name of the active workbook.
  * @return name of active workbook
  * @type String 
- * @throws Exception if unable to retrieve the active workbook name 
+ * @throws Exception if unable to retrieve the active workbook name. 
  */
 MLA.getActiveWorkbookName = function()
 {
@@ -510,13 +505,32 @@ MLA.setActiveWorksheet = function(sheetname)
 }
 
 // HERE
-
+/**
+ * Names a range in the active worksheet   
+ * @param coord1 - starting coordinate of range in A1 notation
+ * @param coord2 - end coordinate of range in A1 notation
+ * @param rngName - the name to be assigned to the range 
+ * @throws Exception if unable to name the specified range
+ */
 MLA.addNamedRange = function(coord1,coord2,rngName)
 {
 	var nr = window.external.addNamedRange(coord1,coord2,rngName);
+        var errMsg = MLA.errorCheck(nr);
+	
+        if(errMsg!=null)
+        	throw("Error: Not able to name specified range; "+errMsg)
 	return nr;
 }
 
+/**
+ * Adds AutoFilter to specified range in active worksheet.  
+ * @param coord1 - starting coordinate of range in A1 notation
+ * @param coord2 - end coordinate of range in A1 notation
+ * @param criteria1 - (optional) default '<>'
+ * @param operator - (optional) default 'AND'
+ * @param criteria2 - (optional) default 'missing'
+ * @throws Exception if unable to add AutoFilter specified range
+ */
 MLA.addAutoFilter = function(coord1, coord2, criteria1, operator, criteria2)
 {
 
@@ -544,7 +558,11 @@ MLA.addAutoFilter = function(coord1, coord2, criteria1, operator, criteria2)
 	return rng;
 }
 
-MLA.getNamedRangeRangeNames = function()
+/**
+ * Returns all NamedRange names for the active workbook
+ * @throws Exception if unable to add retrieve NamedRange names
+ */
+MLA.getNamedRangeNames = function()
 {
 	var nrs = window.external.getNamedRangeRangeNames();
 
@@ -556,7 +574,11 @@ MLA.getNamedRangeRangeNames = function()
 	var nrsArray = nrs.split(":");
 	return nrsArray;
 }
-
+/**
+ * Returns all NamedRange names for the active workbook
+ * @param name - the name of the range to be set active in the workbook 
+ * @throws Exception if unable to add retrieve NamedRange names
+ */
 MLA.setActiveRangeByName = function(name)
 {
 	var msg = window.external.setActiveRangeByName(name);
@@ -568,6 +590,11 @@ MLA.setActiveRangeByName = function(name)
 	return msg;
 }
 
+/**
+ * Clears all cells in the range identified by name
+ * @param name - the name of the range to be cleared in the active workbook 
+ * @throws Exception if unable to clear the cells in the NamedRange
+ */
 MLA.clearNamedRange = function(name)
 {
 	var msg=window.external.clearNamedRange(name);
@@ -579,9 +606,15 @@ MLA.clearNamedRange = function(name)
 	return msg;
 }
 
-MLA.clearRange = function(scoord,ecoord)
+/**
+ * Clears all cells in the range identified by coordinates provide in A1 notation 
+ * @param coord1 - starting coordinate of range to be cleared in A1 notation
+ * @param coord2 - end coordinate of range to be cleared in A1 notation 
+ * @throws Exception if unable to clear the cells in the range
+ */
+MLA.clearRange = function(coord1,coord2)
 {
-	var msg=window.external.clearRange(scoord,ecoord);
+	var msg=window.external.clearRange(coord1,coord2);
         var errMsg = MLA.errorCheck(msg);
 	
         if(errMsg!=null)
@@ -590,6 +623,11 @@ MLA.clearRange = function(scoord,ecoord)
 	return msg;
 }
 
+/**
+ * Removes the NamedRange from the active workbook.  Note - cells and values stay intact, this only removes the name from the range.
+ * @param name -  the name of the NamedRange to be removed from the active workbook 
+ * @throws Exception if unable to remove the named range
+ */
 MLA.removeNamedRange = function(name)
 {
 	var msg = window.external.removeNamedRange(name);
@@ -601,6 +639,10 @@ MLA.removeNamedRange = function(name)
 	return msg;
 }
 
+/**
+ * Returns the selected range coordinates.  This works for contiguous ranges.  When disparate cells are selected,  the last coordinates for the last contigous range selected in the active workbook will be returned.
+ * @throws Exception if unable to retrieve the coordinates
+ */
 MLA.getSelectedRangeCoordinates = function()
 {
         var msg = window.external.getSelectedRangeCoordinates();
@@ -613,6 +655,10 @@ MLA.getSelectedRangeCoordinates = function()
 	return msg;
 }
 
+/**
+ * Returns cells selected in active workbook.  This works for contigous cells.  When disparate cells are selected, the last contigous range of cells selected in the active workbook will be returned.
+ * @throws Exception if unable to retrieve the coordinates
+ */
 MLA.getSelectedCells = function()
 {
      var cellresults = window.external.getSelectedCells();
@@ -640,6 +686,10 @@ MLA.getSelectedCells = function()
      return cellArray;
 }
 
+/**
+ * Returns active cell from the active worksheet in active workbook.  For any range of selected cells, one will always be identified as active; the last selected cell for any range
+ * @throws Exception if unable to retrieve the active cell
+ */
 MLA.getActiveCell = function()
 {
 	var cellinfo = window.external.getActiveCell();
@@ -719,9 +769,18 @@ MLA.setActiveCellValue = function(value)
         return msg;
 }
 
-
-MLA.setCellValue = function(cells)
+/**
+ * Sets the values for the cells identified by Cell.coordinate
+ * @param cells - an array of MLA.Cell objects, the values of which will be used for the values for the given cells in the active workbook.
+ * @param sheetname - (optional) the name of the worksheet where the Cell values should be populated.  If no sheetname is provided, the cells will be populated in the active worksheet.
+ * @throws Exception if unable to set the values for the given cells
+ */
+MLA.setCellValue = function(cells, sheetname)
 { 
+	
+	if(sheetname==null)
+		sheetname="active";
+
 	//alert("IN FUNCTION");
 
 	var v_array = MLA.isArray(cells);
@@ -730,7 +789,7 @@ MLA.setCellValue = function(cells)
 	{
 		for(var i =0; i<cells.length; i++)
 		{
-          		var msg = window.external.setCellValueA1(cells[i].coordinate, cells[i].value2);
+          		var msg = window.external.setCellValueA1(cells[i].coordinate, cells[i].value2, sheetname);
 		        var errMsg = MLA.errorCheck(msg);
 
                         if(errMsg!=null) 
@@ -741,7 +800,11 @@ MLA.setCellValue = function(cells)
 
 	return msg;
 }
-
+/**
+ * Converts an A1 notation coordinate to R1C1 notations
+ * @param coord - the A1 coordinate to be converted
+ * @throws Exception if unable to convert the coordinate
+ */
 MLA.convertA1ToR1C1 = function(coord)
 {
 	var msg=window.external.convertA1ToR1C1(coord);
@@ -752,7 +815,12 @@ MLA.convertA1ToR1C1 = function(coord)
 
 	return msg;
 }
-
+/**
+ * Converts a row index and column index to an A1 notation coordinate
+ * @param rowIdx - the row index 
+ * @param colIdx - the column index
+ * @throws Exception if unable to convert to A1 notation
+ */
 MLA.convertR1C1ToA1 = function(rowIdx, colIdx)
 {
 	var msg=window.external.convertR1C1ToA1(rowIdx, colIdx);
@@ -764,6 +832,10 @@ MLA.convertR1C1ToA1 = function(rowIdx, colIdx)
 	return msg;
 }
 
+/**
+ * Clears the contents of the active worksheet in the active workbook
+ * @throws Exception if unable to clear the contents of the active worksheet
+ */
 MLA.clearWorksheet = function()
 {
 	var msg=window.external.clearActiveWorksheet();
@@ -775,7 +847,10 @@ MLA.clearWorksheet = function()
         return msg;
 }
 
-//NEW
+/**
+ * Returns the path being used for the /temp dir on the client system
+ * @throws Exception if unable to retrieve the /temp path
+ */
 MLA.getTempPath = function()
 {
 	//alert("IN HERE");
@@ -788,6 +863,15 @@ MLA.getTempPath = function()
 	return msg;
 }
 
+/**
+ * Saves the active workbook to MarkLogic
+ * @param tmpPath - the path for the /tmp dir on the client system. (have to save a local copy) 
+ * @param docTitle - the title of the document
+ * @param url - the url on MarkLogic Server where the XQuery to save can be found
+ * @param uname - the username for MarkLogic Server
+ * @param pwd - the password for MarkLogic Server
+ * @throws Exception if unable to save the document to MarkLogic
+ */
 MLA.saveActiveWorkbook = function(tmpPath, doctitle, url, uname,pwd)
 {
        var msg = window.external.saveActiveWorkbook(tmpPath, doctitle, url,uname,pwd);
@@ -798,7 +882,15 @@ MLA.saveActiveWorkbook = function(tmpPath, doctitle, url, uname,pwd)
 
        return msg;
 }
-
+/**
+ * Open a .xlsx from MarkLogic into Excel
+ * @param tmpPath - the path for the /tmp dir on the client system. (have to save a local copy) 
+ * @param docuri - the uri for the document in MarkLogic Server
+ * @param url - the url on MarkLogic Server where the XQuery to open the document specified by docuri can be found
+ * @param uname - the username for MarkLogic Server
+ * @param pwd - the password for MarkLogic Server
+ * @throws Exception if unable to open the document into Excel
+ */
 MLA.openXlsx = function(tmpPath, docuri, url, uname, pwd)
 {
         var msg =  window.external.OpenXlsx(tmpPath, docuri, url, uname,pwd);
@@ -808,24 +900,3 @@ MLA.openXlsx = function(tmpPath, docuri, url, uname, pwd)
         	throw("Error: Not able to openXlsx; "+errMsg);
         return msg;
 }
-     // var msg = window.external.OpenXlsx(tmpPath, docuri, url, "zeke","zeke")
-     //
-
-/*
-MLA.setCellValueR1C1 = function(cells)
-{
-	alert("IN R1C1 FUNCTION");
-
-	var v_array = MLA.isArray(cells);
-
-	if(v_array)
-	{
-		for(var i =0; i<cells.length; i++)
-		{
-          		var msg = window.external.setCellValueA1(cells[i].rowIdx, cells[i].colIdx, cells[i].value2);
-		}
-	}
-
-	return msg;
-}
-*/
