@@ -158,18 +158,76 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    </TR>
 </TABLE>
 
-<A NAME="MLA.Cell()"><!-- --></A><H3>
+<A NAME="MLA.Cell()"><!-- --></A>
+<H3>
 MLA.Cell</H3>
 <PRE><B>MLA.Cell</B>()</PRE>
 
 
 <UL>
-   Create a new Cell instance.
+   Create a new Cell instance.  
+</UL>
+<br/>
+<PRE><B>MLA.Cell</B>(rowIndex, columnIndex)</PRE>
+
+
+<UL>
+   Create a new Cell instance using the given row index and column index. The A1 Cell.coordinate property will be automatically generated.  
+</UL>
+<br/>
+<PRE><B>MLA.Cell</B>(A1Coordinate)</PRE>
+
+
+<UL>
+   Create a new Cell instance using the given A1 coordinate. The Cell.rowIdx and Cell.colIdx properties will automatically be generated.
 </UL>
 
 
 
    </UL>
+   <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+   <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+      <TD COLSPAN=1>
+      <FONT SIZE="+2"><B>Cell Properties</B></FONT>
+      </TD>
+   </TR>
+</TABLE>
+<PRE><B>MLA.Cell.rowIdx</B></PRE>
+
+
+<UL>
+   The row index for the Cell.
+</UL>
+<br/>
+<PRE><B>MLA.Cell.colIdx</B></PRE>
+
+
+<UL>
+   The column index for the Cell.
+</UL>
+<br/>
+<PRE><B>MLA.Cell.coordinate</B></PRE>
+
+
+<UL>
+   The row/column index for the Cell in A1 notation.
+</UL>
+<br/>
+<PRE><B>MLA.Cell.value2</B></PRE>
+
+
+<UL>
+   The value for the Cell.
+</UL>
+<br/>
+<PRE><B>MLA.Cell.formula</B></PRE>
+
+
+<UL>
+   The formula for the Cell. 
+</UL>
+<br/>
+
 
 
 <!-- Constructor return value(s) -->
