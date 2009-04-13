@@ -1,0 +1,6 @@
+C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\tests\addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\obj\Debug\ResolveAssemblyReference.cache
+C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\tests\addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\obj\Debug\MarkLogic_ExcelAddin_Test.csproj.ResolveComReference.cache
+C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\tests\addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\bin\Debug\MarkLogic_ExcelAddin_Test.exe
+C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\tests\addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\bin\Debug\MarkLogic_ExcelAddin_Test.pdb
+C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\tests\addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\obj\Debug\MarkLogic_ExcelAddin_Test.exe
+C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\tests\addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\obj\Debug\MarkLogic_ExcelAddin_Test.pdb
