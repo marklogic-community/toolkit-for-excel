@@ -946,7 +946,7 @@ be returned as text. </div><br>
             <pre xml:space="preserve">xquery version "1.0-ml";
 import module namespace excel= "http://marklogic.com/openxml/excel" 
        at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
-
+declare namespace ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 
 let $dir := "/Default_xlsx_parts/"
 let $ss := fn:doc(excel:sharedstring-uri($dir))/node()
@@ -2816,7 +2816,7 @@ let $worksheet :=
       &lt;/ms:row&gt;
    &lt;/ms:sheetData&gt;
 &lt;/ms:worksheet&gt;
-return excel:ws-set-cells($worksheet, ($cel1,$cel2,$cel3))
+return excel:set-cells($worksheet, ($cell1,$cell2,$cell3))
 =&gt;
 &lt;ms:worksheet xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main"&gt;
    &lt;ms:sheetData&gt;
@@ -2854,7 +2854,7 @@ let $worksheet :=
    &lt;ms:sheetData&gt;
    &lt;/ms:sheetData&gt;
 &lt;/ms:worksheet&gt;
-return excel:ws-set-cells($worksheet, ($cel1))
+return excel:set-cells($worksheet, ($cel1))
 =&gt;
 &lt;ms:worksheet xmlns:ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main"&gt;
    &lt;ms:sheetData&gt;
@@ -3335,6 +3335,7 @@ excel:table(1,"A1:C3",("Heading1","Heading2","Heading3"),xs:boolean("false"),xs:
 xquery version "1.0-ml";
 import module namespace excel= "http://marklogic.com/openxml/excel" 
 at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+
 excel:workbook(3)
 =&gt;
 &lt;workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"&gt;
