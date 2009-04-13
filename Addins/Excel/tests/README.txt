@@ -36,7 +36,7 @@ The paths are all configured to use C:\unitTestAddin, so if that works for you, 
 Running the .bat, the .exe that starts the Excel application will run.
 When Excel starts, the javascript will run tests onload and write the results out to a file.  The .exe also saves the document created as test.xlsx.
 
-After the test runs, test.xlsx and testresults.txt can be found in unitTestAddin\outputs.
+After the test runs, test.xlsx and testresults.txt can be found in unitTestAddin\outputs.  2 samples are provided here as an example.
 
 
 
