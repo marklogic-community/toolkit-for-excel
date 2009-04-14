@@ -6,7 +6,7 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Test JS</title>
-	<link rel="stylesheet" type="text/css" href="office-blue.css"/>
+	<link rel="stylesheet" type="text/css" href="css/office-blue.css"/>
 	<script type="text/javascript" src="js/MarkLogicExcelAddin.js">//</script>
 	<script type="text/javascript" src="js/test.js">//</script>
 </head>

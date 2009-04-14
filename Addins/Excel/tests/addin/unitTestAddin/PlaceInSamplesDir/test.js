@@ -41,130 +41,213 @@ function initPage()
 
 function testGetWBName()
 {
-   return MLA.getActiveWorkbookName();
+	try{
+             	return MLA.getActiveWorkbookName();
+	}catch(err)
+	{
+	     	return "error: "+err.description;
+	}
 }
 
 function testGetWSName()
 {
-    return MLA.getActiveWorksheetName();
+	try{
+             	return MLA.getActiveWorksheetName();
+	}catch(err)
+	{
+	     	return "error: "+err.description;
+	}
 }
  
 function  testGetWBNames()
 {
-    var names = MLA.getAllWorkbookNames();
-    var wb  = "";
 
-    for(var i=0; i < names.length; i++) 
-	   wb = wb+names[i]+",";
+	try{
+    	     	var names = MLA.getAllWorkbookNames();
+    	     	var wb  = "";
 
-    return wb+"end";;
+             	for(var i=0; i < names.length; i++) 
+	        	wb = wb+names[i]+",";
+
+             	return wb+"end";
+	}catch(err)
+  	{
+    	     	return "error: "+err.description;
+  	}	
+
 }
 
 function testGetWBWSNames()
 {
-     var names = MLA.getActiveWorkbookWorksheetNames();
-     var wss = "";
+	try{
+             	var names = MLA.getActiveWorkbookWorksheetNames();
+             	var wss = "";
 
-     for(var i=0; i < names.length; i++){
-
-	   wss = wss+names[i]+",";
+             	for(var i=0; i < names.length; i++){
+	        	wss = wss+names[i]+",";
 	   //alert("WSS: "+ wss);
-     }
-     //alert("HERE"+names);
-     return wss+"end";
+             }
+
+	     	return wss+"end";
+
+	}catch(err)
+	{
+	     	return "error: "+err.description;
+	}
+     
 }
 
 function testAddWorkbook()
 {
-    var x = MLA.addWorkbook("FOO","BAR","FUBAR");
-    return x;
+	try{
+             	var x = MLA.addWorkbook("FOO","BAR","FUBAR");
+             	return x;
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 function testAddWorksheet()
 {
-    var x ="FUBAR";
-    var msg=MLA.addWorksheet(x);
-    return msg;
+	try{
+                var x ="FUBAR";
+                var msg=MLA.addWorksheet(x);
+                return msg;
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 function testSetActiveWB()
 {
-    var test = MLA.setActiveWorkbook("test");  //Book1
-    return "added workbook";
+	try{
+    	        var test = MLA.setActiveWorkbook("test");  //Book1
+    		return "added workbook";
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 function testSetActiveWS()
 {
-    var test = MLA.setActiveWorksheet("Sheet1");  //Sheet3
-    return "added worksheet";
+	try{
+    		var test = MLA.setActiveWorksheet("Sheet1");  //Sheet3
+    		return "added worksheet";
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
     //alert("message is:"+test)
 }
 
 function testCells()
 {
-     var cells = new Array();
-	//alert("array length"+cells.length);
-     for(c = 1; c < 10; c++)
-     { 
-	for(r = 1; r < 20; r++)
+	try{
+     		var cells = new Array();
+		//alert("array length"+cells.length);
+     		for(c = 1; c < 10; c++)
+     		{ 
+			for(r = 1; r < 20; r++)
+			{
+          			var cell = new MLA.Cell(r,c);
+	  			cell.value2 = 999;
+	  			cells.push(cell);
+			}
+     		}
+		//alert("FINAL array length: "+cells.length);
+     		var v_msg = MLA.setCellValue(cells);
+     		return v_msg;
+	}catch(err)
 	{
-          var cell = new MLA.Cell(r,c);
-	  cell.value2 = 999;
-	  cells.push(cell);
+		return "error: "+err.description;
 	}
-     }
-	//alert("FINAL array length: "+cells.length);
-     var v_msg = MLA.setCellValue(cells);
-     return v_msg;
 }
 
 function testAddNamedRange()
 {
-     var nmdRange1 = MLA.addNamedRange("$A$1","$I$19","Everything");
-     var nmdRange2 = MLA.addNamedRange("$A$1","$A$10","MyRange");
-     return nmdRange1;
+	try{
+     		var nmdRange1 = MLA.addNamedRange("$A$1","$I$19","Everything");
+     		var nmdRange2 = MLA.addNamedRange("$A$1","$A$10","MyRange");
+     		return nmdRange1;
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 function testAddAutoFilter()
 {
-     var filter = MLA.addAutoFilter("$A1", "$I19");
-     return filter;
+	try{
+     		var filter = MLA.addAutoFilter("$A1", "$I19");
+     		return filter;
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 function testGetRangeNames()
 {
-	//alert("GETTING NAMES");
-	var names = MLA.getNamedRangeNames();
-	var ranges="";
-	for(i=0;i<names.length;i++)
-		ranges =ranges+names[i]+",";
+	try{
+		//alert("GETTING NAMES");
+		var names = MLA.getNamedRangeNames();
+		var ranges="";
+		for(i=0;i<names.length;i++)
+			ranges =ranges+names[i]+",";
 
-	return ranges+"end";
+		return ranges+"end";
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 function testSetRangeByName()
-{ 
+{
+	try{
 
-	var msg = MLA.setActiveRangeByName("MyRange");
-	return msg;
+		var msg = MLA.setActiveRangeByName("MyRange");
+		return msg;
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 function testClearNamedRange()
 {
-         var x = MLA.clearNamedRange("MyRange");
-	 return x;
+	try{
+         	var x = MLA.clearNamedRange("MyRange");
+	 	return x;
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 function testClearRangeTest()
 {
-	var msg=MLA.clearRange("A1","C3");
-	return msg;
+	try{
+		var msg=MLA.clearRange("A1","C3");
+		return msg;
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 function testRemoveRanges()
 {
-	var msg = MLA.removeNamedRange("MyRange");
-        return msg;
+	try{
+		var msg = MLA.removeNamedRange("MyRange");
+        	return msg;
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 // testClearWorksheet();
@@ -173,35 +256,55 @@ function testRemoveRanges()
 
 function testAddCustomPiece()
 {
-	var v_title="TITLE";
-	var v_description="DESCRIPTION";
-	var v_publisher="PUBLISHER";
-	var v_identifier="IDENTIFIER";
+	try{
+		var v_title="TITLE";
+		var v_description="DESCRIPTION";
+		var v_publisher="PUBLISHER";
+		var v_identifier="IDENTIFIER";
 	
-	var customPiece = generateTemplate(v_title,v_description,v_publisher,v_identifier);
-        var newid = MLA.addCustomXMLPart(customPiece);
-//	alert("ID IS"+newid);
-	return newid;
+		var customPiece = generateTemplate(v_title,v_description,v_publisher,v_identifier);
+        	var newid = MLA.addCustomXMLPart(customPiece);
+		//	alert("ID IS"+newid);
+		return newid;
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
        
 }
 
 function testGetCustomPieceIds()
 {
-	var ids = MLA.getCustomXMLPartIds();
-	return ids[0];
+	try{
+		var ids = MLA.getCustomXMLPartIds();
+		return ids[0];
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 function testGetCustomPiece(cid)
 {
-	var piece = MLA.getCustomXMLPart(cid);
-	//alert("PIECE"+piece.xml);
-	return piece.xml;
+	try{
+		var piece = MLA.getCustomXMLPart(cid);
+		//alert("PIECE"+piece.xml);
+		return piece.xml;
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 function testDeleteCustomPiece(id)
 {
-	var deletedPiece = MLA.deleteCustomXMLPart(id);
-	return deletedPiece;
+	try{
+		var deletedPiece = MLA.deleteCustomXMLPart(id);
+		return deletedPiece;
+	}catch(err)
+	{
+		return "error: "+err.description;
+	}
 }
 
 function writeToFile(output)
