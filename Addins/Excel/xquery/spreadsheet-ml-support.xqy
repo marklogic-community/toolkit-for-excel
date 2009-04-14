@@ -30,14 +30,14 @@ declare function excel:get-mimetype(
   $filename as xs:string
 ) as xs:string?
 {
-     xdmp:uri-content-type($filename)	
+    xdmp:uri-content-type($filename)	
 };
 
 declare function excel:directory-uris(
   $directory as xs:string
 ) as xs:string*
 {
-     cts:uris("","document",cts:directory-query($directory,"infinity"))
+    cts:uris("","document",cts:directory-query($directory,"infinity"))
 };
 
 
@@ -67,10 +67,10 @@ declare function excel:sheet-uris(
 };
 
 declare function excel:workbook-sheet-names(
-	$workbook as element(ms:workbook)
+  $workbook as element(ms:workbook)
 ) as xs:string*
 {
-	$workbook/ms:sheets/ms:sheet/@name
+    $workbook/ms:sheets/ms:sheet/@name
 };
 
 declare function excel:sharedstring-uri(
@@ -81,16 +81,16 @@ declare function excel:sharedstring-uri(
 };
 
 declare function cell-string-value(
-	$cells          as element(ms:c)*,
-        $shared-strings as element(ms:sst)
+  $cells          as element(ms:c)*,
+  $shared-strings as element(ms:sst)
 ) as xs:string*
 {    
-     for $c in $cells
-     return
-	if ( $c/@t="s" ) then
-            	$shared-strings/ms:si[fn:data($c/ms:v)+1]/ms:t/text()
-	else
-		$c/ms:v/text()
+    for $c in $cells
+    return
+      if ( $c/@t="s" ) then
+            $shared-strings/ms:si[fn:data($c/ms:v)+1]/ms:t/text()
+      else
+	    $c/ms:v/text()
 };
 
 (: we have a convert function for this, but not sure we want to import. See Open XML Extract pipeline for details. :)
@@ -129,30 +129,30 @@ declare function excel:map-shared-strings(
 )as element(ms:worksheet)
 {
                   (: for $sheet in $sheets ?, should just work with function mapping :)
-                  let $shared := fn:data($shared-strings//ms:t)
-                  let $rows := for $row at $d in $sheet//ms:row
-                               let $cells  :=  for $cell at $e in $row/ms:c
-                                               let $c := if(fn:data($cell/@t) eq "s") 
-                                               then 
-                                                 element ms:c { $cell/@* except $cell/@t, attribute t{"inlineStr"}, element ms:is { element ms:t { $shared[($cell/ms:v+1 cast as xs:integer)] } } }  
-                                               else
-                                                    $cell
-                                                           
-                                               return $c
+    let $shared := fn:data($shared-strings//ms:t)
+    let $rows := for $row at $d in $sheet//ms:row
+                 let $cells  :=  for $cell at $e in $row/ms:c
+                                 let $c := if(fn:data($cell/@t) eq "s") 
+                                           then 
+                                             element ms:c { $cell/@* except $cell/@t, attribute t{"inlineStr"}, element ms:is { element ms:t { $shared[($cell/ms:v+1 cast as xs:integer)] } } }  
+                                           else
+                                             $cell
+                                                          
+                                  return $c
                      
-                              return element ms:row{ $row/@*, $cells }
+                 return element ms:row{ $row/@*, $cells }
                                
-                  let $worksheet   :=  $sheet/* except ( $sheet/ms:sheetData, $sheet/ms:tableParts, $sheet/ms:pageMargins, $sheet/ms:pageSetup)
-                  let $page-setup :=  $sheet/ms:pageSetup 
-                  let $table-parts :=  $sheet/ms:tableParts
-                  let $sheet-data  :=  $sheet/ms:sheetData
-                  let $ws := element ms:worksheet {  $sheet/ms:worksheet/@*, $worksheet, element ms:sheetData{ $sheet-data/@*, $rows },  $page-setup ,$table-parts  }
-                  return $ws
+    let $worksheet   :=  $sheet/* except ( $sheet/ms:sheetData, $sheet/ms:tableParts, $sheet/ms:pageMargins, $sheet/ms:pageSetup)
+    let $page-setup :=  $sheet/ms:pageSetup 
+    let $table-parts :=  $sheet/ms:tableParts
+    let $sheet-data  :=  $sheet/ms:sheetData
+    let $ws := element ms:worksheet {  $sheet/ms:worksheet/@*, $worksheet, element ms:sheetData{ $sheet-data/@*, $rows },  $page-setup ,$table-parts  }
+    return $ws
 
 };
 
 (: ============================================================================================================== :)
-(: Simple Validation used by tale generation :)
+(: Simple Validation used by table generation :)
 
 declare function excel:validate-child(
   $seq as node()*
@@ -275,7 +275,6 @@ declare function excel:create-row(
 };
 
 (: dates are stored as a julian number with an @ for style which indicates display format :)
-(: need to update these to include style :)
 declare function excel:cell(
   $a1-ref as xs:string, 
   $value  as xs:anyAtomicType?
@@ -335,22 +334,6 @@ declare function excel:cell(
                         if(fn:empty($date-style)) then () 
                         else attribute s{$date-style},
                         $formula, $value }
- 
-    (: <ms:c  r={$a1-ref}> 
-            
-                    if(fn:not(fn:empty($formula))) then 
-                       <ms:f>{$formula}</ms:f>
-                    else
-                        ()
-                   }
-                   {
-                    if(fn:not($value eq 0) and fn:not(fn:empty($value)))
-                    then
-                       <ms:v>{$value}</ms:v>
-                    else ()
-                   }
-                 }
-     </ms:c> :)
     else
               <ms:c r={$a1-ref} t="inlineStr"> 
                     <ms:is>
@@ -359,11 +342,12 @@ declare function excel:cell(
               </ms:c>
 };
 
+(:check this  :)
 declare function excel:row(
   $cells as element(ms:c)+
 ) as element(ms:row)
 {
-  <ms:row r={excel:a1-row($cells[1]/@r)}>{$cells}</ms:row> 
+    <ms:row r={excel:a1-row($cells[1]/@r)}>{$cells}</ms:row> 
 };
 
 declare function excel:a1-to-r1c1(
@@ -374,14 +358,15 @@ declare function excel:a1-to-r1c1(
     <foo/>
 };
 
-(: works for all and then some, excel has limit of WID(16384) for columns and 1048576 for rows 
+(:check this works for all and then some, excel has limit of WID(16384) for columns and 1048576 for rows 
    should we check and return error for # out of range? :)
 
 declare function excel:r1c1-to-a1(
   $row-index as xs:integer, 
   $col-index as xs:integer
 ) as xs:string 
-{   let $first-letter :=   
+{   
+    let $first-letter :=   
           if($col-index >= 703) then
                 let $newcol := fn:floor($col-index div 702)
                 let $flcheck := $col-index - fn:floor($newcol* 702)
@@ -729,18 +714,18 @@ declare function excel:passthru-workbook($x as node(), $newSheetData as element(
 declare function excel:wb-set-sheetdata($x as node(), $newSheetData as element(ms:sheetData)) as node()*
 {
  
-      typeswitch($x)
-       case text() return $x
-       case document-node() return document {$x/@*,excel:passthru-workbook($x,$newSheetData)}
-       case element(ms:sheetData) return  $newSheetData
-       case element() return  element{fn:name($x)} {$x/@*,excel:passthru-workbook($x,$newSheetData)}
-       default return $x
+   typeswitch($x)
+     case text() return $x
+     case document-node() return document {$x/@*,excel:passthru-workbook($x,$newSheetData)}
+     case element(ms:sheetData) return  $newSheetData
+     case element() return  element{fn:name($x)} {$x/@*,excel:passthru-workbook($x,$newSheetData)}
+     default return $x
 
 };
 
 declare function excel:passthru($x as node(), $newcell as element(ms:c)) as node()*
 {
-   for $i in $x/node() return excel:set-row-cell($i,$newcell)
+    for $i in $x/node() return excel:set-row-cell($i,$newcell)
 };
 
 
@@ -749,40 +734,40 @@ declare function excel:insert-cell(
   $newcell as element(ms:c)
 )as element(ms:c)*
 {
- if($newcell/@r = $origcell/@r) then 
-    $newcell 
- else if(fn:empty($origcell/preceding-sibling::*))
- then
+    if($newcell/@r = $origcell/@r) then 
+      $newcell 
+    else if(fn:empty($origcell/preceding-sibling::*))
+    then
     (
-     if($newcell/@r lt $origcell/@r)
-     then
-          ($newcell,$origcell) 
-     else if($newcell/@r gt $origcell/@r 
-             and (($newcell/@r lt $origcell/following-sibling::*/@r) 
-                   or fn:not(fn:exists($origcell/following-sibling::*/@r)))
-          ) 
-          then 
-             ($origcell, $newcell) 
-          else 
-             ($origcell) 
+      if($newcell/@r lt $origcell/@r)
+      then
+           ($newcell,$origcell) 
+      else if($newcell/@r gt $origcell/@r 
+              and (($newcell/@r lt $origcell/following-sibling::*/@r) 
+                    or fn:not(fn:exists($origcell/following-sibling::*/@r)))
+           ) 
+           then 
+              ($origcell, $newcell) 
+           else 
+              ($origcell) 
     ) 
- else if(fn:not(fn:empty($origcell/following-sibling::*)) 
-          and $newcell/@r > $origcell/@r 
-          and $newcell/@r < $origcell/following-sibling::*/@r) 
- then  
-      ($origcell,$newcell)  
- else if(fn:not(fn:empty($origcell/following-sibling::*)) 
-          and $newcell/@r < $origcell/@r 
-          and $newcell/@r > $origcell/preceding-sibling::*/@r 
-          and $newcell/@r < $origcell/following-sibling::*/@r
+    else if(fn:not(fn:empty($origcell/following-sibling::*)) 
+            and $newcell/@r > $origcell/@r 
+            and $newcell/@r < $origcell/following-sibling::*/@r) 
+    then  
+        ($origcell,$newcell)  
+    else if(fn:not(fn:empty($origcell/following-sibling::*)) 
+            and $newcell/@r < $origcell/@r 
+            and $newcell/@r > $origcell/preceding-sibling::*/@r 
+            and $newcell/@r < $origcell/following-sibling::*/@r
         ) 
- then  
-      ($newcell,$origcell)
- else if(fn:empty($origcell/following-sibling::*) 
-          and $newcell/@r > $origcell/@r) 
- then
-      ($origcell,$newcell)
- else $origcell  
+    then  
+        ($newcell,$origcell)
+    else if(fn:empty($origcell/following-sibling::*) 
+            and $newcell/@r > $origcell/@r) 
+    then
+        ($origcell,$newcell)
+    else $origcell  
 };
 
 declare function excel:set-row-cell(
@@ -790,12 +775,12 @@ declare function excel:set-row-cell(
   $newcell as element(ms:c) 
 ) as node()*
 {
-      typeswitch($x)
-       case text() return $x
-       case document-node() return document {$x/@*,excel:passthru($x,$newcell)}
-       case element(ms:c) return excel:insert-cell($x,$newcell)
-       case element() return  element{fn:name($x)} {$x/@*,excel:passthru($x,$newcell)}
-       default return $x
+    typeswitch($x)
+      case text() return $x
+      case document-node() return document {$x/@*,excel:passthru($x,$newcell)}
+      case element(ms:c) return excel:insert-cell($x,$newcell)
+      case element() return  element{fn:name($x)} {$x/@*,excel:passthru($x,$newcell)}
+      default return $x
 };
 
 declare function excel:set-cells(
@@ -812,7 +797,7 @@ declare function excel:set-cells(
 
    let $sheetData :=  $sheet//ms:sheetData
    let $finalsheet := (
-   for $c in $cells
+         for $c in $cells
          return xdmp:set($sheetData,(
                      let $refrow := excel:a1-row($c/@r)
                      let $origrow := $sheetData/ms:row[@r=$refrow]
@@ -831,7 +816,7 @@ declare function excel:set-cells(
                                        return $newrow
                    
                      let $newSheetData := element ms:sheetData{ $sheetData/@*, $rows}   
-   return $newSheetData )),$sheetData)
+                     return $newSheetData )),$sheetData)
 
   return excel:wb-set-sheetdata($sheet(:/ms:worksheet:), $finalsheet)                      
 };
@@ -933,7 +918,7 @@ $tabstyle as xs:boolean
    let $sheet1 := excel:worksheet(($headers,$rows), $colwidths, 1) 
 
    let $package := excel:xl-pkg($content-types, $workbook, $rels, $workbookrels, $sheet1, $worksheetrels, $tablexml)
-return $package
+   return $package
 };
 
 
