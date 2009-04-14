@@ -63,9 +63,9 @@
     Open XML documents.</p>
 <p><font size="+1"><b>Pieces required for creating a .xlsx</b></font><p>
 
-    <p>Below are functions for manipulating the XML files from Excel 2007 documents which have been extracted from their .xlsx package.  Also provided are functions for the dynamic generation of complete workbooks (a .xlsx package) and their requisite related parts.  Some details on standard and enhanced .xlsx packages follows.</p>
-<p>The required files for a standard minimum .xlsx, a workbook, with just worksheets, and no tables (tables manifest as NamedRanges/AutoFiltering/Styles in Excel), requires the pieces detailed in Table1 below.  In Table2 on the right are details for the pieces required when adding Excel tables to the .xlsx.  In the right column of each table we've noted which functions can assist in generating these parts.</p>
-<table cellpadding="4" cellspacing="1" align="center">
+    <p>Below are functions for manipulating the XML files from Excel 2007 documents which have been extracted from their .xlsx package.  Also provided <br/>are functions for the dynamic generation of complete workbooks (a .xlsx package) and their requisite related parts.  Some details on standard and enhanced .xlsx packages follows.</p>
+<p>The required files for a standard minimum .xlsx, a workbook, with just worksheets, and no tables (tables manifest as NamedRanges/AutoFiltering/Styles in Excel), requires the pieces detailed<br/> in Table1 below.  In Table2 on the right are details for the pieces required when adding Excel tables to the .xlsx.  In the right column of each table we've noted which functions can assist in generating these parts.</p>
+<table cellpadding="4" cellspacing="1" align="left">
 <tr><td>
 <table  class="table-line" bgcolor="#000000" cellpadding="4" cellspacing="1" >
 <tr>
@@ -168,7 +168,7 @@
     </td>
 			  </tr>
 </tbody></table>
-<p><i>Note: Each worksheet will have its own file, sheet1.xml, sheet2.xml to sheetN.xml.  The number of sheets and their relationships must be accounted for in [Content_Types].xml, workbook.xml, and workbook.xml.rels.  When adding tables, each table has its own file as well: table1.xml, table2.xml, to tableN.xml.  Each table is mapped to a sheet#.xml.rels, where each sheet has its own single relationships file for relating the tables to the sheet.  If no table is related to the sheet, sheet#.xml.rels file is Not required for that sheet.
+<p><i>Note: Each worksheet will have its own file, sheet1.xml, sheet2.xml to sheetN.xml.  The number of sheets and their relationships must be accounted for in [Content_Types].xml, workbook.xml, and workbook.xml.rels.  <br/>When adding tables, each table has its own file as well: table1.xml, table2.xml, to tableN.xml.  Each table is mapped to a sheet#.xml.rels, where each sheet has its own single relationships file for relating the tables to the sheet.  <br/>If no table is related to the sheet, sheet#.xml.rels file is Not required for that sheet.
 </td>
 		    </tr>
    
@@ -1245,9 +1245,9 @@ excel:content-types(1,1)
           <b>Summary:</b>
           <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
 This function creates a row populated with cells, the values of which are passed in with the parameter sequence. The cell's values
-are either a number type or of type string. This function creates a simple row, containing simple cells;
+are either a number type or of type string. <br/>This function creates a simple row, containing simple cells;
 there is no way to set row number explicitly, and there is no way to
-set cell row/column position. It is assumed that the cells are
+set cell row/column position. It is assumed that the cells <br/>are
 populated in the row in the order that they are passed to the function.
 </div><br>
           </td>
@@ -1352,13 +1352,13 @@ return excel:create-row($vals)
           <b>Summary:</b>
           <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
 This function creates a row populated with cells, the values of which are passed in with the map parameter. The cell's values
-are either a number or of type string. This function creates a simple row, with simple cells; there
+are either a number or of type string. This function creates a simple row, <br/>with simple cells; there
 is no way to set row number explicitly, and there is no way to set cell
 row/column position. It is assumed that the cells are populated in the
-row in the order that they are passed to the function within the map.
+row in the order that they are passed <br/>to the function within the map.
 Keys are passed separately as you may have more keys than are contained
 within the map, this is done for sparsely populated tables. If the key
-doesn't exist within the map, the cell will be created but will not
+doesn't exist within <br/>the map, the cell will be created but will not
 contain any value. </div><br>
           </td>
 				</tr>
@@ -1475,7 +1475,7 @@ return excel:create-row($map,$keys)
           <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
 This function creates a .zip file that is a .xlsx package containing
 the minimum parts required to be a valid package. The parts include:
-[Content_Types].xml, .rels, workbook.xml, workbook.xml.rels, and the
+[Content_Types].xml, .rels, workbook.xml, <br/>workbook.xml.rels, and the
 sheets. Sheets are saved as sheet1.xml, sheet2.xml... to sheetN.xml.
 Pass the sheets into the function in the order you'd like them to be
 displayed in the workbook. </div><br>
@@ -1595,11 +1595,11 @@ return xdmp:zip-manifest(excel:create-simple-xlsx($ws))
           <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
 This function will attempt to generate an Excel workbook from an XML
 table. An XML table here is defined as a single wrapper element, with a
-single repeating child element. The children elements of this repeating
+single repeating child element. <br/>The children elements of this repeating
 element may vary in name and number. The list of distinct names of all the children elements will be
-used as headers for columns, and their values will populate rows. It is
+used as headers for columns, and <br/>their values will populate rows. It is
 possible for the children to have different element names, so its
-possible to generate a sparsely populated table. If the xlsx is unable to be created, and empty sequence is returned.</div><br>
+possible to generate a sparsely populated table. If the xlsx <br/>is not able to be created, and empty sequence is returned.</div><br>
           </td>
 				</tr>
         <tr class="mainbody">
@@ -2334,7 +2334,7 @@ excel:julian-to-gregorian(39909)
           <b>Summary:</b>
           <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
 This function dereferences cell text values so the actual text value is stored within
-the worksheet, instead of just a reference to the sharedStrings table. For string values in worksheet cells, Excel stores an index to the sharedStrings table (ms:sst element, sharedStrings.xml in the .xlsx package).  We dereference for search, and as people would like to get as much info in the actual worksheet as possible, instead of having to map disparate parts within a .xlsx package.  You can store this worksheet with the parts from the original .xlsx package, and still open succesfully in Excel if you were to zip the parts back up. On save, Excel will setup the references to sharedStrings again.</div><br>
+the worksheet, instead of just a reference to the sharedStrings table. For string values in worksheet cells, <br/>Excel stores an index to the sharedStrings table (ms:sst element, sharedStrings.xml in the .xlsx package).  We dereference for search, and as people would like to get as much information <br/>in the actual worksheet as possible, instead of having to map disparate parts within a .xlsx package.  You can store this worksheet with the parts from the original .xlsx package, and still <br/>open succesfully in Excel if you were to zip the parts back up. On save, Excel will setup the references to sharedStrings again.</div><br>
           </td>
 				</tr>
         <tr class="mainbody">
@@ -2532,7 +2532,7 @@ excel:pkg-rels()
           <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
 This function converts the row and column numbers from what Excel
 refers to as R1C1 notation (row/column notation) to the preferred A1
-notation. Excel's limits for rows is 1048756, and for columns is 16384.
+notation. <br/>Excel's limits for rows is 1048756, and for columns is 16384.
 This function returns A1 notation for any cell in that range from A1 to
 WID1048576. </div><br>
           </td>
@@ -2656,8 +2656,7 @@ CJL1
                  </font>
                  <font style="font-family: arial; font-size: 10pt;">
 The cells to be populated within the row. It is assumed that all cells
-have an A1 reference and that they are in the same row. The row number
-is determined by the row number identified by the cell. </font>
+have an A1 reference and that they are in the same row. The row number<br/>is determined by the row number identified by the cell. </font>
                  </div> 
             </td>
 				      </tr>
@@ -2744,7 +2743,7 @@ return excel:row(($cell1,$cell2,$cell3))
           <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
 This function sets the cells within the provided worksheet. If the cell
 exists in the worksheet, it will be replaced. If the cell doesn't
-exist, it will be set in the proper order within the proper row. If the
+exist, it will be set <br/>in the proper order within the proper row. If the
 row doesn't exist, the row will be created and populated with the cell.
 </div><br>
           </td>
@@ -3114,7 +3113,7 @@ excel:sheet-uris("/Default_xlsx_parts/")
           <img src="images/varspace.gif" width="8">
           <b>Summary:</b>
           <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
-            This function creates a table element for a .xlsx package (xl/tables/table#.xml). Tables in SpreadsheetML, manifest themselves as Named Ranges in an Excel worksheet.  With these tables you can apply auto-formatting for columns, as well as styling.
+	    This function creates a table element for a .xlsx package (xl/tables/table#.xml). Tables in SpreadsheetML, manifest themselves as Named Ranges in an Excel worksheet.  <br/>With these tables you can apply auto-formatting for columns, as well as styling.
           </div><br>
           </td>
 				</tr>
@@ -3948,8 +3947,8 @@ excel:worksheet-rels(2,2)
           <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
 This function creates a .zip file that is the .xlsx package containing
 the parts passed in as parameters. It is assumed the parts are properly
-mapped to one another. Just using the constructors provided, and setting the number of worksheets, its possible to generate workbooks dynamically.  It's also quite simple to add a named range to a single worksheet. It can get a little tricker when adding multiple tables to multiple worksheets, but we've aimed to simplify workbook construction for you with the constructors provided.<br/><br/>
-<i>  Some things to remember: Worksheets will appear in the Workbook in the order they are added within their sequence.  Tables must have unique names, and unique relationship ids.  (the constructor accounts for this by letting you add tables by number, as that's how they'll be saved within the .xlsx package natively.)  Every table must also have a worksheet relationship defined. Each worksheet has its own worksheet relationships filed saved within the .xlsx package.  <i/></div><br>
+mapped to one another. <br/>Just using the constructors provided, and setting the number of worksheets, its possible to generate workbooks dynamically.  It's also quite simple to add a named range <br/>to a single worksheet. It can get a little tricker when adding multiple tables to multiple worksheets, but we've aimed to simplify workbook construction for you with the constructors provided.<br/><br/>
+<i>  Some things to remember: Worksheets will appear in the Workbook in the order they are added within their sequence.  Tables must have unique names, and <br/>unique relationship ids.  (the constructor accounts for this by letting you add tables by number, as that's how they'll be saved within the .xlsx package natively.)  <br/>Every table must also have a worksheet relationship defined. Each worksheet has its own worksheet relationships filed saved within the .xlsx package.  <i/></div><br>
           </td>
 				</tr>
         <tr class="mainbody">
