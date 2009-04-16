@@ -2088,18 +2088,9 @@ application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 				      </tr><tr>
 					<td width="20"></td>
 					<td style="font-size: 11pt; font-family: Courier;">
-                      $year as xs:integer, 
+                      $date as xs:date 
                       </td>
 				      </tr><tr>
-					<td width="20"></td>
-					<td style="font-size: 11pt; font-family: Courier;">
-                      $month as xs:integer, 
-                      </td>
-				      </tr><tr>
-					<td width="20"></td>
-					<td style="font-size: 11pt; font-family: Courier;">
-                      $day as xs:integer
-                      </td>
 				      </tr><tr>
 					<td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp; as &nbsp;xs:integer</td>
 				      </tr>
@@ -2131,46 +2122,17 @@ application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
                <img src="images/varspace.gif" width="8">
                  <div style="margin-left: 0.5in; margin-right: 8px;">
                  <font style="font-size: 11pt; font-family: Courier;">
-                   $year
+                   $date
                    :
                  </font>
                  <font style="font-family: arial; font-size: 10pt;">
-                 The year.
+                 The date.
                  </font>
                  </div> 
             </td>
 				      </tr>
-         </tbody></table><table>
-          <tbody><tr class="mainbody">
-					<td style="font-size: 11pt; font-family: Arial;">
-               <img src="images/varspace.gif" width="8">
-                 <div style="margin-left: 0.5in; margin-right: 8px;">
-                 <font style="font-size: 11pt; font-family: Courier;">
-                   $month
-                   :
-                 </font>
-                 <font style="font-family: arial; font-size: 10pt;">
-                 The month.
-                 </font>
-                 </div> 
-            </td>
-				      </tr>
-         </tbody></table><table>
-          <tbody><tr class="mainbody">
-					<td style="font-size: 11pt; font-family: Arial;">
-               <img src="images/varspace.gif" width="8">
-                 <div style="margin-left: 0.5in; margin-right: 8px;">
-                 <font style="font-size: 11pt; font-family: Courier;">
-                   $day
-                   :
-                 </font>
-                 <font style="font-family: arial; font-size: 10pt;">
-                 The day.
-                 </font>
-                 </div> 
-            </td>
-				      </tr>
-         </tbody></table><br>
+         </tbody></table>
+         <br>
     </td>
 				</tr>
  
@@ -2186,7 +2148,7 @@ application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 import module namespace excel= "http://marklogic.com/openxml/excel" 
        at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
        
-excel:gregorian-to-julian(2009,4,6)
+excel:gregorian-to-julian(xs:date("2009-04-06"))
 =&gt;
 39909
        
@@ -2278,7 +2240,7 @@ import module namespace excel= "http://marklogic.com/openxml/excel"
        
 excel:julian-to-gregorian(39909)
 =&gt;
-2009-04-06T00:00:00
+2009-04-06
        
 
   </pre>
