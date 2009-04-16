@@ -198,7 +198,28 @@
 			    <td style="font-family: arial; font-size: 10pt;">
           This function returns the row number from A1 notation cell reference.
           </td>
-			  </tr><tr class="mainbody">
+			  </tr>
+<tr class="mainbody">
+			    <td style="font-family: arial; font-size: 10pt;">
+          <a href="#excel:a1-to-r1c1"><b>
+            excel:a1-to-r1c1
+            </b></a> 
+          </td>
+			    <td style="font-family: arial; font-size: 10pt;">
+This function converts the cell coordinate in A1 notation to what Excel
+refers to as R1C1 notation (row/column notation).
+          </td>
+			  </tr>
+
+
+
+
+
+
+
+
+
+<tr class="mainbody">
 			    <td style="font-family: arial; font-size: 10pt;">
           <a href="#excel:cell"><b>
             excel:cell
@@ -646,7 +667,123 @@ excel:a1-row("D23")
         <tr class="mainbody">
 				  <td></td>
 				</tr>
-        </tbody></table><table class="mainbody" width="100%" border="0" cellpadding="0" cellspacing="0">
+	</tbody></table>
+
+
+
+
+           
+
+        <table class="mainbody" width="100%" border="0" cellpadding="0" cellspacing="0">
+
+        <tbody><tr class="mainbody">
+				  <td><img src="images/varspace.gif" height="12">
+      <hr class="control-line" size="1"></td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td>
+
+            <table>
+            <tbody><tr>
+					<td colspan="2" style="font-size: 12pt; font-family: Courier;">
+                 <a id="excel:a1-to-r1c1"></a><b><font color="#c00831">
+                 excel:a1-to-r1c1</font></b>(
+                    </td>
+				      </tr><tr>
+					<td width="20"></td>
+					<td style="font-size: 11pt; font-family: Courier;">
+                       $a1notation as xs:string 
+                      </td>
+				      </tr>
+				      <tr>
+					<td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp; as &nbsp;xs:string</td>
+				      </tr>
+            </tbody></table>
+
+          </td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td><img src="images/varspace.gif" height="12"></td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td style="font-size: 10pt; font-family: Arial;">
+          <img src="images/varspace.gif" width="8">
+          <b>Summary:</b>
+          <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
+This function converts the cell coordinate in A1 notation to what Excel
+refers to as R1C1 notation (row/column notation). <br/>Excel's limits for rows is 1048756, and for columns is 16384.
+This function returns R1C1 notation for any cell in that range <br/>from A1 to
+WID1048576. </div><br>
+          </td>
+				</tr>
+        <tr class="mainbody">
+				  <td style="font-size: 10pt; font-family: Arial;">
+    <img src="images/varspace.gif" width="8">
+    <b>Parameters:</b>
+      <table>
+          <tbody><tr class="mainbody">
+					<td style="font-size: 11pt; font-family: Arial;">
+               <img src="images/varspace.gif" width="8">
+                 <div style="margin-left: 0.5in; margin-right: 8px;">
+                 <font style="font-size: 11pt; font-family: Courier;">
+                   $a1notation
+                   :
+                 </font>
+                 <font style="font-family: arial; font-size: 10pt;">
+                 the A1 style coordinate reference.
+                 </font>
+                 </div> 
+            </td>
+				      </tr>
+         </tbody></table>
+         <br>
+    </td>
+				</tr>
+ 
+        
+
+        
+
+        <tr class="mainbody">
+				  <td><img src="images/varspace.gif" width="8">
+            <font style="font-size: 10pt; font-family: Arial;"><b>Example:</b></font>
+            <div style="margin-left: 0.5in; margin-right: 8px; font-size: 9pt; font-family: Courier;"> 
+            <pre xml:space="preserve">xquery version "1.0-ml";
+import module namespace excel= "http://marklogic.com/openxml/excel" 
+       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
+
+excel:a1-to-r1c1("CJL1")
+=&gt;
+R:1C:2378 
+ </pre>
+  
+            </div>
+            </td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td></td>
+				</tr>
+        </tbody></table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="mainbody" width="100%" border="0" cellpadding="0" cellspacing="0">
 
         <tbody><tr class="mainbody">
 				  <td><img src="images/varspace.gif" height="12">
