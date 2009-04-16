@@ -870,7 +870,7 @@ declare function excel:set-cells(
 (: calendar conversion functions   :)
 declare function excel:julian-to-gregorian(
   $excel-julian-day as xs:integer
-) as xs:dateTime
+) as xs:date
 {
    (: formula from http://quasar.as.utexas.edu/BillInfo/JulianDatesG.html :)
    (: adapted for excel :)
@@ -890,20 +890,21 @@ declare function excel:julian-to-gregorian(
    let $year := if($E <=2) then $C - 4715 else $C - 4716
    let $finday := if(fn:string-length($day cast as xs:string) eq 1) then fn:concat("0",$day) else $day
    let $finmonth := if(fn:string-length($month cast as xs:string) eq 1) then fn:concat("0",$month) else $month
-   let $findate := fn:concat($year,"-", $finmonth, "-",$finday,"T00:00:00") (:create a date using date and time ? check for me :)
+   let $findate := fn:concat($year,"-", $finmonth, "-",$finday)
 
    (: return  ($day, $month, $year) :)
 (: return as xs:date :)
-   return   xs:dateTime($findate)
+   return   xs:date($findate)
 };
 
 (:function that's inverse of above :)
 declare function excel:gregorian-to-julian(
-  $year  as xs:integer, 
-  $month as xs:integer, 
-  $day   as xs:integer
+  $date   as xs:date
 ) as xs:integer
 {
+   let $year := fn:year-from-date($date)
+   let $month := fn:month-from-date($date)
+   let $day := fn:day-from-date($date)
    (: formula from http://quasar.as.utexas.edu/BillInfo/JulianDatesG.html :)
    (: adapted for excel :)
    let $NY := if($year <= 2) then $year + 1 else $year
