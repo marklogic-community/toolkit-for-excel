@@ -239,7 +239,10 @@ declare function excel:xlsx-package(
     return $return 
 };
 
-(: a couple of ways to create-row(s), both use excel:row constructor :)
+(: a couple of ways to create-rows, these don't use excel:row constructor; 
+   the creat-row functions don't specify row/@r or cell/@r 
+   this is acceptable for opening in excel, order determines layout in sheet
+:)
 declare function excel:create-row(
   $values as xs:anyAtomicType*
 ) as element(ms:row)
@@ -699,7 +702,7 @@ declare function excel:wb-set-sheetdata($x as node(), $newSheetData as element(m
      default return $x
 
 };
-
+(:
 declare function excel:passthru($x as node(), $newcell as element(ms:c)) as node()*
 {
     for $i in $x/node() return excel:set-row-cell($i,$newcell)
@@ -707,7 +710,6 @@ declare function excel:passthru($x as node(), $newcell as element(ms:c)) as node
 
 (: test : generate rowcols, then sort, see what shakes out :)
 (: fn:compare instead of less than with explicit compare :)
-
 (: compare cell with row, pass cell to row, insert accordingly :)
 
 declare function excel:insert-cell(
@@ -764,7 +766,7 @@ declare function excel:set-row-cell(
       default return $x
 };
 
-declare function excel:set-cells(
+declare function excel:set-cells-orig(
   $v_sheet as element(ms:worksheet), 
   $cells as element(ms:c)*
 ) as element(ms:worksheet)
@@ -801,6 +803,69 @@ declare function excel:set-cells(
 
   return excel:wb-set-sheetdata($sheet(:/ms:worksheet:), $finalsheet)                      
 };
+:)
+declare function excel:set-cells(
+  $v_sheet as element(ms:worksheet), 
+  $cells as element(ms:c)*
+) as element(ms:worksheet)
+{   
+    let $sheetDataTst := $v_sheet//ms:sheetData
+    let $sheet := if(fn:empty($sheetDataTst/*)) then 
+                        let $row := excel:row(excel:cell("A1",""))
+                        let $tmpSheet := excel:worksheet($row)
+                        return excel:wb-set-sheetdata($v_sheet, $tmpSheet//ms:sheetData) 
+                 else $v_sheet
+
+    let $sheetData := $sheet/ms:sheetData
+
+    let $cel-rows := fn:distinct-values(excel:a1-row($cells/@r))
+    let $orig-rows := $sheetData/ms:row
+   
+    (:determine missng rows, stub out rows that don't exist so we can loop through rows and add cells accordingly :) 
+    let $mssing := 
+                    for $i in $cel-rows
+                    let $x := if(fn:exists($orig-rows[@r=$i])) then () else 
+                              let $a1 := fn:concat("A",$i)
+                              return excel:row(excel:cell($a1,""))
+                    return $x
+
+    let $both := (($orig-rows,$mssing))
+   
+    (:want to keep rows in order :) 
+    let $ord-rows := for $i in $both
+                     order by xs:integer($i/@r) ascending  
+                     return $i
+                               
+    let $new-rows :=  for $r in $ord-rows
+                      let $cells-to-add := for $i in $cells
+                                           let $c := $i where (excel:a1-row($i/@r) = $r/@r)
+                                           return $c
+                      let $orig-cells := $r/ms:c
+
+                      (:now must replace any cells that previous exist:)
+                      (: want to eliminate cells that we're replacing, so update cells to only return delta, then merge the two sequences:)
+
+                      let $upd-cells := for $i in $orig-cells
+                                        let $x := if(fn:exists($cells-to-add[@r=$i/@r])) 
+                                        then () else $i
+                                        return $x
+                      
+                      (:now that we have all cells, order, return row:)
+                      let $all-cells2 := ($cells-to-add, $upd-cells)
+                      let $all-ord-cells := for $ce in $all-cells2
+                                            order by excel:col-letter-to-idx(excel:a1-column($ce/@r)) ascending
+                                            return $ce
+
+
+                      return  element ms:row{ $r/@* , ($r/* except $r/ms:c), $all-ord-cells}
+
+    (:set the updated rows in sheetData, set sheetData in worksheet, return worksheet:)
+    let $newSheetData := element ms:sheetData { $new-rows }
+    let $final-sheet := excel:wb-set-sheetdata($sheet, $newSheetData)
+    return $final-sheet
+                    
+};
+
 
 
 (: calendar conversion functions   :)
@@ -905,5 +970,3 @@ $tabstyle as xs:boolean
    let $package := excel:xlsx-package($content-types, $workbook, $rels, $workbookrels, $sheet1, $worksheetrels, $tablexml)
    return $package
 };
-
-
