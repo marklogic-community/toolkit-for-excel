@@ -804,6 +804,7 @@ declare function excel:set-cells-orig(
   return excel:wb-set-sheetdata($sheet(:/ms:worksheet:), $finalsheet)                      
 };
 :)
+
 declare function excel:set-cells(
   $v_sheet as element(ms:worksheet), 
   $cells as element(ms:c)*
@@ -860,13 +861,11 @@ declare function excel:set-cells(
                       return  element ms:row{ $r/@* , ($r/* except $r/ms:c), $all-ord-cells}
 
     (:set the updated rows in sheetData, set sheetData in worksheet, return worksheet:)
-    let $newSheetData := element ms:sheetData { $new-rows }
+    let $newSheetData := element ms:sheetData { $sheetData/@*, $new-rows }
     let $final-sheet := excel:wb-set-sheetdata($sheet, $newSheetData)
     return $final-sheet
                     
 };
-
-
 
 (: calendar conversion functions   :)
 declare function excel:julian-to-gregorian(
@@ -919,10 +918,26 @@ declare function excel:gregorian-to-julian(
 };
 
 (:rename width; optional colcustwidth and tabstyle params :)
+
+declare function create-xlsx-from-xml-table(
+$originalxml as node()
+) as binary()?
+{
+    create-xlsx-from-xml-table($originalxml,(),())
+};
+
 declare function create-xlsx-from-xml-table(
 $originalxml as node(),
-$colcustwidths as xs:string,
-$tabstyle as xs:boolean
+$colcustwidth as xs:string?
+) as binary()?
+{
+    create-xlsx-from-xml-table($originalxml,$colcustwidth,()) 
+};
+
+declare function create-xlsx-from-xml-table(
+$originalxml as node(),
+$colcustwidth as xs:string?,
+$tabstyle as xs:boolean?
 ) as binary()?
 {
    let $worksheetrows := $originalxml/child::*
@@ -959,11 +974,17 @@ $tabstyle as xs:boolean
    let $workbookrels :=  excel:workbook-rels(1)
 
    let $tablerange := fn:concat("A1:",excel:r1c1-to-a1($rowcount+1,$columncount))
-   let $tablexml :=  excel:table(1,$tablerange, $headerrows, xs:boolean("true"), $tabstyle) (: fn:true :)
+   let $tablexml :=  if(fn:empty($tabstyle)) then () 
+                     else excel:table(1,$tablerange, $headerrows, fn:true(), $tabstyle) 
 
    let $worksheetrels := excel:worksheet-rels(1,1)
-   let $sheet-col-widths := for $i in 1 to $columncount return $colcustwidths cast as xs:integer 
-   let $colwidths := excel:column-width($sheet-col-widths) 
+   let $sheet-col-widths := if(fn:not(fn:empty($colcustwidth))) then
+                                 for $i in 1 to $columncount
+                                 return $colcustwidth cast as xs:integer 
+                            else
+                                 ()
+   let $colwidths := if(fn:empty($sheet-col-widths)) then ()
+                     else excel:column-width($sheet-col-widths) 
 
    let $sheet1 := excel:worksheet(($headers,$rows), $colwidths, 1) 
 

@@ -80,8 +80,8 @@
 </tr>
 <tr>
 <td>_rels/.rels</td>
-<td><a href="#excel:pkg-rels"><b>
-            excel:pkg-rels
+<td><a href="#excel:package-rels"><b>
+            excel:package-rels
             </b></a></td>
 </tr>
 <tr>
@@ -122,8 +122,8 @@
 </tr>
 <tr>
 <td>_rels/.rels</td>
-<td><a href="#excel:pkg-rels"><b>
-            excel:pkg-rels
+<td><a href="#excel:package-rels"><b>
+            excel:package-rels
             </b></a></td>
 </tr>
 <tr>
@@ -326,8 +326,8 @@ This function dereferences cell text values so text is stored within
 the worksheet, instead of just a reference sharedStrings table. </td>
 			  </tr><tr class="mainbody">
 			    <td style="font-family: arial; font-size: 10pt;">
-          <a href="#excel:pkg-rels"><b>
-            excel:pkg-rels
+          <a href="#excel:package-rels"><b>
+            excel:package-rels
             </b></a> 
           </td>
 			    <td style="font-family: arial; font-size: 10pt;">
@@ -435,8 +435,8 @@ notation. </td>
           </td>
 			  </tr><tr class="mainbody">
 			    <td style="font-family: arial; font-size: 10pt;">
-          <a href="#excel:xl-pkg"><b>
-            excel:xl-pkg
+          <a href="#excel:xlsx-package"><b>
+            excel:xlsx-package
             </b></a> 
           </td>
 			    <td style="font-family: arial; font-size: 10pt;">
@@ -680,7 +680,7 @@ excel:a1-row("D23")
 				      </tr><tr>
 					<td width="20"></td>
 					<td style="font-size: 11pt; font-family: Courier;">
-                      [$date-style as xs:integer?]
+                      [$date-id as xs:integer?]
                       </td>
 				      </tr><tr>
 					<td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp; as &nbsp;element(ms:c)</td>
@@ -759,7 +759,7 @@ excel:a1-row("D23")
                <img src="images/varspace.gif" width="8">
                  <div style="margin-left: 0.5in; margin-right: 8px;">
                  <font style="font-size: 11pt; font-family: Courier;">
-                   $date-style
+                   $date-id
                    <font style="font-size: 10pt; font-family: Arial;"> 
                        (optional)</font>:
                  </font>
@@ -1569,12 +1569,12 @@ return xdmp:zip-manifest(excel:create-simple-xlsx($ws))
 				      </tr><tr>
 					<td width="20"></td>
 					<td style="font-size: 11pt; font-family: Courier;">
-                      $col-cust-widths as xs:integer, 
+                      [$col-cust-width as xs:integer?], 
                       </td>
 				      </tr><tr>
 					<td width="20"></td>
 					<td style="font-size: 11pt; font-family: Courier;">
-                      $tbl-style as xs:boolean
+                      [$tbl-style as xs:boolean?]
                       </td>
 				      </tr><tr>
 					<td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp; as &nbsp;binary()?</td>
@@ -1627,7 +1627,7 @@ possible to generate a sparsely populated table. If the xlsx <br/>is not able to
                <img src="images/varspace.gif" width="8">
                  <div style="margin-left: 0.5in; margin-right: 8px;">
                  <font style="font-size: 11pt; font-family: Courier;">
-                   $col-cust-widths
+                   $col-cust-width
                    :
                  </font>
                  <font style="font-family: arial; font-size: 10pt;">
@@ -1681,7 +1681,7 @@ let $xml := &lt;catalog&gt;
                  &lt;sku&gt;888&lt;/sku&gt;
               &lt;/item&gt;
              &lt;/catalog&gt;
-let $package := excel:create-xlsx-from-xml-table($xml,"15",xs:boolean("true"))
+let $package := excel:create-xlsx-from-xml-table($xml,"15",fn:true())
 return xdmp:zip-manifest($package)
 =&gt;
 &lt;parts xmlns="xdmp:zip"&gt;
@@ -2435,8 +2435,8 @@ return excel:map-shared-strings($ws,$ss)
             <table>
             <tbody><tr>
 					<td colspan="2" style="font-size: 12pt; font-family: Courier;">
-                   <a id="excel:pkg-rels"></a><b><font color="#c00831">
-                   excel:pkg-rels</font></b>(&nbsp;) as&nbsp;element(pr:Relationships)
+                   <a id="excel:package-rels"></a><b><font color="#c00831">
+                   excel:package-rels</font></b>(&nbsp;) as&nbsp;element(pr:Relationships)
                     </td>
 				      </tr>
             </tbody></table>
@@ -2472,7 +2472,7 @@ xquery version "1.0-ml";
 import module namespace excel= "http://marklogic.com/openxml/excel" 
        at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
 
-excel:pkg-rels()
+excel:package-rels()
        =&gt;
 &lt;Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"&gt;
    &lt;Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/&gt;
@@ -3890,8 +3890,8 @@ excel:worksheet-rels(2,2)
             <table>
             <tbody><tr>
 					<td colspan="2" style="font-size: 12pt; font-family: Courier;">
-                 <a id="excel:xl-pkg"></a><b><font color="#c00831">
-                 excel:xl-pkg</font></b>(
+                 <a id="excel:xlsx-package"></a><b><font color="#c00831">
+                 excel:xlsx-package</font></b>(
                     </td>
 				      </tr><tr>
 					<td width="20"></td>
@@ -4077,7 +4077,7 @@ mapped to one another. <br/>Just using the constructors provided, and setting th
             <pre xml:space="preserve">xquery version "1.0-ml";
 import module namespace excel= "http://marklogic.com/openxml/excel" 
        at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
-declare namespace ms = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+declare namespace ms = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 
 let $worksheets:= (&lt;ms:worksheet&gt;
                     &lt;ms:sheetData&gt;
@@ -4092,9 +4092,9 @@ let $worksheets:= (&lt;ms:worksheet&gt;
 let $ws-count := fn:count($worksheets)
 let $content-types := excel:content-types($ws-count,0)
 let $workbook := excel:workbook($ws-count)
-let $rels :=  excel:pkg-rels()
+let $rels :=  excel:package-rels()
 let $workbookrels :=  excel:workbook-rels($ws-count)
-let $package := excel:xl-pkg($content-types, $workbook, $rels, $workbookrels, $worksheets)
+let $package := excel:xlsx-package($content-types, $workbook, $rels, $workbookrels, $worksheets)
 
 return xdmp:zip-manifest($package)
 =&gt;
