@@ -944,7 +944,7 @@ $tabstyle as xs:boolean?
 
 (: order of rows?  :)
 (: remove at clauses :)
-   let $allrows := for $r at $d in $worksheetrows
+   let $allrows := for $r in $worksheetrows
              let $rowhdrs := $r//child::*
              let $validrownames :=
                     for $i in $rowhdrs 
@@ -956,7 +956,7 @@ $tabstyle as xs:boolean?
 
    let $headers := excel:create-row($headerrows)
 
-   let $rowvalues := for $i at $d in $worksheetrows
+   let $rowvalues := for $i in $worksheetrows
                   let $map := map:map()
                   let $return := for $x at $z in $i/child::*
                                  let $put := map:put($map, fn:local-name($x),$x/text())
