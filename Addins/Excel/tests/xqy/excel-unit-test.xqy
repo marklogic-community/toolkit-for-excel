@@ -95,7 +95,7 @@ return excel:create-row($map,$keys)
                 </item>
                </catalog>
    let $package := excel:create-xlsx-from-xml-table($xml,"15",fn:true())
-   return (xdmp:zip-manifest($package),xdmp:zip-get($package,"xl/worksheets/sheet1.xml"))
+   return (xdmp:zip-manifest($package),xdmp:zip-get($package,"xl/worksheets/sheet1.xml"),xdmp:zip-get($package,"xl/tables/table1.xml"))
 }
 </et:test>
 <et:test num="10" id="2">
@@ -115,7 +115,7 @@ return excel:create-row($map,$keys)
                 </item>
                </catalog>
    let $package := excel:create-xlsx-from-xml-table($xml,(),fn:true())
-   return (xdmp:zip-manifest($package),xdmp:zip-get($package,"xl/worksheets/sheet1.xml"))
+   return (xdmp:zip-manifest($package),xdmp:zip-get($package,"xl/worksheets/sheet1.xml"),xdmp:zip-get($package,"xl/tables/table1.xml"))
    }
 </et:test>
 <et:test num="10" id="3">
@@ -154,8 +154,88 @@ return excel:create-row($map,$keys)
                     <sku>888</sku>
                  </item>
                 </catalog>
+   let $package := excel:create-xlsx-from-xml-table($xml)
+   return (xdmp:zip-manifest($package),xdmp:zip-get($package,"xl/worksheets/sheet1.xml"))
+   }
+</et:test>
+<et:test num="10" id="5">
+   {
+   let $xml := <catalog>
+                 <item>
+                    <product>beach ball</product>
+                    <sku>123123</sku>
+                 </item>
+                 <item>
+                    <product>swim fins</product>
+                    <sku>444444</sku>
+                 </item>
+                 <item>
+                    <product>scuba glasses</product>
+                    <sku>888</sku>
+                 </item>
+                </catalog>
    let $package := excel:create-xlsx-from-xml-table($xml,"15",fn:false())
    return (xdmp:zip-manifest($package),xdmp:zip-get($package,"xl/worksheets/sheet1.xml"))
+   }
+</et:test>
+<et:test num="10" id="6">
+   {
+   let $xml := <catalog>
+                 <item>
+                    <product>beach ball</product>
+                    <sku>123123</sku>
+                 </item>
+                 <item>
+                    <product>swim fins</product>
+                    <sku>444444</sku>
+                 </item>
+                 <item>
+                    <product>scuba glasses</product>
+                    <sku>888</sku>
+                 </item>
+                </catalog>
+   let $package := excel:create-xlsx-from-xml-table($xml,"15",fn:false(),fn:false())
+   return (xdmp:zip-manifest($package),xdmp:zip-get($package,"xl/worksheets/sheet1.xml"))
+   }
+</et:test>
+<et:test num="10" id="7">
+   {
+   let $xml := <catalog>
+                 <item>
+                    <product>beach ball</product>
+                    <sku>123123</sku>
+                 </item>
+                 <item>
+                    <product>swim fins</product>
+                    <sku>444444</sku>
+                 </item>
+                 <item>
+                    <product>scuba glasses</product>
+                    <sku>888</sku>
+                 </item>
+                </catalog>
+   let $package := excel:create-xlsx-from-xml-table($xml,"15",fn:true(),fn:false())
+   return (xdmp:zip-manifest($package),xdmp:zip-get($package,"xl/worksheets/sheet1.xml"),xdmp:zip-get($package,"xl/tables/table1.xml"))
+   }
+</et:test>
+<et:test num="10" id="8">
+   {
+   let $xml := <catalog>
+                 <item>
+                    <product>beach ball</product>
+                    <sku>123123</sku>
+                 </item>
+                 <item>
+                    <product>swim fins</product>
+                    <sku>444444</sku>
+                 </item>
+                 <item>
+                    <product>scuba glasses</product>
+                    <sku>888</sku>
+                 </item>
+                </catalog>
+   let $package := excel:create-xlsx-from-xml-table($xml,"15",fn:false(),fn:true())
+   return (xdmp:zip-manifest($package),xdmp:zip-get($package,"xl/worksheets/sheet1.xml"),xdmp:zip-get($package,"xl/tables/table1.xml"))
    }
 </et:test>
 <et:test num="11">
