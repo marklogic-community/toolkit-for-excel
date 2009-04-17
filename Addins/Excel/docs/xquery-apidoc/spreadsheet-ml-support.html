@@ -1705,6 +1705,12 @@ return xdmp:zip-manifest(excel:create-simple-xlsx($ws))
 					<td style="font-size: 11pt; font-family: Courier;">
                       [$col-cust-width as xs:integer?], 
                       </td>
+				      </tr>
+<tr>
+					<td width="20"></td>
+					<td style="font-size: 11pt; font-family: Courier;">
+                      [$auto-filter as xs:boolean?]
+                      </td>
 				      </tr><tr>
 					<td width="20"></td>
 					<td style="font-size: 11pt; font-family: Courier;">
@@ -1770,7 +1776,24 @@ possible to generate a sparsely populated table. If the xlsx <br/>is not able to
                  </div> 
             </td>
 				      </tr>
-         </tbody></table><table>
+	 </tbody></table>
+<table>
+          <tbody><tr class="mainbody">
+					<td style="font-size: 11pt; font-family: Arial;">
+               <img src="images/varspace.gif" width="8">
+                 <div style="margin-left: 0.5in; margin-right: 8px;">
+                 <font style="font-size: 11pt; font-family: Courier;">
+                   $auto-filter
+                   :
+                 </font>
+                 <font style="font-family: arial; font-size: 10pt;">
+                 If true, columns will have auto-filter enabled. 
+                 </font>
+                 </div> 
+            </td>
+				      </tr>
+         </tbody></table>
+<table>
           <tbody><tr class="mainbody">
 					<td style="font-size: 11pt; font-family: Arial;">
                <img src="images/varspace.gif" width="8">
