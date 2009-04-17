@@ -361,7 +361,7 @@ declare function excel:a1-to-r1c1(
     let $row-index := excel:a1-row($a1notation)
     let $return := if(($row-index gt 1048756) or ($col-index gt 16384)) then
                        excel:error("The row and/or column index is beyond the limits of what Excel allows.")
-                   else fn:concat("R:",$row-index,"C:",$col-index)
+                   else fn:concat("R",$row-index,"C",$col-index)
     return $return
 };
 
