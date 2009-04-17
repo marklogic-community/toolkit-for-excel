@@ -112,7 +112,7 @@ this.colIdx=c_values[0];
 }
 
 /** @ignore */
-MLA.version = { "release" : "1.0-20090408" }; 
+MLA.version = { "release" : "1.0-20090420" }; 
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){

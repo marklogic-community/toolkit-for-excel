@@ -11,7 +11,7 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Create Worksheet from XML Table</title>
 	<link rel="stylesheet" type="text/css" href="../css/office-blue.css"/>
-	<script type="text/javascript" src="../MarkLogicExcelAddin.js">//</script>
+	<script type="text/javascript" src="../js/MarkLogicExcelAddin.js">//</script>
 	<script type="text/javascript" src="search.js">//</script>
 </head>
 {

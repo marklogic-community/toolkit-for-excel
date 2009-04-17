@@ -1162,6 +1162,7 @@ namespace MarkLogic_ExcelAddin
                 catch (Exception e)
                 {
                     string origmsg = "A document with the name '"+title+"' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
+                    MessageBox.Show(origmsg);
                     string errorMsg = e.Message;
                     message = "error: " + errorMsg;
                    
