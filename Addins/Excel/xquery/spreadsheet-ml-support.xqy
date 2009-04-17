@@ -836,6 +836,17 @@ $colcustwidth as xs:string?
 declare function create-xlsx-from-xml-table(
 $originalxml as node(),
 $colcustwidth as xs:string?,
+$auto-filter as xs:boolean?
+) as binary()?
+{
+    create-xlsx-from-xml-table($originalxml,$colcustwidth, $auto-filter, ()) 
+};
+
+
+declare function create-xlsx-from-xml-table(
+$originalxml as node(),
+$colcustwidth as xs:string?,
+$auto-filter as xs:boolean?,
 $tabstyle as xs:boolean?
 ) as binary()?
 {
@@ -873,10 +884,14 @@ $tabstyle as xs:boolean?
    let $workbookrels :=  excel:workbook-rels(1)
 
    let $tablerange := fn:concat("A1:",excel:r1c1-to-a1($rowcount+1,$columncount))
-   let $tablexml :=  if(fn:empty($tabstyle)) then () 
-                     else excel:table(1,$tablerange, $headerrows, fn:true(), $tabstyle) 
 
-   let $worksheetrels := excel:worksheet-rels(1,1)
+   let $tablexml :=  if($tabstyle or $auto-filter) then excel:table(1,$tablerange, $headerrows, $auto-filter, $tabstyle) 
+                     else ()
+                      
+
+   let $worksheetrels := if($tabstyle or $auto-filter) then  excel:worksheet-rels(1,1)
+                         else ()
+
    let $sheet-col-widths := if(fn:not(fn:empty($colcustwidth))) then
                                  for $i in 1 to $columncount
                                  return $colcustwidth cast as xs:integer 
@@ -885,7 +900,8 @@ $tabstyle as xs:boolean?
    let $colwidths := if(fn:empty($sheet-col-widths)) then ()
                      else excel:column-width($sheet-col-widths) 
 
-   let $sheet1 := excel:worksheet(($headers,$rows), $colwidths, 1) 
+   let $tbl-count := if($tabstyle or $auto-filter) then 1 else ()
+   let $sheet1 := excel:worksheet(($headers,$rows), $colwidths, $tbl-count) 
 
    let $package := excel:xlsx-package($content-types, $workbook, $rels, $workbookrels, $sheet1, $worksheetrels, $tablexml)
    return $package
