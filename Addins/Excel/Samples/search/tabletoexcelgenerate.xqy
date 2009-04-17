@@ -65,7 +65,7 @@ return $body
 ) 
 else
 (
-    let $package := excel:create-xlsx-from-xml-table($original,$colcustwidths,$tabstyle)
+    let $package := excel:create-xlsx-from-xml-table($original,$colcustwidths,fn:true(),$tabstyle)
 
     let $filename := $xlsxname 
     let $disposition := concat("attachment; filename=""",$filename,"""")
