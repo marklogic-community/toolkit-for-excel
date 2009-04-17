@@ -685,7 +685,7 @@ declare function excel:a1-column(
        fn:replace($a1,("\d+"),"")
 };
 
-(:     functions related wo ws-set-cells       :)
+(:     functions related set-cells       :)
 declare function excel:passthru-workbook($x as node(), $newSheetData as element(ms:sheetData)) as node()*
 {
    for $i in $x/node() return excel:wb-set-sheetdata($i,$newSheetData)
@@ -702,108 +702,6 @@ declare function excel:wb-set-sheetdata($x as node(), $newSheetData as element(m
      default return $x
 
 };
-(:
-declare function excel:passthru($x as node(), $newcell as element(ms:c)) as node()*
-{
-    for $i in $x/node() return excel:set-row-cell($i,$newcell)
-};
-
-(: test : generate rowcols, then sort, see what shakes out :)
-(: fn:compare instead of less than with explicit compare :)
-(: compare cell with row, pass cell to row, insert accordingly :)
-
-declare function excel:insert-cell(
-  $origcell as element(ms:c), 
-  $newcell as element(ms:c)
-)as element(ms:c)*
-{
-    if($newcell/@r = $origcell/@r) then 
-      $newcell 
-    else if(fn:empty($origcell/preceding-sibling::*))
-    then
-    (
-      if($newcell/@r lt $origcell/@r)
-      then
-           ($newcell,$origcell) 
-      else if($newcell/@r gt $origcell/@r 
-              and (($newcell/@r lt $origcell/following-sibling::*/@r) 
-                    or fn:not(fn:exists($origcell/following-sibling::*/@r)))
-           ) 
-           then 
-              ($origcell, $newcell) 
-           else 
-              ($origcell) (:lost newcell ?:) 
-    ) 
-    else if(fn:not(fn:empty($origcell/following-sibling::*)) 
-            and $newcell/@r > $origcell/@r 
-            and $newcell/@r < $origcell/following-sibling::*/@r) 
-    then  
-        ($origcell,$newcell)  
-    else if(fn:not(fn:empty($origcell/following-sibling::*)) 
-            and $newcell/@r < $origcell/@r 
-            and $newcell/@r > $origcell/preceding-sibling::*/@r 
-            and $newcell/@r < $origcell/following-sibling::*/@r
-        ) 
-    then  
-        ($newcell,$origcell)
-    else if(fn:empty($origcell/following-sibling::*) 
-            and $newcell/@r > $origcell/@r) 
-    then
-        ($origcell,$newcell)
-    else $origcell  
-};
-
-declare function excel:set-row-cell(
-  $x as node()*, 
-  $newcell as element(ms:c) 
-) as node()*
-{
-    typeswitch($x)
-      case text() return $x
-      case document-node() return document {$x/@*,excel:passthru($x,$newcell)}
-      case element(ms:c) return excel:insert-cell($x,$newcell)
-      case element() return  element{fn:name($x)} {$x/@*,excel:passthru($x,$newcell)}
-      default return $x
-};
-
-declare function excel:set-cells-orig(
-  $v_sheet as element(ms:worksheet), 
-  $cells as element(ms:c)*
-) as element(ms:worksheet)
-{  
-   let $sheetDataTst := $v_sheet//ms:sheetData
-   let $sheet := if(fn:empty($sheetDataTst)) then
-                        let $row := excel:row(excel:cell("A1",""))
-                        let $tmpSheet := excel:worksheet($row)
-                        return excel:wb-set-sheetdata($v_sheet, $tmpSheet//ms:sheetData)
-                 else $v_sheet
-
-   let $sheetData :=  $sheet//ms:sheetData
-   let $finalsheet := (
-         for $c in $cells
-         return xdmp:set($sheetData,(
-                     let $refrow := excel:a1-row($c/@r)
-                     let $origrow := $sheetData/ms:row[@r=$refrow]
-                     let $newrow := if(fn:empty($origrow)) then 
-                                        excel:row($c)
-                                    else excel:set-row-cell($origrow,$c)
-
-                     let $rows := if(fn:exists($sheetData/ms:row[@r=$refrow])) then
-                                    for $r at $d in $sheetData/ms:row
-                                    let $row := if($r/@r = $newrow/@r) then
-                                                  $newrow 
-                                                else $r
-                                    return $row
-                                  else for $newrow in ($sheetData/ms:row,$newrow)             
-                                       order by $newrow/@r cast as xs:integer
-                                       return $newrow
-                   
-                     let $newSheetData := element ms:sheetData{ $sheetData/@*, $rows}   
-                     return $newSheetData )),$sheetData)
-
-  return excel:wb-set-sheetdata($sheet(:/ms:worksheet:), $finalsheet)                      
-};
-:)
 
 declare function excel:set-cells(
   $v_sheet as element(ms:worksheet), 
