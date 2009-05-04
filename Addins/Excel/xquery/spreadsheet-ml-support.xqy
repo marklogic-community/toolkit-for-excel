@@ -1,5 +1,5 @@
 xquery version "1.0-ml";
-(: Copyright 2009 Mark Logic Corporation
+(: Copyright 2008 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -147,11 +147,12 @@ declare function excel:map-shared-strings(
                      
                  return element ms:row{ $row/@*, $cells }
                                
-    let $worksheet   :=  $sheet/* except ( $sheet/ms:sheetData, $sheet/ms:tableParts, $sheet/ms:pageMargins, $sheet/ms:pageSetup)
+    let $worksheet   :=  $sheet/* except ( $sheet/ms:sheetData, $sheet/ms:tableParts, $sheet/ms:pageMargins, $sheet/ms:pageSetup, $sheet/ms:drawing)
     let $page-setup :=  $sheet/ms:pageSetup 
     let $table-parts :=  $sheet/ms:tableParts
     let $sheet-data  :=  $sheet/ms:sheetData
-    let $ws := element ms:worksheet {  $sheet/ms:worksheet/@*, $worksheet, element ms:sheetData{ $sheet-data/@*, $rows },  $page-setup ,$table-parts  }
+    let $drawing := $sheet/ms:drawing
+    let $ws := element ms:worksheet {  $sheet/ms:worksheet/@*, $worksheet, element ms:sheetData{ $sheet-data/@*, $rows },  $page-setup ,$table-parts, $drawing  }
     return $ws
 
 };
