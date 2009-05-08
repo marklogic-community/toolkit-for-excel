@@ -1,4 +1,22 @@
-﻿using System;
+﻿/*Copyright 2009 Mark Logic Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ * 
+ * UserControl1.cs - the api called from MarkLogicPowerPointAddin.js.  The methods here map directly to functions in the .js.
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -21,16 +39,20 @@ namespace MarkLogic_PowerPointAddin
     [ComVisible(true)]
     public partial class UserControl1 : UserControl
     {
+        private AddinConfiguration ac = AddinConfiguration.GetInstance();
         private string webUrl = "";
         private bool debug = false;
-        private bool debugMsg = false;
         private string color = "";
         private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";
+        HtmlDocument htmlDoc;
+
         public UserControl1()
         {
             InitializeComponent();
-            bool regEntryExists = checkUrlInRegistry();
-            if (!regEntryExists)
+           // bool regEntryExists = checkUrlInRegistry();
+            webUrl = ac.getWebURL();
+
+            if (webUrl.Equals(""))
             {
                 //MessageBox.Show("Unable to find configuration info. Please insure OfficeProperties.txt exists in your system temp directory.  If problems persist, please contact your system administrator.");
                 MessageBox.Show("                                   Unable to find configuration info. \n\r " +
@@ -50,10 +72,32 @@ namespace MarkLogic_PowerPointAddin
             }
 
         }
-        private bool checkUrlInRegistry()
+
+        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            if (webBrowser1.Document != null)
+            {
+                htmlDoc = webBrowser1.Document;
+
+                htmlDoc.Click += htmlDoc_Click;
+
+            }
+        }
+
+        private void htmlDoc_Click(object sender, HtmlElementEventArgs e)
+        {
+            if (!(webBrowser1.Parent.Focused))
+            {
+                webBrowser1.Parent.Focus();
+                webBrowser1.Document.Focus();
+            }
+
+        }
+
+     /*   private bool checkUrlInRegistry()
         {
             RegistryKey regKey1 = Registry.CurrentUser;
-            regKey1 = regKey1.OpenSubKey(@"MarkLogicAddinConfiguration\Word");
+            regKey1 = regKey1.OpenSubKey(@"MarkLogicAddinConfiguration\PowerPoint");
             bool keyExists = false;
             if (regKey1 == null)
             {
@@ -72,6 +116,7 @@ namespace MarkLogic_PowerPointAddin
             }
             return keyExists;
         }
+      * */
         public enum ColorScheme : int
         {
             Blue = 1,
@@ -127,14 +172,17 @@ namespace MarkLogic_PowerPointAddin
                 {
                     if (c.BuiltIn.Equals(false))
                     {
-                        ids += c.Id + "U+016000";
+                        ids += c.Id + " ";// "U+016000";
 
 
                     }
                 }
 
-                char[] tengwar = { 'U', '+', '0', '1', '6', '0', '0', '0' };
-                ids = ids.TrimEnd(tengwar);
+                char[] space = { ' ' };
+                ids = ids.TrimEnd(space);
+
+                //char[] tengwar = { 'U', '+', '0', '1', '6', '0', '0', '0' };
+                //ids = ids.TrimEnd(tengwar);
             }
             catch (Exception e)
             {
@@ -252,6 +300,28 @@ namespace MarkLogic_PowerPointAddin
             return ms.ToArray();
         }
 
+        public String insertImage(string imageuri, string uname, string pwd)
+        {
+            object missing = Type.Missing;
+            MessageBox.Show("Adding Image");
+            string message = "";
+
+            System.Net.WebClient Client = new System.Net.WebClient();
+            Client.Credentials = new System.Net.NetworkCredential(uname, pwd);
+            byte[] bytearray = Client.DownloadData(imageuri);
+            Image img = byteArrayToImage(bytearray);
+            //Image img = Image.FromFile(@"C:\gijoe_destro.jpg");
+
+
+            PPT.Slide slide = (PPT.Slide)Globals.ThisAddIn.Application.ActiveWindow.View.Slide;
+
+            Clipboard.SetImage(img);
+            slide.Shapes.Paste();
+            Clipboard.Clear();
+            return message;
+        }
+
+        /*
         public String insertImage(string imageuri, string imagename)
         {
             object missing = Type.Missing;
@@ -272,6 +342,7 @@ namespace MarkLogic_PowerPointAddin
             Clipboard.Clear();
             return message;
         }
+         * */
 
         public String addSlide()
         {
