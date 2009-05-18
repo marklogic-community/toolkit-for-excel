@@ -303,7 +303,7 @@ namespace MarkLogic_PowerPointAddin
         public String insertImage(string imageuri, string uname, string pwd)
         {
             object missing = Type.Missing;
-            MessageBox.Show("Adding Image");
+            //MessageBox.Show("Adding Image");
             string message = "";
 
             System.Net.WebClient Client = new System.Net.WebClient();
