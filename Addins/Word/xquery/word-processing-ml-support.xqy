@@ -12,8 +12,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-word-processing-ml-support.xqy - XQuery functions for manipulating WordprocessingML
 :)
 module namespace ooxml = "http://marklogic.com/openxml";
 
@@ -26,6 +24,8 @@ declare namespace m="http://schemas.openxmlformats.org/officeDocument/2006/math"
 declare namespace wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing";
 declare namespace w10="urn:schemas-microsoft-com:office:word";
 declare namespace wne="http://schemas.microsoft.com/office/word/2006/wordml";
+declare namespace pkg="http://schemas.microsoft.com/office/2006/xmlPackage";
+declare namespace pic="http://schemas.openxmlformats.org/drawingml/2006/picture";
 
 import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy";
 
@@ -313,5 +313,171 @@ declare function ooxml:custom-xml-highlight($nodes as node()*, $highlight-term a
       ooxml:custom-xml-highlight-exec($nodes,$highlight-term,$tag-name)
 };
 
+(: added Entity Hightlight :)
+declare function ooxml:custom-xml-entity-hlt($nodes as node()*) as node()*
+{
+   let $enriched := cts:entity-highlight($nodes, element w:customXml{attribute w:element{fn:replace($cts:entity-type, ":", "-")}, <w:r><w:t>{$cts:text}</w:t></w:r> } )
+   let $final := ooxml:dispatch-chlt($enriched)
+   return $final
+  
+};
+
 (: END w:customXml HIGHLIGHT =================================================================== :)
+
+(: added OPC Package serialization support :)
+
+declare function ooxml:formatbinary($s as xs:string*) as xs:string*
+{
+ if(fn:string-length($s) > 0) then
+     let $firstpart := fn:concat(fn:substring($s,1,76))
+     let $tail := fn:substring-after($s,$firstpart)
+     return ($firstpart,ooxml:formatbinary($tail))
+                  else
+             ()
+  
+
+  (: let $x := "PETE"
+     let $y := "O"
+     return ($x, $y)
+  :)
+};
+
+declare function ooxml:get-part-content-type($uri as xs:string) as xs:string?
+{
+   if(fn:ends-with($uri,".rels"))
+   then 
+        "application/vnd.openxmlformats-package.relationships+xml"
+   else if(fn:ends-with($uri,"glossary/document.xml"))
+   then
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml"
+   else if(fn:ends-with($uri,"document.xml"))
+   then
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml" 
+   else if(fn:matches($uri, "theme\d+\.xml"))
+   then 
+      "application/vnd.openxmlformats-officedocument.theme+xml"
+   else if(fn:ends-with($uri,"word/numbering.xml"))
+   then 
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"
+   (: else if(fn:ends-with($uri,"word/settings.xml")):)
+   else if(fn:ends-with($uri,"settings.xml"))
+   then 
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"
+   (:else if(fn:ends-with($uri,"word/styles.xml")):)
+   else if(fn:ends-with($uri,"styles.xml"))
+   then 
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"
+   (: else if(fn:ends-with($uri,"word/webSettings.xml")) :)
+   else if(fn:ends-with($uri,"webSettings.xml"))
+   then 
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"
+   (: else if(fn:ends-with($uri,"word/fontTable.xml")) :)
+   else if(fn:ends-with($uri,"fontTable.xml"))
+   then 
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"
+   else if(fn:ends-with($uri,"word/footnotes.xml"))
+   then 
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"
+   else if(fn:matches($uri, "header\d+\.xml"))
+   then 
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"
+   else if(fn:matches($uri, "footer\d+\.xml"))
+   then 
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"
+   else if(fn:ends-with($uri,"word/endnotes.xml"))
+   then
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml"
+   else if(fn:ends-with($uri,"docProps/core.xml"))
+   then
+      "application/vnd.openxmlformats-package.core-properties+xml"
+   else if(fn:ends-with($uri,"docProps/app.xml"))
+   then
+      "application/vnd.openxmlformats-officedocument.extended-properties+xml"
+   else if(fn:ends-with($uri,"docProps/custom.xml")) 
+   then
+      "application/vnd.openxmlformats-officedocument.custom-properties+xml"
+   else if(fn:ends-with($uri,"jpeg")) 
+   then
+      "image/jpeg"
+   else if(fn:ends-with($uri,"wmf")) 
+   then
+      "image/x-wmf"
+   else if(fn:matches($uri,"customXml/itemProps\d+\.xml")) then
+      "application/vnd.openxmlformats-officedocument.customXmlProperties+xml"
+   else if(fn:matches($uri,"customXml/item\d+\.xml")) then
+      "application/xml"
+   else
+       ()
+    
+};
+
+declare function ooxml:get-part-attributes($uri as xs:string) as node()*
+{
+  (:not sure if this is needed, for serverside generated docx, path comes through as \path\name , if path has /mixed\separators\for\path/example, it chokes when opening in word :)
+  let $cleanuri := fn:replace($uri,"\\","/")
+  let $name := attribute pkg:name{$cleanuri}
+  let $contenttype := attribute pkg:contentType{ooxml:get-part-content-type($cleanuri)}
+  let $padding := if(fn:ends-with($cleanuri,".rels")) then
+
+                     if(fn:starts-with($cleanuri,"/word/glossary")) then
+                         ()
+                    
+                     else if(fn:starts-with($cleanuri,"/_rels")) then
+                      attribute pkg:padding{ "512" }
+                     else    
+                      attribute pkg:padding{ "256" }
+                  else
+                     ()
+  let $compression := if(fn:ends-with($cleanuri,"jpeg")) then 
+                         attribute pkg:compression { "store" } 
+                      else ()
+  
+  return ($name, $contenttype, $padding, $compression)
+};
+
+declare function ooxml:get-package-part($directory as xs:string, $uri as xs:string) as node()?
+{
+  let $fulluri := $uri
+  let $docuri := fn:concat("/",fn:substring-after($fulluri,$directory))
+  let $data := fn:doc($fulluri)
+
+  let $part := if(fn:empty($data) or fn:ends-with($fulluri,"[Content_Types].xml")) then () 
+               else if(fn:ends-with($fulluri,".jpeg") or fn:ends-with($fulluri,".wmf")) then
+                  let $bin :=   xs:base64Binary(xs:hexBinary($data)) cast as xs:string 
+                    let $formattedbin := fn:string-join(ooxml:formatbinary($bin),"&#x9;&#xA;") 
+                  (: let $formattedbin := fn:string-join(ooxml:formatbinary($bin),"\r\n") :)
+                  (:let $formattedbin := mlos:formatbinary($bin):)
+                  return  element pkg:part { ooxml:get-part-attributes($docuri), element pkg:binaryData { $formattedbin  }   }
+                  (: element pkg:part { mlos:get-part-attributes($docuri), element pkg:binaryData {  xs:base64Binary(xs:hexBinary($data))    }   } :)
+               else
+                  element pkg:part { ooxml:get-part-attributes($docuri), element pkg:xmlData { $data }}
+  return  $part (: <T>{$fulluri}</T>   :) 
+};
+
+declare function ooxml:make-package($directory as xs:string, $uris as xs:string*) as node()*
+{
+  let $package := element pkg:package { 
+                            for $uri in $uris
+                            let $part := ooxml:get-package-part($directory,$uri)
+                            return $part }
+                           
+return 
+(: <?mso-application progid="Word.Document"?>, :)
+     $package
+};
+
+declare function ooxml:package-uris-from-directory($docuri as xs:string) as xs:string*
+{
+
+  cts:uris("","document",cts:directory-query($docuri,"infinity"))
+
+};
+
+declare function ooxml:package-files-only($uris as xs:string*) as xs:string*
+{
+                  for $uri in $uris
+                  let $u := if(fn:ends-with($uri,"/")) then () else $uri
+                  return $u
+};
+(: end OPC Package serialization :)
 
