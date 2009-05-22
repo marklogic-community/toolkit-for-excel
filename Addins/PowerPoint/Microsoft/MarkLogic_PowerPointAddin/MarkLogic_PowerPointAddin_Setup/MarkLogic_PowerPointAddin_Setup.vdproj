@@ -22,6 +22,18 @@
         "Entry"
         {
         "MsmKey" = "8:_01DF2A9E1D61CAEC2B36F20F2F2A629D"
+        "OwnerKey" = "8:_F10C46424693724F0DD63FE6B53FE0D1"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_01DF2A9E1D61CAEC2B36F20F2F2A629D"
+        "OwnerKey" = "8:_92D0C4C13B5B4DDB9724CC612201B669"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_01DF2A9E1D61CAEC2B36F20F2F2A629D"
         "OwnerKey" = "8:_21732762870CB9CBF252C1839CBBE8E9"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -53,6 +65,24 @@
         {
         "MsmKey" = "8:_3F035BE1D86C9348BE9C8178E170A30E"
         "OwnerKey" = "8:_6E3B8B0CF2D24244B92CECA5D16108BC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3F035BE1D86C9348BE9C8178E170A30E"
+        "OwnerKey" = "8:_88FD7A15877BD96DF59DE7C6DD039451"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3F035BE1D86C9348BE9C8178E170A30E"
+        "OwnerKey" = "8:_F10C46424693724F0DD63FE6B53FE0D1"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3F035BE1D86C9348BE9C8178E170A30E"
+        "OwnerKey" = "8:_92D0C4C13B5B4DDB9724CC612201B669"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -129,6 +159,24 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_88FD7A15877BD96DF59DE7C6DD039451"
+        "OwnerKey" = "8:_92D0C4C13B5B4DDB9724CC612201B669"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_88FD7A15877BD96DF59DE7C6DD039451"
+        "OwnerKey" = "8:_F10C46424693724F0DD63FE6B53FE0D1"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_92D0C4C13B5B4DDB9724CC612201B669"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C89DA6AFE13CB193428F2355F12DDD66"
         "OwnerKey" = "8:_6E3B8B0CF2D24244B92CECA5D16108BC"
         "MsmSig" = "8:_UNDEFINED"
@@ -141,8 +189,32 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_F10C46424693724F0DD63FE6B53FE0D1"
+        "OwnerKey" = "8:_92D0C4C13B5B4DDB9724CC612201B669"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_6E3B8B0CF2D24244B92CECA5D16108BC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_88FD7A15877BD96DF59DE7C6DD039451"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_92D0C4C13B5B4DDB9724CC612201B669"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F10C46424693724F0DD63FE6B53FE0D1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -280,6 +352,62 @@
     {
         "CustomAction"
         {
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_5DBBC53BEBB049F19A01567E02D4D143"
+            {
+            "Name" = "8:Remove add-in from inclusion list"
+            "Condition" = "8:"
+            "Object" = "8:_92D0C4C13B5B4DDB9724CC612201B669"
+            "FileType" = "3:1"
+            "InstallAction" = "3:4"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_651FC5D7_1BED_438C_8063_6967184646B1"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_C7DB93D25BE74259A847F880F4484295"
+            {
+            "Name" = "8:Primary output from InclusionListCustomActions (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_92D0C4C13B5B4DDB9724CC612201B669"
+            "FileType" = "3:1"
+            "InstallAction" = "3:2"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_7E53A72F_7E55_4A1F_B6E5_48A14592DE2C"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_E94164F46B36472EAA4900407BA8A5AD"
+            {
+            "Name" = "8:Primary output from InclusionListCustomActions (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_92D0C4C13B5B4DDB9724CC612201B669"
+            "FileType" = "3:1"
+            "InstallAction" = "3:3"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_62C8FBB0_AA13_48AF_A73D_5BE6D8D3B7FB"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_F88DCCF7DB2C4CBEBB08DFEF88EFCEBD"
+            {
+            "Name" = "8:Add add-in to inclusion list"
+            "Condition" = "8:"
+            "Object" = "8:_92D0C4C13B5B4DDB9724CC612201B669"
+            "FileType" = "3:1"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_FDB986E3_9209_48F7_B2D2_2154441B5FA2"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:/deploymentManifestLocation=\"[TARGETDIR]MarkLogic_PowerPointAddin.vsto\""
+            }
         }
         "DefaultFeature"
         {
@@ -540,6 +668,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_88FD7A15877BD96DF59DE7C6DD039451"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.VisualStudio.Tools.Applications.Hosting.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_88FD7A15877BD96DF59DE7C6DD039451"
+                    {
+                    "Name" = "8:Microsoft.VisualStudio.Tools.Applications.Hosting.v9.0.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.VisualStudio.Tools.Applications.Hosting.v9.0.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_680D66B1B0584076971B0BA1F628C2B7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C89DA6AFE13CB193428F2355F12DDD66"
             {
             "AssemblyRegister" = "3:1"
@@ -589,6 +748,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F10C46424693724F0DD63FE6B53FE0D1"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.VisualStudio.Tools.Office.Runtime.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_F10C46424693724F0DD63FE6B53FE0D1"
+                    {
+                    "Name" = "8:Microsoft.VisualStudio.Tools.Office.Runtime.v9.0.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.VisualStudio.Tools.Office.Runtime.v9.0.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_680D66B1B0584076971B0BA1F628C2B7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
@@ -1304,6 +1494,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{6D9895FE-2384-4DEB-BC1D-D1A2D28E4656}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_92D0C4C13B5B4DDB9724CC612201B669"
+            {
+            "SourcePath" = "8:..\\InclusionListCustomActions\\obj\\Release\\InclusionListCustomActions.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_680D66B1B0584076971B0BA1F628C2B7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{12FDB396-30E6-48EF-9A09-6F5E3D8E2417}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {
