@@ -321,6 +321,290 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
+      //  public static bool CopySlidesFromPPT(string sourcefile, string dstfile, out string exmsg)
+        public string copyPasteSlideToActive()
+        {
+            MessageBox.Show("Copy Pasting files");
+            string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
+            string dstfile = @"C:\pete.pptx";
+            PPT.Application ppa = new PPT.ApplicationClass();
+            PPT.Presentations ppp = ppa.Presentations;
+            //PPT.Presentation ppmp = null;
+
+            PPT.Presentation activePres = Globals.ThisAddIn.Application.ActivePresentation;
+
+            PPT.Presentation sourcePres = ppp.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
+
+         
+
+            //activePres.SlideMaster.BackgroundStyle = sourcePres.SlideMaster.BackgroundStyle;
+          
+            PPT.Slides activeSlides = activePres.Slides;
+            PPT.Slides sourceSlides = sourcePres.Slides;
+            
+
+           //PPT.Master m = activePres.SlideMaster;
+           // m.BackgroundStyle = sourcePres.SlideMaster.BackgroundStyle;
+
+            for (int x = 1; x < sourceSlides.Count; x++)
+            {
+                int id = sourceSlides[x].SlideID;
+                //MessageBox.Show(id+"");
+                sourceSlides.FindBySlideID(id).Copy();
+                //sourcePres.SlideMaster.Background.
+                //activePres.Application.ActiveWindow.View.PasteSpecial();
+
+                //activeSlides.Paste(x);
+                try
+                {
+                  //  sourceSlides.FindBySlideID(id).Copy();
+                    activeSlides.Paste(x);
+                  //  activeSlides[x].Master.BackgroundStyle = sourceSlides.FindBySlideID(id).Master.BackgroundStyle;
+                    //MessageBox.Show(activeSlides[x].Name);
+                    
+                    //activeSlides[x].Background.BackgroundStyle = sourceSlides.FindBySlideID(id).Background.BackgroundStyle;
+                }
+                catch (Exception e)
+                {
+                    //MessageBox.Show("FAIL"+e.Message+"   "+e.StackTrace);
+                }
+                
+                    // activePres.SlideMaster.= sourcePres.SlideMaster.Background;
+                     //activeSlides[x].BackgroundStyle=   sourceSlides.FindBySlideID(id).BackgroundStyle;
+                //activeSlides.Paste(x);
+            }
+
+            int i = 1;
+           // foreach (PPT.Slide s in sourceSlides)
+           // {
+             //   s.Copy();
+               // activePres.Slides.Paste(i);
+         
+                //i++;
+               
+            //}
+          
+            try
+            {
+               
+               // i--;
+                //activePres.NotesMaster.BackgroundStyle = sourcePres.NotesMaster.BackgroundStyle;
+                //activePres.TitleMaster.BackgroundStyle = sourcePres.TitleMaster.BackgroundStyle;
+                //activePres.HandoutMaster.BackgroundStyle = sourcePres.HandoutMaster.BackgroundStyle;
+               // activePres.SlideMaster.Background.BackgroundStyle = sourcePres.SlideMaster.Background.BackgroundStyle;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERR "+e.Message+e.StackTrace);
+            }
+            
+            //for (int j = 0; j < activeSlides.Count; j++)
+          //  /{
+               //activePres.Designs.Add(sourceSlides[j].Design.Name, sourceSlides[j].Design.Index);
+              // activePres.Designs[j]. = sourceSlides[j].Design;
+
+            //}
+            activePres.SaveAs(dstfile, PPT.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Office.MsoTriState.msoFalse);
+            MessageBox.Show("SAVED");
+           // PPT.Slides ppms = ppmp.Slides;
+            Marshal.ReleaseComObject(sourcePres);
+            sourcePres.Close();
+            Marshal.ReleaseComObject(ppp);
+            ppp = null;
+            Marshal.ReleaseComObject(ppa);
+            ppa = null;
+
+            return "Foo";
+
+
+        }
+
+        //missing template style BLERG!
+        public string copySlideToActive()
+        {
+            MessageBox.Show("Saving files");
+            string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
+            //PPT.Presentation p = Globals.ThisAddIn.Application.ActivePresentation;
+
+            PPT.Application ppa = new PPT.ApplicationClass();
+            PPT.Presentations ppp = ppa.Presentations;
+            //PPT.Presentation ppmp = null;
+
+            PPT.Presentation ppmp = Globals.ThisAddIn.Application.ActivePresentation;
+
+            PPT.Slides ppms = ppmp.Slides;
+            
+            
+
+            PPT.Presentation ppps = ppp.Open( sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
+            
+            ppms.InsertFromFile( sourcefile, ppms.Count, 1, ppps.Slides.Count);
+           
+
+            //ppmp.SlideMaster.CustomLayouts.Add( ppps.SlideMaster.CustomLayouts);
+            //ppmp.SlideMaster.
+            ////ppmp.SlideMaster.Background.BackgroundStyle = ppps.SlideMaster.Background.BackgroundStyle;
+           // ppmp.SlideMaster.ColorScheme = ppps.SlideMaster.ColorScheme;
+           // ppmp.HandoutMaster.BackgroundStyle = ppps.HandoutMaster.BackgroundStyle;
+            try
+            {
+                ppmp.SlideMaster.BackgroundStyle = ppps.SlideMaster.BackgroundStyle;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("FAIL");
+            }
+            finally
+            {
+
+                ppps.Close();
+            }
+            
+
+                                //ppmp.Close();
+                    //
+                    // Release the COM object holding the merged presentation
+                    //
+                    //Marshal.ReleaseComObject(ppmp);
+                   // ppmp = null;
+                    //
+                    // Release the COM object holding the presentations
+                    //
+            Marshal.ReleaseComObject(ppp);
+            ppp = null;
+                    //
+                    // Release the COM object holding the powerpoint application
+                    //
+            Marshal.ReleaseComObject(ppa);
+            ppa = null;
+                
+
+            return "foo";
+
+            
+        }
+        public string CopySlidesFromPPT()
+        {
+            MessageBox.Show("Saving files");
+            string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
+            string dstfile = @"C:\JetBlue case study r6.pptx";
+            string exmsg="";
+            bool success = false;
+
+            //
+            // Initialise the exception message
+            //
+            exmsg = "";
+            //
+            // Create a link to the PowerPoint object model
+            //
+            PPT.Application ppa = new PPT.ApplicationClass();
+            PPT.Presentations ppp = ppa.Presentations;
+            PPT.Presentation ppmp = null;
+            //
+            // If the destination presentation exists on disk, load it so
+            // that we can append the new slides
+            //
+            if (File.Exists(dstfile) == true)
+            {
+                try
+                {
+                    //
+                    // Try and open the destination presentation
+                    //
+                    ppmp = ppp.Open(dstfile, Office.MsoTriState.msoFalse, Office.MsoTriState.msoFalse, Office.MsoTriState.msoFalse);
+                }
+                catch (Exception ex)
+                {
+                    ppmp = null;
+                    exmsg = ex.Message;
+                }
+            }
+            else
+            {
+                //
+                // Create a new presentation
+                //
+                try
+                {
+                    ppmp = ppp.Add(Microsoft.Office.Core.MsoTriState.msoFalse);
+                }
+                catch (Exception ex)
+                {
+                    ppmp = null;
+                    exmsg = ex.Message;
+                }
+            }
+            //
+            // Do we have a master presentation ?
+            //
+            if (ppmp != null)
+            {
+                //
+                // Point to the slides in the master presentation
+                //
+               PPT.Slides ppms = ppmp.Slides;
+                try
+                {
+                    try
+                    {
+                        //
+                        // Open the source presentation
+                        //
+                        PPT.Presentation ppps = ppp.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
+                        try
+                        {
+                            //
+                            // Insert the source slides onto the end of the merge presentation
+                            //
+                            ppms.InsertFromFile(sourcefile, ppms.Count, 1, ppps.Slides.Count);
+                            //
+                            // Save the merged presentation back to disk
+                            //
+                            ppmp.SaveAs(dstfile, PPT.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Office.MsoTriState.msoFalse);
+                            //
+                            // Signal success
+                            success = true;
+                        }
+                        finally
+                        {
+                            //
+                            // Close the source presentation
+                            //
+                            ppps.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        exmsg = ex.Message;
+                    }
+                }
+                finally
+                {
+                    //
+                    // Ensure the merge presentation is closed
+                    //
+                    ppmp.Close();
+                    //
+                    // Release the COM object holding the merged presentation
+                    //
+                    Marshal.ReleaseComObject(ppmp);
+                    ppmp = null;
+                    //
+                    // Release the COM object holding the presentations
+                    //
+                    Marshal.ReleaseComObject(ppp);
+                    ppp = null;
+                    //
+                    // Release the COM object holding the powerpoint application
+                    //
+                    Marshal.ReleaseComObject(ppa);
+                    ppa = null;
+                }
+            }
+            return "TEST";
+        }
+
         /*
         public String insertImage(string imageuri, string imagename)
         {
@@ -452,7 +736,7 @@ namespace MarkLogic_PowerPointAddin
         //pass filename, imagename, uri - want to use client download to tmp file
         //insert image
         //delete tmp file
-        public String insertImageORIG(string imageuri, string imagename)
+ /*      public String insertImageORIG(string imageuri, string imagename)
         {
             object missing = Type.Missing;
             MessageBox.Show("Adding Image");
@@ -515,7 +799,7 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-  
+  */
 
 
 
