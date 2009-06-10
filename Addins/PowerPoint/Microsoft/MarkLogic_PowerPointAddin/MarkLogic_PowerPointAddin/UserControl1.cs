@@ -32,6 +32,8 @@ using System.IO;
 using Office = Microsoft.Office.Core;
 using Microsoft.Win32;
 using PPT = Microsoft.Office.Interop.PowerPoint;
+using OX = DocumentFormat.OpenXml.Packaging;
+
 
 
 namespace MarkLogic_PowerPointAddin
@@ -321,30 +323,186 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-      //  public static bool CopySlidesFromPPT(string sourcefile, string dstfile, out string exmsg)
+        public String getTempPath()
+        {
+            string tmpPath = "";
+            try
+            {
+                tmpPath = System.IO.Path.GetTempPath();
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                tmpPath = "error: " + errorMsg;
+            }
+
+            return tmpPath;
+        }
+
+        static bool FileInUse(string path)
+        {
+            string __message = "";
+            try
+            {
+                //Just opening the file as open/create
+                using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+                {
+                    //If required we can check for read/write by using fs.CanRead or fs.CanWrite
+                }
+                return false;
+            }
+            catch (IOException ex)
+            {
+                //check if message is for a File IO
+                __message = ex.Message.ToString();
+                if (__message.Contains("The process cannot access the file"))
+                    return true;
+                else
+                    throw;
+            }
+        }
+
+        public String openPPTX(string path, string title, string url, string user, string pwd)
+        {
+            // MessageBox.Show("in the addin path:"+path+  "      title"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
+            string message = "";
+            object missing = Type.Missing;
+            string tmpdoc = "";
+
+            // title=title.Replace("/","");
+
+            try
+            {
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+                tmpdoc = path + title;
+                //works thought path ends with / and doc starts with \ so you have C:tmp/\foo.xslx
+                //may need to fix
+                //MessageBox.Show("Tempdoc"+tmpdoc);
+                //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
+                Client.DownloadFile(url, tmpdoc);//@"C:\test2.xlsx");
+
+                //something weird with underscores, saves growth_model.xlsx becomes growth.model.xlsx
+                //may have to fix
+
+                //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
+
+                /*
+                 * another way 
+                                    byte[] byteArray =  Client.DownloadData("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx");//File.ReadAllBytes("Test.docx");
+                                    using (MemoryStream mem = new MemoryStream())
+                                    {
+
+                                        mem.Write(byteArray, 0, (int)byteArray.Length);
+
+                                        // using (OpenXmlPkg.SpreadsheetDocument sd = OpenXmlPkg.SpreadsheetDocument.Open(mem, true))
+                                        // {
+                                        // }
+                        
+                                        using (FileStream fileStream = new FileStream(@"C:\Test2.docx", System.IO.FileMode.CreateNew))
+                                        {
+
+                                            mem.WriteTo(fileStream);
+
+                                        }
+
+                       
+                        
+                                    }
+                 * */
+
+                //OpenXmlPkg.SpreadsheetDocument xlPackage;
+                //xlPackage = OpenXmlPkg.SpreadsheetDocument.Open(strm, false);
+            }
+            catch (Exception e)
+            {
+                //not always true, need to improve error handling or message or both
+                string origmsg = "A document with the name '" + title + "' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
+                MessageBox.Show(origmsg);
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+
+            }
+
+            return message;
+        }
+
+        public void LoopThruTest(PPT.Presentation sourcePres)
+        {
+            int count = Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides.Count;
+            MessageBox.Show("COUNT IS: "+count);
+            for (int i = 1; i < 26; i++)
+            {
+              Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[i].Select();
+
+            //  Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[i].BackgroundStyle = sourcePres.SlideMaster.BackgroundStyle;
+              
+                MessageBox.Show("selected");
+            }
+            //MessageBox.Show("TEST");
+        }
         public string copyPasteSlideToActive()
         {
-            MessageBox.Show("Copy Pasting files");
-            string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
-            string dstfile = @"C:\pete.pptx";
-            PPT.Application ppa = new PPT.ApplicationClass();
-            PPT.Presentations ppp = ppa.Presentations;
-            //PPT.Presentation ppmp = null;
+
+          //  string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
+            string user = "oslo";
+            string pwd = "oslo";
+            string message = "";
+            object missing = Type.Missing;
+            string sourcefile = "";
+            string path = getTempPath();
+            string title = "Aven_MarkLogicUserConference2009Exceling.pptx";
+            string url = "http://localhost:8000/ppt/download-support.xqy?uid=/Aven_MarkLogicUserConference2009Exceling.pptx";
+
+            // title=title.Replace("/","");
+
+            try
+            {
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+                sourcefile = path + title;
+                //works thought path ends with / and doc starts with \ so you have C:tmp/\foo.xslx
+                //may need to fix
+                //MessageBox.Show("Tempdoc"+tmpdoc);
+                //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
+                Client.DownloadFile(url, sourcefile);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("issue with download");
+            }
+       
+
+            PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
+
+            copyPasteSlideToActiveSupport(sourcePres);
+           // LoopThruTest(sourcePres);
+            sourcePres.Close();
+            sourcePres = null;
+           
+            return "bar";
+        }
+        public string copyPasteSlideToActiveSupport(PPT.Presentation sourcePres)
+        {
+            //arguments need to include slide(s) to be inserted ..
+
+            //get index of starter slide and reset at end
+
+
+            MessageBox.Show("Copy Pasting files  --");
+            //MessageBox.Show("1: "+GC.MaxGeneration);
+
+            //try getting this from server
+            // string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
 
             PPT.Presentation activePres = Globals.ThisAddIn.Application.ActivePresentation;
-
-            PPT.Presentation sourcePres = ppp.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
-
-         
+            //MessageBox.Show("3: " + GC.MaxGeneration + "activepresegen: " + GC.GetGeneration(activePres));
+            // PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
 
             //activePres.SlideMaster.BackgroundStyle = sourcePres.SlideMaster.BackgroundStyle;
-          
+
             PPT.Slides activeSlides = activePres.Slides;
             PPT.Slides sourceSlides = sourcePres.Slides;
-            
-
-           //PPT.Master m = activePres.SlideMaster;
-           // m.BackgroundStyle = sourcePres.SlideMaster.BackgroundStyle;
 
             for (int x = 1; x < sourceSlides.Count; x++)
             {
@@ -353,76 +511,103 @@ namespace MarkLogic_PowerPointAddin
                 sourceSlides.FindBySlideID(id).Copy();
                 //sourcePres.SlideMaster.Background.
                 //activePres.Application.ActiveWindow.View.PasteSpecial();
-
                 //activeSlides.Paste(x);
                 try
                 {
-                  //  sourceSlides.FindBySlideID(id).Copy();
-                    activeSlides.Paste(x);
-                  //  activeSlides[x].Master.BackgroundStyle = sourceSlides.FindBySlideID(id).Master.BackgroundStyle;
-                    //MessageBox.Show(activeSlides[x].Name);
-                    
+                    int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
+                    // MessageBox.Show("Idx before:  " + Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex);
+
+                    activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
+                    //if need to pull in master, then (also don't set follow master background above
+
+                    Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
+                    PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
+                    sr.Design = sourcePres.SlideMaster.Design;
+                    Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid + 1].Select();
+                    ///sr.BackgroundStyle = sourceSlides.FindBySlideID(id).BackgroundStyle;//sourcePres.SlideMaster.Background;
+                    //  sr.ColorScheme = sourceSlides.FindBySlideID(id).ColorScheme;//sourcePres.SlideMaster.ColorScheme;
+                    // sr.DisplayMasterShapes = //Microsoft.Office.Core.MsoTriState.msoTrue;
+
                     //activeSlides[x].Background.BackgroundStyle = sourceSlides.FindBySlideID(id).Background.BackgroundStyle;
                 }
                 catch (Exception e)
                 {
-                    //MessageBox.Show("FAIL"+e.Message+"   "+e.StackTrace);
+                    MessageBox.Show("FAIL" + e.Message + "   " + e.StackTrace);
+                }
+
+
+            }
+
+
+
+            MessageBox.Show("returning foo");
+            return "foo";
+
+        }
+
+      //  public static bool CopySlidesFromPPT(string sourcefile, string dstfile, out string exmsg)
+        public string copyPasteSlideToActiveSupportBACKUP(PPT.Presentation sourcePres)
+        {
+            MessageBox.Show("Copy Pasting files  --");
+            //MessageBox.Show("1: "+GC.MaxGeneration);
+
+            //try getting this from server
+// string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
+
+             PPT.Presentation activePres = Globals.ThisAddIn.Application.ActivePresentation;
+            //MessageBox.Show("3: " + GC.MaxGeneration + "activepresegen: " + GC.GetGeneration(activePres));
+// PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
+
+            //activePres.SlideMaster.BackgroundStyle = sourcePres.SlideMaster.BackgroundStyle;
+          
+            PPT.Slides activeSlides = activePres.Slides;
+            PPT.Slides sourceSlides = sourcePres.Slides;
+
+            for (int x = 1; x < sourceSlides.Count; x++)
+            {
+                int id = sourceSlides[x].SlideID;
+                //MessageBox.Show(id+"");
+                sourceSlides.FindBySlideID(id).Copy();
+                //sourcePres.SlideMaster.Background.
+                //activePres.Application.ActiveWindow.View.PasteSpecial();
+                //activeSlides.Paste(x);
+                try
+                {
+                    int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
+                   // MessageBox.Show("Idx before:  " + Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex);
+
+                    activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
+          //if need to pull in master, then (also don't set follow master background above
+         
+             Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
+             PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
+             sr.Design = sourcePres.SlideMaster.Design;
+             Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid+1].Select();
+                    ///sr.BackgroundStyle = sourceSlides.FindBySlideID(id).BackgroundStyle;//sourcePres.SlideMaster.Background;
+                  //  sr.ColorScheme = sourceSlides.FindBySlideID(id).ColorScheme;//sourcePres.SlideMaster.ColorScheme;
+                   // sr.DisplayMasterShapes = //Microsoft.Office.Core.MsoTriState.msoTrue;
+
+                 //activeSlides[x].Background.BackgroundStyle = sourceSlides.FindBySlideID(id).Background.BackgroundStyle;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("FAIL"+e.Message+"   "+e.StackTrace);
                 }
                 
-                    // activePres.SlideMaster.= sourcePres.SlideMaster.Background;
-                     //activeSlides[x].BackgroundStyle=   sourceSlides.FindBySlideID(id).BackgroundStyle;
-                //activeSlides.Paste(x);
+
             }
 
-            int i = 1;
-           // foreach (PPT.Slide s in sourceSlides)
-           // {
-             //   s.Copy();
-               // activePres.Slides.Paste(i);
-         
-                //i++;
-               
-            //}
-          
-            try
-            {
-               
-               // i--;
-                //activePres.NotesMaster.BackgroundStyle = sourcePres.NotesMaster.BackgroundStyle;
-                //activePres.TitleMaster.BackgroundStyle = sourcePres.TitleMaster.BackgroundStyle;
-                //activePres.HandoutMaster.BackgroundStyle = sourcePres.HandoutMaster.BackgroundStyle;
-               // activePres.SlideMaster.Background.BackgroundStyle = sourcePres.SlideMaster.Background.BackgroundStyle;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("ERR "+e.Message+e.StackTrace);
-            }
-            
-            //for (int j = 0; j < activeSlides.Count; j++)
-          //  /{
-               //activePres.Designs.Add(sourceSlides[j].Design.Name, sourceSlides[j].Design.Index);
-              // activePres.Designs[j]. = sourceSlides[j].Design;
+  
 
-            //}
-            activePres.SaveAs(dstfile, PPT.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Office.MsoTriState.msoFalse);
-            MessageBox.Show("SAVED");
-           // PPT.Slides ppms = ppmp.Slides;
-            Marshal.ReleaseComObject(sourcePres);
-            sourcePres.Close();
-            Marshal.ReleaseComObject(ppp);
-            ppp = null;
-            Marshal.ReleaseComObject(ppa);
-            ppa = null;
-
-            return "Foo";
-
+            MessageBox.Show("returning foo");
+            return "foo";
 
         }
 
         //missing template style BLERG!
         public string copySlideToActive()
         {
-            MessageBox.Show("Saving files");
+            MessageBox.Show("Saving files 1");
             string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
             //PPT.Presentation p = Globals.ThisAddIn.Application.ActivePresentation;
 
@@ -485,7 +670,7 @@ namespace MarkLogic_PowerPointAddin
         }
         public string CopySlidesFromPPT()
         {
-            MessageBox.Show("Saving files");
+            MessageBox.Show("Saving files 2");
             string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
             string dstfile = @"C:\JetBlue case study r6.pptx";
             string exmsg="";
@@ -600,6 +785,7 @@ namespace MarkLogic_PowerPointAddin
                     //
                     Marshal.ReleaseComObject(ppa);
                     ppa = null;
+                    ppa.Quit();
                 }
             }
             return "TEST";
@@ -630,6 +816,7 @@ namespace MarkLogic_PowerPointAddin
 
         public String addSlide()
         {
+      
             MessageBox.Show("IN ADDIN");
             string message = "foo";
             object missing = Type.Missing;
@@ -641,15 +828,18 @@ namespace MarkLogic_PowerPointAddin
          //   ppa.Activate();
 
             try
-            {
-                
+            { 
+              
                 PPT.Presentation actP = Globals.ThisAddIn.Application.ActivePresentation;
+                
 
                 PPT.Application ppa = new PPT.ApplicationClass();
+              
                 ppa.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
                 ppa.Presentations.Open(filename, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, Microsoft.Office.Core.MsoTriState.msoTrue);
 
                 PPT.Presentation sourceP = ppa.ActivePresentation;
+                
 
 
 
