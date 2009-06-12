@@ -44,15 +44,19 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 	<ul id="ML-Menu">
 		<li>
 			<h2><a href="search/">Search »</a></h2>
-			<p>Search and explore PowerPoint 2007 content.</p>
+			<p>Search and explore PowerPoint 2007 content</p>
 		</li>
 		<li>
 			<h2><a href="metadata/metadata.xqy">Metadata »</a></h2>
-			<p>Create and edit custom document metadata.</p>
+			<p>Create and edit custom document metadata</p>
 		</li>
 	        <li>
 			<h2><a href="images/insert-image.xqy">Images »</a></h2>
 			<p>Search images and insert into active presentation</p>
+		</li>
+	        <li>
+			<h2><a href="api/api-test.xqy">API »</a></h2>
+			<p>API</p>
 		</li>
 	</ul>
 </body>
