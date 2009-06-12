@@ -441,18 +441,19 @@ namespace MarkLogic_PowerPointAddin
             }
             //MessageBox.Show("TEST");
         }
-        public string copyPasteSlideToActive()
+        public string copyPasteSlideToActive(string tmpPath,string filename, string slideidx,string url,string user, string pwd)
         {
+            //MessageBox.Show("In function tmppath"+tmpPath+" filename: "+filename+" slideidx"+slideidx+ "url: "+url+"user: "+user+"pwd"+pwd);
 
           //  string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
-            string user = "oslo";
-            string pwd = "oslo";
+          //  string user = "oslo";
+          //  string pwd = "oslo";
             string message = "";
             object missing = Type.Missing;
             string sourcefile = "";
             string path = getTempPath();
             string title = "Aven_MarkLogicUserConference2009Exceling.pptx";
-            string url = "http://localhost:8000/ppt/download-support.xqy?uid=/Aven_MarkLogicUserConference2009Exceling.pptx";
+            //string url = "http://localhost:8023/ppt/download-support.xqy?uid=/Aven_MarkLogicUserConference2009Exceling.pptx";
 
             // title=title.Replace("/","");
 
@@ -460,6 +461,7 @@ namespace MarkLogic_PowerPointAddin
             {
                 System.Net.WebClient Client = new System.Net.WebClient();
                 Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+              
                 sourcefile = path + title;
                 //works thought path ends with / and doc starts with \ so you have C:tmp/\foo.xslx
                 //may need to fix
@@ -471,20 +473,30 @@ namespace MarkLogic_PowerPointAddin
             {
                 MessageBox.Show("issue with download");
             }
-       
 
-            PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
+            try
+            {
+                PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
+                int num = Convert.ToInt32(slideidx);
+               // MessageBox.Show("the num is :" + num);
+                copyPasteSlideToActiveSupport(sourcePres,num );
+                // LoopThruTest(sourcePres);
+                sourcePres.Close();
+                sourcePres = null;
+            }
+            catch
+            {
+                MessageBox.Show("Unable to open");
+                    
+            }
 
-            copyPasteSlideToActiveSupport(sourcePres);
-           // LoopThruTest(sourcePres);
-            sourcePres.Close();
-            sourcePres = null;
-           
+           // MessageBox.Show("returning bar");
             return "bar";
         }
-        public string copyPasteSlideToActiveSupport(PPT.Presentation sourcePres)
+        public string copyPasteSlideToActiveSupport(PPT.Presentation sourcePres, int slideidx)
         {
             //arguments need to include slide(s) to be inserted ..
+            // user, pwd, url, title, tmpath(?), retainsourceformatting 
 
             //get index of starter slide and reset at end
 
@@ -506,33 +518,38 @@ namespace MarkLogic_PowerPointAddin
 
             for (int x = 1; x < sourceSlides.Count; x++)
             {
+                int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
                 int id = sourceSlides[x].SlideID;
-                //MessageBox.Show(id+"");
-                sourceSlides.FindBySlideID(id).Copy();
-                //sourcePres.SlideMaster.Background.
-                //activePres.Application.ActiveWindow.View.PasteSpecial();
-                //activeSlides.Paste(x);
-                try
+
+                if (sourceSlides[x].SlideIndex == slideidx)
                 {
-                    int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
-                    // MessageBox.Show("Idx before:  " + Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex);
+                    //MessageBox.Show(id+"");
+                    sourceSlides.FindBySlideID(id).Copy();
+                    //sourcePres.SlideMaster.Background.
+                    //activePres.Application.ActiveWindow.View.PasteSpecial();
+                    //activeSlides.Paste(x);
+                    try
+                    {
+                        //int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
+                        // MessageBox.Show("Idx before:  " + Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex);
 
-                    activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
-                    //if need to pull in master, then (also don't set follow master background above
+                        activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
+                        //if need to pull in master, then (also don't set follow master background above
 
-                    Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
-                    PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
-                    sr.Design = sourcePres.SlideMaster.Design;
-                    Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid + 1].Select();
-                    ///sr.BackgroundStyle = sourceSlides.FindBySlideID(id).BackgroundStyle;//sourcePres.SlideMaster.Background;
-                    //  sr.ColorScheme = sourceSlides.FindBySlideID(id).ColorScheme;//sourcePres.SlideMaster.ColorScheme;
-                    // sr.DisplayMasterShapes = //Microsoft.Office.Core.MsoTriState.msoTrue;
+                        Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
+                        PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
+                        sr.Design = sourcePres.SlideMaster.Design;
+                        Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid + 1].Select();
+                        ///sr.BackgroundStyle = sourceSlides.FindBySlideID(id).BackgroundStyle;//sourcePres.SlideMaster.Background;
+                        //  sr.ColorScheme = sourceSlides.FindBySlideID(id).ColorScheme;//sourcePres.SlideMaster.ColorScheme;
+                        // sr.DisplayMasterShapes = //Microsoft.Office.Core.MsoTriState.msoTrue;
 
-                    //activeSlides[x].Background.BackgroundStyle = sourceSlides.FindBySlideID(id).Background.BackgroundStyle;
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("FAIL" + e.Message + "   " + e.StackTrace);
+                        //activeSlides[x].Background.BackgroundStyle = sourceSlides.FindBySlideID(id).Background.BackgroundStyle;
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("FAIL" + e.Message + "   " + e.StackTrace);
+                    }
                 }
 
 
