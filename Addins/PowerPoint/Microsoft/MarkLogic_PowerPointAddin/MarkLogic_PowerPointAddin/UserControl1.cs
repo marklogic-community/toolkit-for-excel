@@ -323,6 +323,19 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
+        public String getFileName()
+        {
+            string filename = "";
+            filename = Globals.ThisAddIn.Application.ActivePresentation.Name;
+            return filename;
+        }
+
+        public String getPath()
+        {
+            string path = "";
+            path = Globals.ThisAddIn.Application.ActivePresentation.Path;
+            return path;
+        }
         public String getTempPath()
         {
             string tmpPath = "";
@@ -562,7 +575,110 @@ namespace MarkLogic_PowerPointAddin
 
         }
 
-      //  public static bool CopySlidesFromPPT(string sourcefile, string dstfile, out string exmsg)
+        public string convertFilenameToImageDir(string filename)
+        {
+            string imgDir = "";
+            string tmpDir = "";
+            string fname = "";
+
+            string[] split = filename.Split(new Char[] { '\\' });
+            fname = split.Last();
+            tmpDir = filename.Replace(fname, "");
+            fname = fname.Replace(".pptx", "_pptx_parts_GIF");
+
+            //imgDir = tmpDir + fname;
+            imgDir = getTempPath() + fname;
+            MessageBox.Show("imgdir: "+imgDir);
+            return imgDir;
+
+        }
+
+        public string useSaveFileDialog()
+        {
+
+            SaveFileDialog s = new SaveFileDialog();
+            s.Filter = "PowerPoint Presentation (*.pptx)|*.pptx|All files (*.*)|*.*";
+            s.DefaultExt = "pptx";
+            s.AddExtension = true;
+            s.ShowDialog();
+
+            return s.FileName;
+        }
+
+        public string saveWithImages()
+        {
+           
+            string message = "";
+            PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
+
+            string path = pptx.Path;
+            string filename = pptx.Name;
+            string fullfilenamewithpath = "";
+            string imgdir = "";
+
+            if (pptx.Name == null || pptx.Name.Equals("") || pptx.Path == null || pptx.Path.Equals(""))
+            {
+                fullfilenamewithpath = useSaveFileDialog();
+                pptx.SaveAs(fullfilenamewithpath, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Microsoft.Office.Core.MsoTriState.msoFalse);
+                
+                imgdir = convertFilenameToImageDir(fullfilenamewithpath);
+                saveImages(imgdir);
+               // pptx.SaveAs(imgdir, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsGIF, Microsoft.Office.Core.MsoTriState.msoFalse);
+
+            }
+            else
+            {
+                fullfilenamewithpath = path + "\\" + filename;
+                pptx.Save();
+
+                imgdir = convertFilenameToImageDir(fullfilenamewithpath);
+                saveImages(imgdir);
+                
+                //pptx.SaveAs(imgdir, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsGIF, Microsoft.Office.Core.MsoTriState.msoFalse);
+
+            }
+
+
+            MessageBox.Show("fullnamewithpath:  "+fullfilenamewithpath + " imgdir: "+imgdir);
+
+            return message;
+        }
+
+        public string saveImages(string imgdir)
+        {
+            PPT.Presentation ppt = Globals.ThisAddIn.Application.ActivePresentation;
+            string message = "";
+            //MessageBox.Show("check for folder and delete first if required");
+            //have to delete folder if exists as images will be appended, not replaced/deleted
+           
+
+            //need some try/catch action here ( and all over the place)
+            if (Directory.Exists(imgdir))
+            {
+                string[] files = Directory.GetFiles(imgdir);
+
+                foreach (string s in files)
+                {
+                    MessageBox.Show("file" + s);
+                    File.Delete(s);
+                }
+
+                Directory.Delete(imgdir);
+            }
+
+            //MessageBox.Show("directory deleted");
+            ppt.SaveAs(imgdir, PPT.PpSaveAsFileType.ppSaveAsGIF,Office.MsoTriState.msoFalse);
+
+            //don't delete til we've copied to ML
+
+
+            //Directory.Delete(imgdir);
+            return message;
+        }
+//====================================================================================================
+//====================================================================================================
+//====================================================================================================
+    //  public static bool CopySlidesFromPPT(string sourcefile, string dstfile, out string exmsg)
         public string copyPasteSlideToActiveSupportBACKUP(PPT.Presentation sourcePres)
         {
             MessageBox.Show("Copy Pasting files  --");
@@ -685,6 +801,8 @@ namespace MarkLogic_PowerPointAddin
 
             
         }
+
+
         public string CopySlidesFromPPT()
         {
             MessageBox.Show("Saving files 2");
