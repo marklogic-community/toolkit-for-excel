@@ -671,7 +671,7 @@ namespace MarkLogic_PowerPointAddin
                 fullfilenamewithpath = path + "\\" + filename;
                 pptx.Save();
                 url = url + "/" + filename;
-                saveToML(fullfilenamewithpath, url);
+                saveToML(fullfilenamewithpath,url);
                 //save to ML
 
                 imgdirwithpath = convertFilenameToImageDir(fullfilenamewithpath);
@@ -693,8 +693,10 @@ namespace MarkLogic_PowerPointAddin
         {
             string message = "";
             string imgdir = imgdirwithpath.Split(new Char[] { '\\' }).Last();
+
+            //name of folder with images, prepend with optional dir?
             MessageBox.Show("IMGDIRWITHPATH.SPLIT.LAST: " + imgdir);
-            imgdir = "/" + imgdir+"/";
+            imgdir = "/" + imgdir; // +"/";
             PPT.Presentation ppt = Globals.ThisAddIn.Application.ActivePresentation;
 
             //need some try/catch action here ( and all over the place)
@@ -716,11 +718,33 @@ namespace MarkLogic_PowerPointAddin
             {
                 //MessageBox.Show("filename: " + i);
                 string fname = i.Split(new Char[] { '\\' }).Last();
-                string fileuri = imgdir + fname;
+                string fileuri = imgdir + "/" + fname;
+                //convert this uri to .pptx slide.xml
+                //als get index from here
+                // add as parameters for upload.xqy doc properties
+
                 MessageBox.Show("fileuri to save :" + fileuri);
 
+                string parentprop = imgdir.Replace("_pptx_parts_GIF", ".pptx");
+
+                string slideprop = fname.Replace(".GIF", ".xml");
+                slideprop = imgdir+"/ppt/slides/" + slideprop;
+                slideprop = slideprop.Replace("_GIF", "");
+                slideprop = slideprop.Replace("Slide", "slide");
+
+               // string slideprop = fileuri.Replace(".GIF", ".xml");
+               // slideprop = slideprop.Replace("_GIF", "");
+
+
+                string slideidx = fname.Replace("Slide", "");
+                slideidx = slideidx.Replace(".GIF", "");
+
+                MessageBox.Show("properties: parent: " + parentprop + " slide: " + slideprop + " idx: " + slideidx);
+
+
+
                 //save to ml, pass imagesurl
-                string url = "http://localhost:8023/ppt/api/upload.xqy?uid=" + fileuri;
+                string url = "http://localhost:8023/ppt/api/upload.xqy?uid=" + fileuri+"&source="+parentprop+"&slide="+slideprop+"&idx="+slideidx;
 
                 try
                 {
