@@ -440,46 +440,21 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-        public void LoopThruTest(PPT.Presentation sourcePres)
-        {
-            int count = Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides.Count;
-            MessageBox.Show("COUNT IS: "+count);
-            for (int i = 1; i < 26; i++)
-            {
-              Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[i].Select();
-
-            //  Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[i].BackgroundStyle = sourcePres.SlideMaster.BackgroundStyle;
-              
-                MessageBox.Show("selected");
-            }
-            //MessageBox.Show("TEST");
-        }
         public string copyPasteSlideToActive(string tmpPath,string filename, string slideidx,string url,string user, string pwd)
         {
             //MessageBox.Show("In function tmppath"+tmpPath+" filename: "+filename+" slideidx"+slideidx+ "url: "+url+"user: "+user+"pwd"+pwd);
 
-          //  string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
-          //  string user = "oslo";
-          //  string pwd = "oslo";
             string message = "";
             object missing = Type.Missing;
             string sourcefile = "";
             string path = getTempPath();
-            string title = "Aven_MarkLogicUserConference2009Exceling.pptx";
-            //string url = "http://localhost:8023/ppt/download-support.xqy?uid=/Aven_MarkLogicUserConference2009Exceling.pptx";
-
-            // title=title.Replace("/","");
 
             try
             {
                 System.Net.WebClient Client = new System.Net.WebClient();
                 Client.Credentials = new System.Net.NetworkCredential(user, pwd);
               
-                sourcefile = path + title;
-                //works thought path ends with / and doc starts with \ so you have C:tmp/\foo.xslx
-                //may need to fix
-                //MessageBox.Show("Tempdoc"+tmpdoc);
-                //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
+                sourcefile = path + filename;
                 Client.DownloadFile(url, sourcefile);
             }
             catch (Exception e)
@@ -491,9 +466,7 @@ namespace MarkLogic_PowerPointAddin
             {
                 PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
                 int num = Convert.ToInt32(slideidx);
-               // MessageBox.Show("the num is :" + num);
                 copyPasteSlideToActiveSupport(sourcePres,num );
-                // LoopThruTest(sourcePres);
                 sourcePres.Close();
                 sourcePres = null;
             }
@@ -503,16 +476,15 @@ namespace MarkLogic_PowerPointAddin
                     
             }
 
-           // MessageBox.Show("returning bar");
-            return "bar";
+            return message;
         }
         public string copyPasteSlideToActiveSupport(PPT.Presentation sourcePres, int slideidx)
         {
             //arguments need to include slide(s) to be inserted ..
             // user, pwd, url, title, tmpath(?), retainsourceformatting 
 
-            //get index of starter slide and reset at end
-
+            //get index of starter slide and reset at end of function?
+            //don't have to worry about if just inserting one slide at a time.
 
             MessageBox.Show("Copy Pasting files  --");
             //MessageBox.Show("1: "+GC.MaxGeneration);
@@ -523,7 +495,6 @@ namespace MarkLogic_PowerPointAddin
             PPT.Presentation activePres = Globals.ThisAddIn.Application.ActivePresentation;
             //MessageBox.Show("3: " + GC.MaxGeneration + "activepresegen: " + GC.GetGeneration(activePres));
             // PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
-
             //activePres.SlideMaster.BackgroundStyle = sourcePres.SlideMaster.BackgroundStyle;
 
             PPT.Slides activeSlides = activePres.Slides;
@@ -605,23 +576,92 @@ namespace MarkLogic_PowerPointAddin
             return s.FileName;
         }
 
+        public string uploadFile(string url, byte[] content)
+        {
+
+            System.Net.WebClient Client = new System.Net.WebClient();
+            Client.Headers.Add("enctype", "multipart/form-data");
+            Client.Headers.Add("Content-Type", "application/octet-stream");
+            Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
+
+            Client.UploadData(url, "POST", content);
+            Client.Dispose();
+
+            return "foo";
+
+        }
+
+        public string saveToML(string filename, string url)
+        {
+            string message = "";
+
+            try
+            {
+
+                FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                int length = (int)fs.Length;
+                byte[] content = new byte[length];
+                fs.Read(content, 0, length);
+
+                try
+                {
+                    uploadFile(url, content);
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                    MessageBox.Show("message1 :" + message);
+                }
+
+                fs.Dispose();
+                fs.Close();
+
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+                MessageBox.Show("message2 :" + message);
+            }
+
+            return message;
+        }
+
         public string saveWithImages()
         {
+            //dir parameter?  make optional in the javascript.  So you can save anywhere in ML.
+            //remember to tied to filenames and mapping
            
             string message = "";
             PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
 
+            string url = "http://localhost:8023/ppt/api/upload.xqy?uid=";
+
+
             string path = pptx.Path;
+            //dir parameter might be used here
             string filename = pptx.Name;
             string fullfilenamewithpath = "";
             string imgdirwithpath = "";
+            string imgdir = "";
 
             if (pptx.Name == null || pptx.Name.Equals("") || pptx.Path == null || pptx.Path.Equals(""))
             {
                 fullfilenamewithpath = useSaveFileDialog();
+                //here's where dir parameter might come in
+                filename = fullfilenamewithpath.Split(new Char[] { '\\' }).Last();
+
                 pptx.SaveAs(fullfilenamewithpath, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Microsoft.Office.Core.MsoTriState.msoFalse);
-                
+                url = url + "/" + filename;
+
+                saveToML(fullfilenamewithpath, url);
+
+
                 imgdirwithpath = convertFilenameToImageDir(fullfilenamewithpath);
+                //dir parameter?
+                imgdir = imgdirwithpath.Split(new Char[] { '\\' }).Last();
+
                 saveImages(imgdirwithpath);
                // pptx.SaveAs(imgdir, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsGIF, Microsoft.Office.Core.MsoTriState.msoFalse);
 
@@ -630,8 +670,13 @@ namespace MarkLogic_PowerPointAddin
             {
                 fullfilenamewithpath = path + "\\" + filename;
                 pptx.Save();
+                url = url + "/" + filename;
+                saveToML(fullfilenamewithpath, url);
+                //save to ML
 
                 imgdirwithpath = convertFilenameToImageDir(fullfilenamewithpath);
+                imgdir = imgdirwithpath.Split(new Char[] { '\\' }).Last();
+
                 saveImages(imgdirwithpath);
                 
                 //pptx.SaveAs(imgdir, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsGIF, Microsoft.Office.Core.MsoTriState.msoFalse);
@@ -651,34 +696,19 @@ namespace MarkLogic_PowerPointAddin
             MessageBox.Show("IMGDIRWITHPATH.SPLIT.LAST: " + imgdir);
             imgdir = "/" + imgdir+"/";
             PPT.Presentation ppt = Globals.ThisAddIn.Application.ActivePresentation;
-            
-            //MessageBox.Show("check for folder and delete first if required");
-            //have to delete folder if exists as images will be appended, not replaced/deleted
-           
 
             //need some try/catch action here ( and all over the place)
             if (Directory.Exists(imgdirwithpath))
             {
                 string[] files = Directory.GetFiles(imgdirwithpath);
-
                 foreach (string s in files)
                 {
-                    //MessageBox.Show("file" + s);
                     File.Delete(s);
                 }
-
                 Directory.Delete(imgdirwithpath);
             }
 
-            //MessageBox.Show("directory deleted");
-            System.Net.WebClient Client = new System.Net.WebClient();
-            Client.Headers.Add("enctype", "multipart/form-data");
-            Client.Headers.Add("Content-Type", "application/octet-stream");
-
             ppt.SaveAs(imgdirwithpath, PPT.PpSaveAsFileType.ppSaveAsGIF,Office.MsoTriState.msoFalse);
-
-
-            //save to ML here, pass fileurl
 
             string[] imgfiles = Directory.GetFiles(imgdirwithpath);
 
@@ -700,11 +730,9 @@ namespace MarkLogic_PowerPointAddin
                     byte[] content = new byte[length];
                     fs.Read(content, 0, length);
 
-
                     try
                     {
-                        Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
-                        Client.UploadData(url, "POST", content);
+                        uploadFile(url, content);
                     }
                     catch (Exception e)
                     {
@@ -712,7 +740,10 @@ namespace MarkLogic_PowerPointAddin
                         message = "error: " + errorMsg;
                         MessageBox.Show("message1 :" + message);
                     }
-
+                    
+                    fs.Dispose();
+                    fs.Close();
+                   
                 }
                 catch (Exception e)
                 {
@@ -722,42 +753,7 @@ namespace MarkLogic_PowerPointAddin
                 }
             }
 
-            Client.Dispose();
             //have the images, now have to get files and upload to ML
-
-
-
-            /*
-                System.Net.WebClient Client = new System.Net.WebClient();
-                Client.Headers.Add("enctype", "multipart/form-data");
-                Client.Headers.Add("Content-Type", "application/octet-stream");
-
-                try
-                {
-                    // FileStream fs = new FileStream(@"C:\Default.xlsx", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                    FileStream fs = new FileStream(newtitle, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    int length = (int)fs.Length;
-                    byte[] content = new byte[length];
-                    fs.Read(content, 0, length);
-
-                    try
-                    {
-                        Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-                        Client.UploadData(url, "POST", content);
-                    }
-                    catch (Exception e)
-                    {
-                        string errorMsg = e.Message;
-                        message = "error: " + errorMsg;
-                    }
-
-                }
-                catch (Exception e)
-                {
-                    string errorMsg = e.Message;
-                    message = "error: " + errorMsg;
-                }
-             * */
             //don't delete til we've copied to ML
 
 
