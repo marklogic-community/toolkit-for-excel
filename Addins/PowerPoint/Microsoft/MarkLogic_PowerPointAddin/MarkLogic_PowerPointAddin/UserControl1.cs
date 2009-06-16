@@ -614,15 +614,15 @@ namespace MarkLogic_PowerPointAddin
             string path = pptx.Path;
             string filename = pptx.Name;
             string fullfilenamewithpath = "";
-            string imgdir = "";
+            string imgdirwithpath = "";
 
             if (pptx.Name == null || pptx.Name.Equals("") || pptx.Path == null || pptx.Path.Equals(""))
             {
                 fullfilenamewithpath = useSaveFileDialog();
                 pptx.SaveAs(fullfilenamewithpath, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Microsoft.Office.Core.MsoTriState.msoFalse);
                 
-                imgdir = convertFilenameToImageDir(fullfilenamewithpath);
-                saveImages(imgdir);
+                imgdirwithpath = convertFilenameToImageDir(fullfilenamewithpath);
+                saveImages(imgdirwithpath);
                // pptx.SaveAs(imgdir, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsGIF, Microsoft.Office.Core.MsoTriState.msoFalse);
 
             }
@@ -631,44 +631,133 @@ namespace MarkLogic_PowerPointAddin
                 fullfilenamewithpath = path + "\\" + filename;
                 pptx.Save();
 
-                imgdir = convertFilenameToImageDir(fullfilenamewithpath);
-                saveImages(imgdir);
+                imgdirwithpath = convertFilenameToImageDir(fullfilenamewithpath);
+                saveImages(imgdirwithpath);
                 
                 //pptx.SaveAs(imgdir, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsGIF, Microsoft.Office.Core.MsoTriState.msoFalse);
 
             }
 
 
-            MessageBox.Show("fullnamewithpath:  "+fullfilenamewithpath + " imgdir: "+imgdir);
+            MessageBox.Show("fullnamewithpath:  "+fullfilenamewithpath + " imgdir: "+imgdirwithpath );
 
             return message;
         }
 
-        public string saveImages(string imgdir)
+        public string saveImages(string imgdirwithpath)
         {
-            PPT.Presentation ppt = Globals.ThisAddIn.Application.ActivePresentation;
             string message = "";
+            string imgdir = imgdirwithpath.Split(new Char[] { '\\' }).Last();
+            MessageBox.Show("IMGDIRWITHPATH.SPLIT.LAST: " + imgdir);
+            imgdir = "/" + imgdir+"/";
+            PPT.Presentation ppt = Globals.ThisAddIn.Application.ActivePresentation;
+            
             //MessageBox.Show("check for folder and delete first if required");
             //have to delete folder if exists as images will be appended, not replaced/deleted
            
 
             //need some try/catch action here ( and all over the place)
-            if (Directory.Exists(imgdir))
+            if (Directory.Exists(imgdirwithpath))
             {
-                string[] files = Directory.GetFiles(imgdir);
+                string[] files = Directory.GetFiles(imgdirwithpath);
 
                 foreach (string s in files)
                 {
-                    MessageBox.Show("file" + s);
+                    //MessageBox.Show("file" + s);
                     File.Delete(s);
                 }
 
-                Directory.Delete(imgdir);
+                Directory.Delete(imgdirwithpath);
             }
 
             //MessageBox.Show("directory deleted");
-            ppt.SaveAs(imgdir, PPT.PpSaveAsFileType.ppSaveAsGIF,Office.MsoTriState.msoFalse);
+            System.Net.WebClient Client = new System.Net.WebClient();
+            Client.Headers.Add("enctype", "multipart/form-data");
+            Client.Headers.Add("Content-Type", "application/octet-stream");
 
+            ppt.SaveAs(imgdirwithpath, PPT.PpSaveAsFileType.ppSaveAsGIF,Office.MsoTriState.msoFalse);
+
+
+            //save to ML here, pass fileurl
+
+            string[] imgfiles = Directory.GetFiles(imgdirwithpath);
+
+            foreach (string i in imgfiles)
+            {
+                //MessageBox.Show("filename: " + i);
+                string fname = i.Split(new Char[] { '\\' }).Last();
+                string fileuri = imgdir + fname;
+                MessageBox.Show("fileuri to save :" + fileuri);
+
+                //save to ml, pass imagesurl
+                string url = "http://localhost:8023/ppt/api/upload.xqy?uid=" + fileuri;
+
+                try
+                {
+                   
+                    FileStream fs = new FileStream(i, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    int length = (int)fs.Length;
+                    byte[] content = new byte[length];
+                    fs.Read(content, 0, length);
+
+
+                    try
+                    {
+                        Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
+                        Client.UploadData(url, "POST", content);
+                    }
+                    catch (Exception e)
+                    {
+                        string errorMsg = e.Message;
+                        message = "error: " + errorMsg;
+                        MessageBox.Show("message1 :" + message);
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                    MessageBox.Show("message2 :" + message);
+                }
+            }
+
+            Client.Dispose();
+            //have the images, now have to get files and upload to ML
+
+
+
+            /*
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.Headers.Add("enctype", "multipart/form-data");
+                Client.Headers.Add("Content-Type", "application/octet-stream");
+
+                try
+                {
+                    // FileStream fs = new FileStream(@"C:\Default.xlsx", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                    FileStream fs = new FileStream(newtitle, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    int length = (int)fs.Length;
+                    byte[] content = new byte[length];
+                    fs.Read(content, 0, length);
+
+                    try
+                    {
+                        Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+                        Client.UploadData(url, "POST", content);
+                    }
+                    catch (Exception e)
+                    {
+                        string errorMsg = e.Message;
+                        message = "error: " + errorMsg;
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+             * */
             //don't delete til we've copied to ML
 
 

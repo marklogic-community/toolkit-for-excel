@@ -77,14 +77,15 @@
             // 
             this.menu1.Image = ((System.Drawing.Image)(resources.GetObject("menu1.Image")));
             this.menu1.Items.Add(this.button1);
-            this.menu1.Label = "Save";
+            this.menu1.KeyTip = "M";
+            this.menu1.Label = "Save to MarkLogic";
             this.menu1.Name = "menu1";
             this.menu1.ShowImage = true;
             // 
             // button1
             // 
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Label = "Save for Search";
+            this.button1.Label = "Save with Images";
             this.button1.Name = "button1";
             this.button1.ShowImage = true;
             this.button1.Click += new System.EventHandler<Microsoft.Office.Tools.Ribbon.RibbonControlEventArgs>(this.button1_Click);
