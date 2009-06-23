@@ -455,6 +455,7 @@ namespace MarkLogic_PowerPointAddin
                 Client.Credentials = new System.Net.NetworkCredential(user, pwd);
               
                 sourcefile = path + filename;
+                //MessageBox.Show("sourcefile: "+sourcefile+" URL: "+ url+ "   slideidx: "+slideidx);
                 Client.DownloadFile(url, sourcefile);
             }
             catch (Exception e)
@@ -470,9 +471,9 @@ namespace MarkLogic_PowerPointAddin
                 sourcePres.Close();
                 sourcePres = null;
             }
-            catch
+            catch(Exception e)
             {
-                MessageBox.Show("Unable to open");
+                MessageBox.Show("Unable to open"+e.Message);
                     
             }
 
@@ -486,7 +487,7 @@ namespace MarkLogic_PowerPointAddin
             //get index of starter slide and reset at end of function?
             //don't have to worry about if just inserting one slide at a time.
 
-            MessageBox.Show("Copy Pasting files  --");
+            //MessageBox.Show("Copy Pasting files  --");
             //MessageBox.Show("1: "+GC.MaxGeneration);
 
             //try getting this from server
@@ -500,7 +501,7 @@ namespace MarkLogic_PowerPointAddin
             PPT.Slides activeSlides = activePres.Slides;
             PPT.Slides sourceSlides = sourcePres.Slides;
 
-            for (int x = 1; x < sourceSlides.Count; x++)
+            for (int x = 1; x <= sourceSlides.Count; x++)
             {
                 int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
                 int id = sourceSlides[x].SlideID;
@@ -541,7 +542,7 @@ namespace MarkLogic_PowerPointAddin
 
 
 
-            MessageBox.Show("returning foo");
+           // MessageBox.Show("returning foo");
             return "foo";
 
         }
@@ -555,11 +556,11 @@ namespace MarkLogic_PowerPointAddin
             string[] split = filename.Split(new Char[] { '\\' });
             fname = split.Last();
             tmpDir = filename.Replace(fname, "");
-            fname = fname.Replace(".pptx", "_pptx_parts_GIF");
+            fname = fname.Replace(".pptx", "_GIF"); //"_pptx_parts_GIF");
 
             //imgDir = tmpDir + fname;
             imgDir = getTempPath() + fname;
-            MessageBox.Show("imgdir: "+imgDir);
+            //MessageBox.Show("imgdir: "+imgDir);
             return imgDir;
 
         }
@@ -716,7 +717,7 @@ namespace MarkLogic_PowerPointAddin
 
             foreach (string i in imgfiles)
             {
-                //MessageBox.Show("filename: " + i);
+                MessageBox.Show("filename: " + i);
                 string fname = i.Split(new Char[] { '\\' }).Last();
                 string fileuri = imgdir + "/" + fname;
                 //convert this uri to .pptx slide.xml
@@ -725,11 +726,11 @@ namespace MarkLogic_PowerPointAddin
 
                 MessageBox.Show("fileuri to save :" + fileuri);
 
-                string parentprop = imgdir.Replace("_pptx_parts_GIF", ".pptx");
+                string parentprop = imgdir.Replace("_GIF", ".pptx");
 
                 string slideprop = fname.Replace(".GIF", ".xml");
                 slideprop = imgdir+"/ppt/slides/" + slideprop;
-                slideprop = slideprop.Replace("_GIF", "");
+                slideprop = slideprop.Replace("_GIF", "_pptx_parts");
                 slideprop = slideprop.Replace("Slide", "slide");
 
                // string slideprop = fileuri.Replace(".GIF", ".xml");
