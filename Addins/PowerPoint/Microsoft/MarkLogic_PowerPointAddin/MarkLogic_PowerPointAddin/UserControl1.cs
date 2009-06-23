@@ -440,8 +440,14 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-        public string copyPasteSlideToActive(string tmpPath,string filename, string slideidx,string url,string user, string pwd)
+        public string copyPasteSlideToActive(string tmpPath,string filename, string slideidx,string url,string user, string pwd, string retain)
         {
+            bool retainformat = false;
+
+            if (retain.ToLower().Equals("true"))
+                retainformat = true;
+
+            //MessageBox.Show("retain in addin" + retain.ToLower());
             //MessageBox.Show("In function tmppath"+tmpPath+" filename: "+filename+" slideidx"+slideidx+ "url: "+url+"user: "+user+"pwd"+pwd);
 
             string message = "";
@@ -467,7 +473,7 @@ namespace MarkLogic_PowerPointAddin
             {
                 PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
                 int num = Convert.ToInt32(slideidx);
-                copyPasteSlideToActiveSupport(sourcePres,num );
+                copyPasteSlideToActiveSupport(sourcePres,num, retainformat );
                 sourcePres.Close();
                 sourcePres = null;
             }
@@ -479,7 +485,7 @@ namespace MarkLogic_PowerPointAddin
 
             return message;
         }
-        public string copyPasteSlideToActiveSupport(PPT.Presentation sourcePres, int slideidx)
+        public string copyPasteSlideToActiveSupport(PPT.Presentation sourcePres, int slideidx, bool retain)
         {
             //arguments need to include slide(s) to be inserted ..
             // user, pwd, url, title, tmpath(?), retainsourceformatting 
@@ -504,6 +510,7 @@ namespace MarkLogic_PowerPointAddin
             for (int x = 1; x <= sourceSlides.Count; x++)
             {
                 int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
+               
                 int id = sourceSlides[x].SlideID;
 
                 if (sourceSlides[x].SlideIndex == slideidx)
@@ -517,14 +524,32 @@ namespace MarkLogic_PowerPointAddin
                     {
                         //int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
                         // MessageBox.Show("Idx before:  " + Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex);
-
-                        activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
+      //Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
+      //activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoTrue;
                         //if need to pull in master, then (also don't set follow master background above
 
-                        Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
-                        PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
-                        sr.Design = sourcePres.SlideMaster.Design;
-                        Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid + 1].Select();
+                        if (retain)
+                        {
+                            Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
+                            activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
+                            PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
+                            sr.Design = sourcePres.SlideMaster.Design;
+                           //Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid + 1].Select();
+                        }
+                        else
+                        {
+                            Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
+                            activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoTrue;
+                            PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
+                            sr.Design = Globals.ThisAddIn.Application.ActivePresentation.SlideMaster.Design;
+                        }
+                       /* else
+                        {
+                            Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
+                            PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
+                            sr.Design = Globals.ThisAddIn.Application.ActivePresentation.SlideMaster.Design;
+
+                        }*/
                         ///sr.BackgroundStyle = sourceSlides.FindBySlideID(id).BackgroundStyle;//sourcePres.SlideMaster.Background;
                         //  sr.ColorScheme = sourceSlides.FindBySlideID(id).ColorScheme;//sourcePres.SlideMaster.ColorScheme;
                         // sr.DisplayMasterShapes = //Microsoft.Office.Core.MsoTriState.msoTrue;
