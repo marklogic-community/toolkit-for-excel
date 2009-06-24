@@ -444,6 +444,17 @@ namespace MarkLogic_PowerPointAddin
         {
             bool retainformat = false;
 
+            MessageBox.Show("SlideMasterName"+Globals.ThisAddIn.Application.ActivePresentation.SlideMaster.Design.Name);
+            PPT.Slides ss = Globals.ThisAddIn.Application.ActivePresentation.Slides;
+
+           // PPT.Options o = 
+            //foreach (PPT.Slide s in ss)
+              //  MessageBox.Show(s.Design.Name);
+
+            PPT.Designs ds = Globals.ThisAddIn.Application.ActivePresentation.Designs;
+            foreach (PPT.Design d in ds)
+                MessageBox.Show(d.Name);
+
             if (retain.ToLower().Equals("true"))
                 retainformat = true;
 
@@ -492,70 +503,43 @@ namespace MarkLogic_PowerPointAddin
 
             //get index of starter slide and reset at end of function?
             //don't have to worry about if just inserting one slide at a time.
-
-            //MessageBox.Show("Copy Pasting files  --");
-            //MessageBox.Show("1: "+GC.MaxGeneration);
-
-            //try getting this from server
-            // string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
+            //string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
 
             PPT.Presentation activePres = Globals.ThisAddIn.Application.ActivePresentation;
-            //MessageBox.Show("3: " + GC.MaxGeneration + "activepresegen: " + GC.GetGeneration(activePres));
-            // PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
-            //activePres.SlideMaster.BackgroundStyle = sourcePres.SlideMaster.BackgroundStyle;
-
             PPT.Slides activeSlides = activePres.Slides;
             PPT.Slides sourceSlides = sourcePres.Slides;
 
             for (int x = 1; x <= sourceSlides.Count; x++)
             {
                 int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
-               
                 int id = sourceSlides[x].SlideID;
 
                 if (sourceSlides[x].SlideIndex == slideidx)
                 {
-                    //MessageBox.Show(id+"");
                     sourceSlides.FindBySlideID(id).Copy();
-                    //sourcePres.SlideMaster.Background.
-                    //activePres.Application.ActiveWindow.View.PasteSpecial();
-                    //activeSlides.Paste(x);
+
                     try
                     {
-                        //int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
-                        // MessageBox.Show("Idx before:  " + Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex);
       //Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
       //activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoTrue;
-                        //if need to pull in master, then (also don't set follow master background above
-
                         if (retain)
                         {
-                            Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
+                            //Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
                             activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
+                            Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
                             PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
                             sr.Design = sourcePres.SlideMaster.Design;
                            //Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid + 1].Select();
                         }
                         else
                         {
-                            Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
+                            //Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
                             activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoTrue;
+                            Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
                             PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
                             sr.Design = Globals.ThisAddIn.Application.ActivePresentation.SlideMaster.Design;
                         }
-                       /* else
-                        {
-                            Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
-                            PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
-                            sr.Design = Globals.ThisAddIn.Application.ActivePresentation.SlideMaster.Design;
-
-                        }*/
-                        ///sr.BackgroundStyle = sourceSlides.FindBySlideID(id).BackgroundStyle;//sourcePres.SlideMaster.Background;
-                        //  sr.ColorScheme = sourceSlides.FindBySlideID(id).ColorScheme;//sourcePres.SlideMaster.ColorScheme;
-                        // sr.DisplayMasterShapes = //Microsoft.Office.Core.MsoTriState.msoTrue;
-
-                        //activeSlides[x].Background.BackgroundStyle = sourceSlides.FindBySlideID(id).Background.BackgroundStyle;
-                    }
+                     }
                     catch (Exception e)
                     {
                         MessageBox.Show("FAIL" + e.Message + "   " + e.StackTrace);
@@ -565,11 +549,7 @@ namespace MarkLogic_PowerPointAddin
 
             }
 
-
-
-           // MessageBox.Show("returning foo");
             return "foo";
-
         }
 
         public string convertFilenameToImageDir(string filename)
@@ -637,7 +617,7 @@ namespace MarkLogic_PowerPointAddin
                 {
                     string errorMsg = e.Message;
                     message = "error: " + errorMsg;
-                    MessageBox.Show("message1 :" + message);
+                   // MessageBox.Show("message1 :" + message);
                 }
 
                 fs.Dispose();
@@ -681,7 +661,7 @@ namespace MarkLogic_PowerPointAddin
                 pptx.SaveAs(fullfilenamewithpath, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Microsoft.Office.Core.MsoTriState.msoFalse);
                 url = url + "/" + filename;
 
-                saveToML(fullfilenamewithpath, url);
+                saveToML(fullfilenamewithpath, url);  //rename saveActivePresentation() - see excel
 
 
                 imgdirwithpath = convertFilenameToImageDir(fullfilenamewithpath);
@@ -710,7 +690,7 @@ namespace MarkLogic_PowerPointAddin
             }
 
 
-            MessageBox.Show("fullnamewithpath:  "+fullfilenamewithpath + " imgdir: "+imgdirwithpath );
+           // MessageBox.Show("fullnamewithpath:  "+fullfilenamewithpath + " imgdir: "+imgdirwithpath );
 
             return message;
         }
@@ -721,7 +701,7 @@ namespace MarkLogic_PowerPointAddin
             string imgdir = imgdirwithpath.Split(new Char[] { '\\' }).Last();
 
             //name of folder with images, prepend with optional dir?
-            MessageBox.Show("IMGDIRWITHPATH.SPLIT.LAST: " + imgdir);
+           // MessageBox.Show("IMGDIRWITHPATH.SPLIT.LAST: " + imgdir);
             imgdir = "/" + imgdir; // +"/";
             PPT.Presentation ppt = Globals.ThisAddIn.Application.ActivePresentation;
 
@@ -742,14 +722,14 @@ namespace MarkLogic_PowerPointAddin
 
             foreach (string i in imgfiles)
             {
-                MessageBox.Show("filename: " + i);
+               // MessageBox.Show("filename: " + i);
                 string fname = i.Split(new Char[] { '\\' }).Last();
                 string fileuri = imgdir + "/" + fname;
                 //convert this uri to .pptx slide.xml
                 //als get index from here
                 // add as parameters for upload.xqy doc properties
 
-                MessageBox.Show("fileuri to save :" + fileuri);
+              //  MessageBox.Show("fileuri to save :" + fileuri);
 
                 string parentprop = imgdir.Replace("_GIF", ".pptx");
 
@@ -765,11 +745,12 @@ namespace MarkLogic_PowerPointAddin
                 string slideidx = fname.Replace("Slide", "");
                 slideidx = slideidx.Replace(".GIF", "");
 
-                MessageBox.Show("properties: parent: " + parentprop + " slide: " + slideprop + " idx: " + slideidx);
+              //  MessageBox.Show("properties: parent: " + parentprop + " slide: " + slideprop + " idx: " + slideidx);
 
 
 
                 //save to ml, pass imagesurl
+                //link in .xqy to .pptx
                 string url = "http://localhost:8023/ppt/api/upload.xqy?uid=" + fileuri+"&source="+parentprop+"&slide="+slideprop+"&idx="+slideidx;
 
                 try
@@ -810,6 +791,47 @@ namespace MarkLogic_PowerPointAddin
             //Directory.Delete(imgdir);
             return message;
         }
+
+        public string insertText(string txt)
+        {
+            //int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
+
+            //PPT.Shapes s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes;
+
+            try
+            {
+                string orig =  Globals.ThisAddIn.Application.ActiveWindow.Selection.TextRange.Text;
+                Globals.ThisAddIn.Application.ActiveWindow.Selection.TextRange.Text = orig + txt;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Please place select text insertion point with cursor.");
+            }
+
+           // PPT.TextRange tr = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes[1].TextFrame.TextRange;
+           // tr.Text = "FOOO";
+            return "Foo";
+           
+        }
+
+        public string insertTable() //parameterize rows, columns, vals
+        {
+           // MessageBox.Show("In addin");
+            object missing = System.Type.Missing;
+            int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
+            PPT.Shape s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddTable(2, 3,50,50,450,70);
+
+            PPT.Table tbl = s.Table;
+           // MessageBox.Show(tbl.Rows.Count + "here");
+            PPT.Cell cell = tbl.Rows[1].Cells[1];
+            cell.Shape.TextFrame.TextRange.Text = "Foo";
+           // PPT.Shapes s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes;
+
+
+            return "foo";
+        }
+
+
 //====================================================================================================
 //====================================================================================================
 //====================================================================================================
