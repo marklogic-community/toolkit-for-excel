@@ -444,16 +444,16 @@ namespace MarkLogic_PowerPointAddin
         {
             bool retainformat = false;
 
-            MessageBox.Show("SlideMasterName"+Globals.ThisAddIn.Application.ActivePresentation.SlideMaster.Design.Name);
+            //MessageBox.Show("SlideMasterName"+Globals.ThisAddIn.Application.ActivePresentation.SlideMaster.Design.Name);
             PPT.Slides ss = Globals.ThisAddIn.Application.ActivePresentation.Slides;
 
            // PPT.Options o = 
             //foreach (PPT.Slide s in ss)
               //  MessageBox.Show(s.Design.Name);
 
-            PPT.Designs ds = Globals.ThisAddIn.Application.ActivePresentation.Designs;
-            foreach (PPT.Design d in ds)
-                MessageBox.Show(d.Name);
+            //PPT.Designs ds = Globals.ThisAddIn.Application.ActivePresentation.Designs;
+            //foreach (PPT.Design d in ds)
+               // MessageBox.Show(d.Name);
 
             if (retain.ToLower().Equals("true"))
                 retainformat = true;
@@ -572,11 +572,22 @@ namespace MarkLogic_PowerPointAddin
 
         public string useSaveFileDialog()
         {
+            Prompt p = new Prompt();
+            p.ShowDialog();
+            string filename = p.pfilename;
+            MessageBox.Show(filename);
+            return filename;
+        }
+
+        public string useSaveFileDialogOrig()
+        {
 
             SaveFileDialog s = new SaveFileDialog();
+           
             s.Filter = "PowerPoint Presentation (*.pptx)|*.pptx|All files (*.*)|*.*";
             s.DefaultExt = "pptx";
             s.AddExtension = true;
+           
             s.ShowDialog();
 
             return s.FileName;
@@ -634,11 +645,15 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-        public string saveWithImages()
+        public string saveWithImages(string saveas)
         {
             //dir parameter?  make optional in the javascript.  So you can save anywhere in ML.
             //remember to tied to filenames and mapping
            
+            bool insuresaveas = false;
+            if (saveas.Equals("true"))
+                insuresaveas = true;
+
             string message = "";
             PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
 
@@ -652,9 +667,11 @@ namespace MarkLogic_PowerPointAddin
             string imgdirwithpath = "";
             string imgdir = "";
 
-            if (pptx.Name == null || pptx.Name.Equals("") || pptx.Path == null || pptx.Path.Equals(""))
+            if ((pptx.Name == null || pptx.Name.Equals("") || pptx.Path == null || pptx.Path.Equals(""))
+                 ||insuresaveas)
             {
-                fullfilenamewithpath = useSaveFileDialog();
+                fullfilenamewithpath = getTempPath()+ useSaveFileDialog()+".pptx";
+                MessageBox.Show("fullnamewithpath is now  " + fullfilenamewithpath);
                 //here's where dir parameter might come in
                 filename = fullfilenamewithpath.Split(new Char[] { '\\' }).Last();
 
@@ -826,7 +843,7 @@ namespace MarkLogic_PowerPointAddin
             PPT.Cell cell = tbl.Rows[1].Cells[1];
             cell.Shape.TextFrame.TextRange.Text = "Foo";
            // PPT.Shapes s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes;
-
+         
 
             return "foo";
         }

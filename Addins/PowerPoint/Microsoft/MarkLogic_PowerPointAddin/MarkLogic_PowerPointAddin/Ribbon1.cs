@@ -19,16 +19,29 @@ namespace MarkLogic_PowerPointAddin
         }
 
         private void toggleButton1_Click(object sender, RibbonControlEventArgs e)
-        {
+        {  
             Globals.ThisAddIn.myPane.Visible = ((RibbonToggleButton)sender).Checked;
 
         }
 
-        private void button1_Click(object sender, RibbonControlEventArgs e)
+   /*     private void button1_Click(object sender, RibbonControlEventArgs e)
         {
             UserControl1 uc = (UserControl1)Globals.ThisAddIn.myPane.Control;
             uc.saveWithImages();
             //System.Windows.Forms.MessageBox.Show("DOING SOMETHIN");
+        }
+*/
+        private void button2_Click(object sender, RibbonControlEventArgs e)
+        {
+            UserControl1 uc = (UserControl1)Globals.ThisAddIn.myPane.Control;
+            uc.saveWithImages("false");
+
+        }
+
+        private void button3_Click(object sender, RibbonControlEventArgs e)
+        {
+            UserControl1 uc = (UserControl1)Globals.ThisAddIn.myPane.Control;
+            uc.saveWithImages("true");
         }
     }
 }

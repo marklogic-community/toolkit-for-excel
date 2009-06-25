@@ -28,14 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Ribbon1));
             this.tab1 = new Microsoft.Office.Tools.Ribbon.RibbonTab();
             this.group1 = new Microsoft.Office.Tools.Ribbon.RibbonGroup();
             this.tab2 = new Microsoft.Office.Tools.Ribbon.RibbonTab();
             this.group2 = new Microsoft.Office.Tools.Ribbon.RibbonGroup();
             this.viewTaskPaneButton = new Microsoft.Office.Tools.Ribbon.RibbonToggleButton();
-            this.menu1 = new Microsoft.Office.Tools.Ribbon.RibbonMenu();
-            this.button1 = new Microsoft.Office.Tools.Ribbon.RibbonButton();
+            this.button2 = new Microsoft.Office.Tools.Ribbon.RibbonButton();
+            this.button3 = new Microsoft.Office.Tools.Ribbon.RibbonButton();
             this.tab1.SuspendLayout();
             this.tab2.SuspendLayout();
             this.group2.SuspendLayout();
@@ -73,22 +72,23 @@
             this.viewTaskPaneButton.ShowImage = true;
             this.viewTaskPaneButton.Click += new System.EventHandler<Microsoft.Office.Tools.Ribbon.RibbonControlEventArgs>(this.toggleButton1_Click);
             // 
-            // menu1
+            // button2
             // 
-            this.menu1.Image = ((System.Drawing.Image)(resources.GetObject("menu1.Image")));
-            this.menu1.Items.Add(this.button1);
-            this.menu1.KeyTip = "M";
-            this.menu1.Label = "Save to MarkLogic";
-            this.menu1.Name = "menu1";
-            this.menu1.ShowImage = true;
+            this.button2.Image = global::MarkLogic_PowerPointAddin.Properties.Resources.menu1_Image;
+            this.button2.Label = "Save To MarkLogic";
+            this.button2.Name = "button2";
+            this.button2.Position = Microsoft.Office.Tools.Ribbon.RibbonPosition.AfterOfficeId("FileSaveAsMenu");
+            this.button2.ShowImage = true;
+            this.button2.Click += new System.EventHandler<Microsoft.Office.Tools.Ribbon.RibbonControlEventArgs>(this.button2_Click);
             // 
-            // button1
+            // button3
             // 
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Label = "Save with Images";
-            this.button1.Name = "button1";
-            this.button1.ShowImage = true;
-            this.button1.Click += new System.EventHandler<Microsoft.Office.Tools.Ribbon.RibbonControlEventArgs>(this.button1_Click);
+            this.button3.Image = global::MarkLogic_PowerPointAddin.Properties.Resources.menu1_Image;
+            this.button3.Label = "Save As To MarkLogic";
+            this.button3.Name = "button3";
+            this.button3.Position = Microsoft.Office.Tools.Ribbon.RibbonPosition.AfterOfficeId("FileSaveAsMenu");
+            this.button3.ShowImage = true;
+            this.button3.Click += new System.EventHandler<Microsoft.Office.Tools.Ribbon.RibbonControlEventArgs>(this.button3_Click);
             // 
             // Ribbon1
             // 
@@ -96,7 +96,8 @@
             // 
             // Ribbon1.OfficeMenu
             // 
-            this.OfficeMenu.Items.Add(this.menu1);
+            this.OfficeMenu.Items.Add(this.button3);
+            this.OfficeMenu.Items.Add(this.button2);
             this.RibbonType = "Microsoft.PowerPoint.Presentation";
             this.Tabs.Add(this.tab1);
             this.Tabs.Add(this.tab2);
@@ -118,8 +119,8 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonTab tab2;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup group2;
         internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton viewTaskPaneButton;
-        internal Microsoft.Office.Tools.Ribbon.RibbonMenu menu1;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton button1;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton button2;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton button3;
     }
 
     partial class ThisRibbonCollection : Microsoft.Office.Tools.Ribbon.RibbonReadOnlyCollection
