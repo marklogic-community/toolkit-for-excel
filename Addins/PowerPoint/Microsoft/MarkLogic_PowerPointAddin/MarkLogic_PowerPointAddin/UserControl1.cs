@@ -71,6 +71,8 @@ namespace MarkLogic_PowerPointAddin
                 webBrowser1.Navigate(webUrl);
                 webBrowser1.ScriptErrorsSuppressed = true;
 
+                this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
+
             }
 
         }
@@ -85,18 +87,20 @@ namespace MarkLogic_PowerPointAddin
 
             }
         }
-
-        private void htmlDoc_Click(object sender, HtmlElementEventArgs e)
-        {
+       
+       private void htmlDoc_Click(object sender, HtmlElementEventArgs e)
+       {
             if (!(webBrowser1.Parent.Focused))
             {
+
                 webBrowser1.Parent.Focus();
                 webBrowser1.Document.Focus();
+               
             }
 
         }
-
-     /*   private bool checkUrlInRegistry()
+        /*
+        private bool checkUrlInRegistry()
         {
             RegistryKey regKey1 = Registry.CurrentUser;
             regKey1 = regKey1.OpenSubKey(@"MarkLogicAddinConfiguration\PowerPoint");
@@ -118,7 +122,7 @@ namespace MarkLogic_PowerPointAddin
             }
             return keyExists;
         }
-      * */
+       */
         public enum ColorScheme : int
         {
             Blue = 1,
@@ -377,12 +381,12 @@ namespace MarkLogic_PowerPointAddin
 
         public String openPPTX(string path, string title, string url, string user, string pwd)
         {
-            // MessageBox.Show("in the addin path:"+path+  "      title"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
+             MessageBox.Show("in the addin path:"+path+  "      title:"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
             string message = "";
             object missing = Type.Missing;
             string tmpdoc = "";
 
-            // title=title.Replace("/","");
+             title=title.Replace("/","");
 
             try
             {
@@ -391,9 +395,11 @@ namespace MarkLogic_PowerPointAddin
                 tmpdoc = path + title;
                 //works thought path ends with / and doc starts with \ so you have C:tmp/\foo.xslx
                 //may need to fix
-                //MessageBox.Show("Tempdoc"+tmpdoc);
+                MessageBox.Show("Tempdoc"+tmpdoc);
                 //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
                 Client.DownloadFile(url, tmpdoc);//@"C:\test2.xlsx");
+
+                PPT.Presentation ppt = Globals.ThisAddIn.Application.Presentations.Open(tmpdoc, Office.MsoTriState.msoFalse, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue);
 
                 //something weird with underscores, saves growth_model.xlsx becomes growth.model.xlsx
                 //may have to fix
