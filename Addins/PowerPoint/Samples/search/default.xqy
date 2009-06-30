@@ -29,11 +29,29 @@ let $body :=
 <form id="basicsearch" action="default.xqy" method="post">
                    <div>
                       <input type="text" size="40" name="xladd:bsv" autocomplete="off" value={$searchval} id="bsearchval"  method="post"/>&nbsp;
-                     <!-- TEST : { $no:color}--><input type="submit" value="Search"/> 
+                     <!-- TEST : { $no:color}--><input type="submit" value="Go"/> 
                   </div>     
-                   <br/>
-                         <input type="radio" name="xladd:searchtype" value="slide" checked="checked" id="s"/>Slides
-                         <input type="radio" name="xladd:searchtype" value="image" id="i"/>Images
+                   <br/> {
+                         if($searchtype eq "slide")
+                         then
+                            <input type="radio" name="xladd:searchtype" checked="checked" value="slide" id="s"/>
+                         else
+                            <input type="radio" name="xladd:searchtype" value="slide" id="s"/>
+                         }Slides
+                         {
+                         if($searchtype eq "image")
+                         then
+                            <input type="radio" name="xladd:searchtype" value="image" checked="checked" id="i"/>
+                         else
+                            <input type="radio" name="xladd:searchtype" value="image" id="i"/>
+                         }Images
+                         {
+                         if($searchtype eq "pres")
+                         then
+                            <input type="radio" name="xladd:searchtype" value="pres" checked="checked" id="i"/>
+                         else
+                            <input type="radio" name="xladd:searchtype" value="pres" id="i"/>
+                         }Presentations
                   </form>   
                {(:
                     xdmp:invoke("image-search.xqy",  (xs:QName("xladd:bsv"),$searchparam ))

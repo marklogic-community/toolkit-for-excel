@@ -10,7 +10,7 @@ let $searchparam := $xladd:bsv
   let $pics := cts:uri-match(fn:concat("/",$searchparam,"*.jpg"))
   for $pic in $pics
   let $src := fn:concat("get-image.xqy?uid=",$pic)
-  let $imageuri := fn:concat("http://localhost:8000/ppt/images/get-image.xqy?uid=",$pic)
+  let $imageuri := fn:concat("http://localhost:8023/ppt/images/get-image.xqy?uid=",$pic)
 
   return 
       (<a href="#" onclick="insertImage('{$imageuri}')">

@@ -1,36 +1,21 @@
-/* .resize {
+ .resize {
     width: 100px;
     height : auto;
+    
     }
 
 .resize {
     width: auto;
     height : 200px;
-} */
-ul.thumb {
-	float: left;
-	list-style: none;
-	margin: 0; padding: 10px;
-	width: 360px;
+    
+} 
+
+.ML-hit-metadata {
+	margin-top: 0.25em;
 }
-ul.thumb li {
-	margin: 0; padding: 5px;
-	float: left;
-	position: relative;  /* Set the absolute positioning base coordinate */
-	width: 300;
-	height: 300;
-}
-ul.thumb li img {
-	width: 250px; height: 200px; /* Set the small thumbnail size */
-	-ms-interpolation-mode: bicubic; /* IE Fix for Bicubic Scaling */
-	border: 1px solid #ddd;
-	padding: 5px;
-	background: #f0f0f0;
-	position: relative;
-	left: 0; top: 0;
-}
-ul.thumb li img.hover {
-	background:url(thumb_bg.png) no-repeat center center;  /* Image used as background on hover effect
-	border: none; /* Get rid of border on hover */
+.ML-hit-metadata li {
+	display: inline;
+	margin: 0 0.5;
+	font-size: 80%;
 }
  
