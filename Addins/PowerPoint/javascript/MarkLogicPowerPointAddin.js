@@ -343,10 +343,10 @@ MLA.copySlideToActive = function()
 	window.external.copySlideToActive();
 }
 */
-MLA.copyPasteSlideToActive = function(tmpPath, filename,slideidx, url, user, pwd)
+MLA.copyPasteSlideToActive = function(tmpPath, filename,slideidx, url, user, pwd,retain)
 {
 	//alert("IN MLA2 tmpPath: "+tmpPath+" fileanme: "+filename +"slidenumber"+slideidx+" url: "+url +" user/pwd"+user+"|"+pwd);
-	window.external.copyPasteSlideToActive(tmpPath,filename,slideidx,url,user,pwd);
+	window.external.copyPasteSlideToActive(tmpPath,filename,slideidx,url,user,pwd,retain);
 }
 
 /**
