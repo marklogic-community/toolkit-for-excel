@@ -378,10 +378,70 @@ namespace MarkLogic_PowerPointAddin
                     throw;
             }
         }
+        public string embedXLSX(string path, string title, string url, string user, string pwd)
+        {
+            string message="foo";
+            string tmpdoc = "";
+            MessageBox.Show("test");
+            // MessageBox.Show("In addin");
+            object missing = System.Type.Missing;
+            int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
 
+                         title=title.Replace("/","");
+                         MessageBox.Show("title" + title);
+
+                         try
+                         {
+                             System.Net.WebClient Client = new System.Net.WebClient();
+                             Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+                             tmpdoc = path + title;
+                             //works thought path ends with / and doc starts with \ so you have C:tmp/\foo.xslx
+                             //may need to fix
+                             //MessageBox.Show("Tempdoc"+tmpdoc);
+                             //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
+                             Client.DownloadFile(url, tmpdoc);//@"C:\test2.xlsx");
+                         }
+                         catch (Exception e)
+                         {
+                             MessageBox.Show("ERROR: "+e.Message);
+                         }
+
+                         try
+                         {
+                             Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(21, 105, 250, 250, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
+                         }
+                         catch (Exception e)
+                         {
+                             MessageBox.Show("Error" + e.Message);
+                         }
+
+            /*
+            PPT.Shape s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddTable(2, 3, 50, 50, 450, 70);
+            try
+            {
+                Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(21, 105, 250, 250, "", @"C:\Workflow101.docx", Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error" + e.Message);
+            }
+
+
+
+            PPT.Table tbl = s.Table;
+
+            // MessageBox.Show(tbl.Rows.Count + "here");
+            PPT.Cell cell = tbl.Rows[1].Cells[1];
+            cell.Shape.TextFrame.TextRange.Text = "Foo";
+            // PPT.Shapes s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes;
+
+
+            return "foo"; */
+            return message;
+        }
         public String openPPTX(string path, string title, string url, string user, string pwd)
         {
-             MessageBox.Show("in the addin path:"+path+  "      title:"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
+             //MessageBox.Show("in the addin path:"+path+  "      title:"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
             string message = "";
             object missing = Type.Missing;
             string tmpdoc = "";
@@ -395,7 +455,7 @@ namespace MarkLogic_PowerPointAddin
                 tmpdoc = path + title;
                 //works thought path ends with / and doc starts with \ so you have C:tmp/\foo.xslx
                 //may need to fix
-                MessageBox.Show("Tempdoc"+tmpdoc);
+                //MessageBox.Show("Tempdoc"+tmpdoc);
                 //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
                 Client.DownloadFile(url, tmpdoc);//@"C:\test2.xlsx");
 
@@ -504,6 +564,7 @@ namespace MarkLogic_PowerPointAddin
         }
         public string copyPasteSlideToActiveSupport(PPT.Presentation sourcePres, int slideidx, bool retain)
         {
+            //MessageBox.Show("retain=" + retain);
             //arguments need to include slide(s) to be inserted ..
             // user, pwd, url, title, tmpath(?), retainsourceformatting 
 
@@ -531,7 +592,7 @@ namespace MarkLogic_PowerPointAddin
                         if (retain)
                         {
                             //Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
-                            activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
+                            activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoTrue;
                             Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
                             PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
                             sr.Design = sourcePres.SlideMaster.Design;
@@ -540,7 +601,7 @@ namespace MarkLogic_PowerPointAddin
                         else
                         {
                             //Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
-                            activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoTrue;
+                            activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
                             Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
                             PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
                             sr.Design = Globals.ThisAddIn.Application.ActivePresentation.SlideMaster.Design;
@@ -697,16 +758,26 @@ namespace MarkLogic_PowerPointAddin
             }
             else
             {
+               // MessageBox.Show("In the else");
                 fullfilenamewithpath = path + "\\" + filename;
+               // MessageBox.Show("Saving " + fullfilenamewithpath);
                 pptx.Save();
+
                 url = url + "/" + filename;
-                saveToML(fullfilenamewithpath,url);
-                //save to ML
+                try
+                {
+                    saveToML(fullfilenamewithpath, url);
+                    //save to ML
 
-                imgdirwithpath = convertFilenameToImageDir(fullfilenamewithpath);
-                imgdir = imgdirwithpath.Split(new Char[] { '\\' }).Last();
+                    imgdirwithpath = convertFilenameToImageDir(fullfilenamewithpath);
+                    imgdir = imgdirwithpath.Split(new Char[] { '\\' }).Last();
 
-                saveImages(imgdirwithpath);
+                    saveImages(imgdirwithpath);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Error" + e.Message);
+                }
                 
                 //pptx.SaveAs(imgdir, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsGIF, Microsoft.Office.Core.MsoTriState.msoFalse);
 
@@ -815,6 +886,12 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
+        public string insertExcel()
+        {
+            string message = "";
+            return message;
+        }
+
         public string insertText(string txt)
         {
             //int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
@@ -843,8 +920,19 @@ namespace MarkLogic_PowerPointAddin
             object missing = System.Type.Missing;
             int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
             PPT.Shape s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddTable(2, 3,50,50,450,70);
+            try
+            {
+                Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(21, 105, 250, 250, "", @"C:\Workflow101.docx", Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error" + e.Message);
+            }
+            
+            
 
             PPT.Table tbl = s.Table;
+          
            // MessageBox.Show(tbl.Rows.Count + "here");
             PPT.Cell cell = tbl.Rows[1].Cells[1];
             cell.Shape.TextFrame.TextRange.Text = "Foo";

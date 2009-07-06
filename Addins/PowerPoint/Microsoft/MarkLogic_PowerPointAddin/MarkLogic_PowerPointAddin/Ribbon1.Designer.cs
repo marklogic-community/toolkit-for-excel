@@ -75,7 +75,7 @@
             // button2
             // 
             this.button2.Image = global::MarkLogic_PowerPointAddin.Properties.Resources.menu1_Image;
-            this.button2.Label = "Save To MarkLogic";
+            this.button2.Label = "Save";
             this.button2.Name = "button2";
             this.button2.Position = Microsoft.Office.Tools.Ribbon.RibbonPosition.AfterOfficeId("FileSaveAsMenu");
             this.button2.ShowImage = true;
@@ -84,7 +84,7 @@
             // button3
             // 
             this.button3.Image = global::MarkLogic_PowerPointAddin.Properties.Resources.menu1_Image;
-            this.button3.Label = "Save As To MarkLogic";
+            this.button3.Label = "Save As";
             this.button3.Name = "button3";
             this.button3.Position = Microsoft.Office.Tools.Ribbon.RibbonPosition.AfterOfficeId("FileSaveAsMenu");
             this.button3.ShowImage = true;
