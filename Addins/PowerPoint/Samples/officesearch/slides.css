@@ -1,0 +1,41 @@
+ .resize {
+    width: 100px;
+    height : auto;
+    
+    }
+
+.resize {
+    width: auto;
+    height : 200px;
+    
+} 
+
+.ML-hit-metadata {
+	margin-top: 0.25em;
+}
+.ML-hit-metadata li {
+	display: inline;
+	margin: 0 0.5;
+	font-size: 80%;
+}
+
+td.ML-td{
+	border-width: 2px 2px 2px 2px;
+	padding: 2px 2px 2px 2px;
+	border-style: outset outset outset outset;
+/*	border-color: gray gray gray gray; */
+	background-color: white;
+        margin:2pt;
+
+}
+
+table.ML-table{
+	border-width: 2px 2px 2px 2px;
+	border-spacing: 2px;
+	border-style: outset outset outset outset;
+/*	border-color: gray gray gray gray; */
+	border-collapse: separate;
+	/*background-color: white;*/
+
+ }
+/*a.test:hover {text-decoration: underline; color: red;}*/
