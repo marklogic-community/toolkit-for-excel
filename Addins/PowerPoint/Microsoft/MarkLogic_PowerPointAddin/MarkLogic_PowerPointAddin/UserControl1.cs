@@ -193,7 +193,7 @@ namespace MarkLogic_PowerPointAddin
             catch (Exception e)
             {
                 string errorMsg = e.Message;
-                ids = "error";
+                ids = "error: " + errorMsg;
             }
 
             if (debug)
@@ -232,7 +232,7 @@ namespace MarkLogic_PowerPointAddin
             catch (Exception e)
             {
                 string errorMsg = e.Message;
-                custompiecexml = "error";
+                custompiecexml = "error: " + errorMsg;
             }
 
             if (debug)
@@ -255,10 +255,11 @@ namespace MarkLogic_PowerPointAddin
             catch (Exception e)
             {
                 string errorMsg = e.Message;
-                newid = "error";
+                newid = "error: " + errorMsg;
             }
             if (debug)
                 newid = "error";
+
             return newid;
 
         }
@@ -282,7 +283,7 @@ namespace MarkLogic_PowerPointAddin
             catch (Exception e)
             {
                 string errorMsg = e.Message;
-                message = "error";
+                message = "error: " + errorMsg;
             }
 
             if (debug)
@@ -294,36 +295,55 @@ namespace MarkLogic_PowerPointAddin
 
         public Image byteArrayToImage(byte[] byteArrayIn)
         {
-            MemoryStream ms = new MemoryStream(byteArrayIn);
-            Image returnImage = Image.FromStream(ms);
-            return returnImage;
+            try
+            {
+                MemoryStream ms = new MemoryStream(byteArrayIn);
+                Image returnImage = Image.FromStream(ms);
+                return returnImage;
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
         }
 
         public byte[] imageToByteArray(System.Drawing.Image imageIn)
         {
-            MemoryStream ms = new MemoryStream();
-            imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
-            return ms.ToArray();
+            try
+            {
+                MemoryStream ms = new MemoryStream();
+                imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
+                return ms.ToArray();
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
         }
 
         public String insertImage(string imageuri, string uname, string pwd)
         {
             object missing = Type.Missing;
-            //MessageBox.Show("Adding Image");
             string message = "";
 
-            System.Net.WebClient Client = new System.Net.WebClient();
-            Client.Credentials = new System.Net.NetworkCredential(uname, pwd);
-            byte[] bytearray = Client.DownloadData(imageuri);
-            Image img = byteArrayToImage(bytearray);
-            //Image img = Image.FromFile(@"C:\gijoe_destro.jpg");
+            try
+            {
+                byte[] bytearray = downloadData(imageuri, uname, pwd);
+                Image img = byteArrayToImage(bytearray);
+
+                PPT.Slide slide = (PPT.Slide)Globals.ThisAddIn.Application.ActiveWindow.View.Slide;
+
+                Clipboard.SetImage(img);
+                slide.Shapes.Paste();
+                Clipboard.Clear();
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
 
 
-            PPT.Slide slide = (PPT.Slide)Globals.ThisAddIn.Application.ActiveWindow.View.Slide;
-
-            Clipboard.SetImage(img);
-            slide.Shapes.Paste();
-            Clipboard.Clear();
             return message;
         }
 
@@ -340,6 +360,7 @@ namespace MarkLogic_PowerPointAddin
             path = Globals.ThisAddIn.Application.ActivePresentation.Path;
             return path;
         }
+
         public String getTempPath()
         {
             string tmpPath = "";
@@ -378,6 +399,9 @@ namespace MarkLogic_PowerPointAddin
                     throw;
             }
         }
+        /*==========================================*/
+        /*==========================================*/
+        /*==========================================*/
         public string embedXLSX(string path, string title, string url, string user, string pwd)
         {
             string message="foo";
@@ -674,6 +698,25 @@ namespace MarkLogic_PowerPointAddin
 
             return "foo";
 
+        }
+
+        private byte[] downloadData(string url, string user, string pwd)
+        {
+            //MessageBox.Show("downloading data");
+            byte[] bytearray;
+
+            try
+            {
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+                bytearray = Client.DownloadData(url);
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
+
+            return bytearray;
         }
 
         public string saveToML(string filename, string url)
