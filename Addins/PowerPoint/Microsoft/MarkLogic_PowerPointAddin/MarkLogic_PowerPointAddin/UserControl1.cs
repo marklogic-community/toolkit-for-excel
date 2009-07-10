@@ -637,7 +637,7 @@ namespace MarkLogic_PowerPointAddin
 
         }
 
-        public string useSaveFileDialog()
+  /*      public string useSaveFileDialog()
         {
             Prompt p = new Prompt();
             p.ShowDialog();
@@ -645,6 +645,7 @@ namespace MarkLogic_PowerPointAddin
             MessageBox.Show(filename);
             return filename;
         }
+   * */
 
         public string useSaveFileDialogOrig()
         {
@@ -712,14 +713,14 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-        public string saveWithImages(string saveas)
+        public string saveWithImages(string saveasname, bool saveas)
         {
             //dir parameter?  make optional in the javascript.  So you can save anywhere in ML.
             //remember to tied to filenames and mapping
            
-            bool insuresaveas = false;
-            if (saveas.Equals("true"))
-                insuresaveas = true;
+            bool insuresaveas = saveas;
+           // if (saveas.Equals("true"))
+             //   insuresaveas = true;
 
             string message = "";
             PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
@@ -737,8 +738,8 @@ namespace MarkLogic_PowerPointAddin
             if ((pptx.Name == null || pptx.Name.Equals("") || pptx.Path == null || pptx.Path.Equals(""))
                  ||insuresaveas)
             {
-                fullfilenamewithpath = getTempPath()+ useSaveFileDialog()+".pptx";
-                MessageBox.Show("fullnamewithpath is now  " + fullfilenamewithpath);
+                fullfilenamewithpath = getTempPath() + saveasname + ".pptx"; // useSaveFileDialog()+".pptx";
+                //MessageBox.Show("fullnamewithpath is now  " + fullfilenamewithpath);
                 //here's where dir parameter might come in
                 filename = fullfilenamewithpath.Split(new Char[] { '\\' }).Last();
 

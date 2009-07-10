@@ -34,14 +34,31 @@ namespace MarkLogic_PowerPointAddin
         private void button2_Click(object sender, RibbonControlEventArgs e)
         {
             UserControl1 uc = (UserControl1)Globals.ThisAddIn.myPane.Control;
-            uc.saveWithImages("false");
+            string filename = useSaveFileDialog();
+
+            if (!(filename.Equals("") || filename == null))
+                uc.saveWithImages(filename,false);
 
         }
 
         private void button3_Click(object sender, RibbonControlEventArgs e)
         {
             UserControl1 uc = (UserControl1)Globals.ThisAddIn.myPane.Control;
-            uc.saveWithImages("true");
+            string filename = useSaveFileDialog();
+
+            if (!(filename.Equals("") || filename == null))
+               uc.saveWithImages(filename,true);
+        }
+
+        private string useSaveFileDialog()
+        {
+            Prompt p = new Prompt();
+            p.ShowDialog();
+            string filename = p.pfilename;
+            //System.Windows.Forms.MessageBox.Show(filename);
+            return filename;
         }
     }
+
+
 }

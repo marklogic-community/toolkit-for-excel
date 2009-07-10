@@ -18,29 +18,10 @@ namespace MarkLogic_PowerPointAddin
             
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("SAVING "+textBox1.Text);
             pfilename = textBox1.Text;
-            
-          //  if( this.ShowDialog() == DialogResult.OK && textBox1.Text.Length > 0)  
-            //{
-              //  MessageBox.Show("RETURNING "+textBox1.Text);
-           // }
-
-
             this.Close();
-
             
         }
 
@@ -51,8 +32,13 @@ namespace MarkLogic_PowerPointAddin
 
         private void button2_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("CANCELING");
+            pfilename = "";
             this.Close();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
