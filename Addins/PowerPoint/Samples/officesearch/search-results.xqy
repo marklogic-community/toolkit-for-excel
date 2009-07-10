@@ -44,12 +44,12 @@ let $type := for $s at $res in $slides
 <li>
                 <table>
                   <tr>
-                    <td><a name={$imgnum} href={$imganchor} onclick="copyPasteSlideToActive('{$pptx}','{$index}','{$d}')">
+                    <td><a name={$imgnum} href={$imganchor} onclick="copyPasteSlideToActive('{$pptx}','{$index}','{$res}')">
                           <img src="{$src}" class="resize"></img>
                         </a>
                     </td>
                     <td style="vertical-align: top;" >
-                          <input type="checkbox" id={fn:concat("retain",$d)} name="format"/>retain format
+                          <input type="checkbox" id={fn:concat("retain",$res)} name="format"/>retain format
                     </td>
                  </tr>
                 </table>
