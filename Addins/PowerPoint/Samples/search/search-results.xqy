@@ -78,7 +78,7 @@ else if($searchtype eq "image") then
           <img src="{$src}"></img>
           </a>,<br/>,<br/>)
 else
-let $slides := cts:search(//p:sld, cts:word-query("marklogic"))
+let $slides := cts:search(//p:sld, cts:word-query($searchparam))
 let $docuris := for $s in $slides 
                        let $orig-uri := xdmp:node-uri($s)
                        return fn:replace(fn:replace($orig-uri,"/ppt/slides/slide\d+\.xml",""),"_pptx_parts",".pptx")
@@ -92,7 +92,7 @@ let $finaldocs := for $doc in  fn:distinct-values($docuris)
                                                 else fn:concat("lastmodified: ",$propsdoc//dcterms:modified//text())
                   return (<a href="#" onclick="openPPTX('{$doc}')">{$doc}</a>,<br/>,
                                 <ul class="ML-hit-metadata">
-                                     <li>{$lastmodby}</li>
+                                     <li>{$lastmodby}</li>&nbsp;&nbsp;
                                      <li>{$lastmoddate}</li>
                                 </ul>,<br/>)
 return $finaldocs
