@@ -313,8 +313,6 @@ MLA.getConfiguration = function()
 
         return MLA.config;	
 }
-/**
- *
 /** Inserts image into the ActiveDocument at current cursor position.  
  *@param picurl a url to an XQuery module that will return the image when evaluated.  
  *@param uname username for Server
@@ -330,23 +328,28 @@ MLA.insertImage = function(picuri,uname,pwd)
 	   throw("Error: Not able to insertImage; "+errMsg);
 
 }
-/*
-MLA.CopySlidesFromPPT = function()
-{
-	alert("IN MLA");
-	window.external.CopySlidesFromPPT();
-}
 
-MLA.copySlideToActive = function()
-{
-	alert("IN MLA");
-	window.external.copySlideToActive();
-}
-*/
+/** Inserts slide, identified by slideIdx,  into the active presentation at current slide position.  
+ *@param tmpPath the directory where the local copy will be saved.  
+ *@param filename the name of the powerpoint file
+ *@param slideIdx the index of the slide within the source powerpoint file to be copied
+ *@param url the url of the .pptx to be downloaded
+ *@param user the username of the MarkLogic Server the url connects with
+ *@param pwd the password of the MarkLogic Server the url connects with
+ *@param retain true or false setting determines whether background style of copied slide will be retained when copied to active presentation
+ *@throws Exception if unable to copy slide to active presentation 
+ */
 MLA.copyPasteSlideToActive = function(tmpPath, filename,slideidx, url, user, pwd,retain)
 {
 	//alert("IN MLA2 tmpPath: "+tmpPath+" fileanme: "+filename +"slidenumber"+slideidx+" url: "+url +" user/pwd"+user+"|"+pwd);
-	window.external.copyPasteSlideToActive(tmpPath,filename,slideidx,url,user,pwd,retain);
+	////master may differ, takes first master, need to insure its correct one in function in AddIn
+
+	var msg = window.external.copyPasteSlideToActive(tmpPath,filename,slideidx,url,user,pwd,retain);
+	var errMsg = MLA.errorCheck(msg);
+	if(errMsg!=null)
+	   throw("Error: Not able to copyPasteSlideToActive; "+errMsg);
+
+	return msg;
 }
 
 /**
@@ -361,6 +364,26 @@ MLA.getTempPath = function()
 
         if(errMsg!=null) 
         	throw("Error: Not able to getTempPath; "+errMsg);
+
+	return msg;
+}
+
+/** opens .pptx by downloading local copy to client  
+ *@param tmpPath the directory where the local copy will be saved.  
+ *@param docuri the uri of the .pptx within MarkLogic
+ *@param url the url of the .pptx to be downloaded
+ *@param user the username of the MarkLogic Server the url connects with
+ *@param pwd the password of the MarkLogic Server the url connects with
+ *@throws Exception if unable to download and open local copy 
+ */
+MLA.openPPTX = function(tmpPath, docuri, url, user, pwd)
+{
+	//alert("tmpPath: "+tmpPath+" docuri: "+docuri+" url:"+url+" user/pwd:"+ user+pwd);
+	var msg = window.external.openPPTX(tmpPath, docuri, url, user, pwd);
+        var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to openPPTX; "+errMsg);
 
 	return msg;
 }
