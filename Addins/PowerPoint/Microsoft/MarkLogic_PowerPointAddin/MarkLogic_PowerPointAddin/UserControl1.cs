@@ -416,7 +416,10 @@ namespace MarkLogic_PowerPointAddin
 
                          try
                          {
-                             System.Net.WebClient Client = new System.Net.WebClient();
+                             tmpdoc = path + title;
+                             downloadFile(url, tmpdoc, user, pwd);
+
+                            /* System.Net.WebClient Client = new System.Net.WebClient();
                              Client.Credentials = new System.Net.NetworkCredential(user, pwd);
                              tmpdoc = path + title;
                              //works thought path ends with / and doc starts with \ so you have C:tmp/\foo.xslx
@@ -424,6 +427,7 @@ namespace MarkLogic_PowerPointAddin
                              //MessageBox.Show("Tempdoc"+tmpdoc);
                              //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
                              Client.DownloadFile(url, tmpdoc);//@"C:\test2.xlsx");
+                             * */
                          }
                          catch (Exception e)
                          {
@@ -463,64 +467,25 @@ namespace MarkLogic_PowerPointAddin
             return "foo"; */
             return message;
         }
+
         public String openPPTX(string path, string title, string url, string user, string pwd)
         {
-             //MessageBox.Show("in the addin path:"+path+  "      title:"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
+            //MessageBox.Show("in the addin path:"+path+  "      title:"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
+            
             string message = "";
             object missing = Type.Missing;
             string tmpdoc = "";
 
-             title=title.Replace("/","");
-
             try
             {
-                System.Net.WebClient Client = new System.Net.WebClient();
-                Client.Credentials = new System.Net.NetworkCredential(user, pwd);
                 tmpdoc = path + title;
-                //works thought path ends with / and doc starts with \ so you have C:tmp/\foo.xslx
-                //may need to fix
-                //MessageBox.Show("Tempdoc"+tmpdoc);
-                //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
-                Client.DownloadFile(url, tmpdoc);//@"C:\test2.xlsx");
-
+                downloadFile(url, tmpdoc, user, pwd);
                 PPT.Presentation ppt = Globals.ThisAddIn.Application.Presentations.Open(tmpdoc, Office.MsoTriState.msoFalse, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue);
-
-                //something weird with underscores, saves growth_model.xlsx becomes growth.model.xlsx
-                //may have to fix
-
-                //Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
-
-                /*
-                 * another way 
-                                    byte[] byteArray =  Client.DownloadData("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx");//File.ReadAllBytes("Test.docx");
-                                    using (MemoryStream mem = new MemoryStream())
-                                    {
-
-                                        mem.Write(byteArray, 0, (int)byteArray.Length);
-
-                                        // using (OpenXmlPkg.SpreadsheetDocument sd = OpenXmlPkg.SpreadsheetDocument.Open(mem, true))
-                                        // {
-                                        // }
-                        
-                                        using (FileStream fileStream = new FileStream(@"C:\Test2.docx", System.IO.FileMode.CreateNew))
-                                        {
-
-                                            mem.WriteTo(fileStream);
-
-                                        }
-
-                       
-                        
-                                    }
-                 * */
-
-                //OpenXmlPkg.SpreadsheetDocument xlPackage;
-                //xlPackage = OpenXmlPkg.SpreadsheetDocument.Open(strm, false);
             }
             catch (Exception e)
             {
                 //not always true, need to improve error handling or message or both
-                string origmsg = "A document with the name '" + title + "' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
+                string origmsg = "A presentation with the name '" + title + "' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
                 MessageBox.Show(origmsg);
                 string errorMsg = e.Message;
                 message = "error: " + errorMsg;
@@ -530,57 +495,60 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-        public string copyPasteSlideToActive(string tmpPath,string filename, string slideidx,string url,string user, string pwd, string retain)
+        public string copyPasteSlideToActive(string tmpPath, string filename, string slideidx,string url,string user, string pwd, string retain)
         {
-            bool retainformat = false;
-
-            //MessageBox.Show("SlideMasterName"+Globals.ThisAddIn.Application.ActivePresentation.SlideMaster.Design.Name);
-            PPT.Slides ss = Globals.ThisAddIn.Application.ActivePresentation.Slides;
-
-           // PPT.Options o = 
-            //foreach (PPT.Slide s in ss)
-              //  MessageBox.Show(s.Design.Name);
-
-            //PPT.Designs ds = Globals.ThisAddIn.Application.ActivePresentation.Designs;
-            //foreach (PPT.Design d in ds)
-               // MessageBox.Show(d.Name);
-
-            if (retain.ToLower().Equals("true"))
-                retainformat = true;
-
-            //MessageBox.Show("retain in addin" + retain.ToLower());
-            //MessageBox.Show("In function tmppath"+tmpPath+" filename: "+filename+" slideidx"+slideidx+ "url: "+url+"user: "+user+"pwd"+pwd);
 
             string message = "";
             object missing = Type.Missing;
             string sourcefile = "";
             string path = getTempPath();
+            bool retainformat = false;
+            bool proceed = false;
+
+            PPT.Slides ss = Globals.ThisAddIn.Application.ActivePresentation.Slides;
+
+            if (retain.ToLower().Equals("true"))
+                retainformat = true;
 
             try
             {
-                System.Net.WebClient Client = new System.Net.WebClient();
-                Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-              
                 sourcefile = path + filename;
-                //MessageBox.Show("sourcefile: "+sourcefile+" URL: "+ url+ "   slideidx: "+slideidx);
-                Client.DownloadFile(url, sourcefile);
+                if (FileInUse(sourcefile))
+                {
+                    string origmsg = "A presentation with the name '" + filename + "' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
+                    MessageBox.Show(origmsg);
+                    
+                }
+                else
+                {
+                    downloadFile(url, sourcefile, user, pwd);
+                    proceed = true;
+                }
             }
             catch (Exception e)
             {
-                MessageBox.Show("issue with download");
+                //MessageBox.Show("issue with download"+e.Message+e.StackTrace);
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
             }
 
+            
             try
             {
-                PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
-                int num = Convert.ToInt32(slideidx);
-                copyPasteSlideToActiveSupport(sourcePres,num, retainformat );
-                sourcePres.Close();
-                sourcePres = null;
+                if (proceed)
+                {
+                    PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
+                    int num = Convert.ToInt32(slideidx);
+                    copyPasteSlideToActiveSupport(sourcePres, num, retainformat);
+                    sourcePres.Close();
+                    sourcePres = null;
+                }
             }
             catch(Exception e)
             {
-                MessageBox.Show("Unable to open"+e.Message);
+                //MessageBox.Show("Unable to open: "+e.Message);
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
                     
             }
 
@@ -670,6 +638,7 @@ namespace MarkLogic_PowerPointAddin
             return filename;
         }
    * */
+       
 
         public string useSaveFileDialogOrig()
         {
@@ -685,7 +654,26 @@ namespace MarkLogic_PowerPointAddin
             return s.FileName;
         }
 
-        public string uploadFile(string url, byte[] content)
+        public string downloadFile(string url, string sourcefile, string user, string pwd)
+        {
+            string message = "";
+            try
+            {
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+                Client.DownloadFile(url, sourcefile);
+                Client.Dispose();
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
+
+            return message;
+        }
+
+
+        public string uploadData(string url, byte[] content)
         {
 
             System.Net.WebClient Client = new System.Net.WebClient();
@@ -695,6 +683,7 @@ namespace MarkLogic_PowerPointAddin
 
             Client.UploadData(url, "POST", content);
             Client.Dispose();
+
 
             return "foo";
 
@@ -710,6 +699,7 @@ namespace MarkLogic_PowerPointAddin
                 System.Net.WebClient Client = new System.Net.WebClient();
                 Client.Credentials = new System.Net.NetworkCredential(user, pwd);
                 bytearray = Client.DownloadData(url);
+                Client.Dispose();
             }
             catch (Exception e)
             {
@@ -733,7 +723,7 @@ namespace MarkLogic_PowerPointAddin
 
                 try
                 {
-                    uploadFile(url, content);
+                    uploadData(url, content);
                 }
                 catch (Exception e)
                 {
@@ -901,7 +891,7 @@ namespace MarkLogic_PowerPointAddin
 
                     try
                     {
-                        uploadFile(url, content);
+                        uploadData(url, content);
                     }
                     catch (Exception e)
                     {
