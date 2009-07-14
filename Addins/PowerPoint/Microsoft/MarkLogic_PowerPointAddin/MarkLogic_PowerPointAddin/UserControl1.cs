@@ -404,67 +404,43 @@ namespace MarkLogic_PowerPointAddin
         /*==========================================*/
         public string embedXLSX(string path, string title, string url, string user, string pwd)
         {
-            string message="foo";
+            string message="";
             string tmpdoc = "";
-            MessageBox.Show("test");
-            // MessageBox.Show("In addin");
             object missing = System.Type.Missing;
+            bool proceed = false;
             int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
 
-                         title=title.Replace("/","");
-                         MessageBox.Show("title" + title);
+                         //title=title.Replace("/","");
+                        // MessageBox.Show("title" + title);
 
                          try
                          {
                              tmpdoc = path + title;
                              downloadFile(url, tmpdoc, user, pwd);
+                             proceed = true;
 
-                            /* System.Net.WebClient Client = new System.Net.WebClient();
-                             Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-                             tmpdoc = path + title;
-                             //works thought path ends with / and doc starts with \ so you have C:tmp/\foo.xslx
-                             //may need to fix
-                             //MessageBox.Show("Tempdoc"+tmpdoc);
-                             //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
-                             Client.DownloadFile(url, tmpdoc);//@"C:\test2.xlsx");
-                             * */
                          }
                          catch (Exception e)
                          {
                              MessageBox.Show("ERROR: "+e.Message);
+                             string errorMsg = e.Message;
+                             message = "error: " + errorMsg;
                          }
 
                          try
                          {
-                             Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(21, 105, 250, 250, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
+                             if (proceed)
+                             {
+                                 Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(21, 105, 250, 250, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
+                             }
                          }
                          catch (Exception e)
                          {
                              MessageBox.Show("Error" + e.Message);
+                             string errorMsg = e.Message;
+                             message = "error: " + errorMsg;
                          }
 
-            /*
-            PPT.Shape s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddTable(2, 3, 50, 50, 450, 70);
-            try
-            {
-                Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(21, 105, 250, 250, "", @"C:\Workflow101.docx", Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("Error" + e.Message);
-            }
-
-
-
-            PPT.Table tbl = s.Table;
-
-            // MessageBox.Show(tbl.Rows.Count + "here");
-            PPT.Cell cell = tbl.Rows[1].Cells[1];
-            cell.Shape.TextFrame.TextRange.Text = "Foo";
-            // PPT.Shapes s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes;
-
-
-            return "foo"; */
             return message;
         }
 
@@ -554,16 +530,10 @@ namespace MarkLogic_PowerPointAddin
 
             return message;
         }
+
         public string copyPasteSlideToActiveSupport(PPT.Presentation sourcePres, int slideidx, bool retain)
         {
-            //MessageBox.Show("retain=" + retain);
-            //arguments need to include slide(s) to be inserted ..
-            // user, pwd, url, title, tmpath(?), retainsourceformatting 
-
-            //get index of starter slide and reset at end of function?
-            //don't have to worry about if just inserting one slide at a time.
-            //string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
-
+            string message = "";
             PPT.Presentation activePres = Globals.ThisAddIn.Application.ActivePresentation;
             PPT.Slides activeSlides = activePres.Slides;
             PPT.Slides sourceSlides = sourcePres.Slides;
@@ -579,20 +549,16 @@ namespace MarkLogic_PowerPointAddin
 
                     try
                     {
-      //Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
-      //activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoTrue;
+
                         if (retain)
                         {
-                            //Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
                             activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoTrue;
                             Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
                             PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
                             sr.Design = sourcePres.SlideMaster.Design;
-                           //Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid + 1].Select();
                         }
                         else
                         {
-                            //Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
                             activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
                             Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
                             PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
@@ -601,14 +567,16 @@ namespace MarkLogic_PowerPointAddin
                      }
                     catch (Exception e)
                     {
-                        MessageBox.Show("FAIL" + e.Message + "   " + e.StackTrace);
+                        string errorMsg = e.Message;
+                        message = "error: " + errorMsg; 
+                        //MessageBox.Show("FAIL" + e.Message + "   " + e.StackTrace);
                     }
                 }
 
 
             }
 
-            return "foo";
+            return message;
         }
 
         public string convertFilenameToImageDir(string filename)
@@ -620,29 +588,29 @@ namespace MarkLogic_PowerPointAddin
             string[] split = filename.Split(new Char[] { '\\' });
             fname = split.Last();
             tmpDir = filename.Replace(fname, "");
-            fname = fname.Replace(".pptx", "_GIF"); //"_pptx_parts_GIF");
-
-            //imgDir = tmpDir + fname;
+            fname = fname.Replace(".pptx", "_GIF"); 
             imgDir = getTempPath() + fname;
-            //MessageBox.Show("imgdir: "+imgDir);
             return imgDir;
 
         }
 
-  /*      public string useSaveFileDialog()
+        public string useSaveFileDialog()
         {
             Prompt p = new Prompt();
             p.ShowDialog();
             string filename = p.pfilename;
-            MessageBox.Show(filename);
+            //MessageBox.Show(filename);
+            if (!filename.EndsWith(".pptx"))
+            {
+                filename = filename + ".pptx";
+                MessageBox.Show("filename");
+            }
             return filename;
         }
-   * */
-       
 
+        /*
         public string useSaveFileDialogOrig()
         {
-
             SaveFileDialog s = new SaveFileDialog();
            
             s.Filter = "PowerPoint Presentation (*.pptx)|*.pptx|All files (*.*)|*.*";
@@ -653,8 +621,9 @@ namespace MarkLogic_PowerPointAddin
 
             return s.FileName;
         }
+        */
 
-        public string downloadFile(string url, string sourcefile, string user, string pwd)
+        private void downloadFile(string url, string sourcefile, string user, string pwd)
         {
             string message = "";
             try
@@ -669,23 +638,31 @@ namespace MarkLogic_PowerPointAddin
                 throw (e);
             }
 
-            return message;
+            //return message;
         }
 
 
-        public string uploadData(string url, byte[] content)
+        private void uploadData(string url, byte[] content)
         {
+            string message = "";
 
-            System.Net.WebClient Client = new System.Net.WebClient();
-            Client.Headers.Add("enctype", "multipart/form-data");
-            Client.Headers.Add("Content-Type", "application/octet-stream");
-            Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
+            try
+            {
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.Headers.Add("enctype", "multipart/form-data");
+                Client.Headers.Add("Content-Type", "application/octet-stream");
+                Client.Credentials = new System.Net.NetworkCredential("oslo", "oslo");
 
-            Client.UploadData(url, "POST", content);
-            Client.Dispose();
+                Client.UploadData(url, "POST", content);
+                Client.Dispose();
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
 
 
-            return "foo";
+           // return message;
 
         }
 
@@ -712,7 +689,6 @@ namespace MarkLogic_PowerPointAddin
         public string saveToML(string filename, string url)
         {
             string message = "";
-
             try
             {
 
@@ -746,19 +722,62 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-        public string saveWithImages(string saveasname, bool saveas)
+        public string saveWithImages(string saveasdirectory, string saveasname, string url)
         {
             //dir parameter?  make optional in the javascript.  So you can save anywhere in ML.
             //remember to tied to filenames and mapping
-           
-            bool insuresaveas = saveas;
-           // if (saveas.Equals("true"))
-             //   insuresaveas = true;
+           string message = "";
 
-            string message = "";
+           try
+           {
+
             PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
 
-            string url = "http://localhost:8023/ppt/api/upload.xqy?uid=";
+            //string url = "http://localhost:8023/ppt/api/upload.xqy?uid=";
+
+            string fullfilenamewithpath = "";
+            string imgdirwithpath = "";
+            string filename = "";
+
+            fullfilenamewithpath = saveasdirectory + saveasname; // useSaveFileDialog()+".pptx";
+            filename = fullfilenamewithpath.Split(new Char[] { '\\' }).Last();
+
+            pptx.SaveAs(fullfilenamewithpath, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Microsoft.Office.Core.MsoTriState.msoFalse);
+            //move url to ribbon as well
+
+            //   url = url + "/" + filename;
+
+            saveToML(fullfilenamewithpath, url);  //rename saveActivePresentation() - see excel
+
+
+            imgdirwithpath = convertFilenameToImageDir(fullfilenamewithpath);
+            saveImages(imgdirwithpath);
+          
+           }
+           catch (Exception e)
+           {
+               string errorMsg = e.Message;
+               message = "error: " + errorMsg;
+               //MessageBox.Show("Error" + e.Message);
+           }
+
+            return message;
+        }
+
+        public string saveWithImagesORIG(string saveasname, string saveas, string url)
+        {
+            //dir parameter?  make optional in the javascript.  So you can save anywhere in ML.
+            //remember to tied to filenames and mapping
+
+             string message = "";
+             bool insuresaveas = false;
+             if (saveas.Equals("true"))
+                 insuresaveas = true;
+
+            
+            PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
+
+            //string url = "http://localhost:8023/ppt/api/upload.xqy?uid=";
 
 
             string path = pptx.Path;
@@ -830,6 +849,7 @@ namespace MarkLogic_PowerPointAddin
 
             //name of folder with images, prepend with optional dir?
            // MessageBox.Show("IMGDIRWITHPATH.SPLIT.LAST: " + imgdir);
+            MessageBox.Show("ImgDirWithPath: "+imgdirwithpath+"   ImageDir: " + imgdir);
             imgdir = "/" + imgdir; // +"/";
             PPT.Presentation ppt = Globals.ThisAddIn.Application.ActivePresentation;
 
@@ -975,460 +995,6 @@ namespace MarkLogic_PowerPointAddin
 
             return "foo";
         }
-
-
-//====================================================================================================
-//====================================================================================================
-//====================================================================================================
-    //  public static bool CopySlidesFromPPT(string sourcefile, string dstfile, out string exmsg)
-        public string copyPasteSlideToActiveSupportBACKUP(PPT.Presentation sourcePres)
-        {
-            MessageBox.Show("Copy Pasting files  --");
-            //MessageBox.Show("1: "+GC.MaxGeneration);
-
-            //try getting this from server
-// string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
-
-             PPT.Presentation activePres = Globals.ThisAddIn.Application.ActivePresentation;
-            //MessageBox.Show("3: " + GC.MaxGeneration + "activepresegen: " + GC.GetGeneration(activePres));
-// PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
-
-            //activePres.SlideMaster.BackgroundStyle = sourcePres.SlideMaster.BackgroundStyle;
-          
-            PPT.Slides activeSlides = activePres.Slides;
-            PPT.Slides sourceSlides = sourcePres.Slides;
-
-            for (int x = 1; x < sourceSlides.Count; x++)
-            {
-                int id = sourceSlides[x].SlideID;
-                //MessageBox.Show(id+"");
-                sourceSlides.FindBySlideID(id).Copy();
-                //sourcePres.SlideMaster.Background.
-                //activePres.Application.ActiveWindow.View.PasteSpecial();
-                //activeSlides.Paste(x);
-                try
-                {
-                    int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
-                   // MessageBox.Show("Idx before:  " + Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex);
-
-                    activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
-          //if need to pull in master, then (also don't set follow master background above
-         
-             Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid].Select();
-             PPT.SlideRange sr = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange;
-             sr.Design = sourcePres.SlideMaster.Design;
-             Globals.ThisAddIn.Application.ActiveWindow.Presentation.Slides[sid+1].Select();
-                    ///sr.BackgroundStyle = sourceSlides.FindBySlideID(id).BackgroundStyle;//sourcePres.SlideMaster.Background;
-                  //  sr.ColorScheme = sourceSlides.FindBySlideID(id).ColorScheme;//sourcePres.SlideMaster.ColorScheme;
-                   // sr.DisplayMasterShapes = //Microsoft.Office.Core.MsoTriState.msoTrue;
-
-                 //activeSlides[x].Background.BackgroundStyle = sourceSlides.FindBySlideID(id).Background.BackgroundStyle;
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("FAIL"+e.Message+"   "+e.StackTrace);
-                }
-                
-
-            }
-
-  
-
-            MessageBox.Show("returning foo");
-            return "foo";
-
-        }
-
-        //missing template style BLERG!
-        public string copySlideToActive()
-        {
-            MessageBox.Show("Saving files 1");
-            string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
-            //PPT.Presentation p = Globals.ThisAddIn.Application.ActivePresentation;
-
-            PPT.Application ppa = new PPT.ApplicationClass();
-            PPT.Presentations ppp = ppa.Presentations;
-            //PPT.Presentation ppmp = null;
-
-            PPT.Presentation ppmp = Globals.ThisAddIn.Application.ActivePresentation;
-
-            PPT.Slides ppms = ppmp.Slides;
-            
-            
-
-            PPT.Presentation ppps = ppp.Open( sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
-            
-            ppms.InsertFromFile( sourcefile, ppms.Count, 1, ppps.Slides.Count);
-           
-
-            //ppmp.SlideMaster.CustomLayouts.Add( ppps.SlideMaster.CustomLayouts);
-            //ppmp.SlideMaster.
-            ////ppmp.SlideMaster.Background.BackgroundStyle = ppps.SlideMaster.Background.BackgroundStyle;
-           // ppmp.SlideMaster.ColorScheme = ppps.SlideMaster.ColorScheme;
-           // ppmp.HandoutMaster.BackgroundStyle = ppps.HandoutMaster.BackgroundStyle;
-            try
-            {
-                ppmp.SlideMaster.BackgroundStyle = ppps.SlideMaster.BackgroundStyle;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("FAIL");
-            }
-            finally
-            {
-
-                ppps.Close();
-            }
-            
-
-                                //ppmp.Close();
-                    //
-                    // Release the COM object holding the merged presentation
-                    //
-                    //Marshal.ReleaseComObject(ppmp);
-                   // ppmp = null;
-                    //
-                    // Release the COM object holding the presentations
-                    //
-            Marshal.ReleaseComObject(ppp);
-            ppp = null;
-                    //
-                    // Release the COM object holding the powerpoint application
-                    //
-            Marshal.ReleaseComObject(ppa);
-            ppa = null;
-                
-
-            return "foo";
-
-            
-        }
-
-
-        public string CopySlidesFromPPT()
-        {
-            MessageBox.Show("Saving files 2");
-            string sourcefile = @"C:\Aven_MarkLogicUserConference2009Exceling.pptx";
-            string dstfile = @"C:\JetBlue case study r6.pptx";
-            string exmsg="";
-            bool success = false;
-
-            //
-            // Initialise the exception message
-            //
-            exmsg = "";
-            //
-            // Create a link to the PowerPoint object model
-            //
-            PPT.Application ppa = new PPT.ApplicationClass();
-            PPT.Presentations ppp = ppa.Presentations;
-            PPT.Presentation ppmp = null;
-            //
-            // If the destination presentation exists on disk, load it so
-            // that we can append the new slides
-            //
-            if (File.Exists(dstfile) == true)
-            {
-                try
-                {
-                    //
-                    // Try and open the destination presentation
-                    //
-                    ppmp = ppp.Open(dstfile, Office.MsoTriState.msoFalse, Office.MsoTriState.msoFalse, Office.MsoTriState.msoFalse);
-                }
-                catch (Exception ex)
-                {
-                    ppmp = null;
-                    exmsg = ex.Message;
-                }
-            }
-            else
-            {
-                //
-                // Create a new presentation
-                //
-                try
-                {
-                    ppmp = ppp.Add(Microsoft.Office.Core.MsoTriState.msoFalse);
-                }
-                catch (Exception ex)
-                {
-                    ppmp = null;
-                    exmsg = ex.Message;
-                }
-            }
-            //
-            // Do we have a master presentation ?
-            //
-            if (ppmp != null)
-            {
-                //
-                // Point to the slides in the master presentation
-                //
-               PPT.Slides ppms = ppmp.Slides;
-                try
-                {
-                    try
-                    {
-                        //
-                        // Open the source presentation
-                        //
-                        PPT.Presentation ppps = ppp.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
-                        try
-                        {
-                            //
-                            // Insert the source slides onto the end of the merge presentation
-                            //
-                            ppms.InsertFromFile(sourcefile, ppms.Count, 1, ppps.Slides.Count);
-                            //
-                            // Save the merged presentation back to disk
-                            //
-                            ppmp.SaveAs(dstfile, PPT.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Office.MsoTriState.msoFalse);
-                            //
-                            // Signal success
-                            success = true;
-                        }
-                        finally
-                        {
-                            //
-                            // Close the source presentation
-                            //
-                            ppps.Close();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        exmsg = ex.Message;
-                    }
-                }
-                finally
-                {
-                    //
-                    // Ensure the merge presentation is closed
-                    //
-                    ppmp.Close();
-                    //
-                    // Release the COM object holding the merged presentation
-                    //
-                    Marshal.ReleaseComObject(ppmp);
-                    ppmp = null;
-                    //
-                    // Release the COM object holding the presentations
-                    //
-                    Marshal.ReleaseComObject(ppp);
-                    ppp = null;
-                    //
-                    // Release the COM object holding the powerpoint application
-                    //
-                    Marshal.ReleaseComObject(ppa);
-                    ppa = null;
-                    ppa.Quit();
-                }
-            }
-            return "TEST";
-        }
-
-        /*
-        public String insertImage(string imageuri, string imagename)
-        {
-            object missing = Type.Missing;
-            MessageBox.Show("Adding Image");
-            string message = "";
-
-            System.Net.WebClient Client = new System.Net.WebClient();
-            Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
-            byte[] bytearray = Client.DownloadData(imageuri);
-            Image img = byteArrayToImage(bytearray);
-            //Image img = Image.FromFile(@"C:\gijoe_destro.jpg");
-
-
-            PPT.Slide slide = (PPT.Slide)Globals.ThisAddIn.Application.ActiveWindow.View.Slide;
-
-            Clipboard.SetImage(img);
-            slide.Shapes.Paste();
-            Clipboard.Clear();
-            return message;
-        }
-         * */
-
-        public String addSlide()
-        {
-      
-            MessageBox.Show("IN ADDIN");
-            string message = "foo";
-            object missing = Type.Missing;
-            //string message="";
-            string filename = @"C:\MarkLogic Connector for SharePoint r1,1.pptx";
-         //   PPT.Application ppa = new PPT.ApplicationClass();
-         //   ppa.Presentations.Open(filename,Microsoft.Office.Core.MsoTriState.msoFalse,Microsoft.Office.Core.MsoTriState.msoFalse,Microsoft.Office.Core.MsoTriState.msoFalse);
-         //   ppa.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
-         //   ppa.Activate();
-
-            try
-            { 
-              
-                PPT.Presentation actP = Globals.ThisAddIn.Application.ActivePresentation;
-                
-
-                PPT.Application ppa = new PPT.ApplicationClass();
-              
-                ppa.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
-                ppa.Presentations.Open(filename, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, Microsoft.Office.Core.MsoTriState.msoTrue);
-
-                PPT.Presentation sourceP = ppa.ActivePresentation;
-                
-
-
-
-                PPT.Slide slide = actP.Slides[1];
-                //PPT.Slide slide = actP.Slides.Add(actP.Slides.Count, Microsoft.Office.Interop.PowerPoint.PpSlideLayout.ppLayoutBlank);
-              //  PPT.Slide s2 = actP.Slides[slide.SlideIndex];
-                
-                slide.Application.Activate();
-                /*
-                 * objSourcePresentation.Slides(SlideID).Copy()
-                   objDestinationPresentation.Slides.Paste
-                 * */
-                MessageBox.Show(sourceP.Slides.Count+"");
-                sourceP.Slides[1].Copy();
-                //slide.BackgroundStyle = sourceP.SlideMaster.BackgroundStyle;
-
-                actP.Slides.Paste(slide.SlideIndex);
-                PPT.Slide s2 = actP.Slides[slide.SlideIndex - 1];
-                s2.CustomLayout = sourceP.Slides[1].CustomLayout;
-
-               
-                
-             //   actP.Application.Activate();
-                //sourceP.Close();
-                //slide.CustomLayout = sourceP.Slides[1].CustomLayout;
-         //       actP.Slides.Paste(slide.SlideIndex);
-                //slide.BackgroundStyle = sourceP.SlideMaster.BackgroundStyle;
-
-                
-                //actP.SlideMaster.BackgroundStyle = sourceP.SlideMaster.BackgroundStyle;
-                //sourceP.Close();
-
-
-                //slide = ppa.Presentations[1].Slides[4];
-                //PPT.Application ppa = Globals.ThisAddIn.Application;
-                //PPT.Presentations ppts = Globals.ThisAddIn.Application.Presentations;
-                //ppts.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
-                //ppts.Open(filename, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, Microsoft.Office.Core.MsoTriState.msoTrue);
-                
-               
-
-               // PPT.Application ppa = new PPT.ApplicationClass();
-               // ppa.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
-               // PPT.Presentation ppts = Globals.ThisAddIn.Application.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
-              
-               //PPT.Presentations ppp = ppa.Presentations;
-                //PPT.Presentation ppmp = null;
-                //ppa.Presentations.Open(filename, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, Microsoft.Office.Core.MsoTriState.msoTrue);
-               // ppts.Open(filename, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, Microsoft.Office.Core.MsoTriState.msoTrue);
-               // PPT.Presentation p1 = Globals.ThisAddIn.Application.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
-               // p1 = ppa.Presentations[1];
-               // p1.Application.Activate();
-                //ppa.Activate();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("ERROR" + e.Message + "==================" + e.StackTrace);
-            }
-            
-
-//PPTApp.Visible = Microsoft.Office.Core.MsoTriState.msoTrue; ;
-
-          //  PPT.Presentations ppp = ppa.Presentations;
-          //  ppp.Open(@"http://localhost:8011/MarkLogic Connector for SharePoint r1,1.pptx"
-
-            //PPT.Application objSourcePresentation;
-            
-           // = File.Open(@"http://localhost:8011/MarkLogic Connector for SharePoint r1,1.pptx", FileMode.Open);
-
-
-  //          'copies the source slide to the clipboard
-//objSourcePresentation.Slides(SlideID).Copy()
-
-
-//'appends the slide from the clipboard to the end of the other presentation
-//objDestinationPresentation.Slides.Paste
-
-
-            return message;
-
-        }
-
-        //TODO:
-        //pass filename, imagename, uri - want to use client download to tmp file
-        //insert image
-        //delete tmp file
- /*      public String insertImageORIG(string imageuri, string imagename)
-        {
-            object missing = Type.Missing;
-            MessageBox.Show("Adding Image");
-            string message = "";
-          //PPT.Slide s = Globals.ThisAddIn.Application.ActivePresentation.Slides[Globals.ThisAddIn.Application.ActivePresentation.Slides.];
-//ONE WAY
-           // try this Current slide? gijoe too
- PPT.Slide slide = (PPT.Slide)Globals.ThisAddIn.Application.ActiveWindow.View.Slide;// app.ActiveWindow.View.Slide;
-
-//ADDING SLIDE
-          PPT.Presentation presentation = Globals.ThisAddIn.Application.ActivePresentation;
-//ADDING SLIDE PPT.Slide slide =
-//ADDING SLIDE presentation.Slides.Add(
-//ADDING SLIDE presentation.Slides.Count + 1,
-//ADDING SLIDE PPT.PpSlideLayout.ppLayoutPictureWithCaption);
-
-            //can get this from byte array
-          //Image img = Image.FromFile(@"C:\test.png");
-          Image img = Image.FromFile(@"C:\gijoe_destro.jpg");
-         
-          Clipboard.SetImage(img);
-          //slide.Shapes.Paste();
-            //how to add to current slide?
-          slide.Shapes.Paste();
-         // presentation.Slides[1].Shapes.Paste();
-
-          //  richTextBox1.SelectionStart = 0;
-          //  richTextBox1.Paste();
-
-          Clipboard.Clear();
-
-//ONE WAY PPT.Shape shape = slide.Shapes[2];
-// ONE WAY slide.Shapes.AddPicture(@"C:\test.png", Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue,
-//shape.Left, shape.Top, shape.Width, shape.Height);
-//ONE WAY slide.Select();
-            
-           
-
-                //shape.Left, shape.Top, shape.Width, shape.Height);
-             
-
-           // slide.Shapes.AddPicture();
-            //PPT.Presentation s = Globals.ThisAddIn.Application.ActivePresentation;
-            //s.Application.ActiveWindow.ActivePane;
-           // PPT.Slide s = Globals.ThisAddIn.Application.ActivePresentation;
-           // Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
-
-   //         System.Net.WebClient Client = new System.Net.WebClient();
-   //         Client.Credentials = new System.Net.NetworkCredential("zeke", "zeke");
-
-   //         byte[] bytearray = Client.DownloadData(imageuri);
-   //         Image img = byteArrayToImage(bytearray);
-
-
-            //place on clipboard
-   //         System.Windows.Forms.Clipboard.SetImage(img);
-           
-           // Globals.ThisAddIn.Application.Selection.Range.Paste();
- 
-            return message;
-        }
-
-  */
-
-
 
     }
 }
