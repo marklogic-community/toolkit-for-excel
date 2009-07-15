@@ -29,6 +29,8 @@ namespace MarkLogic_PowerPointAddin
         {
             UserControl1 uc = (UserControl1)Globals.ThisAddIn.myPane.Control;
             string url = "http://localhost:8023/ppt/api/upload.xqy?uid="; //add to config and get from there
+            string user = "oslo";
+            string pwd ="oslo";
             string filename="";
             string saveasdir = uc.getTempPath();
 
@@ -50,7 +52,7 @@ namespace MarkLogic_PowerPointAddin
             url = url + "/" + filename;
 
             if (!(filename.Equals("") || filename == null))
-                uc.saveWithImages(saveasdir,filename, url);
+                uc.saveWithImages(saveasdir,filename, url, user, pwd);
 
         }
 
@@ -58,6 +60,8 @@ namespace MarkLogic_PowerPointAddin
         {
             UserControl1 uc = (UserControl1)Globals.ThisAddIn.myPane.Control;
             string url = "http://localhost:8023/ppt/api/upload.xqy?uid=";
+            string user = "oslo";
+            string pwd = "oslo";
             
             string filename = uc.useSaveFileDialog();
             string saveasdir = uc.getTempPath();
@@ -65,7 +69,7 @@ namespace MarkLogic_PowerPointAddin
             url = url + "/" + filename;
 
             if (!(filename.Equals("") || filename == null))
-               uc.saveWithImages(saveasdir, filename,url);
+               uc.saveWithImages(saveasdir, filename,url, user, pwd);
         }
 
        /* private string useSaveFileDialog()
