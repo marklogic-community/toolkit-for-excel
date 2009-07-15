@@ -6,7 +6,7 @@ function insertImage(picuri)
        var picuri = fullurl + "/search/download-support.xqy?uid="+picuri;
        var msg = MLA.insertImage(picuri,"oslo","oslo");
 }
-
+/*
 function copyPasteSlideToActive(docuri, slideidx)
 {
        alert("copyPasteSlideToActive(docuri,slideidx)");
@@ -39,8 +39,8 @@ function copyPasteSlideToActive(docuri, slideidx)
        var filename = docuri.substring(1,docuri.length);
        var msg = MLA.copyPasteSlideToActive(tmpPath, filename,slideidx, url, "oslo","oslo");
 }
-
-function copyPasteSlideToActive(docuri, slideidx,retainidx)
+*/
+function copyPasteSlideToActive(docuri, slideidx, retainidx)
 {
       // alert("in this function");
 
@@ -50,15 +50,17 @@ function copyPasteSlideToActive(docuri, slideidx,retainidx)
        var config = MLA.getConfiguration();
        var fullurl= config.url;
        var url = fullurl + "/search/download-support.xqy?uid="+docuri;
-       
-       var filename = docuri.substring(1,docuri.length);
+      
+       var tokens = docuri.split("/");
+       var filename = tokens[tokens.length-1]; 
+       //var filename = docuri.substring(1,docuri.length);
        //alert("url: "+url+"  filename: "+filename+" slidedix: "+slideidx+" retain: "+retain);
        var msg = MLA.copyPasteSlideToActive(tmpPath, filename,slideidx, url, "oslo","oslo",retain);
 }
 
 function openPPTX(docuri)
 {
-       alert("docuri for testOpen():"+ docuri);
+       //alert("docuri for testOpen():"+ docuri);
        var tokens = docuri.split("/");
        var filename = tokens[tokens.length-1];
        var tmpPath = MLA.getTempPath(); 
@@ -66,6 +68,7 @@ function openPPTX(docuri)
        var config = MLA.getConfiguration();
        var fullurl= config.url;
        var url = fullurl + "/search/download-support.xqy?uid="+docuri;
-       var msg = MLA.openPPTX(tmpPath, docuri, url, "oslo","oslo");
+
+       var msg = MLA.openPPTX(tmpPath, filename, url, "oslo","oslo");
 }
 

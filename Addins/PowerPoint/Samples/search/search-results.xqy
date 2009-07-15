@@ -17,24 +17,18 @@ let $searchtype :=  $xladd:searchtype
 let $return := 
 if($searchtype eq "slide") then
      let $slides := cts:search(//p:sld, cts:word-query($searchparam))
+
      let $slideuris := for $s in $slides 
                        let $orig-uri := xdmp:node-uri($s)
-                       (:let $tmp-uri := fn:replace($orig-uri,"_parts/ppt/slides","_parts_GIF"):)
-                       let $tmp-uri := fn:replace($orig-uri,"_pptx_parts/ppt/slides","_GIF")
+                       let $tmp-uri := fn:replace($orig-uri,"_pptx_parts/ppt/slides","_PNG")
                        let $tmp-uri2 := fn:replace($tmp-uri,"slide","Slide")
-                       let $new-uri := fn:replace($tmp-uri2,".xml",".GIF")
+                       let $new-uri := fn:replace($tmp-uri2,".xml",".PNG")
                        return $new-uri
 
-   (:  let $properties := xdmp:document-properties($slideuris)
-     let $pptx := $properties//pptx/text()
-     let $slide := $properties//slide/text()
-     let $index := $properties//index/text() :)
-     
-     (: let $slides := cts:uri-match(fn:concat("/*",$searchparam,"*.GIF")) :)
      let $disp-slides := 
          for $pic at $d in $slideuris
          let $src := fn:concat("download-support.xqy?uid=",$pic)
-         (:let $imageuri := fn:concat("http://localhost:8023/ppt/search/get-image.xqy?uid=",$pic) :)
+
          let $prop := xdmp:document-properties($pic)
          let $pptx := $prop//pptx/text()
          let $slide := $prop//slide/text()
