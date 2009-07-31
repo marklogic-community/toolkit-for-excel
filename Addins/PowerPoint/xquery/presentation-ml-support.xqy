@@ -562,7 +562,7 @@ let $images := for $i at $d in $img-targs
                let $o-img := $i
                let $sfx := fn:substring-after(fn:substring-after($i,"../"),".")
                let $n-img := fn:concat(ppt:uri-ppt-media-dir(()),"image",$n-idx,".",$sfx)
-               let $map-update := map:put($smap,$n-img,fn:replace($o-img,"\.\./",ppt:uri-ppt-media-dir($s-pres)))
+               let $map-update := map:put($smap,$n-img, fn:replace($o-img,"\.\./media/", ppt:uri-ppt-media-dir($s-pres))) 
                return ppt:image-id($i) 
 
 
