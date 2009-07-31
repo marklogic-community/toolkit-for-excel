@@ -689,6 +689,7 @@ declare function ppt:c-types-add-slide($c-types , $slide-idx)
 
 
 (: ================================== :)
+(: BEGIN UPDATE FINAL PRESENTATION.XML ================================== :)
 
 declare function ppt:passthru-remove-handoutlst($x as node()) as node()*
 {
@@ -707,12 +708,59 @@ declare function ppt:dispatch-remove-handoutlst($pres-xml as node())
 
 };
 
-declare function ppt:update-pres-xml($pres-xml as node(),$final-pres-rels as node(), $id as xs:integer)
+declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
 {
-  let $tmp1 :=  ppt:dispatch-remove-handoutlst($pres-xml) (: , $final-pres-rels, $id) :)
-  return $tmp1
+  (:$pres-xml:)
+ (: need to account for 1- case when two slides have the same id 2-multiple slides will need children rIds updated :)
+  let $children := ($pres-xml/node(), $new-sld-id)
+  let $ordered := for $c in $children
+                  order by $c/@r:id
+                  return $c
+  return  element{fn:name($pres-xml)}  {$pres-xml/@*, $ordered }
+};
+declare function ppt:passthru-add-slide-id($x as node(), $new-sld-id as node()) as node()*
+{
+   for $i in $x/node() return ppt:dispatch-add-slide-id($i, $new-sld-id)
+};
+
+declare function ppt:dispatch-add-slide-id($pres-xml as node(), $new-sld-id as node()) 
+{
+  typeswitch($pres-xml)
+       case text() return $pres-xml
+       case document-node() return   document{ppt:passthru-add-slide-id($pres-xml,$new-sld-id)} 
+       case element(p:sldIdLst) return ppt:add-sld($pres-xml, $new-sld-id)
+       case element() return  element{fn:name($pres-xml)} {$pres-xml/@*,  $pres-xml/namespace::*,passthru-add-slide-id($pres-xml,$new-sld-id)}
+       default return $pres-xml
 
 };
+
+(: declare function ppt:update-pres-xml($pres-xml as node(),$final-pres-rels as node(), $id as xs:integer) :)
+(:ppt:update-pres-xml($pres-xml,$final-pres-rels, $s-pres, $start-idx) :)
+declare function ppt:update-pres-xml($pres-xml as node(),$final-pres-rels as node(),$src-dir as xs:string, $id as xs:integer)
+{
+  let $pres-no-hm-lst :=  ppt:dispatch-remove-handoutlst($pres-xml) (: , $final-pres-rels, $id) :)
+  let $newid := "256"
+  let $slide-xml :=fn:concat("slide",$id,".xml")
+
+  (: original rId of slide in original presentation.xml.rels --to check in presentation.xml-- for slide#.xml :)
+  let $src-pres-rel-id := fn:doc(ppt:uri-ppt-rels($src-dir))/rel:Relationships/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id
+  (: original id of slide in original presentation.xml for slide#.xml :)
+  let $src-pres-slide-id := fn:doc(ppt:uri-ppt-presentation($src-dir))/p:presentation/p:sldIdLst/p:sldId[fn:matches(@r:id,$src-pres-rel-id)]/@id
+
+  (:now check rId to use in $final-pres-rels :)
+  let $new-pres-rel-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id
+
+  (:construct new p:sldId:)
+  let $new-sld-id := element p:sldId{attribute id {$src-pres-slide-id } , attribute r:id { $new-pres-rel-id  } }
+
+  
+
+  let $new-pres-xml := ppt:dispatch-add-slide-id($pres-no-hm-lst, $new-sld-id)  
+  
+  return $new-pres-xml (:,$new-sld-id, $new-pres-rel-id, $final-pres-rels, $src-pres-rel-id, $src-pres-slide-id, $slide-xml,$src-dir, $id, $pres-no-hm-lst)
+:)
+};
+(: END UPDATE FINAL PRESENTATION.XML ================================== :)
 (: ====================:)
 (: ====================:)
 (: ====================:)
