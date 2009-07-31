@@ -16,12 +16,13 @@ limitations under the License.
 
 module namespace  ppt = "http://marklogic.com/openxml/powerpoint";
 
+declare namespace a="http://schemas.openxmlformats.org/drawingml/2006/main";
 declare namespace w="http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 declare namespace v="urn:schemas-microsoft-com:vml";
 declare namespace ve="http://schemas.openxmlformats.org/markup-compatibility/2006";
 declare namespace o="urn:schemas-microsoft-com:office:office";
-(: declare namespace r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"; :)
-declare namespace r= "http://schemas.openxmlformats.org/package/2006/relationships";
+declare namespace r="http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+declare namespace rel="http://schemas.openxmlformats.org/package/2006/relationships";
 declare namespace m="http://schemas.openxmlformats.org/officeDocument/2006/math";
 declare namespace wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing";
 declare namespace w10="urn:schemas-microsoft-com:office:word";
@@ -31,6 +32,14 @@ declare namespace pic="http://schemas.openxmlformats.org/drawingml/2006/picture"
 declare namespace pr="http://schemas.openxmlformats.org/package/2006/relationships";
 declare namespace types="http://schemas.openxmlformats.org/package/2006/content-types";
 declare namespace zip="xdmp:zip";
+declare namespace p="http://schemas.openxmlformats.org/presentationml/2006/main";
+
+import module "http://marklogic.com/openxml/powerpoint" at "/MarkLogic/openxml/presentation-ml-support-content-types.xqy"; 
+
+declare default element namespace "http://schemas.openxmlformats.org/package/2006/relationships";
+
+
+(: ================================== :)
 
 declare function ppt:formatbinary($s as xs:string*) as xs:string*
 {
@@ -221,6 +230,10 @@ declare function ppt:package-files-only($uris as xs:string*) as xs:string*
 };
 
 (: ===================== BEGIN file and dir helpers ====================== :)
+declare function ppt:uri-content-types($dir as xs:string?) as xs:string
+{
+  fn:concat($dir,"[Content_Types].xml")
+};
 declare function ppt:uri-rels-dir($dir as xs:string?) as xs:string
 {
     fn:concat($dir,"_rels/")
@@ -449,11 +462,13 @@ declare function ppt:handout-master-theme-ids($hm as xs:string*) as xs:string*
   let $h-rels := ppt:package-uris-from-directory($hm)
   let $theme-idx := for $rel in $h-rels
                  let $doc := fn:doc($rel)
-                 let $theme := $doc/r:Relationships/r:Relationship/@Target
+                 let $theme := $doc/rel:Relationships/rel:Relationship/@Target
                  let $theme-uri := fn:substring-after($theme,"../theme/")
                  return $theme-uri
   return $theme-idx
 };
+
+(:may want a generic fileid function, similar to max :)
 
 declare function ppt:image-id($uri as xs:string) as xs:integer
 {
@@ -482,14 +497,17 @@ declare function ppt:dispatch-slide-rels($rels as node(), $new-img-idx as xs:int
 {
       typeswitch($rels)
        case text() return $rels
-       case document-node() return document {$rels/@*,ppt:passthru-rels($rels, $new-img-idx)}
-       case element(r:Relationship) return ppt:update-rels-rel($rels, $new-img-idx) 
+       (: case document-node() return document{$rels/@*,ppt:passthru-rels($rels, $new-img-idx)} :)
+       case document-node() return document{ppt:passthru-rels($rels, $new-img-idx)}
+       case element(rel:Relationship) return ppt:update-rels-rel($rels, $new-img-idx) 
+       case element(rel:Relationships) return element{fn:name($rels)} {$rels/namespace::*, $rels/@*,passthru-rels($rels, $new-img-idx)}
        case element() return  element{fn:name($rels)} {$rels/@*,passthru-rels($rels, $new-img-idx)}
        default return $rels
 
 };
 
-declare function ppt:upd-slide-rels($orig-slide-rels as element(r:Relationships),$img-targs as xs:string*,$new-img-idx as xs:integer)
+(:declare function ppt:upd-slide-rels($orig-slide-rels as element(r:Relationships),$img-targs as xs:string*,$new-img-idx as xs:integer) :)
+declare function ppt:upd-slide-rels($orig-slide-rels as node(),$img-targs as xs:string*,$new-img-idx as xs:integer)
 {
   ppt:dispatch-slide-rels($orig-slide-rels, $new-img-idx)
  (: fn:doc($orig-slide-rels) :)
@@ -519,7 +537,7 @@ let $new-slide-rels := ppt:uri-ppt-slide-rels((),$start-idx)
 let $slide := map:put($smap, $new-slide-name, $orig-slide-name)
 
 let $rels := fn:doc($orig-slide-rels)
-let $targets := $rels/r:Relationships/r:Relationship/@Target
+let $targets := $rels/rel:Relationships/rel:Relationship/@Target
 let $u-targs := for $t in $targets
                 let $o-uris := if(fn:matches($t,"slideLayout")) 
                                then $t (: fn:concat(ppt:uri-ppt-dir($s-pres),fn:concat(fn:substring-after($t,"../"))) :)
@@ -534,7 +552,9 @@ let $img-targs := for $u in $u-targs
 let $img-count := fn:count($img-targs)
 let $new-img-idx := ppt:max-image-id(ppt:uri-ppt-media-dir($t-pres))
 
-let $upd-rels := ppt:upd-slide-rels($rels/node(),$img-targs,$new-img-idx)
+(: let $upd-rels := ppt:upd-slide-rels($rels/node(),$img-targs,$new-img-idx) :)
+let $upd-rels := ppt:upd-slide-rels($rels,$img-targs,$new-img-idx)
+
 
 (:add images to map:)
 let $images := for $i at $d in $img-targs 
@@ -551,4 +571,150 @@ let $map-test:= map:put($smap,$new-slide-rels,$upd-rels)
 return $smap (:, $images, $upd-rels) :)
  (: $smap :) (: <foo>{$o-slide-dir, $o-slide-rels-dir, $orig-slide-name, $orig-slide-rels, $new-slide-name, $new-slide-rels}</foo> :)
 };
+(: ====================:)
+declare function ppt:check-remove-hm($rels as node())
+{
+  if(fn:matches($rels/@Target, "handoutMaster")) then () else $rels
+};
+declare function ppt:passthru-pres-rels($x as node()) as node()*
+{
+   for $i in $x/node() return ppt:dispatch-pres-rels($i)
+};
 
+declare function ppt:dispatch-pres-rels($rels as node()) as node()*
+{
+      typeswitch($rels)
+       case text() return $rels
+       case document-node() return document{ppt:passthru-pres-rels($rels)}
+       case element(rel:Relationship) return ppt:check-remove-hm($rels) 
+       case element(rel:Relationships) return element{fn:name($rels)} {$rels/namespace::*, $rels/@*,passthru-pres-rels($rels)} 
+       case element() return  element{fn:name($rels)} {$rels/@*,passthru-pres-rels($rels)}
+       default return $rels
+
+};
+
+declare function ppt:remove-hm-from-pres-rels($pres-rels as node())
+{
+  ppt:dispatch-pres-rels($pres-rels)
+};
+(: ====================:)
+
+declare function ppt:rel-ids($rels as element(rel:Relationships))
+{
+   $rels/rel:Relationship/@Id
+};
+(: ====================:)
+(:given a relationships node, and a type (matches on @Target : handout, slide, etc) returns id as integer :)
+declare function ppt:rels-rel-id($rels as node(), $type as xs:string*)
+{
+   (: $rels/r:Relationships/r:Relationship/@Target :)
+   xs:integer(fn:substring-after($rels/rel:Relationships/rel:Relationship[fn:matches(@Target,$type)]/@Id,"rId"))
+};
+(: ====================:)
+declare function ppt:r-id-as-int($rId as xs:string)
+{
+  xs:integer(fn:substring-after($rId,"rId"))
+};
+(: ====================:)
+
+declare function ppt:check-adjust-hm($rels as node(), $idx as xs:integer)
+{
+let $rId := ppt:r-id-as-int($rels/@Id)
+(:have to confirm notes master always after slides :)
+let $new-rel := if($rId >= $idx or fn:matches($rels/@Target,"notesMasters")) then 
+                                       element{fn:name($rels)} { attribute Id {fn:concat("rId",$rId+1  ) }, $rels/@* except $rels/@Id}
+                                    else
+                                       element{fn:name($rels)} { $rels/@* } 
+return $new-rel
+
+};
+declare function ppt:passthru-pres-rels-adjust-hm($x as node(), $idx as xs:integer) as node()*
+{
+   for $i in $x/node() return ppt:dispatch-pres-rels-adjust-hm($i, $idx)
+};
+
+declare function ppt:dispatch-pres-rels-adjust-hm($rels as node(), $hm-id as xs:integer) as node()*
+{
+
+      typeswitch($rels)
+       case text() return $rels
+       case document-node() return document{ppt:passthru-pres-rels-adjust-hm($rels,$hm-id)}
+       case element(rel:Relationship) return ppt:check-adjust-hm($rels, $hm-id) 
+       case element(rel:Relationships) return element{fn:name($rels)} {$rels/@*,passthru-pres-rels-adjust-hm($rels,$hm-id)}
+       case element() return  element{fn:name($rels)} {$rels/@*,passthru-pres-rels-adjust-hm($rels,$hm-id)}
+       default return $rels
+};
+
+
+declare function ppt:pres-rels-adjust-hm($pres-rels as node(), $hm-id as xs:integer)
+{
+  ppt:dispatch-pres-rels-adjust-hm($pres-rels, $hm-id)
+
+};
+
+
+(: ====================:)
+declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx as xs:integer, $hm-id as xs:integer)
+{
+
+(: $pres-rels/r:Relationships :)
+
+    let $non-slide-rels := $pres-rels/rel:Relationships/rel:Relationship[fn:not(fn:matches(@Target,"slide\d+\.xml"))]
+    let $slide-rels := ( $pres-rels/rel:Relationships/rel:Relationship[fn:matches(@Target,"slide\d+\.xml")] ,
+                         element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])}  
+                                {attribute Id {fn:concat("rId",1 +$start-idx  ) },
+                                 attribute Type {"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" },
+                                 attribute Target {fn:concat("slides/slide",$start-idx,".xml"  ) }} 
+                                     )
+
+
+    return element{fn:name($pres-rels/rel:Relationships)} {(($non-slide-rels, $slide-rels))}
+};
+(: ====================:)
+declare function ppt:c-types-remove-theme($ctypes as node(), $theme-ids as xs:string*)
+{
+   ppt:ct-utils-remove-theme($ctypes, $theme-ids) 
+  (:  ppt:dispatch-ct-remove-theme($ctypes) :)
+};
+(: ====================:)
+declare function ppt:c-types-remove-hm($ctypes as node())
+{
+  ppt:ct-utils-remove-hm($ctypes)
+};
+(: ================================== :)
+declare function ppt:c-types-add-slide($c-types , $slide-idx)
+{
+   ppt:ct-utils-add-slide($c-types, $slide-idx)
+};
+
+
+(: ================================== :)
+
+declare function ppt:passthru-remove-handoutlst($x as node()) as node()*
+{
+   for $i in $x/node() return ppt:dispatch-remove-handoutlst($i)
+};
+
+
+declare function ppt:dispatch-remove-handoutlst($pres-xml as node())
+{
+  typeswitch($pres-xml)
+       case text() return $pres-xml
+       case document-node() return   document{ppt:passthru-remove-handoutlst($pres-xml)} 
+       case element(p:handoutMasterIdLst) return ()
+       case element() return  element{fn:name($pres-xml)} {$pres-xml/@*,  $pres-xml/namespace::*,passthru-remove-handoutlst($pres-xml)}
+       default return $pres-xml
+
+};
+
+declare function ppt:update-pres-xml($pres-xml as node(),$final-pres-rels as node(), $id as xs:integer)
+{
+  let $tmp1 :=  ppt:dispatch-remove-handoutlst($pres-xml) (: , $final-pres-rels, $id) :)
+  return $tmp1
+
+};
+(: ====================:)
+(: ====================:)
+(: ====================:)
+(: ====================:)
+(: ====================:)
