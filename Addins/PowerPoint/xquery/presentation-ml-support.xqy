@@ -654,22 +654,70 @@ declare function ppt:pres-rels-adjust-hm($pres-rels as node(), $hm-id as xs:inte
 
 
 (: ====================:)
+declare function ppt:insert-ppt-rels-slide-rel-ORIGINAL($pres-rels as node()*, $start-idx as xs:integer, $hm-id as xs:integer)
+{
+
+(: $pres-rels/r:Relationships :)
+
+    let $non-slide-rels := $pres-rels/rel:Relationships/rel:Relationship[fn:not(fn:matches(@Target,"slide\d+\.xml"))]
+   
+    (:adjust slides: if slide#.xml >= to $start-idx and < $hm-id, increment slide# and rId for slide# :)
+    let $orig-slide-rels :=  $pres-rels/rel:Relationships/rel:Relationship[fn:matches(@Target,"slide\d+\.xml")]
+    (:adjust here:)
+
+(: let $upd-slide-rels := for $o in $orig-slide-rels :)
+                         
+
+ 
+    
+    let $new-slide-rel := element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} (:pos don't matter, just name :)  
+                                  {attribute Id {fn:concat("rId",1 +$start-idx  ) },
+                                   attribute Type {"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" },
+                                   attribute Target {fn:concat("slides/slide",$start-idx,".xml"  ) }} 
+
+
+    return element{fn:name($pres-rels/rel:Relationships)} {(($non-slide-rels, $orig-slide-rels, $new-slide-rel))}
+};
+
 declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx as xs:integer, $hm-id as xs:integer)
 {
 
 (: $pres-rels/r:Relationships :)
 
     let $non-slide-rels := $pres-rels/rel:Relationships/rel:Relationship[fn:not(fn:matches(@Target,"slide\d+\.xml"))]
-    let $slide-rels := ( $pres-rels/rel:Relationships/rel:Relationship[fn:matches(@Target,"slide\d+\.xml")] ,
-                         element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])}  
-                                {attribute Id {fn:concat("rId",1 +$start-idx  ) },
-                                 attribute Type {"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" },
-                                 attribute Target {fn:concat("slides/slide",$start-idx,".xml"  ) }} 
-                                     )
+   
+    (:adjust slides: if slide#.xml >= to $start-idx and < $hm-id, increment slide# and rId for slide# :)
+    let $orig-slide-rels :=  $pres-rels/rel:Relationships/rel:Relationship[fn:matches(@Target,"slide\d+\.xml")]
+    (:adjust here:)
+
+    let $upd-slide-rels := 
+                        for $o in $orig-slide-rels
+                        let $slideIdx := xs:integer(fn:substring-before(fn:substring-after($o/@Target, "slides/slide"),".xml"))
+                        let $rId := ppt:r-id-as-int($o/@Id)
+                         (:may be a problem here with check against handoutmaster id, need to check rId ? instead of slideIdx? :)
+                         (:assuming all slides before handout master, this increments rId and slide# for all slides after slide inserted at $start-idx :)
+                        let $updSlide := if($slideIdx >= $start-idx and $hm-id > $rId) then
+                                            let $elem :=  
+                                              element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} (:pos don't matter, just name :)  
+                                              {attribute Id {fn:concat("rId",$rId +1  ) },
+                                               attribute Type {"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" },
+                                               attribute Target {fn:concat("slides/slide",($slideIdx +1),".xml"  ) }
+                                              }
+                                            return $elem 
+                                         else $o 
+                        return $updSlide
+                         
+
+ 
+    
+    let $new-slide-rel := element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} (:pos don't matter, just name :)  
+                                  {attribute Id {fn:concat("rId",1 +$start-idx  ) },
+                                   attribute Type {"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" },
+                                   attribute Target {fn:concat("slides/slide",$start-idx,".xml"  ) }} 
 
 
-    return element{fn:name($pres-rels/rel:Relationships)} {(($non-slide-rels, $slide-rels))}
-};
+    return  element{fn:name($pres-rels/rel:Relationships)} {(($non-slide-rels, $orig-slide-rels, $new-slide-rel))}
+}; 
 (: ====================:)
 declare function ppt:c-types-remove-theme($ctypes as node(), $theme-ids as xs:string*)
 {
@@ -842,7 +890,7 @@ let $final-uris := for $t in $t-uris
 let $t-pres-rels:= fn:doc(ppt:uri-ppt-rels($t-pres))
 
 (: max-slide-id? or just use idx used forplacement, increment accordingly? :)
-let $max-slide-id := ppt:max-slide-id(ppt:uri-ppt-slides-dir($t-pres))
+(: let $max-slide-id := ppt:max-slide-id(ppt:uri-ppt-slides-dir($t-pres)) :)
 
 (: lets try: add slide t rels, then iterate thru and increase any rId >= to inserted rId of slide, based on this we'll finally update presenation.xml and content-types - then done :)
 
