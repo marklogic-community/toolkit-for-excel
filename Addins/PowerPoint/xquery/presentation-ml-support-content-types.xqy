@@ -77,8 +77,24 @@ let $test := $ctypes/Types/Override[fn:ends-with(@PartName,$slidename)]
 let $final := if(fn:empty($test)) then
                  let $children := $ctypes/node() 
                  return element{fn:name($ctypes)} {$ctypes/@*, $children, $overrideelem}
-              else (:some other function adjust all slides, add this one, blah :) 
-                 ()
+              else  
+                  (:some other function adjust all slides, add this one, blah :)
+                  
+                    let $non-slide-types := $ctypes/Types/Override[fn:not(fn:matches(@PartName,"/ppt/slides/slide\d+\.xml"))] 
+                    let $slide-types :=$ctypes/Types/Override[fn:matches(@PartName,"/ppt/slides/slide\d+\.xml")] 
+                    let $upd-slide-types := for $s in $slide-types
+                                            let $o-slideIdx := xs:integer(fn:substring-before(fn:substring-after($s/@PartName, "slides/slide"),".xml"))
+                                            let $finSld := if($o-slideIdx >= $slide-idx) 
+                                                           then 
+                                                              let $new-slidename := fn:concat("/ppt/slides/slide",($o-slideIdx+1),".xml")
+                                                              return element Override {attribute PartName{$new-slidename }, attribute ContentType {"application/vnd.openxmlformats-officedocument.presentationml.slide+xml" } } 
+                                                           else
+                                                             $s
+                                             return $finSld
+                   return  element{fn:name($ctypes)} {$ctypes/@*, $non-slide-types,$upd-slide-types, $overrideelem}
+                           
+                  
+                  (: () :)
 
 return $final (: ($overrideelem, $test, $ctypes) :)
 
