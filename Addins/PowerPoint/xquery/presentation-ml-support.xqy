@@ -773,6 +773,137 @@ declare function ppt:update-pres-xml($pres-xml as node(),$final-pres-rels as nod
 :)
 };
 (: END UPDATE FINAL PRESENTATION.XML ================================== :)
+
+
+(:BEGIN  function to merge slide from one deck to another maintaining destination formatting :)
+(: $t-pres :="/one_pptx_parts/"    target presentation:)
+(: $s-pres :="/two_pptx_parts/"    source presentation:)
+(: $s-idx  := 2                    index of slide in source to copy to target :)
+(: $start-idx := 2                 insertion index of target presentation :)
+
+declare function ppt:merge-slide($t-pres as xs:string, $s-pres as xs:string, $s-idx as xs:integer, $start-idx as xs:integer)
+{
+let $t-uris := ppt:package-uris-from-directory($t-pres)   (:uris for target files :)
+let $s-uris := ppt:package-uris-from-directory($s-pres)   (:uris for source files :)  
+
+(:removing themes associated with handoutMasters from uris :)
+(: final themes get their own map :)
+let $uri-handout-master-rels := ppt:uri-ppt-handout-master-rels-dir($t-pres)
+
+(: following returns theme1.xml, theme2.xml, etc. :)
+let $theme-ids := ppt:handout-master-theme-ids($uri-handout-master-rels)
+
+let $theme-map := map:map()
+let $theme-uris := for $t in $t-uris
+                   let $theme-uri := 
+                       if(fn:matches($t,"theme\d+\.xml")) then
+                          let $check := for $id in $theme-ids
+                                       let $x := if(fn:matches($t,fn:concat($id,"$"))) then () 
+                                                 else
+                                                 fn:substring-after($t,$t-pres)  
+                                       return $x
+                          return $check
+                       else ()
+                   return if(fn:empty($theme-uri))then () else map:put($theme-map,$theme-uri,$t)
+
+(:map for slides and slide relationships (images,etc.) :)
+
+let $slide-map := map:map()
+let $new-slide-map := ppt:slide-and-relationships($t-pres, $s-pres, $s-idx, $start-idx)
+
+(: rest of the uris :)
+let $uri-map := map:map()
+
+(:add bulk of uris to map, adjust for new slide#.xml, slide#.xml.rels :)
+(: update slide#.xml, slide#.xml.rels accordingly :)
+let $final-uris := for $t in $t-uris
+                   let $upd-uri := 
+                   if(fn:matches($t,"theme\d+\.xml")) then ()        (:themes already in own map :)
+                   else if(fn:matches($t,"handoutMaster")) then ()   (:removing hm for now:)
+                   else if(fn:ends-with($t,"[Content_Types].xml")) then ()  (:will put in own map X :)
+                   else if(fn:ends-with($t,"presentation.xml")) then ()     (:also in map X :)
+                   else if(fn:ends-with($t,"presentation.xml.rels")) then () (: also in map X :)
+                   
+                   else if(fn:matches($t,"slide\d+\.xml$")) then
+                     let $slideoriguri := fn:replace($t,"slide\d+\.xml$","")
+                     let $newuri := fn:substring-after($slideoriguri,$t-pres)
+                     let $slideoname := fn:substring-after($t,$slideoriguri)
+                     let $slideidx := fn:substring-before(fn:substring-after($slideoname,"slide",""),".xml","")
+                     let $slideint := xs:integer($slideidx)
+                     let $final := if($slideint >= $s-idx)
+                                                      then fn:concat($newuri,"slide",$slideint+1,".xml")
+                                                    else fn:concat($newuri,$slideoname)
+                     return $final
+                   else fn:substring-after($t,$t-pres)                   
+                   let $key := if(fn:empty($upd-uri)) then () else
+                               map:put($uri-map,$upd-uri,$t)
+                   return $key
+
+let $t-pres-rels:= fn:doc(ppt:uri-ppt-rels($t-pres))
+
+(: max-slide-id? or just use idx used forplacement, increment accordingly? :)
+let $max-slide-id := ppt:max-slide-id(ppt:uri-ppt-slides-dir($t-pres))
+
+(: lets try: add slide t rels, then iterate thru and increase any rId >= to inserted rId of slide, based on this we'll finally update presenation.xml and content-types - then done :)
+
+let $hm-id :=ppt:rels-rel-id($t-pres-rels,"handout")
+let $pres-rels-no-hm := ppt:remove-hm-from-pres-rels($t-pres-rels)
+let $adjusted-for-hm :=  ppt:pres-rels-adjust-hm($pres-rels-no-hm, $hm-id)
+
+
+let $final-pres-rels := ppt:insert-ppt-rels-slide-rel($adjusted-for-hm, $start-idx, $hm-id)
+  
+(: now have to update presentation.xml and content-types :)
+let $pres-xml := fn:doc(ppt:uri-ppt-presentation($t-pres))
+let $c-types := fn:doc(ppt:uri-content-types($t-pres))/node()
+(:need to pass $start-idx to add slide, update other slides if req'd
+       pass theme-ids, remove theme-id
+       pass image types - if req'd
+       pass slidemasters/slidelayouts -next round
+:)
+let $c-types-no-theme := ppt:c-types-remove-theme($c-types, $theme-ids)
+let $c-types-no-hm := ppt:c-types-remove-hm($c-types-no-theme)
+
+(: have to account for slide incrementing here based on where inserted :)
+let $final-ctypes :=  ppt:c-types-add-slide($c-types-no-hm ,$start-idx ) 
+
+(: need to pass xml/node with slideorig id from source-pres :)
+
+let $final-pres := ppt:update-pres-xml($pres-xml,$final-pres-rels, $s-pres, $s-idx) 
+
+let $pres-root-map := map:map() 
+let $uri-pres := ppt:uri-ppt-presentation(())
+let $uri-pres-rels := ppt:uri-ppt-rels(())
+let $uri-c-types := ppt:uri-content-types(())
+
+let $mapupd1 := map:put( $pres-root-map,$uri-pres, $final-pres)
+let $mapupd2 := map:put( $pres-root-map, $uri-pres-rels, $final-pres-rels)
+let $mapupd3 := map:put( $pres-root-map, $uri-c-types, $final-ctypes)
+
+let $finalmaps := ($pres-root-map , $theme-map, $new-slide-map, $uri-map )
+let $parts := for $m in $finalmaps
+              let $keys := map:keys($m)
+              return $keys (: fn:count($keys) :)
+
+let $finaldocs := for $p in $parts
+                  let $val := map:get($finalmaps, $p)
+                  return if($val instance of xs:string) then fn:doc($val) else $val
+
+let $manifest := <parts xmlns="xdmp:zip"> 
+   {
+    for $i in $parts
+    let $part :=  <part>{$i}</part>
+    return $part
+   }
+                 </parts>
+
+let $pptx := xdmp:zip-create($manifest, $finaldocs)
+return $pptx
+}; 
+
+
+
+(:END  function to merge slide from one deck to another maintaining destination formatting :)
 (: ====================:)
 (: ====================:)
 (: ====================:)
