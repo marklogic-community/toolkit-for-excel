@@ -708,6 +708,13 @@ declare function ppt:dispatch-remove-handoutlst($pres-xml as node())
 
 };
 
+
+declare function ppt:update-nm($pres-xml as node(), $new-nm-id as xs:string*)
+{
+   element{fn:name($pres-xml)} {attribute r:id{ $new-nm-id }}
+
+};
+
 declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
 {
   (:$pres-xml:)
@@ -718,18 +725,20 @@ declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
                   return $c
   return  element{fn:name($pres-xml)}  {$pres-xml/@*, $ordered }
 };
-declare function ppt:passthru-add-slide-id($x as node(), $new-sld-id as node()) as node()*
+
+declare function ppt:passthru-add-slide-id($x as node(), $new-sld-id as node(), $new-nm-id as xs:string*) as node()*
 {
-   for $i in $x/node() return ppt:dispatch-add-slide-id($i, $new-sld-id)
+   for $i in $x/node() return ppt:dispatch-add-slide-id($i, $new-sld-id, $new-nm-id)
 };
 
-declare function ppt:dispatch-add-slide-id($pres-xml as node(), $new-sld-id as node()) 
+declare function ppt:dispatch-add-slide-id($pres-xml as node(), $new-sld-id as node(), $new-nm-id as xs:string*) 
 {
   typeswitch($pres-xml)
        case text() return $pres-xml
-       case document-node() return   document{ppt:passthru-add-slide-id($pres-xml,$new-sld-id)} 
+       case document-node() return   document{ppt:passthru-add-slide-id($pres-xml,$new-sld-id, $new-nm-id)} 
        case element(p:sldIdLst) return ppt:add-sld($pres-xml, $new-sld-id)
-       case element() return  element{fn:name($pres-xml)} {$pres-xml/@*,  $pres-xml/namespace::*,passthru-add-slide-id($pres-xml,$new-sld-id)}
+       case element(p:notesMasterId) return ppt:update-nm($pres-xml, $new-nm-id)
+       case element() return  element{fn:name($pres-xml)} {$pres-xml/@*,  $pres-xml/namespace::*,passthru-add-slide-id($pres-xml,$new-sld-id, $new-nm-id)}
        default return $pres-xml
 
 };
@@ -748,14 +757,17 @@ declare function ppt:update-pres-xml($pres-xml as node(),$final-pres-rels as nod
   let $src-pres-slide-id := fn:doc(ppt:uri-ppt-presentation($src-dir))/p:presentation/p:sldIdLst/p:sldId[fn:matches(@r:id,$src-pres-rel-id)]/@id
 
   (:now check rId to use in $final-pres-rels :)
-  let $new-pres-rel-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id
+  let $new-pres-rel-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id 
+
+(:could be more than one of these, have to account for :)
+  let $new-nm-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Type,"notesMaster")]/@Id  
 
   (:construct new p:sldId:)
   let $new-sld-id := element p:sldId{attribute id {$src-pres-slide-id } , attribute r:id { $new-pres-rel-id  } }
 
   
 
-  let $new-pres-xml := ppt:dispatch-add-slide-id($pres-no-hm-lst, $new-sld-id)  
+  let $new-pres-xml := ppt:dispatch-add-slide-id($pres-no-hm-lst, $new-sld-id, $new-nm-id)  
   
   return $new-pres-xml (:,$new-sld-id, $new-pres-rel-id, $final-pres-rels, $src-pres-rel-id, $src-pres-slide-id, $slide-xml,$src-dir, $id, $pres-no-hm-lst)
 :)
