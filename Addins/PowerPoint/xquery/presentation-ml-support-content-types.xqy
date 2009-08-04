@@ -80,6 +80,8 @@ let $final := if(fn:empty($test)) then
                  return element{fn:name($ctypes)} {$ctypes/@*, $children, $overrideelem}
               else  
                   (:some other function adjust all slides, add this one, blah :)
+                   (:add function to test for image types and add :)
+                    (:let $pngDefTest := <Default Extension="png" ContentType="image/png"/> :)
                   
                     let $non-slide-types := $ctypes/Override[fn:not(fn:matches(@PartName,"/ppt/slides/slide\d+\.xml"))] 
                     let $defaults := $ctypes/Default
@@ -93,7 +95,7 @@ let $final := if(fn:empty($test)) then
                                                            else
                                                              $s
                                              return $finSld
-                   return  element{fn:name($ctypes)} {$ctypes/@*, $defaults, $non-slide-types,$upd-slide-types, $overrideelem}
+                   return  element{fn:name($ctypes)} {$ctypes/@*, $defaults, $non-slide-types,$upd-slide-types, $overrideelem} (:,$pngDefTest} :)
                            
                   
                   (: () :)
@@ -117,6 +119,16 @@ declare function ppt:ct-utils-remove-hm($ctypes as node())
 };
 (: ====== END  remove handoutMasters from content-types :)
 
+declare function  ppt:ct-utils-add-defaults($ctypes as node(), $types as xs:string*)
+{
+    let $children := $ctypes/node()
+    let $new := for $t in $types
+                       let $ext := $t
+                       let $ct := fn:concat("image/",$t)
+                       return element Default {attribute Extension{$ext}, attribute ContentType{$ct}}
+
+   return element{fn:name($ctypes)} {$ctypes/@*, $children, $new}
+};
 
 
 

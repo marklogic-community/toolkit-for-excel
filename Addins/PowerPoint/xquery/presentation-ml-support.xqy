@@ -750,6 +750,12 @@ declare function ppt:c-types-add-slide($c-types , $slide-idx)
 
 
 (: ================================== :)
+declare function ppt:c-types-add-types($c-types as node(), $types as xs:string*)
+{
+   ppt:ct-utils-add-defaults($c-types, $types)
+  (:<fubar>{$types}</fubar> :)
+};
+(: ================================== :)
 (: BEGIN UPDATE FINAL PRESENTATION.XML ================================== :)
 
 declare function ppt:passthru-remove-handoutlst($x as node()) as node()*
@@ -792,14 +798,17 @@ declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
   (:$pres-xml:)
  (: need to account for 1- case when two slides have the same id 2-multiple slides will need children rIds updated :)
   let $children := ($pres-xml/node())
-  let $new-sld-rId := ppt:r-id-as-int($new-sld-id/@r:id) 
-  let $upd-children := for $c in $children
+  let $new-sld-rId := ppt:r-id-as-int($new-sld-id/@r:id)
+  let $upd-sld-id := 1256 
+  let $upd-children := for $c at $n in $children
                        let $rId := ppt:r-id-as-int($c/@r:id)
                        let $slide := if($rId >= $new-sld-rId ) then
                                        let $new-rId := fn:concat("rId",($rId+1))
-                                       return  element p:sldId{attribute id {$c/@id } , attribute r:id { $new-rId  } }
+                                       return  element p:sldId{attribute id {$upd-sld-id + $n (:$c/@id:) } , attribute r:id { $new-rId  } }
                                      else
-                                        $c
+                                        element p:sldId{attribute id {$upd-sld-id + $n (:$c/@id:) } , attribute r:id { $c/@r:id  } }
+                                       (: $c :)
+
                        return $slide
   let $all-children := ($upd-children, $new-sld-id)              
   let $ordered-c := for $c in $all-children
@@ -908,8 +917,11 @@ let $theme-map := map:map()
 let $theme-uris := for $t in $t-uris
                    let $theme-uri := 
                        if(fn:matches($t,"theme\d+\.xml")) then
-                          let $check := for $id in $theme-ids
-                                       let $x := if(fn:matches($t,fn:concat($id,"$"))) then () 
+                          let $check := if(fn:empty($theme-ids)) then
+                                        fn:substring-after($t,$t-pres) 
+                                        else
+                                        for $id in $theme-ids
+                                        let $x := if(fn:matches($t,fn:concat($id,"$"))) then () 
                                                  else
                                                  fn:substring-after($t,$t-pres)  
                                        return $x
@@ -921,6 +933,8 @@ let $theme-uris := for $t in $t-uris
 
 let $slide-map := map:map()
 let $new-slide-map := ppt:slide-and-relationships($t-pres, $s-pres, $s-idx, $start-idx)
+
+let $sld-rels-img-types := ppt:sld-rel-image-types($new-slide-map)
 
 (: rest of the uris :)
 let $uri-map := map:map()
@@ -986,7 +1000,20 @@ let $c-types-no-theme := ppt:c-types-remove-theme($c-types, $theme-ids)
 let $c-types-no-hm := ppt:c-types-remove-hm($c-types-no-theme)
 
 (: have to account for slide incrementing here based on where inserted :)
-let $final-ctypes :=  ppt:c-types-add-slide($c-types-no-hm ,$start-idx ) 
+let $upd-ctypes :=  ppt:c-types-add-slide($c-types-no-hm ,$start-idx ) 
+(:
+let $image-defaults := for $u in $sld-rels-img-types
+                       let $ext := $u
+                       let $ct := fn:concat("image/",$u)
+                       return <Default Extension={$ext} ContentType={$ct}/>
+:)
+let $final-ctypes := if(fn:empty($sld-rels-img-types)) then $upd-ctypes else
+                     ppt:c-types-add-types($upd-ctypes,$sld-rels-img-types)
+
+(:
+let $final-ctypes := if(fn:empty($image-defaults)) then $upd-ctypes else
+                     ppt:c-types-add-types($upd-ctypes,$image-defaults)
+:)
 
 (: need to pass xml/node with slideorig id from source-pres :)
 
@@ -1022,6 +1049,16 @@ let $pptx := xdmp:zip-create($manifest, $finaldocs)
 return $pptx
 }; 
 
+declare function ppt:sld-rel-image-types($map as map:map)
+{
+let $tKeys := map:keys($map)
+let $rels := for $t in $tKeys
+             let $doc := map:get($map,$t)
+             let $ret := if($doc instance of xs:string) then () else $doc
+             return $ret
+let $imgTypes := fn:substring-after(fn:substring-after($rels/rel:Relationships/rel:Relationship[fn:ends-with(@Type,"image")]/@Target,"image"),".")
+return $imgTypes
+};
 
 
 (:END  function to merge slide from one deck to another maintaining destination formatting :)
