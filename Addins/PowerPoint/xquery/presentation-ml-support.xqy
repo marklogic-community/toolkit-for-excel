@@ -784,7 +784,7 @@ declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
                        let $rId := ppt:r-id-as-int($c/@r:id)
                        let $slide := if($rId >= $new-sld-rId ) then
                                        let $new-rId := fn:concat("rId",($rId+1))
-                                       return  element p:sldId{attribute id {$c/id } , attribute r:id { $new-rId  } }
+                                       return  element p:sldId{attribute id {$c/@id } , attribute r:id { $new-rId  } }
                                      else
                                         $c
                        return $slide
