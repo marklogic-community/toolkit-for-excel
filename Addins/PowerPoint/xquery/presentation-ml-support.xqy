@@ -763,7 +763,7 @@ declare function ppt:update-nm($pres-xml as node(), $new-nm-id as xs:string*)
 
 };
 
-declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
+declare function ppt:add-sld-ORIG($pres-xml as node(), $new-sld-id as node())
 {
   (:$pres-xml:)
  (: need to account for 1- case when two slides have the same id 2-multiple slides will need children rIds updated :)
@@ -772,6 +772,27 @@ declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
                   order by $c/@r:id
                   return $c
   return  element{fn:name($pres-xml)}  {$pres-xml/@*, $ordered }
+};
+
+declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
+{
+  (:$pres-xml:)
+ (: need to account for 1- case when two slides have the same id 2-multiple slides will need children rIds updated :)
+  let $children := ($pres-xml/node())
+  let $new-sld-rId := ppt:r-id-as-int($new-sld-id/@r:id) 
+  let $upd-children := for $c in $children
+                       let $rId := ppt:r-id-as-int($c/@r:id)
+                       let $slide := if($rId >= $new-sld-rId ) then
+                                       let $new-rId := fn:concat("rId",($rId+1))
+                                       return  element p:sldId{attribute id {$c/id } , attribute r:id { $new-rId  } }
+                                     else
+                                        $c
+                       return $slide
+  let $all-children := ($upd-children, $new-sld-id)              
+  let $ordered-c := for $c in $all-children
+                    order by $c/@r:id
+                    return $c
+  return  element{fn:name($pres-xml)}  {$pres-xml/@*, $ordered-c }
 };
 
 declare function ppt:passthru-add-slide-id($x as node(), $new-sld-id as node(), $new-nm-id as xs:string*) as node()*
@@ -820,6 +841,35 @@ declare function ppt:update-pres-xml($pres-xml as node(),$final-pres-rels as nod
   return $new-pres-xml (:,$new-sld-id, $new-pres-rel-id, $final-pres-rels, $src-pres-rel-id, $src-pres-slide-id, $slide-xml,$src-dir, $id, $pres-no-hm-lst)
 :)
 };
+
+declare function ppt:update-pres-xml-ORIG($pres-xml as node(),$final-pres-rels as node(),$src-dir as xs:string, $id as xs:integer)
+{
+  let $pres-no-hm-lst :=  ppt:dispatch-remove-handoutlst($pres-xml) (: , $final-pres-rels, $id) :)
+  let $newid := "256"
+  let $slide-xml :=fn:concat("slide",$id,".xml")
+
+  (: original rId of slide in original presentation.xml.rels --to check in presentation.xml-- for slide#.xml :)
+  let $src-pres-rel-id := fn:doc(ppt:uri-ppt-rels($src-dir))/rel:Relationships/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id
+  (: original id of slide in original presentation.xml for slide#.xml :)
+  let $src-pres-slide-id := fn:doc(ppt:uri-ppt-presentation($src-dir))/p:presentation/p:sldIdLst/p:sldId[fn:matches(@r:id,$src-pres-rel-id)]/@id
+
+  (:now check rId to use in $final-pres-rels :)
+  let $new-pres-rel-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id 
+
+(:could be more than one of these, have to account for :)
+  let $new-nm-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Type,"notesMaster")]/@Id  
+
+  (:construct new p:sldId:)
+  let $new-sld-id := element p:sldId{attribute id {$src-pres-slide-id } , attribute r:id { $new-pres-rel-id  } }
+
+  
+
+  let $new-pres-xml := ppt:dispatch-add-slide-id($pres-no-hm-lst, $new-sld-id, $new-nm-id)  
+  
+  return $new-pres-xml (:,$new-sld-id, $new-pres-rel-id, $final-pres-rels, $src-pres-rel-id, $src-pres-slide-id, $slide-xml,$src-dir, $id, $pres-no-hm-lst)
+:)
+};
+
 (: END UPDATE FINAL PRESENTATION.XML ================================== :)
 
 
