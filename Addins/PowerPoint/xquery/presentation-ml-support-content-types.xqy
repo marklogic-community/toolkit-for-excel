@@ -73,15 +73,16 @@ declare function ppt:ct-utils-add-slide($ctypes as node(), $slide-idx as xs:inte
 {
 let $slidename := fn:concat("/ppt/slides/slide",$slide-idx,".xml")
 let $overrideelem := element Override {attribute PartName{$slidename }, attribute ContentType {"application/vnd.openxmlformats-officedocument.presentationml.slide+xml" } }
-let $test := $ctypes/Types/Override[fn:ends-with(@PartName,$slidename)]
+let $test := $ctypes/Override[fn:ends-with(@PartName,$slidename)]
 let $final := if(fn:empty($test)) then
                  let $children := $ctypes/node() 
                  return element{fn:name($ctypes)} {$ctypes/@*, $children, $overrideelem}
               else  
                   (:some other function adjust all slides, add this one, blah :)
                   
-                    let $non-slide-types := $ctypes/Types/Override[fn:not(fn:matches(@PartName,"/ppt/slides/slide\d+\.xml"))] 
-                    let $slide-types :=$ctypes/Types/Override[fn:matches(@PartName,"/ppt/slides/slide\d+\.xml")] 
+                    let $non-slide-types := $ctypes/Override[fn:not(fn:matches(@PartName,"/ppt/slides/slide\d+\.xml"))] 
+                    let $defaults := $ctypes/Default
+                    let $slide-types :=$ctypes/Override[fn:matches(@PartName,"/ppt/slides/slide\d+\.xml")] 
                     let $upd-slide-types := for $s in $slide-types
                                             let $o-slideIdx := xs:integer(fn:substring-before(fn:substring-after($s/@PartName, "slides/slide"),".xml"))
                                             let $finSld := if($o-slideIdx >= $slide-idx) 
@@ -91,7 +92,7 @@ let $final := if(fn:empty($test)) then
                                                            else
                                                              $s
                                              return $finSld
-                   return  element{fn:name($ctypes)} {$ctypes/@*, $non-slide-types,$upd-slide-types, $overrideelem}
+                   return  element{fn:name($ctypes)} {$ctypes/@*, $defaults, $non-slide-types,$upd-slide-types, $overrideelem}
                            
                   
                   (: () :)

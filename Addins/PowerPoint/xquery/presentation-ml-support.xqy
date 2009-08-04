@@ -671,7 +671,7 @@ declare function ppt:insert-ppt-rels-slide-rel-ORIGINAL($pres-rels as node()*, $
  
     
     let $new-slide-rel := element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} (:pos don't matter, just name :)  
-                                  {attribute Id {fn:concat("rId",1 +$start-idx  ) },
+                                  {attribute Id {fn:concat("rId",1+$start-idx  ) },
                                    attribute Type {"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" },
                                    attribute Target {fn:concat("slides/slide",$start-idx,".xml"  ) }} 
 
@@ -696,7 +696,7 @@ declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx
                         let $rId := ppt:r-id-as-int($o/@Id)
                          (:may be a problem here with check against handoutmaster id, need to check rId ? instead of slideIdx? :)
                          (:assuming all slides before handout master, this increments rId and slide# for all slides after slide inserted at $start-idx :)
-                        let $updSlide := if($slideIdx >= $start-idx and $hm-id > $rId) then
+                        let $updSlide := if($slideIdx >= $start-idx and $hm-id > $rId)  then
                                             let $elem :=  
                                               element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} (:pos don't matter, just name :)  
                                               {attribute Id {fn:concat("rId",$rId +1  ) },
@@ -716,7 +716,7 @@ declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx
                                    attribute Target {fn:concat("slides/slide",$start-idx,".xml"  ) }} 
 
 
-    return  element{fn:name($pres-rels/rel:Relationships)} {(($non-slide-rels, $orig-slide-rels, $new-slide-rel))}
+    return  element{fn:name($pres-rels/rel:Relationships)} {(($non-slide-rels, $upd-slide-rels, $new-slide-rel))}
 }; 
 (: ====================:)
 declare function ppt:c-types-remove-theme($ctypes as node(), $theme-ids as xs:string*)
@@ -928,8 +928,18 @@ let $final-uris := for $t in $t-uris
                      let $slideoname := fn:substring-after($t,$slideoriguri)
                      let $slideidx := fn:substring-before(fn:substring-after($slideoname,"slide",""),".xml","")
                      let $slideint := xs:integer($slideidx)
-                     let $final := if($slideint >= $s-idx)
+                     let $final := if($slideint >= $start-idx)
                                                       then fn:concat($newuri,"slide",$slideint+1,".xml")
+                                                    else fn:concat($newuri,$slideoname)
+                     return $final
+                   else if(fn:matches($t,"slide\d+\.xml.rels$")) then
+                     let $slideoriguri := fn:replace($t,"slide\d+\.xml.rels$","")
+                     let $newuri := fn:substring-after($slideoriguri,$t-pres)
+                     let $slideoname := fn:substring-after($t,$slideoriguri)
+                     let $slideidx := fn:substring-before(fn:substring-after($slideoname,"slide",""),".xml.rels","")
+                     let $slideint := xs:integer($slideidx)
+                     let $final := if($slideint >= $start-idx)
+                                                      then fn:concat($newuri,"slide",$slideint+1,".xml.rels")
                                                     else fn:concat($newuri,$slideoname)
                      return $final
                    else fn:substring-after($t,$t-pres)                   
