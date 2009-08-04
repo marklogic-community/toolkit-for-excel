@@ -608,7 +608,8 @@ declare function ppt:rel-ids($rels as element(rel:Relationships))
 declare function ppt:rels-rel-id($rels as node(), $type as xs:string*)
 {
    (: $rels/r:Relationships/r:Relationship/@Target :)
-   xs:integer(fn:substring-after($rels/rel:Relationships/rel:Relationship[fn:matches(@Target,$type)]/@Id,"rId"))
+    let $hmId :=fn:substring-after($rels/rel:Relationships/rel:Relationship[fn:matches(@Target,$type)]/@Id,"rId")
+    return if((fn:empty($hmId)) or ($hmId eq "")) then () else xs:integer($hmId)
 };
 (: ====================:)
 declare function ppt:r-id-as-int($rId as xs:string)
@@ -616,9 +617,20 @@ declare function ppt:r-id-as-int($rId as xs:string)
   xs:integer(fn:substring-after($rId,"rId"))
 };
 (: ====================:)
-
-declare function ppt:check-adjust-hm($rels as node(), $idx as xs:integer)
+(:rename? adjust regardless of hm presence, will adjust slides with insert of new slide :)
+declare function ppt:check-adjust-hm($rels as node(), $idx as xs:integer*)
 {
+if(fn:empty($idx)) then
+    let $new-rel := if(fn:not(fn:matches($rels/@Target, "slide")))
+                    then
+                     let $rId := ppt:r-id-as-int($rels/@Id)
+                     return  element{fn:name($rels)} { attribute Id {fn:concat("rId",$rId+1  ) }, $rels/@* except $rels/@Id}
+                    else
+                     element{fn:name($rels)} { $rels/@* }
+    return $new-rel 
+
+
+else
 let $rId := ppt:r-id-as-int($rels/@Id)
 (:have to confirm notes master always after slides :)
 let $new-rel := if($rId >= $idx or fn:matches($rels/@Target,"notesMasters")) then 
@@ -628,12 +640,13 @@ let $new-rel := if($rId >= $idx or fn:matches($rels/@Target,"notesMasters")) the
 return $new-rel
 
 };
-declare function ppt:passthru-pres-rels-adjust-hm($x as node(), $idx as xs:integer) as node()*
+
+declare function ppt:passthru-pres-rels-adjust-hm($x as node(), $idx as xs:integer*) as node()*
 {
    for $i in $x/node() return ppt:dispatch-pres-rels-adjust-hm($i, $idx)
 };
 
-declare function ppt:dispatch-pres-rels-adjust-hm($rels as node(), $hm-id as xs:integer) as node()*
+declare function ppt:dispatch-pres-rels-adjust-hm($rels as node(), $hm-id as xs:integer*) as node()*
 {
 
       typeswitch($rels)
@@ -646,7 +659,7 @@ declare function ppt:dispatch-pres-rels-adjust-hm($rels as node(), $hm-id as xs:
 };
 
 
-declare function ppt:pres-rels-adjust-hm($pres-rels as node(), $hm-id as xs:integer)
+declare function ppt:pres-rels-adjust-hm($pres-rels as node(), $hm-id as xs:integer*)
 {
   ppt:dispatch-pres-rels-adjust-hm($pres-rels, $hm-id)
 
@@ -679,7 +692,7 @@ declare function ppt:insert-ppt-rels-slide-rel-ORIGINAL($pres-rels as node()*, $
     return element{fn:name($pres-rels/rel:Relationships)} {(($non-slide-rels, $orig-slide-rels, $new-slide-rel))}
 };
 
-declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx as xs:integer, $hm-id as xs:integer)
+declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx as xs:integer, $hm-id as xs:integer*)
 {
 
 (: $pres-rels/r:Relationships :)
@@ -696,7 +709,7 @@ declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx
                         let $rId := ppt:r-id-as-int($o/@Id)
                          (:may be a problem here with check against handoutmaster id, need to check rId ? instead of slideIdx? :)
                          (:assuming all slides before handout master, this increments rId and slide# for all slides after slide inserted at $start-idx :)
-                        let $updSlide := if($slideIdx >= $start-idx and $hm-id > $rId)  then
+                        let $updSlide := if($slideIdx >= $start-idx) (:and $hm-id > $rId):)  then
                                             let $elem :=  
                                               element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} (:pos don't matter, just name :)  
                                               {attribute Id {fn:concat("rId",$rId +1  ) },
@@ -716,7 +729,7 @@ declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx
                                    attribute Target {fn:concat("slides/slide",$start-idx,".xml"  ) }} 
 
 
-    return  element{fn:name($pres-rels/rel:Relationships)} {(($non-slide-rels, $upd-slide-rels, $new-slide-rel))}
+    return  element{fn:name($pres-rels/rel:Relationships)} {($non-slide-rels, $upd-slide-rels, $new-slide-rel)}
 }; 
 (: ====================:)
 declare function ppt:c-types-remove-theme($ctypes as node(), $theme-ids as xs:string*)

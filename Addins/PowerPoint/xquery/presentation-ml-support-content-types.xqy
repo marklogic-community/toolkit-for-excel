@@ -40,6 +40,7 @@ declare default element namespace "http://schemas.openxmlformats.org/package/200
 (: gotta be a better way to do this , to much looping:)
 declare function ppt:ct-remove-theme($ctypes as node(), $theme-ids as xs:string*) as node()*
 {
+if(fn:empty($theme-ids)) then $ctypes else
   for $t in $theme-ids
   let $override := if(fn:ends-with($ctypes/@PartName, $t)) then () else $ctypes 
   return $override
