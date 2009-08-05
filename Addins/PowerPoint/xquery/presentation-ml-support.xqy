@@ -224,222 +224,223 @@ declare function ppt:package-uris-from-directory($docuri as xs:string, $depth as
 
 declare function ppt:package-files-only($uris as xs:string*) as xs:string*
 {
-                  for $uri in $uris
-                  let $u := if(fn:ends-with($uri,"/")) then () else $uri
-                  return $u
+  for $uri in $uris
+  let $u := if(fn:ends-with($uri,"/")) then () else $uri
+  return $u
 };
 
 (: ===================== BEGIN file and dir helpers ====================== :)
 declare function ppt:uri-content-types($dir as xs:string?) as xs:string
 {
-  fn:concat($dir,"[Content_Types].xml")
+	fn:concat($dir,"[Content_Types].xml")
 };
 declare function ppt:uri-rels-dir($dir as xs:string?) as xs:string
 {
-    fn:concat($dir,"_rels/")
+  	fn:concat($dir,"_rels/")
 };
 
 declare function ppt:uri-rels($dir as xs:string?) as xs:string
 {
-    fn:concat(ppt:uri-rels-dir($dir),".rels") 
+    	fn:concat(ppt:uri-rels-dir($dir),".rels") 
 };
 
 declare function ppt:uri-docprops-dir($dir as xs:string?) as xs:string
 {
-    fn:concat($dir,"docProps/")
+    	fn:concat($dir,"docProps/")
 };
 
 declare function ppt:uri-app-props($dir as xs:string?) as xs:string
 {
-      fn:concat(ppt:uri-docprops-dir($dir),"app.xml")
+      	fn:concat(ppt:uri-docprops-dir($dir),"app.xml")
 };
 
 declare function ppt:uri-core-props($dir as xs:string?) as xs:string
 {
-      fn:concat(ppt:uri-docprops-dir($dir),"core.xml")
+     	 fn:concat(ppt:uri-docprops-dir($dir),"core.xml")
 };
 
 declare function ppt:uri-ppt-dir($dir as xs:string?) as xs:string
 {
-      fn:concat($dir, "ppt/")
+      	fn:concat($dir, "ppt/")
 };
 
 declare function ppt:uri-ppt-rels-dir($dir as xs:string?) as xs:string
 {
-      fn:concat(ppt:uri-ppt-dir($dir),"_rels/")
+      	fn:concat(ppt:uri-ppt-dir($dir),"_rels/")
 };
 
 declare function ppt:uri-ppt-rels($dir as xs:string?) as xs:string
 {
-     fn:concat(ppt:uri-ppt-rels-dir($dir),"presentation.xml.rels")
+     	fn:concat(ppt:uri-ppt-rels-dir($dir),"presentation.xml.rels")
 };
 
 declare function ppt:uri-ppt-handout-masters-dir($dir as xs:string?) as xs:string
 {
-      fn:concat(ppt:uri-ppt-dir($dir),"handoutMasters/")
+      	fn:concat(ppt:uri-ppt-dir($dir),"handoutMasters/")
 };
 
 declare function ppt:uri-ppt-handout-master-rels-dir($dir as xs:string?) as xs:string
 {
-      fn:concat(ppt:uri-ppt-handout-masters-dir($dir),"_rels/")
+      	fn:concat(ppt:uri-ppt-handout-masters-dir($dir),"_rels/")
 };
 
 declare function ppt:uri-ppt-handout-master($dir as xs:string?, $idx as xs:integer) as xs:string
 {
-    let $handoutMasterFile := fn:concat("handoutMaster",$idx,".xml")
-    return fn:concat(ppt:uri-ppt-handout-masters-dir($dir), $handoutMasterFile)
+    	let $handoutMasterFile := fn:concat("handoutMaster",$idx,".xml")
+   	return fn:concat(ppt:uri-ppt-handout-masters-dir($dir), $handoutMasterFile)
 };
 
 declare function ppt:uri-ppt-handout-master-rels($dir as xs:string?, $idx as xs:integer) as xs:string
 {
-    let $handoutMasterRelsFile := fn:concat("handoutMaster",$idx,".xml.rels")
-    return fn:concat( ppt:uri-ppt-handout-master-rels-dir($dir),$handoutMasterRelsFile)
+    	let $handoutMasterRelsFile := fn:concat("handoutMaster",$idx,".xml.rels")
+    	return fn:concat( ppt:uri-ppt-handout-master-rels-dir($dir),$handoutMasterRelsFile)
 };
 
 declare function ppt:uri-ppt-media-dir($dir as xs:string?) as xs:string
 {
-     fn:concat(ppt:uri-ppt-dir($dir),"media/")
+     	fn:concat(ppt:uri-ppt-dir($dir),"media/")
 };
 
 declare function ppt:uri-ppt-notes-masters-dir($dir as xs:string?) as xs:string
 {
-     fn:concat(ppt:uri-ppt-dir($dir),"notesMasters/")
+     	fn:concat(ppt:uri-ppt-dir($dir),"notesMasters/")
 };
 
 declare function ppt:uri-ppt-notes-masters-rels-dir($dir as xs:string?) as xs:string
 {
-    fn:concat(ppt:uri-ppt-notes-masters-dir($dir),"_rels/")
+    	fn:concat(ppt:uri-ppt-notes-masters-dir($dir),"_rels/")
 }; 
 
 declare function ppt:uri-ppt-notes-master($dir as xs:string?, $idx as xs:integer) as xs:string
 {
-    let $notesMasterFile := fn:concat("notesMaster",$idx,".xml")
-    return fn:concat(ppt:uri-ppt-notes-masters-dir($dir), $notesMasterFile)
+    	let $notesMasterFile := fn:concat("notesMaster",$idx,".xml")
+    	return fn:concat(ppt:uri-ppt-notes-masters-dir($dir), $notesMasterFile)
 };
 
 declare function ppt:uri-ppt-notes-master-rels($dir as xs:string?, $idx as xs:integer) as xs:string
 {
-    let $notesMasterRelsFile := fn:concat("notesMaster",$idx,".xml.rels")
-    return fn:concat( ppt:uri-ppt-notes-masters-rels-dir($dir),$notesMasterRelsFile)
+    	let $notesMasterRelsFile := fn:concat("notesMaster",$idx,".xml.rels")
+    	return fn:concat( ppt:uri-ppt-notes-masters-rels-dir($dir),$notesMasterRelsFile)
 };
 
 declare function ppt:uri-ppt-slide-layouts-dir($dir as xs:string?) as xs:string
 {
-     fn:concat(ppt:uri-ppt-dir($dir),"slideLayouts/")
+     	fn:concat(ppt:uri-ppt-dir($dir),"slideLayouts/")
 };
 
 declare function ppt:uri-ppt-slide-layout-rels-dir($dir as xs:string?) as xs:string
 {
-    fn:concat(ppt:uri-ppt-slide-layouts-dir($dir),"_rels/")
+    	fn:concat(ppt:uri-ppt-slide-layouts-dir($dir),"_rels/")
 }; 
 
 declare function ppt:uri-ppt-slide-layout($dir as xs:string?, $idx as xs:integer) as xs:string
 {
-    let $slideLayoutFile := fn:concat("slideLayout",$idx,".xml")
-    return fn:concat(ppt:uri-ppt-slide-layouts-dir($dir), $slideLayoutFile)
+    	let $slideLayoutFile := fn:concat("slideLayout",$idx,".xml")
+    	return fn:concat(ppt:uri-ppt-slide-layouts-dir($dir), $slideLayoutFile)
 };
 
 declare function ppt:uri-ppt-slide-layout-rels($dir as xs:string?, $idx as xs:integer) as xs:string
 {
-    let $slideLayoutRelsFile := fn:concat("slideLayout",$idx,".xml.rels")
-    return fn:concat( ppt:uri-ppt-slide-layout-rels-dir($dir),$slideLayoutRelsFile)
+    	let $slideLayoutRelsFile := fn:concat("slideLayout",$idx,".xml.rels")
+    	return fn:concat( ppt:uri-ppt-slide-layout-rels-dir($dir),$slideLayoutRelsFile)
 };
 
 declare function ppt:uri-ppt-slide-masters-dir($dir as xs:string?) as xs:string
 {
-     fn:concat(ppt:uri-ppt-dir($dir),"slideMasters/")
+     	fn:concat(ppt:uri-ppt-dir($dir),"slideMasters/")
 };
 
 declare function ppt:uri-ppt-slide-master-rels-dir($dir as xs:string?) as xs:string
 {
-    fn:concat(ppt:uri-ppt-slide-masters-dir($dir),"_rels/")
+    	fn:concat(ppt:uri-ppt-slide-masters-dir($dir),"_rels/")
 }; 
 
 declare function ppt:uri-ppt-slide-master($dir as xs:string?, $idx as xs:integer) as xs:string
 {
-    let $slideMasterFile := fn:concat("slideMaster",$idx,".xml")
-    return fn:concat(ppt:uri-ppt-slide-masters-dir($dir), $slideMasterFile)
+    	let $slideMasterFile := fn:concat("slideMaster",$idx,".xml")
+   	return fn:concat(ppt:uri-ppt-slide-masters-dir($dir), $slideMasterFile)
 };
 
 declare function ppt:uri-ppt-slide-master-rels($dir as xs:string?, $idx as xs:integer) as xs:string
 {
-    let $slideMasterRelsFile := fn:concat("slideMaster",$idx,".xml.rels")
-    return fn:concat( ppt:uri-ppt-slide-master-rels-dir($dir),$slideMasterRelsFile)
+    	let $slideMasterRelsFile := fn:concat("slideMaster",$idx,".xml.rels")
+    	return fn:concat( ppt:uri-ppt-slide-master-rels-dir($dir),$slideMasterRelsFile)
 };
 
 declare function ppt:uri-ppt-slides-dir($dir as xs:string?) as xs:string
 {
-     fn:concat(ppt:uri-ppt-dir($dir),"slides/")
+     	fn:concat(ppt:uri-ppt-dir($dir),"slides/")
 };
 
 
 declare function ppt:uri-ppt-slide-rels-dir($dir as xs:string?) as xs:string
 {
-    fn:concat(ppt:uri-ppt-slides-dir($dir),"_rels/")
+    	fn:concat(ppt:uri-ppt-slides-dir($dir),"_rels/")
 }; 
 
 declare function ppt:uri-ppt-slide($dir as xs:string?, $idx as xs:integer) as xs:string
 {
-    let $slideFile := fn:concat("slide",$idx,".xml")
-    return fn:concat(ppt:uri-ppt-slides-dir($dir), $slideFile)
+    	let $slideFile := fn:concat("slide",$idx,".xml")
+    	return fn:concat(ppt:uri-ppt-slides-dir($dir), $slideFile)
 };
 
 declare function ppt:uri-ppt-slide-rels($dir as xs:string?, $idx as xs:integer) as xs:string
 {
-    let $slideRelsFile := fn:concat("slide",$idx,".xml.rels")
-    return fn:concat( ppt:uri-ppt-slide-rels-dir($dir),$slideRelsFile)
+    	let $slideRelsFile := fn:concat("slide",$idx,".xml.rels")
+    	return fn:concat( ppt:uri-ppt-slide-rels-dir($dir),$slideRelsFile)
 };
 
 declare function ppt:uri-ppt-theme-dir($dir as xs:string?) as xs:string
 {
-     fn:concat(ppt:uri-ppt-dir($dir),"theme/")
+     	fn:concat(ppt:uri-ppt-dir($dir),"theme/")
 };
 
 declare function ppt:uri-ppt-theme-rels-dir($dir as xs:string?) as xs:string
 {
-    fn:concat(ppt:uri-ppt-theme-dir($dir),"_rels/")
+    	fn:concat(ppt:uri-ppt-theme-dir($dir),"_rels/")
 }; 
 
 declare function ppt:uri-ppt-theme($dir as xs:string?, $idx as xs:integer) as xs:string
 {
-    let $themeFile := fn:concat("theme",$idx,".xml")
-    return fn:concat(ppt:uri-ppt-theme-dir($dir), $themeFile)
+    	let $themeFile := fn:concat("theme",$idx,".xml")
+    	return fn:concat(ppt:uri-ppt-theme-dir($dir), $themeFile)
 };
 
 declare function ppt:uri-ppt-theme-rels($dir as xs:string?, $idx as xs:integer) as xs:string
 {
-    let $themeRelsFile := fn:concat("theme",$idx,".xml.rels")
-    return fn:concat( ppt:uri-ppt-theme-rels-dir($dir),$themeRelsFile)
+    	let $themeRelsFile := fn:concat("theme",$idx,".xml.rels")
+    	return fn:concat( ppt:uri-ppt-theme-rels-dir($dir),$themeRelsFile)
 };
 
 declare function ppt:uri-ppt-presentation($dir as xs:string?) as xs:string
 {
-     fn:concat(ppt:uri-ppt-dir($dir),"presentation.xml")
+     	fn:concat(ppt:uri-ppt-dir($dir),"presentation.xml")
 };
 declare function ppt:uri-ppt-pres-props($dir as xs:string?) as xs:string
 {
-     fn:concat(ppt:uri-ppt-dir($dir),"presProps.xml")
+     	fn:concat(ppt:uri-ppt-dir($dir),"presProps.xml")
 };
 declare function ppt:uri-ppt-table-styles($dir as xs:string?) as xs:string
 {
-     fn:concat(ppt:uri-ppt-dir($dir),"tableStyles.xml")
+     	fn:concat(ppt:uri-ppt-dir($dir),"tableStyles.xml")
 };
 declare function ppt:uri-ppt-view-props($dir as xs:string?) as xs:string
 {
-     fn:concat(ppt:uri-ppt-dir($dir),"viewProps.xml")
+     	fn:concat(ppt:uri-ppt-dir($dir),"viewProps.xml")
 };
 (: ===================== END file and dir helpers  ====================== :)
 
 declare function ppt:max-file-id($dir as xs:string*, $type as xs:string*, $depth as xs:string)
 {
-  let $files :=  ppt:package-uris-from-directory($dir,"1")
-  let $numbers := if(fn:empty($files)) then 0
+  	let $files :=  ppt:package-uris-from-directory($dir,"1")
+  	let $numbers := 
+                  if(fn:empty($files)) then 0
                   else
                      for $i in $files
                      let $tmp1 := fn:substring-after($i,fn:concat($dir,$type))
                      let $tmp2 := fn:substring-before($tmp1,".")
                      return xs:integer($tmp2)
-  return fn:max($numbers)
+  	return fn:max($numbers)
 
 };
 
@@ -447,61 +448,62 @@ declare function ppt:max-file-id($dir as xs:string*, $type as xs:string*, $depth
 declare function ppt:max-image-id($dir as xs:string*)
 {
   
-  ppt:max-file-id($dir, "image", "infinity") 
+  	ppt:max-file-id($dir, "image", "infinity") 
 
 };
 
 declare function ppt:max-slide-id($dir as xs:string*)
 {
-  ppt:max-file-id($dir, "slide", "1") 
+  	ppt:max-file-id($dir, "slide", "1") 
 };
 
 declare function ppt:handout-master-theme-ids($hm as xs:string*) as xs:string*
 {
 (:need to findout theme#.xml, so we can remove from pkg :)
-  let $h-rels := ppt:package-uris-from-directory($hm)
-  let $theme-idx := for $rel in $h-rels
+  	let $h-rels := ppt:package-uris-from-directory($hm)
+  	let $theme-idx := 
+                 for $rel in $h-rels
                  let $doc := fn:doc($rel)
                  let $theme := $doc/rel:Relationships/rel:Relationship/@Target
                  let $theme-uri := fn:substring-after($theme,"../theme/")
                  return $theme-uri
-  return $theme-idx
+        return $theme-idx
 };
 
 (:may want a generic fileid function, similar to max :)
 
 declare function ppt:image-id($uri as xs:string) as xs:integer
 {
-  xs:integer(fn:substring-before(fn:substring-after($uri,"image"),"."))
+  	xs:integer(fn:substring-before(fn:substring-after($uri,"image"),"."))
 };
 (: begin related to updating slide.xml.rels ============================ :)
 
 declare function ppt:update-rels-rel($r as node(), $n-idx as xs:integer)
 {
-   if(fn:matches($r/@Target,"slideLayout")) then $r 
-   else if(fn:matches($r/@Target,"image")) then
-    let $target := $r/@Target
-    let $prfx := fn:substring-before($target,"image")
-    let $sfx := fn:substring-after($target,".")
-    let $id := ppt:image-id($target)
-    let $n-targ := fn:replace($target, xs:string($id),xs:string($id + $n-idx))
-    return  element{fn:name($r)} {$r/@* except $r/@Target, attribute Target{$n-targ}}
-   else $r
+   	if(fn:matches($r/@Target,"slideLayout")) then $r 
+   	else if(fn:matches($r/@Target,"image")) then
+    		let $target := $r/@Target
+    		let $prfx := fn:substring-before($target,"image")
+    		let $sfx := fn:substring-after($target,".")
+    		let $id := ppt:image-id($target)
+    		let $n-targ := fn:replace($target, xs:string($id),xs:string($id + $n-idx))
+    		return  element{fn:name($r)} {$r/@* except $r/@Target, attribute Target{$n-targ}}
+   	else $r
 };
 declare function ppt:passthru-rels($x as node(), $idx as xs:integer) as node()*
 {
-   for $i in $x/node() return ppt:dispatch-slide-rels($i, $idx)
+   	for $i in $x/node() return ppt:dispatch-slide-rels($i, $idx)
 };
 
 declare function ppt:dispatch-slide-rels($rels as node(), $new-img-idx as xs:integer) as node()*
 {
-      typeswitch($rels)
-       case text() return $rels
-       (: case document-node() return document{$rels/@*,ppt:passthru-rels($rels, $new-img-idx)} :)
-       case document-node() return document{ppt:passthru-rels($rels, $new-img-idx)}
-       case element(rel:Relationship) return ppt:update-rels-rel($rels, $new-img-idx) 
-       case element(rel:Relationships) return element{fn:name($rels)} {$rels/namespace::*, $rels/@*,passthru-rels($rels, $new-img-idx)}
-       case element() return  element{fn:name($rels)} {$rels/@*,passthru-rels($rels, $new-img-idx)}
+       typeswitch($rels)
+        case text() return $rels
+        (: case document-node() return document{$rels/@*,ppt:passthru-rels($rels, $new-img-idx)} :)
+        case document-node() return document{ppt:passthru-rels($rels, $new-img-idx)}
+        case element(rel:Relationship) return ppt:update-rels-rel($rels, $new-img-idx) 
+        case element(rel:Relationships) return element{fn:name($rels)} {$rels/namespace::*, $rels/@*,passthru-rels($rels, $new-img-idx)}
+        case element() return  element{fn:name($rels)} {$rels/@*,passthru-rels($rels, $new-img-idx)}
        default return $rels
 
 };
@@ -509,7 +511,7 @@ declare function ppt:dispatch-slide-rels($rels as node(), $new-img-idx as xs:int
 (:declare function ppt:upd-slide-rels($orig-slide-rels as element(r:Relationships),$img-targs as xs:string*,$new-img-idx as xs:integer) :)
 declare function ppt:upd-slide-rels($orig-slide-rels as node(),$img-targs as xs:string*,$new-img-idx as xs:integer)
 {
-  ppt:dispatch-slide-rels($orig-slide-rels, $new-img-idx)
+  	ppt:dispatch-slide-rels($orig-slide-rels, $new-img-idx)
  (: fn:doc($orig-slide-rels) :)
 };
 
@@ -525,39 +527,42 @@ declare function ppt:slide-and-relationships($t-pres as xs:string, $s-pres as xs
    don't think we need numbers elsewhere, relationship defined in slide.xml.rels
 :)
 
-let $smap := map:map()
-let $o-slide-dir := ppt:uri-ppt-slides-dir($s-pres)
-let $o-slide-rels-dir := ppt:uri-ppt-slide-rels-dir($s-pres)
-let $orig-slide-name := ppt:uri-ppt-slide($s-pres,$s-idx)
-let $orig-slide-rels:= ppt:uri-ppt-slide-rels($s-pres,$s-idx)
-let $new-slide-name := ppt:uri-ppt-slide((),$start-idx)
-let $new-slide-rels := ppt:uri-ppt-slide-rels((),$start-idx)
+	let $smap := map:map()
+	let $o-slide-dir := ppt:uri-ppt-slides-dir($s-pres)
+	let $o-slide-rels-dir := ppt:uri-ppt-slide-rels-dir($s-pres)
+	let $orig-slide-name := ppt:uri-ppt-slide($s-pres,$s-idx)
+	let $orig-slide-rels:= ppt:uri-ppt-slide-rels($s-pres,$s-idx)
+	let $new-slide-name := ppt:uri-ppt-slide((),$start-idx)
+	let $new-slide-rels := ppt:uri-ppt-slide-rels((),$start-idx)
 
 (: add slide to map :)
-let $slide := map:put($smap, $new-slide-name, $orig-slide-name)
+	let $slide := map:put($smap, $new-slide-name, $orig-slide-name)
 
-let $rels := fn:doc($orig-slide-rels)
-let $targets := $rels/rel:Relationships/rel:Relationship/@Target
-let $u-targs := for $t in $targets
+	let $rels := fn:doc($orig-slide-rels)
+	let $targets := $rels/rel:Relationships/rel:Relationship/@Target
+	let $u-targs := 
+                for $t in $targets
                 let $o-uris := if(fn:matches($t,"slideLayout")) 
                                then $t (: fn:concat(ppt:uri-ppt-dir($s-pres),fn:concat(fn:substring-after($t,"../"))) :)
                                else $t (: fn:replace($t,"\.\./",ppt:uri-ppt-dir($s-pres)) :)
                 return $o-uris
 
 
-let $img-targs := for $u in $u-targs
+	let $img-targs := 
+                  for $u in $u-targs
                   let $image := if(fn:matches($u,"image")) then $u else ()
                   return $image
 
-let $img-count := fn:count($img-targs)
-let $new-img-idx := ppt:max-image-id(ppt:uri-ppt-media-dir($t-pres))
+	let $img-count := fn:count($img-targs)
+	let $new-img-idx := ppt:max-image-id(ppt:uri-ppt-media-dir($t-pres))
 
 (: let $upd-rels := ppt:upd-slide-rels($rels/node(),$img-targs,$new-img-idx) :)
-let $upd-rels := ppt:upd-slide-rels($rels,$img-targs,$new-img-idx)
+	let $upd-rels := ppt:upd-slide-rels($rels,$img-targs,$new-img-idx)
 
 
 (:add images to map:)
-let $images := for $i at $d in $img-targs 
+	let $images := 
+               for $i at $d in $img-targs 
                let $n-idx := ppt:image-id($i)+$new-img-idx
                let $o-img := $i
                let $sfx := fn:substring-after(fn:substring-after($i,"../"),".")
@@ -567,143 +572,119 @@ let $images := for $i at $d in $img-targs
 
 
 (:ok, put new slide.xml.rels xml in map, then test with instance of before fn:doc and zip for final .pptx :)
-let $map-test:= map:put($smap,$new-slide-rels,$upd-rels)
-return $smap (:, $images, $upd-rels) :)
+	let $map-test:= map:put($smap,$new-slide-rels,$upd-rels)
+	return $smap (:, $images, $upd-rels) :)
  (: $smap :) (: <foo>{$o-slide-dir, $o-slide-rels-dir, $orig-slide-name, $orig-slide-rels, $new-slide-name, $new-slide-rels}</foo> :)
 };
 (: ====================:)
 declare function ppt:check-remove-hm($rels as node())
 {
-  if(fn:matches($rels/@Target, "handoutMaster")) then () else $rels
+  	if(fn:matches($rels/@Target, "handoutMaster")) then () else $rels
 };
 declare function ppt:passthru-pres-rels($x as node()) as node()*
 {
-   for $i in $x/node() return ppt:dispatch-pres-rels($i)
+   	for $i in $x/node() return ppt:dispatch-pres-rels($i)
 };
 
 declare function ppt:dispatch-pres-rels($rels as node()) as node()*
 {
-      typeswitch($rels)
-       case text() return $rels
-       case document-node() return document{ppt:passthru-pres-rels($rels)}
-       case element(rel:Relationship) return ppt:check-remove-hm($rels) 
-       case element(rel:Relationships) return element{fn:name($rels)} {$rels/namespace::*, $rels/@*,passthru-pres-rels($rels)} 
-       case element() return  element{fn:name($rels)} {$rels/@*,passthru-pres-rels($rels)}
+       typeswitch($rels)
+        case text() return $rels
+        case document-node() return document{ppt:passthru-pres-rels($rels)}
+        case element(rel:Relationship) return ppt:check-remove-hm($rels) 
+        case element(rel:Relationships) return element{fn:name($rels)} {$rels/namespace::*, $rels/@*,passthru-pres-rels($rels)} 
+        case element() return  element{fn:name($rels)} {$rels/@*,passthru-pres-rels($rels)}
        default return $rels
 
 };
 
 declare function ppt:remove-hm-from-pres-rels($pres-rels as node())
 {
-  ppt:dispatch-pres-rels($pres-rels)
+  	ppt:dispatch-pres-rels($pres-rels)
 };
 (: ====================:)
 
 declare function ppt:rel-ids($rels as element(rel:Relationships))
 {
-   $rels/rel:Relationship/@Id
+   	$rels/rel:Relationship/@Id
 };
 (: ====================:)
 (:given a relationships node, and a type (matches on @Target : handout, slide, etc) returns id as integer :)
 declare function ppt:rels-rel-id($rels as node(), $type as xs:string*)
 {
    (: $rels/r:Relationships/r:Relationship/@Target :)
-    let $hmId :=fn:substring-after($rels/rel:Relationships/rel:Relationship[fn:matches(@Target,$type)]/@Id,"rId")
-    return if((fn:empty($hmId)) or ($hmId eq "")) then () else xs:integer($hmId)
+    	let $hmId :=fn:substring-after($rels/rel:Relationships/rel:Relationship[fn:matches(@Target,$type)]/@Id,"rId")
+    	return if((fn:empty($hmId)) or ($hmId eq "")) then () else xs:integer($hmId)
 };
 (: ====================:)
 declare function ppt:r-id-as-int($rId as xs:string)
 {
-  xs:integer(fn:substring-after($rId,"rId"))
+  	xs:integer(fn:substring-after($rId,"rId"))
 };
 (: ====================:)
 (:rename? adjust regardless of hm presence, will adjust slides with insert of new slide :)
 declare function ppt:check-adjust-hm($rels as node(), $idx as xs:integer*)
 {
-if(fn:empty($idx)) then
-    let $new-rel := if(fn:not(fn:matches($rels/@Target, "slide")))
+	if(fn:empty($idx)) then
+    		let $new-rel := 
+                    if(fn:not(fn:matches($rels/@Target, "slide")))
                     then
-                     let $rId := ppt:r-id-as-int($rels/@Id)
-                     return  element{fn:name($rels)} { attribute Id {fn:concat("rId",$rId+1  ) }, $rels/@* except $rels/@Id}
+                       let $rId := ppt:r-id-as-int($rels/@Id)
+                       return  element{fn:name($rels)} { attribute Id {fn:concat("rId",$rId+1  ) }, $rels/@* except $rels/@Id}
                     else
-                     element{fn:name($rels)} { $rels/@* }
-    return $new-rel 
+                       element{fn:name($rels)} { $rels/@* }
+	    	return $new-rel 
 
 
-else
-let $rId := ppt:r-id-as-int($rels/@Id)
+	else	
+		let $rId := ppt:r-id-as-int($rels/@Id)
 (:have to confirm notes master always after slides :)
-let $new-rel := if($rId >= $idx or fn:matches($rels/@Target,"notesMasters")) then 
-                                       element{fn:name($rels)} { attribute Id {fn:concat("rId",$rId+1  ) }, $rels/@* except $rels/@Id}
-                                    else
-                                       element{fn:name($rels)} { $rels/@* } 
-return $new-rel
+	let $new-rel := 
+		if($rId >= $idx or fn:matches($rels/@Target,"notesMasters")) then 
+			element{fn:name($rels)} { attribute Id {fn:concat("rId",$rId+1  ) }, $rels/@* except $rels/@Id}
+                else
+                        element{fn:name($rels)} { $rels/@* } 
+	return $new-rel
 
 };
 
 declare function ppt:passthru-pres-rels-adjust-hm($x as node(), $idx as xs:integer*) as node()*
 {
-   for $i in $x/node() return ppt:dispatch-pres-rels-adjust-hm($i, $idx)
+   	for $i in $x/node() return ppt:dispatch-pres-rels-adjust-hm($i, $idx)
 };
 
 declare function ppt:dispatch-pres-rels-adjust-hm($rels as node(), $hm-id as xs:integer*) as node()*
 {
-
-      typeswitch($rels)
-       case text() return $rels
-       case document-node() return document{ppt:passthru-pres-rels-adjust-hm($rels,$hm-id)}
-       case element(rel:Relationship) return ppt:check-adjust-hm($rels, $hm-id) 
-       case element(rel:Relationships) return element{fn:name($rels)} {$rels/@*,passthru-pres-rels-adjust-hm($rels,$hm-id)}
-       case element() return  element{fn:name($rels)} {$rels/@*,passthru-pres-rels-adjust-hm($rels,$hm-id)}
+       typeswitch($rels)
+        case text() return $rels
+        case document-node() return document{ppt:passthru-pres-rels-adjust-hm($rels,$hm-id)}
+        case element(rel:Relationship) return ppt:check-adjust-hm($rels, $hm-id) 
+        case element(rel:Relationships) return element{fn:name($rels)} {$rels/@*,passthru-pres-rels-adjust-hm($rels,$hm-id)}
+        case element() return  element{fn:name($rels)} {$rels/@*,passthru-pres-rels-adjust-hm($rels,$hm-id)}
        default return $rels
 };
 
 
 declare function ppt:pres-rels-adjust-hm($pres-rels as node(), $hm-id as xs:integer*)
 {
-  ppt:dispatch-pres-rels-adjust-hm($pres-rels, $hm-id)
+	ppt:dispatch-pres-rels-adjust-hm($pres-rels, $hm-id)
 
 };
 
 
 (: ====================:)
-declare function ppt:insert-ppt-rels-slide-rel-ORIGINAL($pres-rels as node()*, $start-idx as xs:integer, $hm-id as xs:integer)
-{
-
-(: $pres-rels/r:Relationships :)
-
-    let $non-slide-rels := $pres-rels/rel:Relationships/rel:Relationship[fn:not(fn:matches(@Target,"slide\d+\.xml"))]
-   
-    (:adjust slides: if slide#.xml >= to $start-idx and < $hm-id, increment slide# and rId for slide# :)
-    let $orig-slide-rels :=  $pres-rels/rel:Relationships/rel:Relationship[fn:matches(@Target,"slide\d+\.xml")]
-    (:adjust here:)
-
-(: let $upd-slide-rels := for $o in $orig-slide-rels :)
-                         
-
- 
-    
-    let $new-slide-rel := element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} (:pos don't matter, just name :)  
-                                  {attribute Id {fn:concat("rId",1+$start-idx  ) },
-                                   attribute Type {"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" },
-                                   attribute Target {fn:concat("slides/slide",$start-idx,".xml"  ) }} 
-
-
-    return element{fn:name($pres-rels/rel:Relationships)} {(($non-slide-rels, $orig-slide-rels, $new-slide-rel))}
-};
-
 declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx as xs:integer, $hm-id as xs:integer*)
 {
 
 (: $pres-rels/r:Relationships :)
 
-    let $non-slide-rels := $pres-rels/rel:Relationships/rel:Relationship[fn:not(fn:matches(@Target,"slide\d+\.xml"))]
+    	let $non-slide-rels := $pres-rels/rel:Relationships/rel:Relationship[fn:not(fn:matches(@Target,"slide\d+\.xml"))]
    
     (:adjust slides: if slide#.xml >= to $start-idx and < $hm-id, increment slide# and rId for slide# :)
-    let $orig-slide-rels :=  $pres-rels/rel:Relationships/rel:Relationship[fn:matches(@Target,"slide\d+\.xml")]
+    	let $orig-slide-rels :=  $pres-rels/rel:Relationships/rel:Relationship[fn:matches(@Target,"slide\d+\.xml")]
     (:adjust here:)
 
-    let $upd-slide-rels := 
+    	let $upd-slide-rels := 
                         for $o in $orig-slide-rels
                         let $slideIdx := xs:integer(fn:substring-before(fn:substring-after($o/@Target, "slides/slide"),".xml"))
                         let $rId := ppt:r-id-as-int($o/@Id)
@@ -723,36 +704,36 @@ declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx
 
  
     
-    let $new-slide-rel := element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} (:pos don't matter, just name :)  
+    	let $new-slide-rel := element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} (:pos don't matter, just name :)  
                                   {attribute Id {fn:concat("rId",1 +$start-idx  ) },
                                    attribute Type {"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" },
                                    attribute Target {fn:concat("slides/slide",$start-idx,".xml"  ) }} 
 
 
-    return  element{fn:name($pres-rels/rel:Relationships)} {($non-slide-rels, $upd-slide-rels, $new-slide-rel)}
+    	return  element{fn:name($pres-rels/rel:Relationships)} {($non-slide-rels, $upd-slide-rels, $new-slide-rel)}
 }; 
 (: ====================:)
 declare function ppt:c-types-remove-theme($ctypes as node(), $theme-ids as xs:string*)
 {
-   ppt:ct-utils-remove-theme($ctypes, $theme-ids) 
+   	ppt:ct-utils-remove-theme($ctypes, $theme-ids) 
   (:  ppt:dispatch-ct-remove-theme($ctypes) :)
 };
 (: ====================:)
 declare function ppt:c-types-remove-hm($ctypes as node())
 {
-  ppt:ct-utils-remove-hm($ctypes)
+  	ppt:ct-utils-remove-hm($ctypes)
 };
 (: ================================== :)
 declare function ppt:c-types-add-slide($c-types , $slide-idx)
 {
-   ppt:ct-utils-add-slide($c-types, $slide-idx)
+   	ppt:ct-utils-add-slide($c-types, $slide-idx)
 };
 
 
 (: ================================== :)
 declare function ppt:c-types-add-types($c-types as node(), $types as xs:string*)
 {
-   ppt:ct-utils-add-defaults($c-types, $types)
+   	ppt:ct-utils-add-defaults($c-types, $types)
   (:<fubar>{$types}</fubar> :)
 };
 (: ================================== :)
@@ -760,17 +741,17 @@ declare function ppt:c-types-add-types($c-types as node(), $types as xs:string*)
 
 declare function ppt:passthru-remove-handoutlst($x as node()) as node()*
 {
-   for $i in $x/node() return ppt:dispatch-remove-handoutlst($i)
+   	for $i in $x/node() return ppt:dispatch-remove-handoutlst($i)
 };
 
 
 declare function ppt:dispatch-remove-handoutlst($pres-xml as node())
 {
-  typeswitch($pres-xml)
-       case text() return $pres-xml
-       case document-node() return   document{ppt:passthru-remove-handoutlst($pres-xml)} 
-       case element(p:handoutMasterIdLst) return ()
-       case element() return  element{fn:name($pres-xml)} {$pres-xml/@*,  $pres-xml/namespace::*,passthru-remove-handoutlst($pres-xml)}
+       typeswitch($pres-xml)
+	case text() return $pres-xml
+       	case document-node() return   document{ppt:passthru-remove-handoutlst($pres-xml)} 
+       	case element(p:handoutMasterIdLst) return ()
+       	case element() return  element{fn:name($pres-xml)} {$pres-xml/@*,  $pres-xml/namespace::*,passthru-remove-handoutlst($pres-xml)}
        default return $pres-xml
 
 };
@@ -778,29 +759,18 @@ declare function ppt:dispatch-remove-handoutlst($pres-xml as node())
 
 declare function ppt:update-nm($pres-xml as node(), $new-nm-id as xs:string*)
 {
-   element{fn:name($pres-xml)} {attribute r:id{ $new-nm-id }}
-
-};
-
-declare function ppt:add-sld-ORIG($pres-xml as node(), $new-sld-id as node())
-{
-  (:$pres-xml:)
- (: need to account for 1- case when two slides have the same id 2-multiple slides will need children rIds updated :)
-  let $children := ($pres-xml/node(), $new-sld-id)
-  let $ordered := for $c in $children
-                  order by $c/@r:id
-                  return $c
-  return  element{fn:name($pres-xml)}  {$pres-xml/@*, $ordered }
+  	element{fn:name($pres-xml)} {attribute r:id{ $new-nm-id }}
 };
 
 declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
 {
   (:$pres-xml:)
  (: need to account for 1- case when two slides have the same id 2-multiple slides will need children rIds updated :)
-  let $children := ($pres-xml/node())
-  let $new-sld-rId := ppt:r-id-as-int($new-sld-id/@r:id)
-  let $upd-sld-id := 1256 
-  let $upd-children := for $c at $n in $children
+  	let $children := ($pres-xml/node())
+  	let $new-sld-rId := ppt:r-id-as-int($new-sld-id/@r:id)
+  	let $upd-sld-id := 1256 
+  	let $upd-children := 
+                       for $c at $n in $children
                        let $rId := ppt:r-id-as-int($c/@r:id)
                        let $slide := if($rId >= $new-sld-rId ) then
                                        let $new-rId := fn:concat("rId",($rId+1))
@@ -810,26 +780,26 @@ declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
                                        (: $c :)
 
                        return $slide
-  let $all-children := ($upd-children, $new-sld-id)              
-  let $ordered-c := for $c in $all-children
-                    order by $c/@r:id
-                    return $c
-  return  element{fn:name($pres-xml)}  {$pres-xml/@*, $ordered-c }
+  	let $all-children := ($upd-children, $new-sld-id)              
+  	let $ordered-c := for $c in $all-children
+        	          order by $c/@r:id
+                          return $c
+  	return element{fn:name($pres-xml)}  {$pres-xml/@*, $ordered-c }
 };
 
 declare function ppt:passthru-add-slide-id($x as node(), $new-sld-id as node(), $new-nm-id as xs:string*) as node()*
 {
-   for $i in $x/node() return ppt:dispatch-add-slide-id($i, $new-sld-id, $new-nm-id)
+   	for $i in $x/node() return ppt:dispatch-add-slide-id($i, $new-sld-id, $new-nm-id)
 };
 
 declare function ppt:dispatch-add-slide-id($pres-xml as node(), $new-sld-id as node(), $new-nm-id as xs:string*) 
 {
-  typeswitch($pres-xml)
-       case text() return $pres-xml
-       case document-node() return   document{ppt:passthru-add-slide-id($pres-xml,$new-sld-id, $new-nm-id)} 
-       case element(p:sldIdLst) return ppt:add-sld($pres-xml, $new-sld-id)
-       case element(p:notesMasterId) return ppt:update-nm($pres-xml, $new-nm-id)
-       case element() return  element{fn:name($pres-xml)} {$pres-xml/@*,  $pres-xml/namespace::*,passthru-add-slide-id($pres-xml,$new-sld-id, $new-nm-id)}
+       typeswitch($pres-xml)
+     	case text() return $pres-xml
+       	case document-node() return   document{ppt:passthru-add-slide-id($pres-xml,$new-sld-id, $new-nm-id)} 
+       	case element(p:sldIdLst) return ppt:add-sld($pres-xml, $new-sld-id)
+       	case element(p:notesMasterId) return ppt:update-nm($pres-xml, $new-nm-id)
+       	case element() return  element{fn:name($pres-xml)} {$pres-xml/@*,  $pres-xml/namespace::*,passthru-add-slide-id($pres-xml,$new-sld-id, $new-nm-id)}
        default return $pres-xml
 
 };
@@ -838,61 +808,58 @@ declare function ppt:dispatch-add-slide-id($pres-xml as node(), $new-sld-id as n
 (:ppt:update-pres-xml($pres-xml,$final-pres-rels, $s-pres, $start-idx) :)
 declare function ppt:update-pres-xml($pres-xml as node(),$final-pres-rels as node(),$src-dir as xs:string, $id as xs:integer)
 {
-  let $pres-no-hm-lst :=  ppt:dispatch-remove-handoutlst($pres-xml) (: , $final-pres-rels, $id) :)
-  let $newid := "256"
-  let $slide-xml :=fn:concat("slide",$id,".xml")
+  	let $pres-no-hm-lst :=  ppt:dispatch-remove-handoutlst($pres-xml) (: , $final-pres-rels, $id) :)
+  	let $newid := "256"
+  	let $slide-xml :=fn:concat("slide",$id,".xml")
 
   (: original rId of slide in original presentation.xml.rels --to check in presentation.xml-- for slide#.xml :)
-  let $src-pres-rel-id := fn:doc(ppt:uri-ppt-rels($src-dir))/rel:Relationships/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id
+  	let $src-pres-rel-id := fn:doc(ppt:uri-ppt-rels($src-dir))/rel:Relationships/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id
   (: original id of slide in original presentation.xml for slide#.xml :)
-  let $src-pres-slide-id := fn:doc(ppt:uri-ppt-presentation($src-dir))/p:presentation/p:sldIdLst/p:sldId[fn:matches(@r:id,$src-pres-rel-id)]/@id
+  	let $src-pres-slide-id := fn:doc(ppt:uri-ppt-presentation($src-dir))/p:presentation/p:sldIdLst/p:sldId[fn:matches(@r:id,$src-pres-rel-id)]/@id
 
   (:now check rId to use in $final-pres-rels :)
-  let $new-pres-rel-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id 
+  	let $new-pres-rel-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id 
 
 (:could be more than one of these, have to account for :)
-  let $new-nm-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Type,"notesMaster")]/@Id  
+  	let $new-nm-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Type,"notesMaster")]/@Id  
 
   (:construct new p:sldId:)
-  let $new-sld-id := element p:sldId{attribute id {$src-pres-slide-id } , attribute r:id { $new-pres-rel-id  } }
+  	let $new-sld-id := element p:sldId{attribute id {$src-pres-slide-id } , attribute r:id { $new-pres-rel-id  } }
 
+	let $new-pres-xml := ppt:dispatch-add-slide-id($pres-no-hm-lst, $new-sld-id, $new-nm-id)  
   
-
-  let $new-pres-xml := ppt:dispatch-add-slide-id($pres-no-hm-lst, $new-sld-id, $new-nm-id)  
-  
-  return $new-pres-xml (:,$new-sld-id, $new-pres-rel-id, $final-pres-rels, $src-pres-rel-id, $src-pres-slide-id, $slide-xml,$src-dir, $id, $pres-no-hm-lst)
-:)
-};
-
-declare function ppt:update-pres-xml-ORIG($pres-xml as node(),$final-pres-rels as node(),$src-dir as xs:string, $id as xs:integer)
-{
-  let $pres-no-hm-lst :=  ppt:dispatch-remove-handoutlst($pres-xml) (: , $final-pres-rels, $id) :)
-  let $newid := "256"
-  let $slide-xml :=fn:concat("slide",$id,".xml")
-
-  (: original rId of slide in original presentation.xml.rels --to check in presentation.xml-- for slide#.xml :)
-  let $src-pres-rel-id := fn:doc(ppt:uri-ppt-rels($src-dir))/rel:Relationships/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id
-  (: original id of slide in original presentation.xml for slide#.xml :)
-  let $src-pres-slide-id := fn:doc(ppt:uri-ppt-presentation($src-dir))/p:presentation/p:sldIdLst/p:sldId[fn:matches(@r:id,$src-pres-rel-id)]/@id
-
-  (:now check rId to use in $final-pres-rels :)
-  let $new-pres-rel-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id 
-
-(:could be more than one of these, have to account for :)
-  let $new-nm-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Type,"notesMaster")]/@Id  
-
-  (:construct new p:sldId:)
-  let $new-sld-id := element p:sldId{attribute id {$src-pres-slide-id } , attribute r:id { $new-pres-rel-id  } }
-
-  
-
-  let $new-pres-xml := ppt:dispatch-add-slide-id($pres-no-hm-lst, $new-sld-id, $new-nm-id)  
-  
-  return $new-pres-xml (:,$new-sld-id, $new-pres-rel-id, $final-pres-rels, $src-pres-rel-id, $src-pres-slide-id, $slide-xml,$src-dir, $id, $pres-no-hm-lst)
+  	return $new-pres-xml (:,$new-sld-id, $new-pres-rel-id, $final-pres-rels, $src-pres-rel-id, $src-pres-slide-id, $slide-xml,$src-dir, $id, $pres-no-hm-lst)
 :)
 };
 
 (: END UPDATE FINAL PRESENTATION.XML ================================== :)
+
+declare function ppt:slide-index-error()
+{
+   	fn:error("Slide Index Out of Bounds Error: ","The index specified for the presentation does not exist.")
+};
+
+declare function ppt:validate-slide-indexes($t-pres as xs:string, $s-pres as xs:string, $s-idx as xs:integer, $start-idx as xs:integer)
+{
+	let $t-slide-confirm := ppt:uri-ppt-slides-dir($t-pres)
+	let $s-slide-confirm := ppt:uri-ppt-slides-dir($s-pres)
+
+	let $tconfirm-cnt := fn:count(ppt:package-uris-from-directory($t-slide-confirm,"1"))
+	let $sconfirm-cnt := fn:count(ppt:package-uris-from-directory($s-slide-confirm,"1"))
+	let $test :=    if($s-idx = 0 or $start-idx = 0) 
+        	        then 
+                	   	fn:false()
+               	        else if($tconfirm-cnt = 0 or $sconfirm-cnt = 0) 
+               		then
+                    		fn:false() 
+              		else if((($start-idx) > $tconfirm-cnt+1 ) or ($s-idx > $sconfirm-cnt ))  
+               		then 
+                   		fn:false() 
+               		else 
+                   		fn:true()
+	return $test
+
+};
 
 
 (:BEGIN  function to merge slide from one deck to another maintaining destination formatting :)
@@ -903,18 +870,21 @@ declare function ppt:update-pres-xml-ORIG($pres-xml as node(),$final-pres-rels a
 
 declare function ppt:merge-slide($t-pres as xs:string, $s-pres as xs:string, $s-idx as xs:integer, $start-idx as xs:integer)
 {
-let $t-uris := ppt:package-uris-from-directory($t-pres)   (:uris for target files :)
-let $s-uris := ppt:package-uris-from-directory($s-pres)   (:uris for source files :)  
+
+let $return := if(ppt:validate-slide-indexes($t-pres, $s-pres, $s-idx, $start-idx)) then
+	let $t-uris := ppt:package-uris-from-directory($t-pres)   (:uris for target files :)
+	let $s-uris := ppt:package-uris-from-directory($s-pres)   (:uris for source files :)  
 
 (:removing themes associated with handoutMasters from uris :)
 (: final themes get their own map :)
-let $uri-handout-master-rels := ppt:uri-ppt-handout-master-rels-dir($t-pres)
+	let $uri-handout-master-rels := ppt:uri-ppt-handout-master-rels-dir($t-pres)
 
 (: following returns theme1.xml, theme2.xml, etc. :)
-let $theme-ids := ppt:handout-master-theme-ids($uri-handout-master-rels)
+	let $theme-ids := ppt:handout-master-theme-ids($uri-handout-master-rels)
 
-let $theme-map := map:map()
-let $theme-uris := for $t in $t-uris
+	let $theme-map := map:map()
+	let $theme-uris := 
+                   for $t in $t-uris
                    let $theme-uri := 
                        if(fn:matches($t,"theme\d+\.xml")) then
                           let $check := if(fn:empty($theme-ids)) then
@@ -931,17 +901,18 @@ let $theme-uris := for $t in $t-uris
 
 (:map for slides and slide relationships (images,etc.) :)
 
-let $slide-map := map:map()
-let $new-slide-map := ppt:slide-and-relationships($t-pres, $s-pres, $s-idx, $start-idx)
+	let $slide-map := map:map()
+	let $new-slide-map := ppt:slide-and-relationships($t-pres, $s-pres, $s-idx, $start-idx)
 
-let $sld-rels-img-types := ppt:sld-rel-image-types($new-slide-map)
+	let $sld-rels-img-types := ppt:sld-rel-image-types($new-slide-map)
 
 (: rest of the uris :)
-let $uri-map := map:map()
+	let $uri-map := map:map()
 
 (:add bulk of uris to map, adjust for new slide#.xml, slide#.xml.rels :)
 (: update slide#.xml, slide#.xml.rels accordingly :)
-let $final-uris := for $t in $t-uris
+	let $final-uris := 
+                   for $t in $t-uris
                    let $upd-uri := 
                    if(fn:matches($t,"theme\d+\.xml")) then ()        (:themes already in own map :)
                    else if(fn:matches($t,"handoutMaster")) then ()   (:removing hm for now:)
@@ -974,40 +945,41 @@ let $final-uris := for $t in $t-uris
                                map:put($uri-map,$upd-uri,$t)
                    return $key
 
-let $t-pres-rels:= fn:doc(ppt:uri-ppt-rels($t-pres))
+	let $t-pres-rels:= fn:doc(ppt:uri-ppt-rels($t-pres))
 
 (: max-slide-id? or just use idx used forplacement, increment accordingly? :)
 (: let $max-slide-id := ppt:max-slide-id(ppt:uri-ppt-slides-dir($t-pres)) :)
 
 (: lets try: add slide t rels, then iterate thru and increase any rId >= to inserted rId of slide, based on this we'll finally update presenation.xml and content-types - then done :)
 
-let $hm-id :=ppt:rels-rel-id($t-pres-rels,"handout")
-let $pres-rels-no-hm := ppt:remove-hm-from-pres-rels($t-pres-rels)
-let $adjusted-for-hm :=  ppt:pres-rels-adjust-hm($pres-rels-no-hm, $hm-id)
+	let $hm-id :=ppt:rels-rel-id($t-pres-rels,"handout")
+	let $pres-rels-no-hm := ppt:remove-hm-from-pres-rels($t-pres-rels)
+	let $adjusted-for-hm :=  ppt:pres-rels-adjust-hm($pres-rels-no-hm, $hm-id)
 
 
-let $final-pres-rels := ppt:insert-ppt-rels-slide-rel($adjusted-for-hm, $start-idx, $hm-id)
+	let $final-pres-rels := ppt:insert-ppt-rels-slide-rel($adjusted-for-hm, $start-idx, $hm-id)
   
 (: now have to update presentation.xml and content-types :)
-let $pres-xml := fn:doc(ppt:uri-ppt-presentation($t-pres))
-let $c-types := fn:doc(ppt:uri-content-types($t-pres))/node()
+	let $pres-xml := fn:doc(ppt:uri-ppt-presentation($t-pres))
+	let $c-types := fn:doc(ppt:uri-content-types($t-pres))/node()
 (:need to pass $start-idx to add slide, update other slides if req'd
        pass theme-ids, remove theme-id
        pass image types - if req'd
        pass slidemasters/slidelayouts -next round
 :)
-let $c-types-no-theme := ppt:c-types-remove-theme($c-types, $theme-ids)
-let $c-types-no-hm := ppt:c-types-remove-hm($c-types-no-theme)
+	let $c-types-no-theme := ppt:c-types-remove-theme($c-types, $theme-ids)
+	let $c-types-no-hm := ppt:c-types-remove-hm($c-types-no-theme)
 
 (: have to account for slide incrementing here based on where inserted :)
-let $upd-ctypes :=  ppt:c-types-add-slide($c-types-no-hm ,$start-idx ) 
+	let $upd-ctypes :=  ppt:c-types-add-slide($c-types-no-hm ,$start-idx ) 
 (:
 let $image-defaults := for $u in $sld-rels-img-types
                        let $ext := $u
                        let $ct := fn:concat("image/",$u)
                        return <Default Extension={$ext} ContentType={$ct}/>
 :)
-let $final-ctypes := if(fn:empty($sld-rels-img-types)) then $upd-ctypes else
+	let $final-ctypes := 
+                     if(fn:empty($sld-rels-img-types)) then $upd-ctypes else
                      ppt:c-types-add-types($upd-ctypes,$sld-rels-img-types)
 
 (:
@@ -1017,47 +989,58 @@ let $final-ctypes := if(fn:empty($image-defaults)) then $upd-ctypes else
 
 (: need to pass xml/node with slideorig id from source-pres :)
 
-let $final-pres := ppt:update-pres-xml($pres-xml,$final-pres-rels, $s-pres, $s-idx) 
+	let $final-pres := ppt:update-pres-xml($pres-xml,$final-pres-rels, $s-pres, $s-idx) 
 
-let $pres-root-map := map:map() 
-let $uri-pres := ppt:uri-ppt-presentation(())
-let $uri-pres-rels := ppt:uri-ppt-rels(())
-let $uri-c-types := ppt:uri-content-types(())
+	let $pres-root-map := map:map() 
+	let $uri-pres := ppt:uri-ppt-presentation(())
+	let $uri-pres-rels := ppt:uri-ppt-rels(())
+	let $uri-c-types := ppt:uri-content-types(())
 
-let $mapupd1 := map:put( $pres-root-map,$uri-pres, $final-pres)
-let $mapupd2 := map:put( $pres-root-map, $uri-pres-rels, $final-pres-rels)
-let $mapupd3 := map:put( $pres-root-map, $uri-c-types, $final-ctypes)
+	let $mapupd1 := map:put( $pres-root-map,$uri-pres, $final-pres)
+	let $mapupd2 := map:put( $pres-root-map, $uri-pres-rels, $final-pres-rels)
+	let $mapupd3 := map:put( $pres-root-map, $uri-c-types, $final-ctypes)
 
-let $finalmaps := ($pres-root-map , $theme-map, $new-slide-map, $uri-map )
-let $parts := for $m in $finalmaps
+	let $finalmaps := ($pres-root-map , $theme-map, $new-slide-map, $uri-map )
+	let $parts := 
+              for $m in $finalmaps
               let $keys := map:keys($m)
               return $keys (: fn:count($keys) :)
 
-let $finaldocs := for $p in $parts
-                  let $val := map:get($finalmaps, $p)
-                  return if($val instance of xs:string) then fn:doc($val) else $val
+	let $finaldocs := 
+              for $p in $parts
+              let $val := map:get($finalmaps, $p)
+              return if($val instance of xs:string) then fn:doc($val) else $val
 
-let $manifest := <parts xmlns="xdmp:zip"> 
-   {
-    for $i in $parts
-    let $part :=  <part>{$i}</part>
-    return $part
-   }
-                 </parts>
+	let $manifest := 
+	<parts xmlns="xdmp:zip"> 
+   	{
+    		for $i in $parts
+    		let $part :=  <part>{$i}</part>
+    		return $part
+   	}
+        </parts>
 
-let $pptx := xdmp:zip-create($manifest, $finaldocs)
-return $pptx
+	let $pptx := xdmp:zip-create($manifest, $finaldocs)
+	return $pptx
+
+else
+	ppt:slide-index-error()
+return $return
+
 }; 
 
 declare function ppt:sld-rel-image-types($map as map:map)
 {
-let $tKeys := map:keys($map)
-let $rels := for $t in $tKeys
-             let $doc := map:get($map,$t)
-             let $ret := if($doc instance of xs:string) then () else $doc
-             return $ret
-let $imgTypes := fn:substring-after(fn:substring-after($rels/rel:Relationships/rel:Relationship[fn:ends-with(@Type,"image")]/@Target,"image"),".")
-return $imgTypes
+	let $tKeys := map:keys($map)
+	let $rels := for $t in $tKeys
+        	     let $doc := map:get($map,$t)
+             	     let $ret := 
+                         if($doc instance of xs:string) then () else $doc
+                     return $ret
+	let $imgTypes := fn:substring-after(fn:substring-after($rels/rel:Relationships/rel:Relationship[fn:ends-with(@Type,"image")]/@Target,"image"),".")
+	return if($imgTypes eq "") then 
+                  () 
+               else $imgTypes
 };
 
 
