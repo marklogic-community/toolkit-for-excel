@@ -39,7 +39,7 @@ declare default element namespace "http://schemas.openxmlformats.org/package/200
 (: ====== BEGIN remove themes from content-types :)
 (: gotta be a better way to do this , to much looping:)
 declare function ppt:ct-remove-theme($ctypes as node(), $theme-ids as xs:string*) as node()*
-{
+{(:BUG!:)
 	if(fn:empty($theme-ids)) then 
 		$ctypes 
 	else
@@ -123,7 +123,7 @@ declare function ppt:ct-utils-remove-hm($ctypes as node())
    	return element{fn:name($ctypes)} {$ctypes/@*, $finalchildren}
 };
 (: ====== END  remove handoutMasters from content-types :)
-
+(:CHANGE add image defaults :)
 declare function  ppt:ct-utils-add-defaults($ctypes as node(), $types as xs:string*)
 {
 	let $children := $ctypes/node()

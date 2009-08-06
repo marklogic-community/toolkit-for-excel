@@ -431,7 +431,7 @@ declare function ppt:uri-ppt-view-props($dir as xs:string?) as xs:string
 (: ===================== END file and dir helpers  ====================== :)
 
 declare function ppt:max-file-id($dir as xs:string*, $type as xs:string*, $depth as xs:string)
-{
+{  (:fn:max on inner flwr, default return is 0 :)
   	let $files :=  ppt:package-uris-from-directory($dir,"1")
   	let $numbers := 
                   if(fn:empty($files)) then 0
@@ -480,6 +480,7 @@ declare function ppt:image-id($uri as xs:string) as xs:integer
 
 declare function ppt:update-rels-rel($r as node(), $n-idx as xs:integer)
 {
+(:only check for image :)
    	if(fn:matches($r/@Target,"slideLayout")) then $r 
    	else if(fn:matches($r/@Target,"image")) then
     		let $target := $r/@Target
@@ -540,6 +541,7 @@ declare function ppt:slide-and-relationships($t-pres as xs:string, $s-pres as xs
 
 	let $rels := fn:doc($orig-slide-rels)
 	let $targets := $rels/rel:Relationships/rel:Relationship/@Target
+(:check this don't need?!?!:)
 	let $u-targs := 
                 for $t in $targets
                 let $o-uris := if(fn:matches($t,"slideLayout")) 
@@ -553,7 +555,7 @@ declare function ppt:slide-and-relationships($t-pres as xs:string, $s-pres as xs
                   let $image := if(fn:matches($u,"image")) then $u else ()
                   return $image
 
-	let $img-count := fn:count($img-targs)
+	(: let $img-count := fn:count($img-targs) :)
 	let $new-img-idx := ppt:max-image-id(ppt:uri-ppt-media-dir($t-pres))
 
 (: let $upd-rels := ppt:upd-slide-rels($rels/node(),$img-targs,$new-img-idx) :)
@@ -568,10 +570,11 @@ declare function ppt:slide-and-relationships($t-pres as xs:string, $s-pres as xs
                let $sfx := fn:substring-after(fn:substring-after($i,"../"),".")
                let $n-img := fn:concat(ppt:uri-ppt-media-dir(()),"image",$n-idx,".",$sfx)
                let $map-update := map:put($smap,$n-img, fn:replace($o-img,"\.\./media/", ppt:uri-ppt-media-dir($s-pres))) 
-               return ppt:image-id($i) 
+               return ppt:image-id($i) (:return map put :) 
 
 
 (:ok, put new slide.xml.rels xml in map, then test with instance of before fn:doc and zip for final .pptx :)
+(:move this up:)
 	let $map-test:= map:put($smap,$new-slide-rels,$upd-rels)
 	return $smap (:, $images, $upd-rels) :)
  (: $smap :) (: <foo>{$o-slide-dir, $o-slide-rels-dir, $orig-slide-name, $orig-slide-rels, $new-slide-name, $new-slide-rels}</foo> :)
@@ -622,7 +625,9 @@ declare function ppt:r-id-as-int($rId as xs:string)
   	xs:integer(fn:substring-after($rId,"rId"))
 };
 (: ====================:)
+
 (:rename? adjust regardless of hm presence, will adjust slides with insert of new slide :)
+(: pluck and reconstruck - forget the typeswitch :)
 declare function ppt:check-adjust-hm($rels as node(), $idx as xs:integer*)
 {
 	if(fn:empty($idx)) then
@@ -768,7 +773,7 @@ declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
  (: need to account for 1- case when two slides have the same id 2-multiple slides will need children rIds updated :)
   	let $children := ($pres-xml/node())
   	let $new-sld-rId := ppt:r-id-as-int($new-sld-id/@r:id)
-  	let $upd-sld-id := 1256 
+  	let $upd-sld-id := 1256 (:rand  uniqueid-generator random-num and incremenet max of //rId:) 
   	let $upd-children := 
                        for $c at $n in $children
                        let $rId := ppt:r-id-as-int($c/@r:id)
@@ -784,6 +789,7 @@ declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
   	let $ordered-c := for $c in $all-children
         	          order by $c/@r:id
                           return $c
+          (: don't use fn:name - nodename?  fn:QName( ) :)
   	return element{fn:name($pres-xml)}  {$pres-xml/@*, $ordered-c }
 };
 
@@ -809,7 +815,7 @@ declare function ppt:dispatch-add-slide-id($pres-xml as node(), $new-sld-id as n
 declare function ppt:update-pres-xml($pres-xml as node(),$final-pres-rels as node(),$src-dir as xs:string, $id as xs:integer)
 {
   	let $pres-no-hm-lst :=  ppt:dispatch-remove-handoutlst($pres-xml) (: , $final-pres-rels, $id) :)
-  	let $newid := "256"
+  	(:let $newid := "256" :)
   	let $slide-xml :=fn:concat("slide",$id,".xml")
 
   (: original rId of slide in original presentation.xml.rels --to check in presentation.xml-- for slide#.xml :)
@@ -859,6 +865,20 @@ declare function ppt:validate-slide-indexes($t-pres as xs:string, $s-pres as xs:
                    		fn:true()
 	return $test
 
+};
+
+declare function ppt:sld-rel-image-types($map as map:map)
+{
+	let $tKeys := map:keys($map)
+	let $rels := for $t in $tKeys
+        	     let $doc := map:get($map,$t)
+             	     let $ret := 
+                         if($doc instance of xs:string) then () else $doc
+                     return $ret
+	let $imgTypes := fn:substring-after(fn:substring-after($rels/rel:Relationships/rel:Relationship[fn:ends-with(@Type,"image")]/@Target,"image"),".")
+	return if($imgTypes eq "") then 
+                  () 
+               else $imgTypes
 };
 
 
@@ -953,10 +973,11 @@ let $return := if(ppt:validate-slide-indexes($t-pres, $s-pres, $s-idx, $start-id
 (: lets try: add slide t rels, then iterate thru and increase any rId >= to inserted rId of slide, based on this we'll finally update presenation.xml and content-types - then done :)
 
 	let $hm-id :=ppt:rels-rel-id($t-pres-rels,"handout")
-	let $pres-rels-no-hm := ppt:remove-hm-from-pres-rels($t-pres-rels)
+(:simplify, remove typeswitch from function :)
+	let $pres-rels-no-hm := ppt:remove-hm-from-pres-rels($t-pres-rels) 
+(:poorly named change!:)
+(:converge following 2 into one function :)
 	let $adjusted-for-hm :=  ppt:pres-rels-adjust-hm($pres-rels-no-hm, $hm-id)
-
-
 	let $final-pres-rels := ppt:insert-ppt-rels-slide-rel($adjusted-for-hm, $start-idx, $hm-id)
   
 (: now have to update presentation.xml and content-types :)
@@ -967,17 +988,14 @@ let $return := if(ppt:validate-slide-indexes($t-pres, $s-pres, $s-idx, $start-id
        pass image types - if req'd
        pass slidemasters/slidelayouts -next round
 :)
+        (:pluck and reconstruct content-types CHANGE!:)
+ (:bottom 4 lines in one function reconstruct-ctypes:)
 	let $c-types-no-theme := ppt:c-types-remove-theme($c-types, $theme-ids)
 	let $c-types-no-hm := ppt:c-types-remove-hm($c-types-no-theme)
-
 (: have to account for slide incrementing here based on where inserted :)
 	let $upd-ctypes :=  ppt:c-types-add-slide($c-types-no-hm ,$start-idx ) 
-(:
-let $image-defaults := for $u in $sld-rels-img-types
-                       let $ext := $u
-                       let $ct := fn:concat("image/",$u)
-                       return <Default Extension={$ext} ContentType={$ct}/>
-:)
+
+
 	let $final-ctypes := 
                      if(fn:empty($sld-rels-img-types)) then $upd-ctypes else
                      ppt:c-types-add-types($upd-ctypes,$sld-rels-img-types)
@@ -1000,15 +1018,30 @@ let $final-ctypes := if(fn:empty($image-defaults)) then $upd-ctypes else
 	let $mapupd2 := map:put( $pres-root-map, $uri-pres-rels, $final-pres-rels)
 	let $mapupd3 := map:put( $pres-root-map, $uri-c-types, $final-ctypes)
 
+(: use one map ,function gather up the map :)
+(:input map , maybe empty() passin, if empty populate, else increment :)
+(:otherfunction to make map of single preso :)
+
 	let $finalmaps := ($pres-root-map , $theme-map, $new-slide-map, $uri-map )
+        return $finalmaps
+
+else
+	ppt:slide-index-error()
+return $return
+
+}; 
+
+declare function ppt:make-package($map as map:map*)
+{
+   
 	let $parts := 
-              for $m in $finalmaps
+              for $m in $map
               let $keys := map:keys($m)
               return $keys (: fn:count($keys) :)
 
 	let $finaldocs := 
               for $p in $parts
-              let $val := map:get($finalmaps, $p)
+              let $val := map:get($map, $p)
               return if($val instance of xs:string) then fn:doc($val) else $val
 
 	let $manifest := 
@@ -1020,29 +1053,10 @@ let $final-ctypes := if(fn:empty($image-defaults)) then $upd-ctypes else
    	}
         </parts>
 
+(:make the map, other function to zip the map :)
 	let $pptx := xdmp:zip-create($manifest, $finaldocs)
 	return $pptx
-
-else
-	ppt:slide-index-error()
-return $return
-
-}; 
-
-declare function ppt:sld-rel-image-types($map as map:map)
-{
-	let $tKeys := map:keys($map)
-	let $rels := for $t in $tKeys
-        	     let $doc := map:get($map,$t)
-             	     let $ret := 
-                         if($doc instance of xs:string) then () else $doc
-                     return $ret
-	let $imgTypes := fn:substring-after(fn:substring-after($rels/rel:Relationships/rel:Relationship[fn:ends-with(@Type,"image")]/@Target,"image"),".")
-	return if($imgTypes eq "") then 
-                  () 
-               else $imgTypes
 };
-
 
 (:END  function to merge slide from one deck to another maintaining destination formatting :)
 (: ====================:)
