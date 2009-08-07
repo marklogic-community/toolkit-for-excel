@@ -584,7 +584,7 @@ declare function ppt:slide-and-relationships($smap as map:map,$t-pres as xs:stri
 declare function ppt:remove-hm-from-pres-rels($pres-rels as node())
 {
      let $children := $pres-rels/node()
-     let $upd-children := for $c in $children
+     let $upd-children := for $c in $children/Relationship
                           let $rel := if(fn:matches($c/@Target, "handoutMaster")) then () else $c
                           return $rel
      return  element{fn:QName("http://schemas.openxmlformats.org/package/2006/relationships","Relationships")} {$pres-rels/@*, $upd-children}
@@ -615,6 +615,7 @@ declare function ppt:r-id-as-int($rId as xs:string)
 (: pluck and reconstruck - forget the typeswitch :)
 declare function ppt:check-adjust-hm($rels as node(), $idx as xs:integer*)
 {
+(:no handout master, so adjust all that aren't slides:)
 	if(fn:empty($idx)) then
     		let $new-rel := 
                     if(fn:not(fn:matches($rels/@Target, "slide")))
@@ -660,7 +661,15 @@ declare function ppt:pres-rels-adjust-hm($pres-rels as node(), $hm-id as xs:inte
 	ppt:dispatch-pres-rels-adjust-hm($pres-rels, $hm-id)
 
 };
+(: ====================:)
+declare function ppt:ppt-rels-insert-slide($pres-rels as node(), $start-idx as xs:integer, $hm-id as xs:integer*)
+{
+(:see above: if $hm-id empty, then update all that aren't slides, else, update notesmaster + onward where $rId >= $hm-id :)
+(:see below: for slides, increment all where $slideIdx >= $start-idx --NOT SLIDEMASTER --:)
 
+(:return updated $pres-rels :)
+<foo/>
+};
 
 (: ====================:)
 declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx as xs:integer, $hm-id as xs:integer*)
@@ -668,10 +677,10 @@ declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx
 
 (: $pres-rels/r:Relationships :)
 
-    	let $non-slide-rels := $pres-rels/rel:Relationships/rel:Relationship[fn:not(fn:matches(@Target,"slide\d+\.xml"))]
+    	let $non-slide-rels := $pres-rels/Relationship[fn:not(fn:matches(@Target,"slide\d+\.xml"))]
    
     (:adjust slides: if slide#.xml >= to $start-idx and < $hm-id, increment slide# and rId for slide# :)
-    	let $orig-slide-rels :=  $pres-rels/rel:Relationships/rel:Relationship[fn:matches(@Target,"slide\d+\.xml")]
+    	let $orig-slide-rels :=  $pres-rels/Relationship[fn:matches(@Target,"slide\d+\.xml")]
     (:adjust here:)
 
     	let $upd-slide-rels := 
@@ -682,7 +691,8 @@ declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx
                          (:assuming all slides before handout master, this increments rId and slide# for all slides after slide inserted at $start-idx :)
                         let $updSlide := if($slideIdx >= $start-idx) (:and $hm-id > $rId):)  then
                                             let $elem :=  
-                                              element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} (:pos don't matter, just name :)  
+                                              (: element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} :)(:pos don't matter, just name :)  
+                                              element{fn:QName("http://schemas.openxmlformats.org/package/2006/relationships","Relationship")} (:pos don't matter, just name :)  
                                               {attribute Id {fn:concat("rId",$rId +1  ) },
                                                attribute Type {"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" },
                                                attribute Target {fn:concat("slides/slide",($slideIdx +1),".xml"  ) }
@@ -694,13 +704,15 @@ declare function ppt:insert-ppt-rels-slide-rel($pres-rels as node()*, $start-idx
 
  
     
-    	let $new-slide-rel := element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} (:pos don't matter, just name :)  
+    	(: let $new-slide-rel := element{fn:name($pres-rels/rel:Relationships/rel:Relationship[1])} (:pos don't matter, just name :)  :)
+    	let $new-slide-rel := element{fn:QName("http://schemas.openxmlformats.org/package/2006/relationships","Relationship")} (:pos don't matter, just name :)  
                                   {attribute Id {fn:concat("rId",1 +$start-idx  ) },
                                    attribute Type {"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" },
                                    attribute Target {fn:concat("slides/slide",$start-idx,".xml"  ) }} 
 
 
-    	return  element{fn:name($pres-rels/rel:Relationships)} {($non-slide-rels, $upd-slide-rels, $new-slide-rel)}
+    	(:return  element{fn:name($pres-rels/rel:Relationships)} {($non-slide-rels, $upd-slide-rels, $new-slide-rel)} :)
+    	return element{fn:QName("http://schemas.openxmlformats.org/package/2006/relationships","Relationships")} {($non-slide-rels, $upd-slide-rels, $new-slide-rel)}
 }; 
 (: ====================:)
 declare function ppt:c-types-remove-theme($ctypes as node(), $theme-ids as xs:string*)
@@ -956,8 +968,13 @@ let $return := if(ppt:validate-slide-indexes($t-pres, $s-pres, $s-idx, $start-id
 
 (:poorly named change!:)
 (:converge following 2 into one function :)
+(:single function -- ppt-rels-insert-slide , inserts entry for new slide and adjusts other rIds :)
+(:pres-rels-adjust-hm name sucks, it adjusts rels, hm doesn't matter :)
 	let $adjusted-for-hm :=  ppt:pres-rels-adjust-hm($pres-rels-no-hm, $hm-id)
 	let $final-pres-rels := ppt:insert-ppt-rels-slide-rel($adjusted-for-hm, $start-idx, $hm-id)
+       (:return ( $adjusted-for-hm, $start-idx, $hm-id, $final-pres-rels ):)
+
+        let $final-pres-rels-NEW := ppt:ppt-rels-insert-slide($pres-rels-no-hm, $start-idx, $hm-id)
   
 (: now have to update presentation.xml and content-types :)
 	let $pres-xml := fn:doc(ppt:uri-ppt-presentation($t-pres))
@@ -979,6 +996,7 @@ let $return := if(ppt:validate-slide-indexes($t-pres, $s-pres, $s-idx, $start-id
                      if(fn:empty($sld-rels-img-types)) then $upd-ctypes else
                      ppt:c-types-add-types($upd-ctypes,$sld-rels-img-types)
 
+(:return (fn:count($sld-rels-img-types),$sld-rels-img-types , $upd-ctypes, $final-ctypes):)
 (:
 let $final-ctypes := if(fn:empty($image-defaults)) then $upd-ctypes else
                      ppt:c-types-add-types($upd-ctypes,$image-defaults)
@@ -1001,6 +1019,7 @@ let $final-ctypes := if(fn:empty($image-defaults)) then $upd-ctypes else
 (:otherfunction to make map of single preso :)
 
 	return $new-map
+     
 
 else
 	ppt:slide-index-error()

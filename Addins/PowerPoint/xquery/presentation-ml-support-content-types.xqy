@@ -126,13 +126,23 @@ declare function ppt:ct-utils-remove-hm($ctypes as node())
 (:CHANGE add image defaults :)
 declare function  ppt:ct-utils-add-defaults($ctypes as node(), $types as xs:string*)
 {
-	let $children := $ctypes/node()
-    	let $new := for $t in $types
-                    let $ext := $t
-                    let $ct := fn:concat("image/",$t)
-                    return element Default {attribute Extension{$ext}, attribute ContentType{$ct}}
+        let $new-types := for $t in $types
+                          let $ext := $t
+                          let $ct := fn:concat("image/",$t)
+                          return element Default {attribute Extension{$ext}, attribute ContentType{$ct}}
+                        
+        let $default  := $ctypes/Default
+        let $all-def := ($new-types,$default)
+   
+        let $dist := fn:distinct-values($all-def/@Extension)
+        let $final-def := for $d in $dist
+                          return $all-def[@Extension = $d][1]
 
-   	return element{fn:name($ctypes)} {$ctypes/@*, $children, $new}
+        
+        let $other  := $ctypes/* except $ctypes/Default
+
+        
+        return element{fn:name($ctypes)} {$ctypes/@*,($final-def,$other)}
 };
 
 
