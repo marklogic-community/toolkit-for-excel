@@ -36,43 +36,35 @@ declare namespace zip="xdmp:zip";
 
 declare default element namespace "http://schemas.openxmlformats.org/package/2006/content-types";
 
-(: ====== BEGIN remove themes from content-types :)
-(: gotta be a better way to do this , to much looping:)
-declare function ppt:ct-remove-theme($ctypes as node(), $theme-ids as xs:string*) as node()*
-{(:BUG!:)
-	if(fn:empty($theme-ids)) then 
-		$ctypes 
-	else
-  		for $t in $theme-ids
-  		let $override := if(fn:ends-with($ctypes/@PartName, $t)) then () else $ctypes 
-  		return $override
 
-};
-
-declare function ppt:passthru-ct-remove-theme($x as node(), $theme-ids as xs:string*) as node()*
+declare function  ppt:ct-utils-update-types($ctypes as node(), $start-idx as xs:integer,$types as xs:string*, $theme-ids as xs:string*)
 {
-   	for $i in $x/node() return ppt:dispatch-ct-remove-theme($i, $theme-ids)
+
+    let $ctypes-no-theme := ppt:ct-utils-remove-themes($ctypes,$theme-ids)
+    let $ctypes-no-hm := ppt:ct-utils-remove-hm($ctypes)
+    let $upd-ctypes := ppt:ct-utils-add-slide($ctypes-no-hm,$start-idx)
+    let $final-ctypes := if(fn:empty($types)) then 
+                             $upd-ctypes 
+                         else
+                             ppt:ct-utils-add-defaults($upd-ctypes,$types)
+    
+    return $final-ctypes
 };
 
-declare function ppt:dispatch-ct-remove-theme($ctypes as node(), $theme-ids as xs:string*) as node()*
+declare function ppt:ct-utils-remove-themes($ctypes as node(),$theme-ids as xs:string*)
 {
-       typeswitch($ctypes)
-       	case text() return $ctypes
-       	case document-node() return   document{ppt:passthru-ct-remove-theme($ctypes, $theme-ids)} 
-       	case element(types:Override) return ppt:ct-remove-theme($ctypes, $theme-ids) 
-       	case element() return  element{fn:name($ctypes)} {$ctypes/@*,passthru-ct-remove-theme($ctypes, $theme-ids)}
-       default return $ctypes
-
+     let $children := $ctypes/node()
+     let $themes  := $ctypes/Override[fn:matches(@PartName,"theme\d+\.xml?")]
+     let $override := $ctypes/Override[fn:not(fn:matches(@PartName,"theme\d+\.xml?"))]
+     let $default := $ctypes/Default
+   
+     let $upd-themes := for $t in $themes
+                         return if(fn:substring-after($t/@PartName,"/ppt/theme/") = $theme-ids) then () else $t
+     
+    
+     return element{fn:name($ctypes)} {$ctypes/@*, $upd-themes, $override, $default}
 };
 
-declare function  ppt:ct-utils-remove-theme($ctypes as node(), $theme-ids as xs:string*)
-{
-  	ppt:dispatch-ct-remove-theme($ctypes, $theme-ids)
-};
-
-(: ====== END remove themes from content-types :)
-
-(: ====== BEGIN add slide  to content-types :)
 declare function ppt:ct-utils-add-slide($ctypes as node(), $slide-idx as xs:integer)
 {
 	let $slidename := fn:concat("/ppt/slides/slide",$slide-idx,".xml")
@@ -99,17 +91,11 @@ declare function ppt:ct-utils-add-slide($ctypes as node(), $slide-idx as xs:inte
                                                            else
                                                              $s
                                             return $finSld
-                   	return  element{fn:name($ctypes)} {$ctypes/@*, $defaults, $non-slide-types,$upd-slide-types, $overrideelem} (:,$pngDefTest} :)
-                           
-                  
-                  (: () :)
+                   	return  element{fn:name($ctypes)} {$ctypes/@*, $defaults, $non-slide-types,$upd-slide-types, $overrideelem} 
 
-	return $final (: ($overrideelem, $test, $ctypes) :)
+	return $final 
 
-(: <Override PartName="/ppt/slides/slide1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/> :)
-  (: ($slide-idx, $ctypes) :)
 };
-(: ====== END add slide to content-types :)
 
 (: ====== BEGIN remove handoutMasters from content-types :)
 declare function ppt:ct-utils-remove-hm($ctypes as node())

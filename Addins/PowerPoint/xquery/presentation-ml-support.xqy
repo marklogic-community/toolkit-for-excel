@@ -653,28 +653,9 @@ return element{fn:QName("http://schemas.openxmlformats.org/package/2006/relation
 };
 
 (: ====================:)
-declare function ppt:c-types-remove-theme($ctypes as node(), $theme-ids as xs:string*)
+declare function ppt:update-c-types($c-types as node(), $slide-idx as xs:integer,$types as xs:string*, $theme-ids as xs:string*)
 {
-   	ppt:ct-utils-remove-theme($ctypes, $theme-ids) 
-  (:  ppt:dispatch-ct-remove-theme($ctypes) :)
-};
-(: ====================:)
-declare function ppt:c-types-remove-hm($ctypes as node())
-{
-  	ppt:ct-utils-remove-hm($ctypes)
-};
-(: ================================== :)
-declare function ppt:c-types-add-slide($c-types , $slide-idx)
-{
-   	ppt:ct-utils-add-slide($c-types, $slide-idx)
-};
-
-
-(: ================================== :)
-declare function ppt:c-types-add-types($c-types as node(), $types as xs:string*)
-{
-   	ppt:ct-utils-add-defaults($c-types, $types)
-  (:<fubar>{$types}</fubar> :)
+        ppt:ct-utils-update-types($c-types, $slide-idx, $types, $theme-ids)
 };
 (: ================================== :)
 (: BEGIN UPDATE FINAL PRESENTATION.XML ================================== :)
@@ -869,7 +850,6 @@ let $return := if(ppt:validate-slide-indexes($t-pres, $s-pres, $s-idx, $start-id
    slide#.xml and slide#.xml.rels updated accordingly
 :)
 
-
 	let $final-uris := 
                    for $t in $t-uris
                    let $upd-uri := 
@@ -916,29 +896,9 @@ let $return := if(ppt:validate-slide-indexes($t-pres, $s-pres, $s-idx, $start-id
 (: now have to update presentation.xml and content-types :)
 	let $pres-xml := fn:doc(ppt:uri-ppt-presentation($t-pres))
 	let $c-types := fn:doc(ppt:uri-content-types($t-pres))/node()
-(:need to pass $start-idx to add slide, update other slides if req'd
-       pass theme-ids, remove theme-id
-       pass image types - if req'd
-       pass slidemasters/slidelayouts -next round
-:)
-        (:pluck and reconstruct content-types CHANGE!:)
- (:bottom 4 lines in one function reconstruct-ctypes:)
+        
+        let $final-ctypes := ppt:update-c-types($c-types, $start-idx, $sld-rels-img-types, $theme-ids)
 
-	let $c-types-no-theme := ppt:c-types-remove-theme($c-types, $theme-ids)
-	let $c-types-no-hm := ppt:c-types-remove-hm($c-types-no-theme)
-(: have to account for slide incrementing here based on where inserted :)
-	let $upd-ctypes :=  ppt:c-types-add-slide($c-types-no-hm ,$start-idx ) 
-
-
-	let $final-ctypes := 
-                     if(fn:empty($sld-rels-img-types)) then $upd-ctypes else
-                     ppt:c-types-add-types($upd-ctypes,$sld-rels-img-types)
-
-(:return (fn:count($sld-rels-img-types),$sld-rels-img-types , $upd-ctypes, $final-ctypes):)
-(:
-let $final-ctypes := if(fn:empty($image-defaults)) then $upd-ctypes else
-                     ppt:c-types-add-types($upd-ctypes,$image-defaults)
-:)
 
 (: need to pass xml/node with slideorig id from source-pres :)
 
@@ -952,11 +912,9 @@ let $final-ctypes := if(fn:empty($image-defaults)) then $upd-ctypes else
 	let $mapupd2 := map:put( $new-map, $uri-pres-rels, $final-pres-rels)
 	let $mapupd3 := map:put( $new-map, $uri-c-types, $final-ctypes)
 
-(: use one map ,function gather up the map :)
-(:input map , maybe empty() passin, if empty populate, else increment :)
-(:otherfunction to make map of single preso :)
-
 	return $new-map
+(:return (fn:count($final-ctypes-NEW/node()), fn:count($final-ctypes/node())):)
+(: return ($final-ctypes-NEW, $final-ctypes) :)
      
 
 else
