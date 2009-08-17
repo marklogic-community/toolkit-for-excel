@@ -234,6 +234,7 @@ declare function ppt:uri-content-types($dir as xs:string?) as xs:string
 {
 	fn:concat($dir,"[Content_Types].xml")
 };
+
 declare function ppt:uri-rels-dir($dir as xs:string?) as xs:string
 {
   	fn:concat($dir,"_rels/")
@@ -416,14 +417,17 @@ declare function ppt:uri-ppt-presentation($dir as xs:string?) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"presentation.xml")
 };
+
 declare function ppt:uri-ppt-pres-props($dir as xs:string?) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"presProps.xml")
 };
+
 declare function ppt:uri-ppt-table-styles($dir as xs:string?) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"tableStyles.xml")
 };
+
 declare function ppt:uri-ppt-view-props($dir as xs:string?) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"viewProps.xml")
@@ -441,7 +445,19 @@ declare function ppt:uri-ppt-handout-master-rels-map($pkg-map as map:map)
    return $hms
 
 };
+
 (: ===================== END MAP file and dir helpers  ====================== :)
+
+declare function ppt:map-update($map1 as map:map, $map2 as map:map)
+{
+        let $keys := map:keys($map1)
+        let $slide-upd := for $k in $keys
+                          let $kval := map:get($map1, $k)
+                          return map:put($map2, $k, $kval)
+        return $slide-upd
+
+};
+
 declare function ppt:map-max-image-id($pkg as map:map)
 {
    let $keys := map:keys($pkg)
@@ -488,7 +504,8 @@ declare function ppt:handout-master-theme-idx($hm-rels as xs:string*)
     return $theme-idx
                    
 };
-declare function ppt:handout-master-theme-ids($hm as xs:string*) as xs:string*
+
+(:declare function ppt:handout-master-theme-ids($hm as xs:string*) as xs:string*
 {
 (:need to findout theme#.xml, so we can remove from pkg :)
   	let $h-rels := ppt:package-uris-from-directory($hm)
@@ -500,6 +517,7 @@ declare function ppt:handout-master-theme-ids($hm as xs:string*) as xs:string*
                  return $theme-uri
         return $theme-idx
 };
+:)
 
 (:may want a generic fileid function, similar to max :)
 
@@ -599,33 +617,52 @@ declare function ppt:map-slide-and-relationships($to-pkg-map as map:map, $from-p
                                                 ()
                                return $s-rel-uri
       
-      
-        let $slide-upd := for $s in $slide-uris
+     (:need to loop thru, generate key, val pairs, then loop thru those to add to map; currently overwrite map with new key, when go to grab val with subsequent key, its been overwritten!:)
+        
+        let $upd-map1 := map:map()
+        let $slide-upd-map := for $s in $slide-uris
                           (:want to increment keys, not values as they point to actual urls :) 
                             let $key-idx := xs:integer(fn:substring-before(fn:substring-after($s,"slides/slide"),".xml"))
                             let $orig-slide-val := map:get($to-pkg-map,$s) 
                                      
                             let $new-key-pfx := fn:replace($s,"slide\d+\.xml$","")
                             let $final-key     := if($key-idx >= $to-idx) then
-                                                   fn:concat($new-key-pfx,"slide",$key-idx+1,".xml")
+                                                   fn:concat($new-key-pfx,"slide",($key-idx+1),".xml")
                                                  else $s
 
-                            return map:put($to-pkg-map , $final-key, $orig-slide-val)
-                        
-        let $slide-rel-upd := for $sr in $slide-rel-uris
+                            let $finmap :=  map:put($upd-map1 , $final-key, $orig-slide-val)
+                            return  (: $finmap :) <FOO>{($s, $final-key, $orig-slide-val, $upd-map1)}</FOO>
+   
+         (:let $upd-keys1 := map:keys($upd-map1):)
+         let $slide-upd := ppt:map-update($upd-map1, $to-pkg-map)
+         (:let $slide-upd := for $u1 in $upd-keys1
+                           let $u1val := map:get($upd-map1, $u1)
+                           return map:put($to-pkg-map, $u1, $u1val) :)
+   
+         let $upd-map2 := map:map()
+         let $slide-rel-upd-map := for $sr in $slide-rel-uris
                               let $key-idx := xs:integer(fn:substring-before(fn:substring-after($sr,"_rels/slide"),".xml.rels"))
                               let $orig-slide-rel-val := map:get($to-pkg-map,$sr)
                               let $new-key-pfx := fn:replace($sr,"slide\d+\.xml.rels$","")
                               let $final-rel-key     := if($key-idx >= $to-idx) then
-                                                           fn:concat($new-key-pfx,"slide",$key-idx+1,".xml.rels")
+                                                           fn:concat($new-key-pfx,"slide",($key-idx+1),".xml.rels")
                                                         else $sr
-                              return map:put($to-pkg-map , $final-rel-key, $orig-slide-rel-val)
+                              return map:put($upd-map2 , $final-rel-key, $orig-slide-rel-val)
 
-(:now we've incremented, so overwrite existing with added :) 
+         (:let $upd-keys2 := map:keys($upd-map2):)
+         let $slide-rel-upd := ppt:map-update($upd-map2,$to-pkg-map)
+         (:let $slide-rel-upd := for $u2 in $upd-keys2
+                               let $u2val := map:get($upd-map2, $u2)
+                               return map:put($to-pkg-map, $u2, $u2val) :)
+   
+
+(:now we've incremented, so overwrite existing with added :)
+
         let $map-rels :=  map:put($to-pkg-map,$new-slide-rels,$upd-rels)
         let $map-slide := map:put($to-pkg-map, $new-slide-name, $orig-slide-name)
 
-return $to-pkg-map
+return (: $slide-upd-map :)  $to-pkg-map
+ (: ( $slide-upd, $new-slide-name, $orig-slide-name, $to-pkg-map) :) 
 
 };
 
@@ -763,6 +800,11 @@ return element{fn:QName("http://schemas.openxmlformats.org/package/2006/relation
 };
 
 (: ====================:)
+(:new function reqd as I switched theme1.xml, theme2.xml ... themeN.xml to 1,2...N :)
+declare function ppt:update-c-types-NEW($c-types as node(), $slide-idx as xs:integer,$types as xs:string*, $theme-ids as xs:string*)
+{
+        ppt:ct-utils-update-types-NEW($c-types, $slide-idx, $types, $theme-ids)
+};
 declare function ppt:update-c-types($c-types as node(), $slide-idx as xs:integer,$types as xs:string*, $theme-ids as xs:string*)
 {
         ppt:ct-utils-update-types($c-types, $slide-idx, $types, $theme-ids)
@@ -797,7 +839,7 @@ declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
 {
   (:$pres-xml:)
  (: need to account for 1- case when two slides have the same id 2-multiple slides will need children rIds updated :)
-  	let $children := ($pres-xml/node())
+  	let $children := $pres-xml/node()
   	let $new-sld-rId := ppt:r-id-as-int($new-sld-id/@r:id)
   	let $upd-sld-id := 1256 (:rand  uniqueid-generator random-num and incremenet max of //rId:) 
   	let $upd-children := 
@@ -947,7 +989,7 @@ declare function ppt:sld-rel-image-types($map as map:map)
 (: $s-idx  := 2                    index of slide in source to copy to target :)
 (: $start-idx := 2                 insertion index of target presentation :)
 
-declare function ppt:merge-slide($pkg-map as map:map?,$t-pres as xs:string, $s-pres as xs:string, $s-idx as xs:integer, $start-idx as xs:integer)
+(:declare function ppt:merge-slide($pkg-map as map:map?,$t-pres as xs:string, $s-pres as xs:string, $s-idx as xs:integer, $start-idx as xs:integer)
 {
 
 	let $doc-map := if(fn:empty($pkg-map)) then map:map() else $pkg-map
@@ -1060,6 +1102,7 @@ else
 return $return
 
 };
+:)
 (:===============================================================================================:)
 (:===============================================================================================:)
 (:===============================================================================================:)
@@ -1078,12 +1121,12 @@ declare function ppt:merge-slide-two($to-pkg-map as map:map?,$from-pres as xs:st
 {
  let $return := if(ppt:validate-slide-indexes-map($to-pkg-map, $from-pres, $from-idx, $insert-idx)) then
 
- let $to-uris := map:keys($to-pkg-map)                                     (:uris for to files    :)
- let $from-uris(:s-pres:) := ppt:package-uris-from-directory($from-pres)   (:uris for from files  :) 
- let $uri-handout-master-rels := ppt:uri-ppt-handout-master-rels-map($to-pkg-map)
- let $theme-ids := ppt:handout-master-theme-idx($uri-handout-master-rels)
+        let $to-uris := map:keys($to-pkg-map)                                     (:uris for to files    :)
+        let $from-uris(:s-pres:) := ppt:package-uris-from-directory($from-pres)   (:uris for from files  :) 
+        let $uri-handout-master-rels := ppt:uri-ppt-handout-master-rels-map($to-pkg-map) (:return handoutMaster from map :)
+        let $theme-ids := ppt:handout-master-theme-idx($uri-handout-master-rels) (:return indices for themes related to handoutMaster - 1,2..N :)
 
- (:remove themes associated with handoutmaster from map:)
+        (:remove themes associated with handoutmaster from map:)
  	let $theme-uris := 
                    for $t in $to-uris
                    let $theme-uri := 
@@ -1092,7 +1135,7 @@ declare function ppt:merge-slide-two($to-pkg-map as map:map?,$from-pres as xs:st
                                            ()
                                         else
                                         for $id in $theme-ids
-                                        let $x := if(fn:matches($t,fn:concat("theme",$id,".xml","$"))) then 
+                                        let $x := if(fn:matches($t,fn:concat("theme",$id,".xml"))) then 
                                                     map:delete($to-pkg-map,$t)
                                                    else 
                                                      ()
@@ -1100,124 +1143,50 @@ declare function ppt:merge-slide-two($to-pkg-map as map:map?,$from-pres as xs:st
                           return $check
                        else ()
                    return $theme-uri
-
+         
+        (:remove handoutMaster :)      
+        let $remove-hms := for $to in $to-uris
+                           return if(fn:matches($to,"handoutMaster")) then 
+                                     map:delete($to-pkg-map, $to)
+                           else () 
+ 
+        (:inserts new slide, slide.xml.rels, and images, adjusting other slide #s appropriately :)
         let $new-slide-map := ppt:map-slide-and-relationships($to-pkg-map, $from-pres, $from-idx, $insert-idx)
 
- return  ($from-idx, $insert-idx,$new-slide-map) (:, $to-pkg-map, fn:count($theme-ids),$theme-uris, $theme-ids, $uri-handout-master-rels) :)
+        let $sld-rels-img-types := ppt:sld-rel-image-types($new-slide-map)
+
+        (:update presentation.xml.rels :)
+        let $to-pres-rels-val:= map:get($new-slide-map,ppt:uri-ppt-rels(()))
+        (:check for uri or node val in map:)
+        let $to-pres-rels := if($to-pres-rels-val instance of xs:string) then fn:doc($to-pres-rels-val) else $to-pres-rels-val                         
+        let $pres-rels-no-hm := ppt:remove-hm-from-pres-rels($to-pres-rels)
+        let $final-pres-rels := ppt:ppt-rels-insert-slide($pres-rels-no-hm, $insert-idx)
+        
+        (:update [Content_Types].xml :) 
+        let $c-types-val := map:get($new-slide-map,ppt:uri-content-types(()))
+        let $c-types := if($c-types-val instance of xs:string) then fn:doc($c-types-val)/node() else $c-types-val
+        let $final-ctypes := ppt:update-c-types-NEW($c-types, $insert-idx, $sld-rels-img-types, $theme-ids)
+
+        (:update presentation.xml :)
+        let $pres-xml-val := map:get($new-slide-map,ppt:uri-ppt-presentation(()))
+        let $pres-xml := if($pres-xml-val instance of xs:string) then fn:doc($pres-xml-val) else $pres-xml-val
+        let $final-pres := ppt:update-pres-xml($pres-xml,$final-pres-rels, $from-pres, $from-idx)
+
+        (:add 3 updates above to map:)
+        let $mapupd1 := map:put( $new-slide-map, ppt:uri-ppt-presentation(()), $final-pres)
+	let $mapupd2 := map:put( $new-slide-map, ppt:uri-ppt-rels(()), $final-pres-rels)
+	let $mapupd3 := map:put( $new-slide-map, ppt:uri-content-types(()), $final-ctypes)
+
+ return $new-slide-map
+
+(:($pres-xml, $c-types, $final-ctypes, $final-pres-rels, $sld-rels-img-types, $from-idx, $insert-idx,$new-slide-map):)
+ (:, $to-pkg-map, fn:count($theme-ids),$theme-uris, $theme-ids, $uri-handout-master-rels) :)
 
 
  else
   ppt:slide-index-error()
 
  return $return
-(:
-let $return := if(ppt:validate-slide-indexes($t-pres, $from-pres, $from-idx, $insert-idx)) then
-	let $t-uris := ppt:package-uris-from-directory($t-pres)   (:uris for target files :)
-	let $s-uris := ppt:package-uris-from-directory($from-pres)   (:uris for source files :)  
-
-(:handoutMasters directory :)
-	let $uri-handout-master-rels := ppt:uri-ppt-handout-master-rels-dir($t-pres)
-
-(:list of themes --theme#.xml-- associated with handoutMasters that we need to remove :)
-	let $theme-ids := ppt:handout-master-theme-ids($uri-handout-master-rels)
-
-	let $theme-uris := 
-                   for $t in $t-uris
-                   let $theme-uri := 
-                       if(fn:matches($t,"theme\d+\.xml")) then
-                          let $check := if(fn:empty($theme-ids)) then
-                                        fn:substring-after($t,$t-pres) 
-                                        else
-                                        for $id in $theme-ids
-                                        let $x := if(fn:matches($t,fn:concat($id,"$"))) then () 
-                                                 else
-                                                 fn:substring-after($t,$t-pres)  
-                                       return $x
-                          return $check
-                       else ()
-(:add themes to keep to map:)           
-                   return if(fn:empty($theme-uri))then () else map:put($to-pkg-map,$theme-uri,$t)
-
-
-	let $new-slide-map := ppt:slide-and-relationships($to-pkg-map, $t-pres, $from-pres, $from-idx, $insert-idx)
-	let $sld-rels-img-types := ppt:sld-rel-image-types($to-pkg-map)
-
-(: adding all uris EXCEPT themes, added slide --both added to map above
-                          Content_Types, presentation.xml.rels, presentation.xml -- added to map after these r
-   slide#.xml and slide#.xml.rels updated accordingly
-:)
-
-	let $final-uris := 
-                   for $t in $t-uris
-                   let $upd-uri := 
-                   if(fn:matches($t,"theme\d+\.xml")) then ()                 (:themes already in own map :)
-                   else if(fn:matches($t,"handoutMaster")) then ()            (:removing hm for now:)
-                   else if(fn:ends-with($t,"[Content_Types].xml")) then ()    (:added below:) 
-                   else if(fn:ends-with($t,"presentation.xml")) then ()       (:added below:) 
-                   else if(fn:ends-with($t,"presentation.xml.rels")) then ()  (:added below:) 
-                   
-                   else if(fn:matches($t,"slide\d+\.xml$")) then
-                     let $slideoriguri := fn:replace($t,"slide\d+\.xml$","")
-                     let $newuri := fn:substring-after($slideoriguri,$t-pres)
-                     let $slideoname := fn:substring-after($t,$slideoriguri)
-                     let $slideidx := fn:substring-before(fn:substring-after($slideoname,"slide",""),".xml","")
-                     let $slideint := xs:integer($slideidx)
-                     let $final := if($slideint >= $insert-idx)
-                                                      then fn:concat($newuri,"slide",$slideint+1,".xml")
-                                                    else fn:concat($newuri,$slideoname)
-                     return $final
-                   else if(fn:matches($t,"slide\d+\.xml.rels$")) then
-                     let $slideoriguri := fn:replace($t,"slide\d+\.xml.rels$","")
-                     let $newuri := fn:substring-after($slideoriguri,$t-pres)
-                     let $slideoname := fn:substring-after($t,$slideoriguri)
-                     let $slideidx := fn:substring-before(fn:substring-after($slideoname,"slide",""),".xml.rels","")
-                     let $slideint := xs:integer($slideidx)
-                     let $final := if($slideint >= $insert-idx)
-                                                      then fn:concat($newuri,"slide",$slideint+1,".xml.rels")
-                                                    else fn:concat($newuri,$slideoname)
-                     return $final
-                   else fn:substring-after($t,$t-pres)                   
-                   let $key := if(fn:empty($upd-uri)) then () else
-                               map:put($to-pkg-map,$upd-uri,$t)
-                   return $key
-
-	let $t-pres-rels:= fn:doc(ppt:uri-ppt-rels($t-pres))
-
-(:rId for handoutMaster in presentation.xml.rels :)
-(:removes handoutmaster entry from presentation.xml.rels :)
-	let $pres-rels-no-hm := ppt:remove-hm-from-pres-rels($t-pres-rels) 
-
-(:==converged pres-rels-adjust-hm, insert-ppt-rels-slide-rel  into one function :)
-        let $final-pres-rels := ppt:ppt-rels-insert-slide($pres-rels-no-hm, $insert-idx)
- 
-(: now have to update presentation.xml and content-types :)
-	let $pres-xml := fn:doc(ppt:uri-ppt-presentation($t-pres))
-	let $c-types := fn:doc(ppt:uri-content-types($t-pres))/node()
-        
-        let $final-ctypes := ppt:update-c-types($c-types, $insert-idx, $sld-rels-img-types, $theme-ids)
-
-
-(: need to pass xml/node with slideorig id from source-pres :)
-
-	let $final-pres := ppt:update-pres-xml($pres-xml,$final-pres-rels, $from-pres, $from-idx) 
-
-	let $uri-pres := ppt:uri-ppt-presentation(())
-	let $uri-pres-rels := ppt:uri-ppt-rels(())
-	let $uri-c-types := ppt:uri-content-types(())
-
-	let $mapupd1 := map:put( $to-pkg-map,$uri-pres, $final-pres)
-	let $mapupd2 := map:put( $to-pkg-map, $uri-pres-rels, $final-pres-rels)
-	let $mapupd3 := map:put( $to-pkg-map, $uri-c-types, $final-ctypes)
-
-	return $to-pkg-map
-(:return (fn:count($final-ctypes-NEW/node()), fn:count($final-ctypes/node())):)
-(: return ($final-ctypes-NEW, $final-ctypes) :)
-     
-
-else
-	ppt:slide-index-error()
-return $return
-:)
 
 }; 
 

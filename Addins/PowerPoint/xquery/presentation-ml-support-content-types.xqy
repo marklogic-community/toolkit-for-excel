@@ -41,15 +41,44 @@ declare function  ppt:ct-utils-update-types($ctypes as node(), $start-idx as xs:
 {
 
     let $ctypes-no-theme := ppt:ct-utils-remove-themes($ctypes,$theme-ids)
-    let $ctypes-no-hm := ppt:ct-utils-remove-hm($ctypes)
+    let $ctypes-no-hm := ppt:ct-utils-remove-hm($ctypes-no-theme)
     let $upd-ctypes := ppt:ct-utils-add-slide($ctypes-no-hm,$start-idx)
     let $final-ctypes := if(fn:empty($types)) then 
                              $upd-ctypes 
                          else
-                             ppt:ct-utils-add-defaults($upd-ctypes,$types)
+                             ppt:ct-utils-add-img-defaults($upd-ctypes,$types)
     
     return $final-ctypes
 };
+
+declare function  ppt:ct-utils-update-types-NEW($ctypes as node(), $start-idx as xs:integer,$types as xs:string*, $theme-ids as xs:string*)
+{
+
+    let $ctypes-no-theme := ppt:ct-utils-remove-themes-NEW($ctypes,$theme-ids)
+    let $ctypes-no-hm := ppt:ct-utils-remove-hm($ctypes-no-theme)
+    let $upd-ctypes := ppt:ct-utils-add-slide($ctypes-no-hm,$start-idx)
+    let $final-ctypes := if(fn:empty($types)) then 
+                             $upd-ctypes 
+                         else
+                             ppt:ct-utils-add-img-defaults($upd-ctypes,$types)
+    
+    return $final-ctypes 
+};
+
+declare function ppt:ct-utils-remove-themes-NEW($ctypes as node(),$theme-ids as xs:string*)
+{
+     let $children := $ctypes/node()
+     let $themes  := $ctypes/Override[fn:matches(@PartName,"theme\d+\.xml?")]
+     let $override := $ctypes/Override[fn:not(fn:matches(@PartName,"theme\d+\.xml?"))]
+     let $default := $ctypes/Default
+   
+     let $upd-themes := for $t in $themes
+                         return if(fn:substring-before(fn:substring-after($t/@PartName,"/ppt/theme/theme"),".xml") = $theme-ids) then () else $t
+     
+    
+     return element{fn:name($ctypes)} {$ctypes/@*, $upd-themes, $override, $default} 
+};
+
 
 declare function ppt:ct-utils-remove-themes($ctypes as node(),$theme-ids as xs:string*)
 {
@@ -110,7 +139,7 @@ declare function ppt:ct-utils-remove-hm($ctypes as node())
 };
 (: ====== END  remove handoutMasters from content-types :)
 (:CHANGE add image defaults :)
-declare function  ppt:ct-utils-add-defaults($ctypes as node(), $types as xs:string*)
+declare function  ppt:ct-utils-add-img-defaults($ctypes as node(), $types as xs:string*)
 {
         let $new-types := for $t in $types
                           let $ext := $t
