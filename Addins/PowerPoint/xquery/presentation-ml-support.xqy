@@ -827,7 +827,17 @@ declare function ppt:update-pres-xml($pres-xml as node(),$final-pres-rels as nod
 
 declare function ppt:slide-index-error()
 {
-   	fn:error("Slide Index Out of Bounds Error: ","The index specified for the presentation does not exist.")
+   	fn:error("SlideIndexOutofBounds: ","The index specified for the presentation does not exist.")
+};
+
+declare function ppt:list-length-error()
+{
+        fn:error("ListLengthsNotEqual: ","The lengths of the lists that are dependant on each other differ.") 
+};
+
+declare function ppt:validate-list-length-equal($list1 as xs:string+ , $list2 as xs:integer+) as xs:boolean
+{
+  fn:count($list1) eq fn:count($list2)
 };
 
 declare function ppt:validate-slide-indexes-map($t-map as map:map, $from-pres as xs:string, $from-idx as xs:integer, $insert-index as xs:integer)
@@ -854,7 +864,7 @@ declare function ppt:validate-slide-indexes-map($t-map as map:map, $from-pres as
                    		fn:false() 
                		else 
                    		fn:true()
-	return $test
+   return $test
 
 };
 
@@ -891,9 +901,8 @@ declare function ppt:sld-rel-image-types($map as map:map)
 (: $from-idx  := 2                    index of slide in from preso to copy to target    :)
 (: $insert-idx := 2                   insertion index of slide merged into preso in map :)
 
-declare function ppt:merge-slide($to-pkg-map as map:map?,$from-pres as xs:string, $from-idx as xs:integer, $insert-idx as xs:integer)
+declare function ppt:merge-slide-util($to-pkg-map as map:map?,$from-pres as xs:string, $from-idx as xs:integer, $insert-idx as xs:integer)
 {
- let $return := if(ppt:validate-slide-indexes-map($to-pkg-map, $from-pres, $from-idx, $insert-idx)) then
 
         let $to-uris := map:keys($to-pkg-map)                                     (:uris for to files    :)
         let $from-uris(:s-pres:) := ppt:package-uris-from-directory($from-pres)   (:uris for from files  :) 
@@ -956,17 +965,27 @@ declare function ppt:merge-slide($to-pkg-map as map:map?,$from-pres as xs:string
 	let $mapupd3 := map:put( $new-slide-map, ppt:uri-content-types(()), $final-ctypes)
 
  return  $new-slide-map
-
 (:($pres-xml, $c-types, $final-ctypes, $final-pres-rels, $sld-rels-img-types, $from-idx, $insert-idx,$new-slide-map):)
  (:, $to-pkg-map, fn:count($theme-ids),$theme-uris, $theme-ids, $uri-handout-master-rels) :)
-
-
- else
-  ppt:slide-index-error()
-
- return $return
-
 }; 
+
+declare function ppt:merge-slide($to-pkg-map as map:map?,$from-pres as xs:string+, $from-idx as xs:integer+, $insert-idx as xs:integer)
+{
+ let $return := 
+   if(ppt:validate-slide-indexes-map($to-pkg-map, $from-pres, $from-idx, $insert-idx)) then
+   
+      if(ppt:validate-list-length-equal($from-pres, $from-idx)) then
+            for $from at $idx in $from-pres
+            let $upd-idx := $idx - 1
+            let $merge := ppt:merge-slide-util($to-pkg-map,$from,$from-idx[$idx], $insert-idx+$upd-idx)
+            return $merge
+      else
+        ppt:list-length-error()
+   
+   else
+        ppt:slide-index-error()
+   return $to-pkg-map
+};
 
 declare function ppt:package-map-zip($map as map:map*)
 {
