@@ -753,7 +753,8 @@ declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
  (: need to account for 1- case when two slides have the same id 2-multiple slides will need children rIds updated :)
   	let $children := $pres-xml/node()
   	let $new-sld-rId := ppt:r-id-as-int($new-sld-id/@r:id)
-  	let $upd-sld-id := 1256 (:rand  uniqueid-generator random-num and incremenet max of //rId:) 
+  	let $upd-sld-id := xs:integer($new-sld-id/@id) + 1 (: just take slide id we're adding, make all one greater as we add back to presentatin.xml:)
+                                                           (:1256:)  (:rand  uniqueid-generator random-num and incremenet max of //rId:) 
   	let $upd-children := 
                        for $c at $n in $children
                        let $rId := ppt:r-id-as-int($c/@r:id)
