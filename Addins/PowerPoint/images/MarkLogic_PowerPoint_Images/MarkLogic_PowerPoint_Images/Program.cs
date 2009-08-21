@@ -12,7 +12,7 @@ using Microsoft.Office.Core;
 //using System.Runtime.InteropServices;
 
 
-namespace MarkLogic_PowerPointLoader
+namespace MarkLogic_PowerPoint_Images
 {
     class Program
     {
