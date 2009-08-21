@@ -1,4 +1,4 @@
-<!-- Copyright 2002-2008 Mark Logic Corporation. All Rights Reserved.
+<!-- Copyright 2002-2009 Mark Logic Corporation. All Rights Reserved.
 -->
 <?xml-stylesheet href="/cpf/pipelines.css" type="text/css"?>
 <pipeline xmlns="http://marklogic.com/cpf/pipelines"
@@ -22,16 +22,33 @@ xsi:schemaLocation="http://marklogic.com/cpf/pipelines pipelines.xsd"
        <on-success>http://marklogic.com/states/slidemapped</on-success>
        <on-failure>http://marklogic.com/states/error</on-failure>
        <priority>9300</priority>
-        <execute>
-	<condition>
+       <execute>
+       <condition>
             <module>/MarkLogic/cpf/actions/namespace-condition.xqy</module>
             <options xmlns="/MarkLogic/cpf/actions/namespace-condition.xqy">
                <namespace>http://schemas.openxmlformats.org/presentationml/2006/main</namespace>
 	       <root-element>sld</root-element>
             </options>
-         </condition>
+       </condition>
        <action>
-	       <module>/MarkLogic/conversion/actions/map-slide-action.xqy</module>
+	    <module>/MarkLogic/conversion/actions/map-slide-action.xqy</module>
+            <options xmlns="/MarkLogic/conversion/actions/map-slide-action.xqy">
+	       <map-type>slide</map-type>	 
+            </options>
+       </action>
+     </execute>
+     <execute>
+       <condition>
+            <module>/MarkLogic/cpf/actions/mimetype-condition.xqy</module>
+            <options xmlns="/MarkLogic/cpf/actions/mimetype-condition.xqy">
+	       <mime-type>image/png</mime-type>
+            </options>
+       </condition>
+       <action>
+	    <module>/MarkLogic/conversion/actions/map-slide-action.xqy</module>
+            <options xmlns="/MarkLogic/conversion/actions/map-slide-action.xqy">
+	       <map-type>image</map-type>	 
+            </options>
        </action>
      </execute>
      </state-transition>
