@@ -1,3 +1,19 @@
+/* 
+Copyright 2009 Mark Logic Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 function loadXMLDoc(url) 
 {
     if (window.XMLHttpRequest) {
@@ -39,19 +55,17 @@ function insertImage(picuri)
        var msg = MLA.insertImage(picuri,"oslo","oslo");
 }
 
-function copyPasteSlideToActive(docuri, slideidx,retainidx)
+function copyPasteSlideToActive(docuri, slideidx, retainidx)
 {
-       //alert("in this function"+retainidx);
-
        var retain=document.getElementById("retain"+retainidx).checked;
        var tmpPath = MLA.getTempPath();
 
        var config = MLA.getConfiguration();
        var fullurl= config.url;
        var url = fullurl + "/officesearch/download-support.xqy?uid="+docuri;
-       
-       var filename = docuri.substring(1,docuri.length);
-       //alert("url: "+url+"  filename: "+filename+" slidedix: "+slideidx+" retain: "+retain);
+      
+       var tokens = docuri.split("/");
+       var filename = tokens[tokens.length-1]; 
        var msg = MLA.copyPasteSlideToActive(tmpPath, filename,slideidx, url, "oslo","oslo",retain);
 }
 
@@ -65,8 +79,10 @@ function openPPTX(docuri)
        var config = MLA.getConfiguration();
        var fullurl= config.url;
        var url = fullurl + "/officesearch/download-support.xqy?uid="+docuri;
-       var msg = MLA.openPPTX(tmpPath, docuri, url, "oslo","oslo");
+
+       var msg = MLA.openPPTX(tmpPath, filename, url, "oslo","oslo");
 }
+
 /* -----------------------------HERE --------------------------------------------*/
 function openWord(t,txt)
 {
