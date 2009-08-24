@@ -1,4 +1,23 @@
-﻿using System;
+﻿/*Copyright 2009 Mark Logic Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ * 
+ * Program.cs : simple utility to save all powerpoints in a given directory (and its subdirectories)
+ *              in associated image folder with each slide in .PNG format
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,14 +47,8 @@ namespace MarkLogic_PowerPoint_Images
         static void Main(string[] args)
         {
             //parameters reqd
-            //path of dir with ppt(x)s  convert, load to ML
-            //path of output dir for image dirs ? (right now just create dir of images sibling to .pptx)
-            //url to ML for saving the ppt and images 
-            //user
-            //pwd
-            //could add- folder to save in ML, right now defaults to '/'
-
-            //this assumes pipeline already installed 
+            //directory-path : path of dir with ppt(x)s to save as images
+            //{debug}        : true||false
 
             if (args.Length < 1 || args.Length >2 )
             {
@@ -150,7 +163,6 @@ namespace MarkLogic_PowerPoint_Images
                                     {
                                         Console.WriteLine("Saved.");
                                     }
-
 
                                 }
                             }
