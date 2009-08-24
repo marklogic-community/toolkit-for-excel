@@ -1,1 +1,1 @@
-MarkLogic_PowerPoint_Images.exe C:\presentationsToConvert\
+MarkLogic_PowerPoint_Images.exe C:\presentationsToConvert true

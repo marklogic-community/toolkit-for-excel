@@ -5,11 +5,6 @@ using System.Text;
 using System.IO;
 using Microsoft.Office.Interop.PowerPoint;
 using Microsoft.Office.Core;
-//using System.IO.Compression;
-//using System.Net;
-//using System.Net.Mail;
-//using System.Net.Sockets;
-//using System.Runtime.InteropServices;
 
 
 namespace MarkLogic_PowerPoint_Images
@@ -42,7 +37,7 @@ namespace MarkLogic_PowerPoint_Images
 
             //this assumes pipeline already installed 
 
-            if (args.Length != 1)
+            if (args.Length < 1 || args.Length >2 )
             {
                 Console.WriteLine(args.Length);
                 Console.WriteLine(args);
@@ -56,6 +51,12 @@ namespace MarkLogic_PowerPoint_Images
             }
 
             string sourceDirectory = args[0];
+            bool debug = false;
+
+            if (args.Length==2 && args[1].ToLower().Equals("true")){
+
+                debug = true;
+            }
 
 
             object missing = System.Type.Missing;
@@ -80,9 +81,18 @@ namespace MarkLogic_PowerPoint_Images
                             Presentation pres = ppt.Presentations.Open(file.FullName, MsoTriState.msoFalse, MsoTriState.msoTrue, MsoTriState.msoFalse);
                             imgdirwithpath = file.FullName.Replace(".pptx", "_PNG");
 
-                            Console.WriteLine("BEFORE:   " + file.FullName + "|" + file.Directory + "|" + file.Name);
+                            if (debug)
+                            {
+                                Console.WriteLine("Saving images for file :   " + file.FullName );
+                            }
+
                             pres.SaveAs(imgdirwithpath, PpSaveAsFileType.ppSaveAsPNG, MsoTriState.msoFalse);
                             pres.Close();
+
+                            if (debug)
+                            {
+                                Console.WriteLine("Saved.");
+                            }
 
                         }
                     }
@@ -91,9 +101,10 @@ namespace MarkLogic_PowerPoint_Images
                         Console.WriteLine("Error. Filename: " + file.FullName + " Message: " + e.Message + " StackTrace: " + e.StackTrace);
                     }
 
-                    Console.WriteLine("AFTER :" + file.FullName + "|" + file.Directory + "|" + file.Name);
+                   //Console.WriteLine("AFTER :" + file.FullName + "|" + file.Directory + "|" + file.Name);
                 }
                    ppt.Quit();
+
             }catch (Exception e)
             {
                         Console.WriteLine("Error: " + e.Message + " " + e.StackTrace);
@@ -104,9 +115,12 @@ namespace MarkLogic_PowerPoint_Images
             {
                 //if (d.Name.Equals("ug2009"))//only for testing purposes
                 //{
+                if (debug)
+                {
                     Console.WriteLine(d.FullName);
+                }
                     FileInfo[] files = d.GetFiles();
-                    Console.WriteLine("files:");
+                    //Console.WriteLine("files:");
 
                     try
                     {
@@ -124,9 +138,19 @@ namespace MarkLogic_PowerPoint_Images
                                     Presentation pres = ppt.Presentations.Open(file.FullName, MsoTriState.msoFalse, MsoTriState.msoTrue, MsoTriState.msoFalse);
                                     imgdirwithpath = file.FullName.Replace(".pptx", "_PNG");
 
-                                    Console.WriteLine("BEFORE:   " + file.FullName + "|" + file.Directory + "|" + file.Name);
+                                    if (debug)
+                                    {
+                                        Console.WriteLine("Saving images for file:   " + file.FullName );
+                                    }
+
                                     pres.SaveAs(imgdirwithpath, PpSaveAsFileType.ppSaveAsPNG, MsoTriState.msoFalse);
                                     pres.Close();
+
+                                    if (debug)
+                                    {
+                                        Console.WriteLine("Saved.");
+                                    }
+
 
                                 }
                             }
@@ -135,7 +159,6 @@ namespace MarkLogic_PowerPoint_Images
                                 Console.WriteLine("Error. Filename: " + file.FullName + " Message: " + e.Message + " StackTrace: " + e.StackTrace);
                             }
 
-                            Console.WriteLine("AFTER :" + file.FullName + "|" + file.Directory + "|" + file.Name);
                         }
                         ppt.Quit();
                     }
@@ -146,8 +169,11 @@ namespace MarkLogic_PowerPoint_Images
                 //}
             }
 
-            Console.WriteLine("Press any key too continue...");
-            Console.ReadLine();
+            if (debug)
+            {
+                Console.WriteLine("Press any key too continue...");
+                Console.ReadLine();
+            }
         }
     }
 }
