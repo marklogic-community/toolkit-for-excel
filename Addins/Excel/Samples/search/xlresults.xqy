@@ -94,7 +94,7 @@ let $html := for $d in $distinct
                          }
                          <br/>
                          </div>
-                         else 
+                         else if(fn:ends-with($d,".xml")) then
                               let $finaldiv := 
                                            if(fn:count($space-test) gt 1 ) then ()
                                            else
@@ -133,6 +133,8 @@ let $html := for $d in $distinct
                                            return ($return,<table border="0"><tr><td><img src="xml_icon.gif"/></td></tr></table>,<br/>)
 
                               return $finaldiv
+
+                         else ()
 
              return $div
 return if(fn:count($html) eq 0) then <div id="ML-Message"><p><strong>No results returned.</strong></p><p>Your search for "{$searchparam}" did not match anything.</p></div> else $html
