@@ -16,7 +16,20 @@ namespace MarkLogic_PowerPoint_Images
 {
     class Program
     {
-
+        static bool checkExtension(string ext)
+        {
+            if (ext.EndsWith(".pptx") ||
+                ext.EndsWith(".ppsx") ||
+                ext.EndsWith(".pptm") ||
+                ext.EndsWith(".ppsm") ||
+                ext.EndsWith(".potx") ||
+                ext.EndsWith(".potm")
+                )
+                return true;
+            else
+                return false;
+                              
+        }
         static void Main(string[] args)
         {
             //parameters reqd
@@ -47,8 +60,46 @@ namespace MarkLogic_PowerPoint_Images
 
             object missing = System.Type.Missing;
             DirectoryInfo root = new DirectoryInfo(sourceDirectory);
+            FileInfo[] rootFiles = root.GetFiles();
             DirectoryInfo[] dirs = root.GetDirectories("*", SearchOption.AllDirectories);
 
+
+            try
+            {
+                Application ppt = new Application();
+
+                foreach (FileInfo file in rootFiles)
+                {
+                    try
+                    {
+                        //Presentation pres = ppt.Presentations.Open(file.FullName, MsoTriState.msoFalse, MsoTriState.msoTrue, MsoTriState.msoFalse);
+                        string imgdirwithpath = "";
+                        bool extensionCheck = checkExtension(file.Name);
+                        if (extensionCheck)
+                        {
+                            Presentation pres = ppt.Presentations.Open(file.FullName, MsoTriState.msoFalse, MsoTriState.msoTrue, MsoTriState.msoFalse);
+                            imgdirwithpath = file.FullName.Replace(".pptx", "_PNG");
+
+                            Console.WriteLine("BEFORE:   " + file.FullName + "|" + file.Directory + "|" + file.Name);
+                            pres.SaveAs(imgdirwithpath, PpSaveAsFileType.ppSaveAsPNG, MsoTriState.msoFalse);
+                            pres.Close();
+
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Error. Filename: " + file.FullName + " Message: " + e.Message + " StackTrace: " + e.StackTrace);
+                    }
+
+                    Console.WriteLine("AFTER :" + file.FullName + "|" + file.Directory + "|" + file.Name);
+                }
+                   ppt.Quit();
+            }catch (Exception e)
+            {
+                        Console.WriteLine("Error: " + e.Message + " " + e.StackTrace);
+            }
+
+            
             foreach (DirectoryInfo d in dirs)
             {
                 //if (d.Name.Equals("ug2009"))//only for testing purposes
@@ -57,36 +108,42 @@ namespace MarkLogic_PowerPoint_Images
                     FileInfo[] files = d.GetFiles();
                     Console.WriteLine("files:");
 
-
-                    Application ppt = new Application();
-                    foreach (FileInfo file in files)
+                    try
                     {
-                        Presentation pres = ppt.Presentations.Open(file.FullName, MsoTriState.msoFalse, MsoTriState.msoTrue, MsoTriState.msoFalse);
-                        string imgdirwithpath = "";
-                        string saveasdir = "";
-                        if (file.Name.EndsWith(".pptx"))
+                        Application ppt = new Application();
+
+                        foreach (FileInfo file in files)
                         {
-                            imgdirwithpath = file.FullName.Replace(".pptx", "_PNG");
-                            saveasdir = "/" + file.Name.Replace(".ppt", "_PNG");
-                            //}
-                            //else
-                            //{
-                            //    imgdirwithpath = file.FullName.Replace(".pptx", "_PNG");
-                            //    saveasdir = "/"+file.Name.Replace(".pptx", "_PNG");
-                            //}
-                            Console.WriteLine("BEFORE:   " + file.FullName + "|" + file.Directory + "|" + file.Name);
-                            pres.SaveAs(imgdirwithpath, PpSaveAsFileType.ppSaveAsPNG, MsoTriState.msoFalse);
-                            pres.Close();
+                            try
+                            {
+                                //Presentation pres = ppt.Presentations.Open(file.FullName, MsoTriState.msoFalse, MsoTriState.msoTrue, MsoTriState.msoFalse);
+                                string imgdirwithpath = "";
+                                bool extensionCheck = checkExtension(file.Name);
+                                if (extensionCheck)
+                                {
+                                    Presentation pres = ppt.Presentations.Open(file.FullName, MsoTriState.msoFalse, MsoTriState.msoTrue, MsoTriState.msoFalse);
+                                    imgdirwithpath = file.FullName.Replace(".pptx", "_PNG");
+
+                                    Console.WriteLine("BEFORE:   " + file.FullName + "|" + file.Directory + "|" + file.Name);
+                                    pres.SaveAs(imgdirwithpath, PpSaveAsFileType.ppSaveAsPNG, MsoTriState.msoFalse);
+                                    pres.Close();
+
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("Error. Filename: " + file.FullName + " Message: " + e.Message + " StackTrace: " + e.StackTrace);
+                            }
+
+                            Console.WriteLine("AFTER :" + file.FullName + "|" + file.Directory + "|" + file.Name);
                         }
-
-                        Console.WriteLine("AFTER :" + file.FullName + "|" + file.Directory + "|" + file.Name);
-
+                        ppt.Quit();
                     }
-                    ppt.Quit();
-
-
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Error: " + e.Message + " " + e.StackTrace);
+                    }
                 //}
-
             }
 
             Console.WriteLine("Press any key too continue...");
