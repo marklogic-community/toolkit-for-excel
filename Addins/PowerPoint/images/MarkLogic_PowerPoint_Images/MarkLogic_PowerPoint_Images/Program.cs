@@ -39,13 +39,16 @@ namespace MarkLogic_PowerPoint_Images
 
             if (args.Length < 1 || args.Length >2 )
             {
-                Console.WriteLine(args.Length);
-                Console.WriteLine(args);
+                //Console.WriteLine(args.Length);
+                //Console.WriteLine(args);
                 foreach (string s in args)
                 {
                     Console.WriteLine("arg: " + s);
                 }
-                Console.WriteLine("Expected Params: (tbd) ....\nPress any key too continue...");
+                Console.WriteLine("Expected Params: directory-path {debug} \n\n"+
+                                  "directory-path   = path where .pptx can be found. Example: C:\\my-pptx \n"+
+                                  "debug {optional} = true or false. if true, debug messages enabled \n                   and prompt entry required for exit\n\n"+
+                                  "Press any key too continue...");
                 Console.ReadLine();
                 return;
             }
@@ -73,7 +76,7 @@ namespace MarkLogic_PowerPoint_Images
                 {
                     try
                     {
-                        //Presentation pres = ppt.Presentations.Open(file.FullName, MsoTriState.msoFalse, MsoTriState.msoTrue, MsoTriState.msoFalse);
+                        
                         string imgdirwithpath = "";
                         bool extensionCheck = checkExtension(file.Name);
                         if (extensionCheck)
@@ -101,7 +104,6 @@ namespace MarkLogic_PowerPoint_Images
                         Console.WriteLine("Error. Filename: " + file.FullName + " Message: " + e.Message + " StackTrace: " + e.StackTrace);
                     }
 
-                   //Console.WriteLine("AFTER :" + file.FullName + "|" + file.Directory + "|" + file.Name);
                 }
                    ppt.Quit();
 
@@ -120,7 +122,6 @@ namespace MarkLogic_PowerPoint_Images
                     Console.WriteLine(d.FullName);
                 }
                     FileInfo[] files = d.GetFiles();
-                    //Console.WriteLine("files:");
 
                     try
                     {
@@ -130,7 +131,6 @@ namespace MarkLogic_PowerPoint_Images
                         {
                             try
                             {
-                                //Presentation pres = ppt.Presentations.Open(file.FullName, MsoTriState.msoFalse, MsoTriState.msoTrue, MsoTriState.msoFalse);
                                 string imgdirwithpath = "";
                                 bool extensionCheck = checkExtension(file.Name);
                                 if (extensionCheck)
