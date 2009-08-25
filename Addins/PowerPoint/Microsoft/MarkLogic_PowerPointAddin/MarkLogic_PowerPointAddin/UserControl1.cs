@@ -377,7 +377,8 @@ namespace MarkLogic_PowerPointAddin
         /*==========================================*/
         /*==========================================*/
         /*==========================================*/
-        public string embedXLSX(string path, string title, string url, string user, string pwd)
+        //need a param here for class type? right now works from filename for Word, Excel; but we could specify classname
+        public string embedOLE(string path, string title, string url, string user, string pwd)
         {
             string message="";
             string tmpdoc = "";
@@ -385,13 +386,10 @@ namespace MarkLogic_PowerPointAddin
             bool proceed = false;
             int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
 
-                        // title=title.Replace("/","");
-                         MessageBox.Show("title: " + title);
 
                          try
                          {
                              tmpdoc = path + title;
-                             MessageBox.Show("tmpdoc " + tmpdoc);
                              downloadFile(url, tmpdoc, user, pwd);
                              proceed = true;
 
@@ -407,7 +405,8 @@ namespace MarkLogic_PowerPointAddin
                              if (proceed)
                              {
                                  //defaulting args here.  these could be parameters.
-                                 Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(21, 105, 250, 250, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
+                                 //you specify classtype or filename, not both
+                                 Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(60, 105,600, 300, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
                              }
                          }
                          catch (Exception e)
@@ -600,7 +599,7 @@ namespace MarkLogic_PowerPointAddin
 
         private void downloadFile(string url, string sourcefile, string user, string pwd)
         {
-            string message = "";
+            //string message = "";
             try
             {
                 System.Net.WebClient Client = new System.Net.WebClient();
