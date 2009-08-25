@@ -56,7 +56,6 @@ namespace MarkLogic_PowerPointAddin
 
             if (webUrl.Equals(""))
             {
-                //MessageBox.Show("Unable to find configuration info. Please insure OfficeProperties.txt exists in your system temp directory.  If problems persist, please contact your system administrator.");
                 MessageBox.Show("                                   Unable to find configuration info. \n\r " +
                                 " Please see the README for how to add configuration info for your system. \n\r " +
                                 "           If problems persist, please contact your system administrator.");
@@ -99,30 +98,7 @@ namespace MarkLogic_PowerPointAddin
             }
 
         }
-        /*
-        private bool checkUrlInRegistry()
-        {
-            RegistryKey regKey1 = Registry.CurrentUser;
-            regKey1 = regKey1.OpenSubKey(@"MarkLogicAddinConfiguration\PowerPoint");
-            bool keyExists = false;
-            if (regKey1 == null)
-            {
-                if (debugMsg)
-                    MessageBox.Show("KEY IS NULL");
 
-            }
-            else
-            {
-                if (debugMsg)
-                    MessageBox.Show("KEY IS: " + regKey1.GetValue("URL"));
-
-                webUrl = (string)regKey1.GetValue("URL");
-                if (!((webUrl.Equals("")) || (webUrl == null)))
-                    keyExists = true;
-            }
-            return keyExists;
-        }
-       */
         public enum ColorScheme : int
         {
             Blue = 1,
@@ -178,7 +154,7 @@ namespace MarkLogic_PowerPointAddin
                 {
                     if (c.BuiltIn.Equals(false))
                     {
-                        ids += c.Id + " ";// "U+016000";
+                        ids += c.Id + " ";
 
 
                     }
@@ -187,8 +163,6 @@ namespace MarkLogic_PowerPointAddin
                 char[] space = { ' ' };
                 ids = ids.TrimEnd(space);
 
-                //char[] tengwar = { 'U', '+', '0', '1', '6', '0', '0', '0' };
-                //ids = ids.TrimEnd(tengwar);
             }
             catch (Exception e)
             {
@@ -257,6 +231,7 @@ namespace MarkLogic_PowerPointAddin
                 string errorMsg = e.Message;
                 newid = "error: " + errorMsg;
             }
+
             if (debug)
                 newid = "error";
 
@@ -410,19 +385,19 @@ namespace MarkLogic_PowerPointAddin
             bool proceed = false;
             int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
 
-                         //title=title.Replace("/","");
-                        // MessageBox.Show("title" + title);
+                        // title=title.Replace("/","");
+                         MessageBox.Show("title: " + title);
 
                          try
                          {
                              tmpdoc = path + title;
+                             MessageBox.Show("tmpdoc " + tmpdoc);
                              downloadFile(url, tmpdoc, user, pwd);
                              proceed = true;
 
                          }
                          catch (Exception e)
                          {
-                             MessageBox.Show("ERROR: "+e.Message);
                              string errorMsg = e.Message;
                              message = "error: " + errorMsg;
                          }
@@ -431,12 +406,12 @@ namespace MarkLogic_PowerPointAddin
                          {
                              if (proceed)
                              {
+                                 //defaulting args here.  these could be parameters.
                                  Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(21, 105, 250, 250, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
                              }
                          }
                          catch (Exception e)
                          {
-                             MessageBox.Show("Error" + e.Message);
                              string errorMsg = e.Message;
                              message = "error: " + errorMsg;
                          }
