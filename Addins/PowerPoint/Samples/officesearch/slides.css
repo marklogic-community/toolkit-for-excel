@@ -14,7 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
  
 */
- .resize {
+body{
+	width:1000px;
+}
+
+.resize {
     width: 100px;
     height : auto;
     
@@ -34,12 +38,15 @@ limitations under the License.
 	margin: 0 0.5;
 	font-size: 80%;
 }
-
+td.ML-thdr{
+       font-weight:bold;
+       font-size:7pt;
+}
 td.ML-td{
-	border-width: 2px 2px 2px 2px;
-	padding: 2px 2px 2px 2px;
-	border-style: outset outset outset outset;
-/*	border-color: gray gray gray gray; */
+	/*width: 100px;*/
+	/*padding: 2px 10px 2px 10px;*/
+	border-style: solid; 
+	border-width: 0px 40px 0px 0px;
 	background-color: white;
         margin:2pt;
 
@@ -49,9 +56,7 @@ table.ML-table{
 	border-width: 2px 2px 2px 2px;
 	border-spacing: 2px;
 	border-style: outset outset outset outset;
-/*	border-color: gray gray gray gray; */
 	border-collapse: separate;
-	/*background-color: white;*/
 
  }
 /*a.test:hover {text-decoration: underline; color: red;}*/
