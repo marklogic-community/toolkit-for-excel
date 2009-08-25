@@ -84,7 +84,7 @@ function openPPTX(docuri)
 }
 
 /* -----------------------------HERE --------------------------------------------*/
-function openWord(t,txt)
+function openDocument(t,txt)
 {
 //alert("TEST"+t+txt);
    var form=document.getElementById("buttons"+t);
@@ -105,33 +105,56 @@ function openWord(t,txt)
 		  window.external.insertText(txt);
 	  }else if(type=="opendocument")
 	  {
-		  //alert(docname);
+		  //title for word doc
 		  docname = docname.replace("/word/document.xml","");
 		  docname = docname.replace("_docx_parts",".docx");
+
+		  //title for xl doc
 		  docname = docname.replace("/xl/worksheets/","");
 		  docname = docname.replace(/sheet[0-9]+.xml/,"");
 		  docname = docname.replace("_xlsx_parts",".xlsx");
-		  //alert(docname);
 		  
 		  var clean = docname.split("/");
 		  var title = clean[clean.length-1];
 		  var myref = window.location('http://localhost:8023/openbinary.xqy?url='+docname+'&title='+title);
 
 	  }
-	  else
+	  else if(type=="embeddocument")
 	  {
+		  alert("docname before: "+docname);
+
+		  docname = docname.replace("/word/document.xml","");
+		  docname = docname.replace("_docx_parts",".docx");
+
+
 		  docname = docname.replace("/xl/worksheets/","");
 		  docname = docname.replace(/sheet[0-9]+.xml/,"");
 		  docname = docname.replace("_xlsx_parts",".xlsx");
-		         var tmpPath = MLA.getTempPath(); 
+
+		  var clean = docname.split("/");
+		  var title = clean[clean.length-1];
+
+
+		  var tmpPath = MLA.getTempPath(); 
 
                   var config = MLA.getConfiguration();
                   var fullurl= config.url;
                   var url = fullurl + "/officesearch/download-support.xqy?uid="+docname;
-		  alert("fullurl"+url);
-                  var msg = window.external.embedXLSX(tmpPath, docname, url, "oslo","oslo")
-		  //window.external.embedXLSX();
-	          alert("foo: "+docname);
+		  alert("tmppath: "+tmpPath+"\n  url: "+url+ "\n   title: "+title);
+                  var msg = window.external.embedOLE(tmpPath, title, url, "oslo","oslo");
+		  alert("message"+msg);
+	  }else
+	  {
+		  alert("foo"+txt+ "length"+txt);
+		  var table = document.getElementById(txt);
+		  var list = table.getElementsByTagName('TR');
+
+		  for(var l =0; l<list.length; l++)
+		  {
+                     alert(list[l].innerHTML);
+		  }
+
+
 	  }
 
 }

@@ -385,7 +385,17 @@ namespace MarkLogic_PowerPointAddin
             object missing = System.Type.Missing;
             bool proceed = false;
             int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
+            float left=60;
+            float top=105;
+            float width=600;
+            float height=300;
 
+            if(title.EndsWith(".docx") || title.EndsWith(".docm") ||
+               title.EndsWith(".dotx") || title.EndsWith(".dotm"))
+            {
+                left=220;
+                width=300;
+            }
 
                          try
                          {
@@ -406,7 +416,7 @@ namespace MarkLogic_PowerPointAddin
                              {
                                  //defaulting args here.  these could be parameters.
                                  //you specify classtype or filename, not both
-                                 Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(60, 105,600, 300, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
+                                 Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(left,top,width,height, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
                              }
                          }
                          catch (Exception e)

@@ -41,9 +41,9 @@ let $type := for $s at $res in $slides
                if(fn:not(fn:empty($s/p:cSld))) then
                     let $orig-uri := xdmp:node-uri($s)
                        
-                    let $tmp-uri := fn:replace($orig-uri,"_pptx_parts/ppt/slides","_GIF")
+                    let $tmp-uri := fn:replace($orig-uri,"_pptx_parts/ppt/slides","_PNG")
                     let $tmp-uri2 := fn:replace($tmp-uri,"slide","Slide")
-                    let $new-uri := fn:replace($tmp-uri2,".xml",".GIF")
+                    let $new-uri := fn:replace($tmp-uri2,".xml",".PNG")
                        
                     let $disp-slides := 
                         for $pic at $d in $new-uri
@@ -94,6 +94,7 @@ let $type := for $s at $res in $slides
                                <li>
                                   <form id={fn:concat("buttons",$res)}>
                                     <input type="radio" name="{$uri}" value="inserttext" id="searchtype"/>Insert Text
+                                    <input type="radio" name="{$uri}" value="embeddocument" id="searchtype"/>Embed Document
                                     <input type="radio" name="{$uri}" value="opendocument" id="searchtype"/>Open Document
                                   </form>
                                </li>
@@ -118,7 +119,7 @@ let $type := for $s at $res in $slides
                                 <li>  
                                    {(:<a name={$name} class="test" href="{$anchor}" onclick="openDocument('{$res}')"> :) }
                                    <a name={$name} class="test" href="{$anchor}" onclick="openDocument('{$res}','{$name}')"> 
-                                      <table id={$name} class="ML-table">
+                                      <table class="ML-table">
                                                   <tr>{$headers}</tr>
                                                   <tr>{$final}</tr>
                                       </table>
