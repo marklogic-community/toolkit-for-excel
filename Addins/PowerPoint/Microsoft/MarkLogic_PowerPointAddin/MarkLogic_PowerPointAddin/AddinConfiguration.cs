@@ -38,6 +38,10 @@ namespace MarkLogic_PowerPointAddin
         private string rbnGrpLbl = "";
         private string ctpTtlLbl = "";
 
+        private string user = "";
+        private string auth = "";
+        private string rbnXqy = "";
+
         private string isPaneEnabled = "";
         private bool paneEnabled = false;
 
@@ -82,6 +86,10 @@ namespace MarkLogic_PowerPointAddin
                 rbnGrpLbl = (string)regKey1.GetValue("RbnGrpLbl");
                 rbnBtnLbl = (string)regKey1.GetValue("RbnBtnLbl");
                 isPaneEnabled = (string)regKey1.GetValue("CTPEnabled");
+                user = (string)regKey1.GetValue("User");
+                auth = (string)regKey1.GetValue("Auth");
+                rbnXqy = (string)regKey1.GetValue("RibbonXqy");
+
 
                 if (isPaneEnabled.ToUpper().Equals("TRUE"))
                 {
@@ -122,6 +130,21 @@ namespace MarkLogic_PowerPointAddin
         public bool getPaneEnabled()
         {
             return paneEnabled;
+        }
+
+        public string getUser()
+        {
+            return user;
+        }
+
+        public string getAuth()
+        {
+            return auth;
+        }
+
+        public string getRibbonXqy()
+        {
+            return rbnXqy;
         }
     }
 

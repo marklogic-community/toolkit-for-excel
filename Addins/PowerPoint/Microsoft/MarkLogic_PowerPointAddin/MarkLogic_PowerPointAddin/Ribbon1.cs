@@ -45,6 +45,9 @@ namespace MarkLogic_PowerPointAddin
         private void button2_Click(object sender, RibbonControlEventArgs e)
         {
             UserControl1 uc = (UserControl1)Globals.ThisAddIn.myPane.Control;
+            AddinConfiguration ac = AddinConfiguration.GetInstance();
+        System.Windows.Forms.MessageBox.Show("url"+ac.getWebURL()+"\nuser:"+ac.getUser()+"\npass:"+ac.getAuth()+"\nribbonxqy:"+ac.getRibbonXqy());
+            //need user, pwd, and .xqy in reg
             string url = "http://localhost:8023/ppt/api/upload.xqy?uid="; //add to config and get from there
             string user = "oslo";
             string pwd ="oslo";

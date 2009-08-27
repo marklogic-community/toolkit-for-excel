@@ -106,7 +106,7 @@
         "Entry"
         {
         "MsmKey" = "8:_4235443B87C668C5AA32BF0C1B085AF7"
-        "OwnerKey" = "8:_454916A8AF0B07CD414551675C400684"
+        "OwnerKey" = "8:_C89DA6AFE13CB193428F2355F12DDD66"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -124,18 +124,18 @@
         "Entry"
         {
         "MsmKey" = "8:_4235443B87C668C5AA32BF0C1B085AF7"
+        "OwnerKey" = "8:_4D57079602DC1A03F584F9E1F74ABA76"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4D57079602DC1A03F584F9E1F74ABA76"
         "OwnerKey" = "8:_C89DA6AFE13CB193428F2355F12DDD66"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_454916A8AF0B07CD414551675C400684"
-        "OwnerKey" = "8:_C89DA6AFE13CB193428F2355F12DDD66"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_454916A8AF0B07CD414551675C400684"
+        "MsmKey" = "8:_4D57079602DC1A03F584F9E1F74ABA76"
         "OwnerKey" = "8:_6E3B8B0CF2D24244B92CECA5D16108BC"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -173,6 +173,12 @@
         {
         "MsmKey" = "8:_92D0C4C13B5B4DDB9724CC612201B669"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B82CE9BABB9AF3B85298AE20FC6E8F4B"
+        "OwnerKey" = "8:_6E3B8B0CF2D24244B92CECA5D16108BC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -220,6 +226,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_B82CE9BABB9AF3B85298AE20FC6E8F4B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_21732762870CB9CBF252C1839CBBE8E9"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -256,7 +268,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_454916A8AF0B07CD414551675C400684"
+        "OwnerKey" = "8:_4D57079602DC1A03F584F9E1F74ABA76"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -606,14 +618,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_454916A8AF0B07CD414551675C400684"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4D57079602DC1A03F584F9E1F74ABA76"
             {
             "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyIsInGAC" = "11:TRUE"
             "AssemblyAsmDisplayName" = "8:Microsoft.Vbe.Interop, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c"
                 "ScatterAssemblies"
                 {
-                    "_454916A8AF0B07CD414551675C400684"
+                    "_4D57079602DC1A03F584F9E1F74ABA76"
                     {
                     "Name" = "8:Microsoft.Vbe.Interop.dll"
                     "Attributes" = "3:512"
@@ -696,6 +708,37 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B82CE9BABB9AF3B85298AE20FC6E8F4B"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:DocumentFormat.OpenXml, Version=1.0.1803.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_B82CE9BABB9AF3B85298AE20FC6E8F4B"
+                    {
+                    "Name" = "8:DocumentFormat.OpenXml.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:DocumentFormat.OpenXml.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_680D66B1B0584076971B0BA1F628C2B7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -879,7 +922,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MarkLogic Add-in for PowerPoint®"
         "ProductCode" = "8:{180C24EC-0D6A-45A9-827E-42DA31833EB2}"
-        "PackageCode" = "8:{CC4E895C-D4A0-448A-84ED-61689CCED5CE}"
+        "PackageCode" = "8:{0688F867-5955-40D6-A331-C5606F7A2011}"
         "UpgradeCode" = "8:{B90EB3CA-4D53-4EBB-9851-81C24D09E59E}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -1067,6 +1110,30 @@
                                 }
                                 "Values"
                                 {
+                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4D7C4336826F42ECB337465A561E597B"
+                                    {
+                                    "Name" = "8:User"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "ValueTypes" = "3:1"
+                                    "Value" = "8:ButtonMenuUserName"
+                                    }
+                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4FC80A09A83F4E4F9416A31BB3D474AA"
+                                    {
+                                    "Name" = "8:Auth"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "ValueTypes" = "3:1"
+                                    "Value" = "8:ButtonMenuAuth"
+                                    }
+                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_90F10A3DCD534CABA47FA3E1F8198A5E"
+                                    {
+                                    "Name" = "8:RibbonXqy"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "ValueTypes" = "3:1"
+                                    "Value" = "8:ButtonUploadXqy"
+                                    }
                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_A6FEB2521B7C47DF851481D2CCC69060"
                                     {
                                     "Name" = "8:RbnBtnLbl"
@@ -1577,7 +1644,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_92D0C4C13B5B4DDB9724CC612201B669"
             {
-            "SourcePath" = "8:..\\InclusionListCustomActions\\obj\\Release\\InclusionListCustomActions.dll"
+            "SourcePath" = "8:..\\InclusionListCustomActions\\obj\\Debug\\InclusionListCustomActions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_680D66B1B0584076971B0BA1F628C2B7"
