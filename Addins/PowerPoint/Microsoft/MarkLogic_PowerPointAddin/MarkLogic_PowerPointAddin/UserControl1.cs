@@ -33,6 +33,7 @@ using Office = Microsoft.Office.Core;
 using Microsoft.Win32;
 using PPT = Microsoft.Office.Interop.PowerPoint;
 using OX = DocumentFormat.OpenXml.Packaging;
+using System.Web.Script.Serialization;
 
 
 
@@ -374,9 +375,7 @@ namespace MarkLogic_PowerPointAddin
                     throw;
             }
         }
-        /*==========================================*/
-        /*==========================================*/
-        /*==========================================*/
+
         //need a param here for class type? right now works from filename for Word, Excel; but we could specify classname
         public string embedOLE(string path, string title, string url, string user, string pwd)
         {
@@ -408,6 +407,7 @@ namespace MarkLogic_PowerPointAddin
                          {
                              string errorMsg = e.Message;
                              message = "error: " + errorMsg;
+                             //MessageBox.Show("ERROR" + e.StackTrace + e.Message);
                          }
 
                          try
@@ -421,7 +421,7 @@ namespace MarkLogic_PowerPointAddin
                          }
                          catch (Exception e)
                          {
-                             string errorMsg = e.Message;
+                             string errorMsg = e.Message+e.StackTrace;
                              message = "error: " + errorMsg;
                          }
 
@@ -455,7 +455,8 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-        public string copyPasteSlideToActive(string tmpPath, string filename, string slideidx,string url,string user, string pwd, string retain)
+        //public string copyPasteSlideToActive(string tmpPath, string filename, string slideidx,string url,string user, string pwd, string retain)
+        public string insertSlide(string tmpPath, string filename, string slideidx,string url,string user, string pwd, string retain)
         {
 
             string message = "";
@@ -950,10 +951,7 @@ namespace MarkLogic_PowerPointAddin
 
         public string insertText(string txt)
         {
-            //int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
-
-            //PPT.Shapes s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes;
-
+            string message = "";
             try
             {
                 string orig =  Globals.ThisAddIn.Application.ActiveWindow.Selection.TextRange.Text;
@@ -961,38 +959,73 @@ namespace MarkLogic_PowerPointAddin
             }
             catch (Exception e)
             {
-                MessageBox.Show("Please place select text insertion point with cursor.");
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+                if (e.Message.Contains("Nothing appropriate is currently selected"))
+                {
+                    MessageBox.Show("Please set text insertion point with cursor selection.");
+                }
+
             }
 
-           // PPT.TextRange tr = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes[1].TextFrame.TextRange;
-           // tr.Text = "FOOO";
-            return "Foo";
+            return message;
            
         }
 
-        public string insertTable() //parameterize rows, columns, vals
+        class MYTABLE
         {
-           // MessageBox.Show("In addin");
-            object missing = System.Type.Missing;
-            int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
-            PPT.Shape s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddTable(2, 3,50,50,450,70);
+            public List<string> headers { get; set;}
+            public List<string[]> values { get; set; }
+        }
+
+        //this is interesting, not sure if we can use
+        //ppt, word, and excel "tables" are all different
+        //ultimately might want a server side transform to create generalized table,
+        //and send  XML representation of tbl to function in Addin insertTable(string XML)
+        public string insertJSONTable(string table) //parameterize rows, columns, vals
+        {
+            MessageBox.Show("table: " + table);
+            //JavaScriptSerializer ser = new JavaScriptSerializer();
             try
             {
-                Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(21, 105, 250, 250, "", @"C:\Workflow101.docx", Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
+                MYTABLE mytable = new MYTABLE();
+                mytable = new JavaScriptSerializer().Deserialize<MYTABLE>(table);
+
+              //MessageBox.Show("columns"+x.columns.Length);
+              //MessageBox.Show("Headers Count is: "+mytable.headers.Count+" Values count is:" +mytable.values.Count);
+              List<string> labels = mytable.headers;
+              foreach (string l in labels)
+              {
+                  //MessageBox.Show("header: " + l);
+              }
+
+              List<string[]> vals = mytable.values;
+              foreach (string[] v in vals)
+              {
+                  //MessageBox.Show("Starting loop");
+                  string[] vs = v;
+                  for(int i=0;i<vs.Length;i++)
+                  {
+                      //MessageBox.Show("Value"+vs[i]);
+                  }
+
+                  //MessageBox.Show(""+v.Length);
+              }
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error" + e.Message);
+                MessageBox.Show("ERROR: " + e.Message + "      " + e.StackTrace);
             }
             
-            
-
+            // MessageBox.Show("In addin");
+            object missing = System.Type.Missing;
+            int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
+            PPT.Shape s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddTable(2, 3,50,50,450,70);
             PPT.Table tbl = s.Table;
-          
-           // MessageBox.Show(tbl.Rows.Count + "here");
+            // MessageBox.Show(tbl.Rows.Count + "here");
             PPT.Cell cell = tbl.Rows[1].Cells[1];
             cell.Shape.TextFrame.TextRange.Text = "Foo";
-           // PPT.Shapes s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes;
+            // PPT.Shapes s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes;
          
 
             return "foo";
