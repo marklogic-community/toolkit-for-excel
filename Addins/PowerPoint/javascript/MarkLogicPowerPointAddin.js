@@ -398,4 +398,13 @@ MLA.insertText = function(text)
 	return msg;
 }
 
+MLA.embedOLE = function(tmpPath, title, url, usr, pwd)
+{
+	var msg = window.external.embedOLE(tmpPath, title, url, usr, pwd);
+	var errMsg = MLA.errorCheck(msg);
+        //alert("errMsg"+errMsg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to embedOLE; "+errMsg);
 
+	return msg;
+}
