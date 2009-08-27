@@ -109,7 +109,7 @@ function openPPTX(docuri)
        var msg = MLA.openPPTX(tmpPath, filename, url, "oslo","oslo");
 }
 
-function openDocument(t,txt)
+function actionDocument(t,txt)
 {
    var form=document.getElementById("buttons"+t);
    var type="";

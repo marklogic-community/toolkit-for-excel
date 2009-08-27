@@ -98,7 +98,7 @@ let $type := for $s at $res in $slides
                     return (<div>
                               <ul>
                                <li title="{data($s)}">
-	                          <a name={$name} class="test" href="{$anchor}" onclick="openDocument('{$res}','{fn:data($s)}')">
+	                          <a name={$name} class="test" href="{$anchor}" onclick="actionDocument('{$res}','{fn:data($s)}')">
                                      {cts:highlight(<p>{$snippet}</p>,$w-query, <strong class="ML-highlight">{$cts:text}</strong>)}
                                   </a>
                                </li>
@@ -129,7 +129,7 @@ let $type := for $s at $res in $slides
                               <ul>
                                 <li>  
                                    {(:<a name={$name} class="test" href="{$anchor}" onclick="openDocument('{$res}')"> :) }
-                                   <a name={$name} class="test" href="{$anchor}" onclick="openDocument('{$res}','{$name}')"> 
+                                   <a name={$name} class="test" href="{$anchor}" onclick="actionDocument('{$res}','{$name}')"> 
                                       <table class="ML-table">
                                                   <tr>{$headers}</tr>
                                                   <tr>{$final}</tr>
