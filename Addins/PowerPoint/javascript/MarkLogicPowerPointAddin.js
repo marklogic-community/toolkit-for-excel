@@ -324,9 +324,11 @@ MLA.insertImage = function(picuri,uname,pwd)
 	
 	var inserted = window.external.InsertImage(picuri,uname,pwd);
 	var errMsg = MLA.errorCheck(inserted);
+
 	if(errMsg!=null)
 	   throw("Error: Not able to insertImage; "+errMsg);
 
+	return inserted;
 }
 
 /** Inserts slide, identified by slideIdx,  into the active presentation at current slide position.  
@@ -339,12 +341,9 @@ MLA.insertImage = function(picuri,uname,pwd)
  *@param retain true or false setting determines whether background style of copied slide will be retained when copied to active presentation
  *@throws Exception if unable to copy slide to active presentation 
  */
-MLA.copyPasteSlideToActive = function(tmpPath, filename,slideidx, url, user, pwd,retain)
+MLA.insertSlide = function(tmpPath, filename,slideidx, url, user, pwd,retain)
 {
-	//alert("IN MLA2 tmpPath: "+tmpPath+" fileanme: "+filename +"slidenumber"+slideidx+" url: "+url +" user/pwd"+user+"|"+pwd);
-	////master may differ, takes first master, need to insure its correct one in function in AddIn
-
-	var msg = window.external.copyPasteSlideToActive(tmpPath,filename,slideidx,url,user,pwd,retain);
+	var msg = window.external.insertSlide(tmpPath,filename,slideidx,url,user,pwd,retain);
 	var errMsg = MLA.errorCheck(msg);
 	if(errMsg!=null)
 	   throw("Error: Not able to copyPasteSlideToActive; "+errMsg);
@@ -387,3 +386,16 @@ MLA.openPPTX = function(tmpPath, docuri, url, user, pwd)
 
 	return msg;
 }
+
+MLA.insertText = function(text)
+{
+	var msg = window.external.insertText(text);
+        var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to openPPTX; "+errMsg);
+
+	return msg;
+}
+
+

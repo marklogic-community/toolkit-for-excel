@@ -16,7 +16,7 @@ limitations under the License.
 
 :)
 
-declare namespace xladd="http://marklogic.com/openxl/exceladdin";
+declare namespace pptadd="http://marklogic.com/openxml/pptaddin";
 declare namespace html = "http://www.w3.org/1999/xhtml";
 declare namespace a="http://schemas.openxmlformats.org/drawingml/2006/main";
 declare namespace r="http://schemas.openxmlformats.org/officeDocument/2006/relationships";
@@ -25,11 +25,11 @@ declare namespace dc = "http://purl.org/dc/elements/1.1/";
 declare namespace cp = "http://schemas.openxmlformats.org/package/2006/metadata/core-properties";
 declare namespace dcterms="http://purl.org/dc/terms/";
 
-declare variable $xladd:bsv as xs:string external;
-declare variable $xladd:searchtype as xs:string external;
+declare variable $pptadd:bsv as xs:string external;
+declare variable $pptadd:searchtype as xs:string external;
 
-let $searchparam := $xladd:bsv
-let $searchtype :=  $xladd:searchtype
+let $searchparam := $pptadd:bsv
+let $searchtype :=  $pptadd:searchtype
 
 let $return := 
 if($searchtype eq "slide") then
@@ -60,7 +60,7 @@ if($searchtype eq "slide") then
               <li>
                 <table>
                   <tr>
-                    <td><a name={$imgnum} href={$imganchor} onclick="copyPasteSlideToActive('{$pptx}','{$index}','{$d}')">
+                    <td><a name={$imgnum} href={$imganchor} onclick="insertSlide('{$pptx}','{$index}','{$d}')">
                           <img src="{$src}" class="resize"></img>
                         </a>
                     </td>
@@ -74,7 +74,7 @@ if($searchtype eq "slide") then
               </div>,<br/> 
           )
      
-     return <div>{(:$searchtype:)}<ul class="thumb">{$disp-slides}</ul></div>
+     return <div><ul class="thumb">{$disp-slides}</ul></div>
 else if($searchtype eq "image") then
      let $pics := cts:uri-match(fn:concat("/",$searchparam,"*.jpg"))
      for $pic at $d in $pics

@@ -17,7 +17,7 @@ limitations under the License.
 :)
 
 declare namespace w="http://schemas.openxmlformats.org/wordprocessingml/2006/main";
-declare namespace xladd="http://marklogic.com/openxl/exceladdin";
+declare namespace pptadd="http://marklogic.com/openxml/pptaddin";
 
 xdmp:set-response-content-type('text/html;charset=utf-8'),
 (:'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',:)
@@ -35,51 +35,47 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 </head>
 {
 let $rgb :=  "rgb(200,216,237)"
-let $searchparam := if(fn:empty(xdmp:get-request-field("xladd:bsv"))) then "" else (xdmp:get-request-field("xladd:bsv"))
-let $searchtype :=  if(fn:empty(xdmp:get-request-field("xladd:searchtype"))) then "" else (xdmp:get-request-field("xladd:searchtype"))
-(:do test for checked here :)
-let $searchval := $searchparam (: if(fn:empty($xladd:bsv) or $xladd:bsv eq "") then () else $xladd:bsv :)
+let $searchparam := if(fn:empty(xdmp:get-request-field("pptadd:bsv"))) then "" else (xdmp:get-request-field("pptadd:bsv"))
+let $searchtype :=  if(fn:empty(xdmp:get-request-field("pptadd:searchtype"))) then "" else (xdmp:get-request-field("pptadd:searchtype"))
+
+let $searchval := $searchparam 
 let $body :=
       <body bgcolor={$rgb}>
 	<div id="ML-Add-in">
 <br/>
 <form id="basicsearch" action="default.xqy" method="post">
                    <div>
-                      <input type="text" size="40" name="xladd:bsv" autocomplete="off" value={$searchval} id="bsearchval"  method="post"/>&nbsp;
-                     <!-- TEST : { $no:color}--><input type="submit" value="Go"/> 
+                      <input type="text" size="40" name="pptadd:bsv" autocomplete="off" value={$searchval} id="bsearchval"  method="post"/>&nbsp;
+                      <input type="submit" value="Go"/> 
                   </div>     
                    <br/> {
                          if($searchtype eq "slide")
                          then
-                            <input type="radio" name="xladd:searchtype" checked="checked" value="slide" id="s"/>
+                            <input type="radio" name="pptadd:searchtype" checked="checked" value="slide" id="s"/>
                          else
-                            <input type="radio" name="xladd:searchtype" value="slide" id="s"/>
+                            <input type="radio" name="pptadd:searchtype" value="slide" id="s"/>
                          }Slides
                          {
                          if($searchtype eq "image")
                          then
-                            <input type="radio" name="xladd:searchtype" value="image" checked="checked" id="i"/>
+                            <input type="radio" name="pptadd:searchtype" value="image" checked="checked" id="i"/>
                          else
-                            <input type="radio" name="xladd:searchtype" value="image" id="i"/>
+                            <input type="radio" name="pptadd:searchtype" value="image" id="i"/>
                          }Images
                          {
                          if($searchtype eq "pres")
                          then
-                            <input type="radio" name="xladd:searchtype" value="pres" checked="checked" id="i"/>
+                            <input type="radio" name="pptadd:searchtype" value="pres" checked="checked" id="i"/>
                          else
-                            <input type="radio" name="xladd:searchtype" value="pres" id="i"/>
+                            <input type="radio" name="pptadd:searchtype" value="pres" id="i"/>
                          }Presentations
                   </form>   
-               {(:
-                    xdmp:invoke("image-search.xqy",  (xs:QName("xladd:bsv"),$searchparam ))
-               :)}
                <br/><br/>
-            
                {
                 let $res := 
                  if(fn:not(fn:empty($searchparam) or $searchparam eq "" )) then
 
-                     xdmp:invoke("search-results.xqy",((xs:QName("xladd:bsv"), $searchparam),(xs:QName("xladd:searchtype"), $searchtype)))
+                     xdmp:invoke("search-results.xqy",((xs:QName("pptadd:bsv"), $searchparam),(xs:QName("pptadd:searchtype"), $searchtype)))
                 
                  else ()
                  return $res
