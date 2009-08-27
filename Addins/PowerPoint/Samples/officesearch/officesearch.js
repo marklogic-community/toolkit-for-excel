@@ -55,23 +55,49 @@ function insertImage(picuri)
        var msg = MLA.insertImage(picuri,"oslo","oslo");
 }
 
-function copyPasteSlideToActive(docuri, slideidx, retainidx)
+function insertSlide(docuri, slideidx, retainidx)
 {
-       var retain=document.getElementById("retain"+retainidx).checked;
-       var tmpPath = MLA.getTempPath();
+       var form=document.getElementById("buttons"+retainidx);
+       var type="";
+       var docname="";
 
-       var config = MLA.getConfiguration();
-       var fullurl= config.url;
-       var url = fullurl + "/officesearch/download-support.xqy?uid="+docuri;
+       for (var i = 0; i < form.searchtype.length; i++) {
+         if (form.searchtype[i].checked) {
+             type=form.searchtype[i].value;
+	     docname=form.searchtype[i].name;
+         break;
+            }
+       }
+
+          if(type=="insertslide")
+	  {
+                  // var retain=document.getElementById("retain"+retainidx).checked;
+		  var retain = "false";
+                  var tmpPath = MLA.getTempPath();
+
+                  var config = MLA.getConfiguration();
+                  var fullurl= config.url;
+                  var url = fullurl + "/officesearch/download-support.xqy?uid="+docuri;
       
-       var tokens = docuri.split("/");
-       var filename = tokens[tokens.length-1]; 
-       var msg = MLA.copyPasteSlideToActive(tmpPath, filename,slideidx, url, "oslo","oslo",retain);
+                  var tokens = docuri.split("/");
+                  var filename = tokens[tokens.length-1]; 
+                  var msg = MLA.insertSlide(tmpPath, filename,slideidx, url, "oslo","oslo",retain);
+	  }
+	  else if(type=="opendocument")
+	  { 
+		  docname = docname.replace("/ppt/slides/","");
+		  docname = docname.replace(/slide[0-9]+.xml/,"");
+		  docname = docname.replace("_pptx_parts",".pptx");
+
+		  var clean = docname.split("/");
+		  var title = clean[clean.length-1];
+		  var myref = window.location('http://localhost:8023/openbinary.xqy?url='+docuri+'&title='+title);
+	  }
+	  
 }
 
 function openPPTX(docuri)
 {
-       //alert("docuri for testOpen():"+ docuri);
        var tokens = docuri.split("/");
        var filename = tokens[tokens.length-1];
        var tmpPath = MLA.getTempPath(); 
@@ -83,14 +109,12 @@ function openPPTX(docuri)
        var msg = MLA.openPPTX(tmpPath, filename, url, "oslo","oslo");
 }
 
-/* -----------------------------HERE --------------------------------------------*/
 function openDocument(t,txt)
 {
-//alert("TEST"+t+txt);
    var form=document.getElementById("buttons"+t);
    var type="";
    var docname="";
-   //var form = document.forms[0];
+
    for (var i = 0; i < form.searchtype.length; i++) {
       if (form.searchtype[i].checked) {
           type=form.searchtype[i].value;
@@ -101,9 +125,9 @@ function openDocument(t,txt)
 
           if(type=="inserttext")
 	  {
-		  //alert("true"+docname);
-		  window.external.insertText(txt);
-	  }else if(type=="opendocument")
+		  MLA.insertText(txt);
+	  }
+	  else if(type=="opendocument")
 	  {
 		  //title for word doc
 		  docname = docname.replace("/word/document.xml","");
@@ -121,12 +145,12 @@ function openDocument(t,txt)
 	  }
 	  else if(type=="embeddocument")
 	  {
-		  alert("docname before: "+docname);
-
+		  //title for word doc
 		  docname = docname.replace("/word/document.xml","");
 		  docname = docname.replace("_docx_parts",".docx");
 
 
+		  //title for xl doc
 		  docname = docname.replace("/xl/worksheets/","");
 		  docname = docname.replace(/sheet[0-9]+.xml/,"");
 		  docname = docname.replace("_xlsx_parts",".xlsx");
@@ -140,26 +164,9 @@ function openDocument(t,txt)
                   var config = MLA.getConfiguration();
                   var fullurl= config.url;
                   var url = fullurl + "/officesearch/download-support.xqy?uid="+docname;
-		  alert("tmppath: "+tmpPath+"\n  url: "+url+ "\n   title: "+title);
-                  var msg = window.external.embedOLE(tmpPath, title, url, "oslo","oslo");
-		  alert("message"+msg);
-	  }else
-	  {
-		  alert("foo"+txt+ "length"+txt);
-		  var table = document.getElementById(txt);
-		  var list = table.getElementsByTagName('TR');
+		  //alert("tmppath: "+tmpPath+"\n  url: "+url+ "\n   title: "+title);
 
-		  for(var l =0; l<list.length; l++)
-		  {
-                     alert(list[l].innerHTML);
-		  }
-
-
+                  var msg = MLA.embedOLE(tmpPath, title, url, "oslo","oslo");
 	  }
 
-}
-
-function test()
-{
-	alert("testing");
 }

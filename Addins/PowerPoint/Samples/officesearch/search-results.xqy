@@ -16,7 +16,7 @@ limitations under the License.
 
 :)
 
-declare namespace xladd="http://marklogic.com/openxl/exceladdin";
+declare namespace pptadd="http://marklogic.com/openxml/pptaddin";
 declare namespace html = "http://www.w3.org/1999/xhtml";
 declare namespace a="http://schemas.openxmlformats.org/drawingml/2006/main";
 declare namespace r="http://schemas.openxmlformats.org/officeDocument/2006/relationships";
@@ -27,9 +27,9 @@ declare namespace dcterms="http://purl.org/dc/terms/";
 declare namespace ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 declare namespace w="http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 
-declare variable $xladd:bsv as xs:string external;
+declare variable $pptadd:bsv as xs:string external;
 
-let $searchparam := $xladd:bsv
+let $searchparam := $pptadd:bsv
 
 let $w-query := cts:word-query($searchparam)
 let $slides := cts:search(/(p:sld|ms:worksheet/ms:sheetData/ms:row|w:document/w:body/w:p), $w-query)
@@ -40,6 +40,7 @@ let $type := for $s at $res in $slides
              let $t := 
                if(fn:not(fn:empty($s/p:cSld))) then
                     let $orig-uri := xdmp:node-uri($s)
+                    let $uri := fn:replace($orig-uri,"_pptx_parts/ppt/slides",".pptx")
                        
                     let $tmp-uri := fn:replace($orig-uri,"_pptx_parts/ppt/slides","_PNG")
                     let $tmp-uri2 := fn:replace($tmp-uri,"slide","Slide")
@@ -63,15 +64,25 @@ let $type := for $s at $res in $slides
                          <table>
                           <tr>
                            <td>
-                            <a name={$imgnum} href={$imganchor} onclick="copyPasteSlideToActive('{$pptx}','{$index}','{$res}')">
+                            <a name={$imgnum} href={$imganchor} onclick="insertSlide('{$pptx}','{$index}','{$res}')">
+                            {(:<a name={$imgnum} href={$imganchor} onclick="insertSlide('{$pptx}','{$index}','{$res}')"> :)}
                              <img src="{$src}" class="resize"></img>
                             </a>
                            </td>
-                           <td style="vertical-align: top;" >
+                           <!--<td style="vertical-align: top;" >
                             <input type="checkbox" id={fn:concat("retain",$res)} name="format"/>retain format
-                           </td>
+                           </td>-->
                           </tr>
                          </table>
+                              <ul>
+                               <li>
+                                  <form id={fn:concat("buttons",$res)}>
+                                    <input type="radio" name="{$orig-uri}" value="insertslide" id="searchtype"/>Insert Slide
+                                    <input type="radio" name="{$orig-uri}" value="embeddocument" id="searchtype" disabled="disabled"/>Embed Document
+                                    <input type="radio" name="{$orig-uri}" value="opendocument" id="searchtype"/>Open Document
+                                  </form>
+                               </li>
+                              </ul>
                          </li>
                          <br/>
                          </div>,<br/> 
