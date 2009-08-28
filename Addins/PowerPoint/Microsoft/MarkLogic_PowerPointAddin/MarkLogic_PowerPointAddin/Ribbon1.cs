@@ -42,54 +42,66 @@ namespace MarkLogic_PowerPointAddin
 
         }
 
-        private void button2_Click(object sender, RibbonControlEventArgs e)
+        private void saveasbutton_Click(object sender, RibbonControlEventArgs e)
         {
-            UserControl1 uc = (UserControl1)Globals.ThisAddIn.myPane.Control;
-            AddinConfiguration ac = AddinConfiguration.GetInstance();
-        System.Windows.Forms.MessageBox.Show("url"+ac.getWebURL()+"\nuser:"+ac.getUser()+"\npass:"+ac.getAuth()+"\nribbonxqy:"+ac.getRibbonXqy());
-            //need user, pwd, and .xqy in reg
-            string url = "http://localhost:8023/ppt/api/upload.xqy?uid="; //add to config and get from there
-            string user = "oslo";
-            string pwd ="oslo";
-            string filename="";
-            string saveasdir = uc.getTempPath();
-
-            PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
-            string path = pptx.Path;
-
-
-            if ((pptx.Name == null || pptx.Name.Equals("") || pptx.Path == null || pptx.Path.Equals("")))
+            try
             {
-                filename = uc.useSaveFileDialog();
-                //System.Windows.Forms.MessageBox.Show("name: "+filename);
+                UserControl1 uc = (UserControl1)Globals.ThisAddIn.myPane.Control;
+                AddinConfiguration ac = AddinConfiguration.GetInstance();
+
+                string url = ac.getWebURL() + ac.getRibbonXqy();
+                string user = ac.getUser();
+                string pwd = ac.getAuth();
+                string filename = "";
+                string saveasdir = uc.getTempPath();
+
+                PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
+                string path = pptx.Path;
+
+
+                if ((pptx.Name == null || pptx.Name.Equals("") || pptx.Path == null || pptx.Path.Equals("")))
+                {
+                    filename = uc.useSaveFileDialog();
+                }
+                else
+                {
+                    filename = pptx.Name;
+                }
+
+                //url = url + "/" + filename;
+
+                if (!(filename.Equals("") || filename == null))
+                    uc.saveActivePresentationAndImages(saveasdir, filename, url, user, pwd);
             }
-            else
+            catch (Exception ex)
             {
-                filename = pptx.Name;
-                //System.Windows.Forms.MessageBox.Show("name2: " + filename);
+                System.Windows.Forms.MessageBox.Show("An Error occurred when trying to save the presentation.\n\n" + ex.Message);
             }
-
-            url = url + "/" + filename;
-
-            if (!(filename.Equals("") || filename == null))
-                uc.saveWithImages(saveasdir,filename, url, user, pwd);
 
         }
 
-        private void button3_Click(object sender, RibbonControlEventArgs e)
+        private void savebutton_Click(object sender, RibbonControlEventArgs e)
         {
-            UserControl1 uc = (UserControl1)Globals.ThisAddIn.myPane.Control;
-            string url = "http://localhost:8023/ppt/api/upload.xqy?uid=";
-            string user = "oslo";
-            string pwd = "oslo";
-            
-            string filename = uc.useSaveFileDialog();
-            string saveasdir = uc.getTempPath();
+            try
+            {
+                UserControl1 uc = (UserControl1)Globals.ThisAddIn.myPane.Control;
+                AddinConfiguration ac = AddinConfiguration.GetInstance();
+                string url = ac.getWebURL() + ac.getRibbonXqy();
+                string user = ac.getUser();
+                string pwd = ac.getAuth();
 
-            url = url + "/" + filename;
+                string filename = uc.useSaveFileDialog();
+                string saveasdir = uc.getTempPath();
 
-            if (!(filename.Equals("") || filename == null))
-               uc.saveWithImages(saveasdir, filename,url, user, pwd);
+                //url = url +"/" + filename;
+
+                if (!(filename.Equals("") || filename == null))
+                    uc.saveActivePresentationAndImages(saveasdir, filename, url, user, pwd);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("An error occurred when trying to save the presentation.\n\n" + ex.Message);
+            }
         }
 
        /* private string useSaveFileDialog()

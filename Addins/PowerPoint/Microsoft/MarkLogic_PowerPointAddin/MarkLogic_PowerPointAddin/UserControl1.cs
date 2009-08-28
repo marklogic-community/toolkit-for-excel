@@ -323,17 +323,32 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-        public String getFileName()
+        public String getPresentationName()
         {
             string filename = "";
-            filename = Globals.ThisAddIn.Application.ActivePresentation.Name;
+            try{
+                filename = Globals.ThisAddIn.Application.ActivePresentation.Name;
+            }catch(Exception e)
+            {
+                string errorMsg = e.Message;
+                filename = "error: " + errorMsg;
+            }
+
             return filename;
         }
 
-        public String getPath()
+        public String getPresentationPath()
         {
             string path = "";
-            path = Globals.ThisAddIn.Application.ActivePresentation.Path;
+            try
+            {
+                path = Globals.ThisAddIn.Application.ActivePresentation.Path;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                path = "error: " + errorMsg;
+            }
             return path;
         }
 
@@ -500,7 +515,7 @@ namespace MarkLogic_PowerPointAddin
                 {
                     PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
                     int num = Convert.ToInt32(slideidx);
-                    copyPasteSlideToActiveSupport(sourcePres, num, retainformat);
+                    copyPasteSlideToActive(sourcePres, num, retainformat);
                     sourcePres.Close();
                     sourcePres = null;
                 }
@@ -516,7 +531,7 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-        public string copyPasteSlideToActiveSupport(PPT.Presentation sourcePres, int slideidx, bool retain)
+        public string copyPasteSlideToActive(PPT.Presentation sourcePres, int slideidx, bool retain)
         {
             string message = "";
             PPT.Presentation activePres = Globals.ThisAddIn.Application.ActivePresentation;
@@ -661,12 +676,13 @@ namespace MarkLogic_PowerPointAddin
             return bytearray;
         }
 
-        public string saveToML(string filename, string url, string user , string pwd)
+        public string saveActivePresentation(string filename, string url, string user , string pwd)
         {
+            //MessageBox.Show("SAVE ACTIVE PRESENTATION:\nfilename: " + filename + "\nurl: " + url); 
             string message = "";
             try
             {
-                MessageBox.Show("Filename: " + filename + "\n url: " + url + "\n");
+                //MessageBox.Show("Filename: " + filename + "\n url: " + url + "\n");
 
                 FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 int length = (int)fs.Length;
@@ -681,7 +697,6 @@ namespace MarkLogic_PowerPointAddin
                 {
                     string errorMsg = e.Message;
                     message = "error: " + errorMsg;
-                   // MessageBox.Show("message1 :" + message);
                 }
 
                 fs.Dispose();
@@ -697,10 +712,11 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-        public string saveWithImages(string saveasdirectory, string saveasname, string url, string user, string pwd)
+        public string saveActivePresentationAndImages(string saveasdirectory, string saveasname, string url, string user, string pwd)
         {
-            //dir parameter?  make optional in the javascript.  So you can save anywhere in ML.
-            //remember to tied to filenames and mapping
+           //MessageBox.Show("SAVE PRES WITH IMAGES:\nsaveasdirectory: " + saveasdirectory + "\nsaveasname: " + saveasname+"\nurl: "+url); 
+           //can just append /dir/path/etc to url= for insert in other locations.
+           //may want to have parameter later
            string message = "";
 
            try
@@ -708,7 +724,6 @@ namespace MarkLogic_PowerPointAddin
 
             PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
 
-            //string url = "http://localhost:8023/ppt/api/upload.xqy?uid=";
             string fullfilenamewithpath = "";
             string imgdirwithpath = "";
             string filename = "";
@@ -718,55 +733,68 @@ namespace MarkLogic_PowerPointAddin
 
             pptx.SaveAs(fullfilenamewithpath, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Microsoft.Office.Core.MsoTriState.msoFalse);
             imgdirwithpath = convertFilenameToImageDir(fullfilenamewithpath);
-            saveImages(imgdirwithpath, user, pwd);
 
-            saveToML(fullfilenamewithpath, url, user, pwd);  //rename saveActivePresentation() - see excel
+            saveImages(imgdirwithpath, url, user, pwd);
+            string fullurl = url + "/" + filename;
+            saveActivePresentation(fullfilenamewithpath, fullurl, user, pwd);
           
            }
            catch (Exception e)
            {
                string errorMsg = e.Message;
                message = "error: " + errorMsg;
-               //MessageBox.Show("Error" + e.Message);
            }
 
             return message;
         }
 
-        public string saveImages(string imgdirwithpath, string user, string pwd)
+        public string saveImages(string imgdirwithpath, string url, string user, string pwd)
         {
+            //MessageBox.Show("SAVE IMAGES:\nimgdirwithpath: " + imgdirwithpath + "\nurl: " + url); 
             string message = "";
             string imgdir = imgdirwithpath.Split(new Char[] { '\\' }).Last();
         
-            MessageBox.Show("In Save Images. \nImgDirWithPath: "+imgdirwithpath+"\nImageDir: " + imgdir);
-            imgdir = "/" + imgdir; // +"/";
+            imgdir = "/" + imgdir; 
             PPT.Presentation ppt = Globals.ThisAddIn.Application.ActivePresentation;
 
-            //need some try/catch action here ( and all over the place)
-            if (Directory.Exists(imgdirwithpath))
+            try
             {
-                string[] files = Directory.GetFiles(imgdirwithpath);
-                foreach (string s in files)
+                if (Directory.Exists(imgdirwithpath))
                 {
-                    File.Delete(s);
+                    string[] files = Directory.GetFiles(imgdirwithpath);
+                    foreach (string s in files)
+                    {
+                        File.Delete(s);
+                    }
+                    Directory.Delete(imgdirwithpath);
                 }
-                Directory.Delete(imgdirwithpath);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+                return message;
             }
 
-            ppt.SaveAs(imgdirwithpath, PPT.PpSaveAsFileType.ppSaveAsPNG,Office.MsoTriState.msoFalse);
+            try
+            {
+                ppt.SaveAs(imgdirwithpath, PPT.PpSaveAsFileType.ppSaveAsPNG, Office.MsoTriState.msoFalse);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+                return message;
+            }
+
             string[] imgfiles = Directory.GetFiles(imgdirwithpath);
 
             foreach (string i in imgfiles)
             {
-
                 string fname = i.Split(new Char[] { '\\' }).Last();
                 string fileuri = imgdir + "/" + fname;
+                string fullurl = url + fileuri;
 
-                MessageBox.Show("i"+i);
-                MessageBox.Show("FileUri"+fileuri);
-
-                string url = "http://localhost:8023/ppt/api/upload.xqy?uid=" + fileuri;
-                MessageBox.Show("url"+url);
                 try
                 {
                    
@@ -777,13 +805,12 @@ namespace MarkLogic_PowerPointAddin
 
                     try
                     {
-                        uploadData(url, content,user,pwd);
+                        uploadData(fullurl, content,user,pwd);
                     }
                     catch (Exception e)
                     {
                         string errorMsg = e.Message;
                         message = "error: " + errorMsg;
-                        MessageBox.Show("message1 :" + message);
                     }
                     
                     fs.Dispose();
@@ -794,15 +821,9 @@ namespace MarkLogic_PowerPointAddin
                 {
                     string errorMsg = e.Message;
                     message = "error: " + errorMsg;
-                    MessageBox.Show("message2 :" + message);
                 }
             }
 
-            //have the images, now have to get files and upload to ML
-            //don't delete til we've copied to ML
-
-
-            //Directory.Delete(imgdir);
             return message;
         }
 
