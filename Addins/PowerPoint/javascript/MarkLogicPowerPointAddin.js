@@ -408,3 +408,93 @@ MLA.embedOLE = function(tmpPath, title, url, usr, pwd)
 
 	return msg;
 }
+
+MLA.useSaveFileDialog =function()
+{
+	var msg=window.external.useSaveFileDialog();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to embedOLE; "+errMsg);
+
+	return msg;
+}
+
+/**
+ * Returns the path being used for the /temp dir on the client system
+ * @throws Exception if unable to retrieve the /temp path
+ */
+MLA.convertFilenameToImageDir = function(filename)
+{
+	//alert("IN HERE");
+	var msg=window.external.convertFilenameToImageDir(filename);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to convert filename to image directory name; "+errMsg);
+
+	return msg;
+}
+
+/**
+ * Returns the path being used for the active presentation on the client system
+ * @throws Exception if unable to retrieve the presentation path
+ */
+MLA.getPresentationPath = function()
+{
+	//alert("IN HERE");
+	var msg=window.external.getPresentationPath();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getPresentationPath; "+errMsg);
+
+	return msg;
+}
+
+/**
+ * Returns the name being used for the active presentation on the client system
+ * @throws Exception if unable to retrieve the presentation name
+ */
+MLA.getPresentationName = function()
+{
+	//alert("IN HERE");
+	var msg=window.external.getPresentationName();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getPresentationName; "+errMsg);
+
+	return msg;
+}
+
+MLA.saveLocalCopy = function(filename)
+{
+	alert("saving local copy");
+	var msg = window.external.saveLocalCopy(filename);
+	return msg;
+}
+
+MLA.saveActivePresentation = function(filename, url, user, pwd)
+{//filename is path/name of where you want to save locally.  
+ //url includes filename to save as on ML
+	alert("saving active presentation");
+	var msg=window.external.saveActivePresentation(filename, url, user, pwd);
+	alert("after"+msg);
+	return msg;
+}
+
+MLA.saveImages = function(imgdir, url, user, pwd)
+{
+	alert("saving images");
+	var msg = window.external.saveImages(imgdir,url,user,pwd);
+	alert("after"+msg);
+	return msg;
+}
+
+//MLA.saveActivePresentationAndImages = function()
+MLA.saveActivePresentationAndImages = function(saveasdir, saveasname, url, user, pwd)
+{
+	alert("saving active presentation and images");
+}
+

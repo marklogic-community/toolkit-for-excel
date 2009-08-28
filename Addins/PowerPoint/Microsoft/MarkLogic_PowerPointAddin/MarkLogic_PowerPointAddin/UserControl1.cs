@@ -588,8 +588,8 @@ namespace MarkLogic_PowerPointAddin
             string[] split = filename.Split(new Char[] { '\\' });
             fname = split.Last();
             tmpDir = filename.Replace(fname, "");
-            fname = fname.Replace(".pptx", "_PNG"); 
-            imgDir = getTempPath() + fname;
+            fname = fname.Replace(".pptx", "_PNG");
+            imgDir = fname; //getTempPath() + fname;
             return imgDir;
 
         }
@@ -602,15 +602,19 @@ namespace MarkLogic_PowerPointAddin
                 Prompt p = new Prompt();
                 p.ShowDialog();
                 string filename = p.pfilename;
-
-                if (!filename.EndsWith(".pptx"))
+                if (filename.Trim().Equals("") || filename.Trim() == null)
                 {
-                    message = filename + ".pptx";
+                    //do nothing
+                }
+                else if (!filename.EndsWith(".pptx"))
+                {
+                        message = filename + ".pptx";
                 }
                 else
                 {
-                    message = filename;
+                        message = filename;
                 }
+                
             }
             catch (Exception e)
             {
@@ -712,6 +716,24 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
+        public string saveLocalCopy(string filename)
+        {
+            string message = "";
+
+            try
+            {
+                PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
+                pptx.SaveAs(filename, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Microsoft.Office.Core.MsoTriState.msoFalse);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
         public string saveActivePresentationAndImages(string saveasdirectory, string saveasname, string url, string user, string pwd)
         {
            //MessageBox.Show("SAVE PRES WITH IMAGES:\nsaveasdirectory: " + saveasdirectory + "\nsaveasname: " + saveasname+"\nurl: "+url); 
@@ -722,7 +744,7 @@ namespace MarkLogic_PowerPointAddin
            try
            {
 
-            PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
+   //         PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
 
             string fullfilenamewithpath = "";
             string imgdirwithpath = "";
@@ -731,8 +753,9 @@ namespace MarkLogic_PowerPointAddin
             fullfilenamewithpath = saveasdirectory + saveasname; // useSaveFileDialog()+".pptx";
             filename = fullfilenamewithpath.Split(new Char[] { '\\' }).Last();
 
-            pptx.SaveAs(fullfilenamewithpath, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Microsoft.Office.Core.MsoTriState.msoFalse);
-            imgdirwithpath = convertFilenameToImageDir(fullfilenamewithpath);
+            saveLocalCopy(fullfilenamewithpath);    
+   //         pptx.SaveAs(fullfilenamewithpath, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Microsoft.Office.Core.MsoTriState.msoFalse);
+            imgdirwithpath = getTempPath() + convertFilenameToImageDir(fullfilenamewithpath);
 
             saveImages(imgdirwithpath, url, user, pwd);
             string fullurl = url + "/" + filename;
