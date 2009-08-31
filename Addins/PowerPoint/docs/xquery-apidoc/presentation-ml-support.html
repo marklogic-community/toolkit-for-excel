@@ -499,18 +499,38 @@
 				  <td>
 
             <table>
-            <tbody><tr>
+	    <tbody>
+              <tr>
 					<td colspan="2" style="font-size: 12pt; font-family: Courier;">
                  <a id="ppt:insert-slide"></a><b><font color="#c00831">
-                 excel:a1-column</font></b>(
+                 ppt:insert-slide</font></b>(
                     </td>
 				      </tr><tr>
 					<td width="20"></td>
 					<td style="font-size: 11pt; font-family: Courier;">
-                      $a1 as xs:string
+                      $to-pkg-map as map:map
                       </td>
-				      </tr><tr>
-					<td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp; as &nbsp;xs:string</td>
+				      </tr>
+<tr>
+					<td width="20"></td>
+					<td style="font-size: 11pt; font-family: Courier;">
+                      $from-pres as xs:string+
+                      </td>
+				      </tr>
+<tr>
+					<td width="20"></td>
+					<td style="font-size: 11pt; font-family: Courier;">
+                       $from-idx as xs:integer+
+                      </td>
+				      </tr>
+<tr>
+					<td width="20"></td>
+					<td style="font-size: 11pt; font-family: Courier;">
+                       $insert-idx as xs:integer
+                      </td>
+				      </tr>
+                                      <tr>
+					<td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp; as &nbsp;map:map</td>
 				      </tr>
             </tbody></table>
 
@@ -526,7 +546,12 @@
           <img src="images/varspace.gif" width="8">
           <b>Summary:</b>
           <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
-            This function returns the column letter from A1 notation cell reference.
+	  This function returns updated map for the presentation, with slides inserted from presentations specified in parameters.
+<br/><br/>
+  The keys for the map are the names for the files within a presentation .pptx package.  The value for the key is either A) a URI for a presentation part in MarkLogic, or B) the actual XML element for the respective presentation package part.
+<br/><br/>
+<i>Note: the lengths of the sequences of $from-pres and $from-idx must be equal, otherwise an Error is thrown. </i><br/><br/>
+<i>Note: a slide may be inserted into the presentation contained within $to-pkg-map at any slide index that is within the count of slides contained within the presentation +1.  Trying to insert a slide into an index that is not allowed results in Error.</i>
           </div><br>
           </td>
 				</tr>
@@ -536,15 +561,57 @@
     <b>Parameters:</b>
       <table>
           <tbody><tr class="mainbody">
-					<td style="font-size: 11pt; font-family: Arial;">
+		<td style="font-size: 11pt; font-family: Arial;">
                <img src="images/varspace.gif" width="8">
                  <div style="margin-left: 0.5in; margin-right: 8px;">
                  <font style="font-size: 11pt; font-family: Courier;">
-                   $a1
+                   $to-pkg-map
                    :
                  </font>
                  <font style="font-family: arial; font-size: 10pt;">
-                The cell reference in A1 notation. 
+                  The map for a .pptx presentation.
+                 </font>
+                 </div> 
+            </td>
+				      </tr>
+<tr class="mainbody">
+		<td style="font-size: 11pt; font-family: Arial;">
+               <img src="images/varspace.gif" width="8">
+                 <div style="margin-left: 0.5in; margin-right: 8px;">
+                 <font style="font-size: 11pt; font-family: Courier;">
+                   $from-pres
+                   :
+                 </font>
+                 <font style="font-family: arial; font-size: 10pt;">
+                The directory in MarkLogic for a presentation from which slides will be inserted into the presentation within $to-pkg-map.
+                 </font>
+                 </div> 
+            </td>
+				      </tr>
+<tr class="mainbody">
+		<td style="font-size: 11pt; font-family: Arial;">
+               <img src="images/varspace.gif" width="8">
+                 <div style="margin-left: 0.5in; margin-right: 8px;">
+                 <font style="font-size: 11pt; font-family: Courier;">
+                   $from-idx
+                   :
+                 </font>
+                 <font style="font-family: arial; font-size: 10pt;">
+                The index of the slide within the $from-pres that is to be inserted into $to-pkg-map.
+                 </font>
+                 </div> 
+            </td>
+				      </tr>
+<tr class="mainbody">
+		<td style="font-size: 11pt; font-family: Arial;">
+               <img src="images/varspace.gif" width="8">
+                 <div style="margin-left: 0.5in; margin-right: 8px;">
+                 <font style="font-size: 11pt; font-family: Courier;">
+                   $insert-idx
+                   :
+                 </font>
+                 <font style="font-family: arial; font-size: 10pt;">
+                The insertion point for the presentation within $to-pkg-map, where the slide inserted from $from-pres will be inserted at.
                  </font>
                  </div> 
             </td>
