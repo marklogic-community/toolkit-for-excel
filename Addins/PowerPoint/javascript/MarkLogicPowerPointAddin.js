@@ -57,7 +57,7 @@ String.prototype.trim = function() {
 
 
 /**
- * Returns version of MarkLogicWordAddin.js library
+ * Returns version of MarkLogicPowerPointAddin.js library.
  * @return the version of MarkLogicWordAddin.js
  * @type String
  */
@@ -80,7 +80,7 @@ MLA.errorCheck = function(message)
 	return returnVal;
 
 }
-/** Utility function for creating Microsoft.XMLDOM object from string
+/** Utility function for creating Microsoft.XMLDOM object from string.
  *
  *@param xmlString the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML.
  *@return Microsoft.XMLDOM object
@@ -231,59 +231,6 @@ MLA.deleteCustomXMLPart = function(customXMLPartId)
 
 }
 
-
-/** Returns the document.xml for the ActiveDocument as XMLDOM object. 
- * @return document.xml from the active Open XML package -- NOTE: This is the materialized view of the document.  If you have Content Controls bound to XML data islands within the .docx package, you'll only see the inline text, not the references, nor the original XML from which the value was mapped.
- * @type Microsoft.XMLDOM object
- * @throws Exception if unable to retrieve Styles.xml from the ActiveDocument.
- */
-MLA.getActiveDocXml = function()
-{
-	var documentXml = window.external.getActiveDocXml();
-
-        var errMsg = MLA.errorCheck(documentXml);
-	if(errMsg!=null)
-	   throw("Error: Not able to getActiveDocumentXml; "+errMsg);
-
-	if(documentXml=="")
-          documentXml=null;
-
-	var v_documentXml = MLA.createXMLDOM(documentXml);
-	return v_documentXml;
-
-}
-
-
-/** Inserts document.xml into the ActiveDocument package in Word.  This will replace the contents of the entire document the user is currently viewing. 
- *
- * As this only allows insert of document.xml, it is assumed that whatever references required by document.xml by other xml files in the package currently being authored (styles, themes, etc.) already exist.
- * 
- *@param documentXml this parameter may either be A) an XMLDOM object that is the XML equivalent of the document.xml to be inserted,or B) a String, that is the serialized, well-formed XML of the document.xml to be inserted.
- *@throws Exception if unable to set the documentXml
- */
-MLA.setActiveDocXml = function(documentXml)
-{
-	var v_document="";
-
-	if(documentXml.xml)
-	{ 
-               v_document=documentXml.xml;
-	}
-	else
-	{ 
-	       v_document = documentXml;
-	}
-
-        var inserted = window.external.setActiveDocXml(v_document);
-
-	var errMsg = MLA.errorCheck(inserted);
-	if(errMsg!=null)
-	   throw("Error: Not able to setActiveDocXml. Make sure XML is well-formed and valid wordprocessingML; "+errMsg);
-
-	if(inserted=="")
-	  inserted = null;
-}
-
 /** @ignore */
 MLA.isArray = function(obj)
 {
@@ -313,16 +260,16 @@ MLA.getConfiguration = function()
 
         return MLA.config;	
 }
-/** Inserts image into the ActiveDocument at current cursor position.  
- *@param picurl a url to an XQuery module that will return the image when evaluated.  
- *@param uname username for Server
- *@param pwd password for Server
- *@throws Exception if unable to insert text
+/** Inserts image into the Presentation.  
+ *@param url a url to XQuery module that will return the image when evaluated  
+ *@param user username for the MarkLogic Server the picuri connects with
+ *@param pwd password for the MarkLogic Server the picuri connects with
+ *@throws Exception if unable to insert image
  */
-MLA.insertImage = function(picuri,uname,pwd)
+MLA.insertImage = function(url,user,pwd)
 {
 	
-	var inserted = window.external.InsertImage(picuri,uname,pwd);
+	var inserted = window.external.InsertImage(url,user,pwd);
 	var errMsg = MLA.errorCheck(inserted);
 
 	if(errMsg!=null)
@@ -332,8 +279,8 @@ MLA.insertImage = function(picuri,uname,pwd)
 }
 
 /** Inserts slide, identified by slideIdx,  into the active presentation at current slide position.  
- *@param tmpPath the directory where the local copy will be saved.  
- *@param filename the name of the powerpoint file
+ *@param tmpPath the directory (including path) where the local copy of presentation will be saved.  
+ *@param filename the name of the .pptx file
  *@param slideIdx the index of the slide within the source powerpoint file to be copied
  *@param url the url of the .pptx to be downloaded
  *@param user the username of the MarkLogic Server the url connects with
@@ -341,7 +288,7 @@ MLA.insertImage = function(picuri,uname,pwd)
  *@param retain true or false setting determines whether background style of copied slide will be retained when copied to active presentation
  *@throws Exception if unable to copy slide to active presentation 
  */
-MLA.insertSlide = function(tmpPath, filename,slideidx, url, user, pwd,retain)
+MLA.insertSlide = function(tmpPath, filename, slideidx, url, user, pwd,retain)
 {
 	var msg = window.external.insertSlide(tmpPath,filename,slideidx,url,user,pwd,retain);
 	var errMsg = MLA.errorCheck(msg);
@@ -352,7 +299,9 @@ MLA.insertSlide = function(tmpPath, filename,slideidx, url, user, pwd,retain)
 }
 
 /**
- * Returns the path being used for the /temp dir on the client system
+ * Returns the path being used for the /temp dir on the client system.
+ * @return /temp path on client system
+ * @type string
  * @throws Exception if unable to retrieve the /temp path
  */
 MLA.getTempPath = function()
@@ -367,12 +316,12 @@ MLA.getTempPath = function()
 	return msg;
 }
 
-/** opens .pptx by downloading local copy to client  
- *@param tmpPath the directory where the local copy will be saved.  
+/** Opens .pptx  into PowerPoint from local copy saved to client from MarkLogic.
+ *@param tmpPath the directory (including path) where the local copy of presentation will be saved.  
  *@param docuri the uri of the .pptx within MarkLogic
- *@param url the url of the .pptx to be downloaded
- *@param user the username of the MarkLogic Server the url connects with
- *@param pwd the password of the MarkLogic Server the url connects with
+ *@param url the url for fetching the .pptx to be downloaded
+ *@param user the username for the MarkLogic Server the url connects with
+ *@param pwd the password for the MarkLogic Server the url connects with
  *@throws Exception if unable to download and open local copy 
  */
 MLA.openPPTX = function(tmpPath, docuri, url, user, pwd)
@@ -386,18 +335,29 @@ MLA.openPPTX = function(tmpPath, docuri, url, user, pwd)
 
 	return msg;
 }
-
+/** Inserts text into the Presentation at cursor position.  
+ *@param text text to inser
+ *@throws Exception if unable to insert text
+ */
 MLA.insertText = function(text)
 {
 	var msg = window.external.insertText(text);
         var errMsg = MLA.errorCheck(msg);
 
         if(errMsg!=null) 
-        	throw("Error: Not able to openPPTX; "+errMsg);
+        	throw("Error: Not able to insertText; "+errMsg);
 
 	return msg;
 }
 
+/** Embeds OLE into the Presentation. the OLE is downloaded to client and saved into Presentation from local file.
+ *@param tmpPath the directory (including path) where the local copy of object to be embedded will be saved.  
+ *@param filename the name of the file to be embedded. tmpPath + filename should be the name and path of file on client.  
+ *@param url the url for the file to be downloaded and embedded
+ *@param user username for MarkLogic Server url connects with
+ *@param pwd password for MarkLogic Server url connects with
+ *@throws Exception if unable to embedOLE 
+ */
 MLA.embedOLE = function(tmpPath, title, url, usr, pwd)
 {
 	var msg = window.external.embedOLE(tmpPath, title, url, usr, pwd);
@@ -409,6 +369,11 @@ MLA.embedOLE = function(tmpPath, title, url, usr, pwd)
 	return msg;
 }
 
+/** Launches Windows form on client as simple SaveAs text box. 
+ * @return text entered by user as filename into form
+ * @type string 
+ *@throws Exception if unable to return text 
+ */
 MLA.useSaveFileDialog =function()
 {
 	var msg=window.external.useSaveFileDialog();
@@ -420,8 +385,10 @@ MLA.useSaveFileDialog =function()
 	return msg;
 }
 
-/**
- * Returns the path being used for the /temp dir on the client system
+/** Converts .pptx filename to image directory name.
+ * @param filename the name to be converted
+ * @return converted_name replaces .pptx of filename with _PNG 
+ * @type string
  * @throws Exception if unable to retrieve the /temp path
  */
 MLA.convertFilenameToImageDir = function(filename)
@@ -437,7 +404,9 @@ MLA.convertFilenameToImageDir = function(filename)
 }
 
 /**
- * Returns the path being used for the active presentation on the client system
+ * Returns the path being used for the active Presentation on the client system.
+ * @return path path is path for where current Presentation is saved on client
+ * @type string
  * @throws Exception if unable to retrieve the presentation path
  */
 MLA.getPresentationPath = function()
@@ -452,7 +421,9 @@ MLA.getPresentationPath = function()
 }
 
 /**
- * Returns the name being used for the active presentation on the client system
+ * Returns the name being used for the active Presentation on the client system.
+ * @return presentation_name the name of the active Presentation
+ * @type string
  * @throws Exception if unable to retrieve the presentation name
  */
 MLA.getPresentationName = function()
@@ -466,7 +437,11 @@ MLA.getPresentationName = function()
 	return msg;
 }
 
-//saves .pptx on client
+/**
+ * Saves .pptx for active Presentation on the client system.
+ * @param filename the filename (including path) to save Presentation as on client system
+ * @throws Exception if unable to save local copy
+ */
 MLA.saveLocalCopy = function(filename)
 {
 	var msg = window.external.saveLocalCopy(filename);
@@ -478,8 +453,14 @@ MLA.saveLocalCopy = function(filename)
 	return msg;
 }
 
-//saves .pptx on client (already saved) to MarkLogic
-//.pptx must have path and name, must exist somewhere on client before saving to MarkLogic
+
+/** Saves active Presentation to MarkLogic from client system.  .pptx being saved to ML must already exist (be saved) on client and have both path and name.
+ *@param filename the name of the file (including path) to be saved to MarkLogic  
+ *@param url the url on MarkLogic that the client calls to upload the presentation
+ *@param user username for MarkLogic Server url connects with
+ *@param pwd password for MarkLogic Server url connects with
+ *@throws Exception if unable to save the active Presentation
+ */
 MLA.saveActivePresentation = function(filename, url, user, pwd)
 {
 
@@ -492,7 +473,14 @@ MLA.saveActivePresentation = function(filename, url, user, pwd)
 	return msg;
 }
 
-//saves dir of images on client in _PNG dir, saves dir and contents to MarkLogic
+
+/** Saves directory of images on client. saves this directory and its contents to MarkLogic.
+ *@param imgdir the name of the directory (including path) where to save the images on the client system  
+ *@param url the url on MarkLogic that the client calls to upload the image directory and contents to MarkLogic
+ *@param user username for MarkLogic Server url connects with
+ *@param pwd password for MarkLogic Server url connects with
+ *@throws Exception if unable to save images
+ */
 MLA.saveImages = function(imgdir, url, user, pwd)
 {
 	var msg = window.external.saveImages(imgdir,url,user,pwd);
@@ -504,7 +492,14 @@ MLA.saveImages = function(imgdir, url, user, pwd)
 	return msg;
 }
 
-//saves .pptx on client , same .pptx saved to MarkLogic, associated images dir _PNG also saved to MarkLogic
+/** Saves Presentation on client as .pptx. Saves same .pptx to MarkLogic. Saves images for Presentation to client.  Saves same images to MarkLogic.
+ *@param saveasdir the name of the directory (including path) where to save the local copies
+ *@param saveasname the name to save the .pptx as (no path)
+ *@param url the url on MarkLogic that the client calls to upload the Presentation and images to MarkLogic
+ *@param user username for MarkLogic Server url connects with
+ *@param pwd password for MarkLogic Server url connects with
+ *@throws Exception if unable to save active Presentation and images
+ */
 MLA.saveActivePresentationAndImages = function(saveasdir, saveasname, url, user, pwd)
 {
 	var msg=window.external.saveActivePresentationAndImages(saveasdir, saveasname, url, user, pwd);
