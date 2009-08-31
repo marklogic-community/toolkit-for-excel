@@ -410,7 +410,6 @@ namespace MarkLogic_PowerPointAddin
                 left=220;
                 width=300;
             }
-
                          try
                          {
                              tmpdoc = path + title;
@@ -422,7 +421,6 @@ namespace MarkLogic_PowerPointAddin
                          {
                              string errorMsg = e.Message;
                              message = "error: " + errorMsg;
-                             //MessageBox.Show("ERROR" + e.StackTrace + e.Message);
                          }
 
                          try
@@ -446,7 +444,6 @@ namespace MarkLogic_PowerPointAddin
         public String openPPTX(string path, string title, string url, string user, string pwd)
         {
             //MessageBox.Show("in the addin path:"+path+  "      title:"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
-            
             string message = "";
             object missing = Type.Missing;
             string tmpdoc = "";
@@ -464,13 +461,11 @@ namespace MarkLogic_PowerPointAddin
                 MessageBox.Show(origmsg);
                 string errorMsg = e.Message;
                 message = "error: " + errorMsg;
-
             }
 
             return message;
         }
 
-        //public string copyPasteSlideToActive(string tmpPath, string filename, string slideidx,string url,string user, string pwd, string retain)
         public string insertSlide(string tmpPath, string filename, string slideidx,string url,string user, string pwd, string retain)
         {
 
@@ -503,7 +498,6 @@ namespace MarkLogic_PowerPointAddin
             }
             catch (Exception e)
             {
-                //MessageBox.Show("issue with download"+e.Message+e.StackTrace);
                 string errorMsg = e.Message;
                 message = "error: " + errorMsg;
             }
@@ -522,10 +516,8 @@ namespace MarkLogic_PowerPointAddin
             }
             catch(Exception e)
             {
-                //MessageBox.Show("Unable to open: "+e.Message);
                 string errorMsg = e.Message;
-                message = "error: " + errorMsg;
-                    
+                message = "error: " + errorMsg;    
             }
 
             return message;
@@ -546,10 +538,8 @@ namespace MarkLogic_PowerPointAddin
                 if (sourceSlides[x].SlideIndex == slideidx)
                 {
                     sourceSlides.FindBySlideID(id).Copy();
-
                     try
                     {
-
                         if (retain)
                         {
                             activeSlides.Paste(sid).FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoTrue;
@@ -569,7 +559,6 @@ namespace MarkLogic_PowerPointAddin
                     {
                         string errorMsg = e.Message;
                         message = "error: " + errorMsg; 
-                        //MessageBox.Show("FAIL" + e.Message + "   " + e.StackTrace);
                     }
                 }
 
@@ -627,7 +616,6 @@ namespace MarkLogic_PowerPointAddin
 
         private void downloadFile(string url, string sourcefile, string user, string pwd)
         {
-            //string message = "";
             try
             {
                 System.Net.WebClient Client = new System.Net.WebClient();
@@ -639,12 +627,10 @@ namespace MarkLogic_PowerPointAddin
             {
                 throw (e);
             }
-            //return message;
         }
 
         private void uploadData(string url, byte[] content, string user, string pwd)
         {
-            //string message = "";
             try
             {
                 System.Net.WebClient Client = new System.Net.WebClient();
@@ -659,12 +645,10 @@ namespace MarkLogic_PowerPointAddin
             {
                 throw (e);
             }
-           // return message;
         }
 
         private byte[] downloadData(string url, string user, string pwd)
         {
-            //MessageBox.Show("downloading data");
             byte[] bytearray;
             try
             {
@@ -682,12 +666,9 @@ namespace MarkLogic_PowerPointAddin
 
         public string saveActivePresentation(string filename, string url, string user , string pwd)
         {
-            //MessageBox.Show("SAVE ACTIVE PRESENTATION:\nfilename: " + filename + "\nurl: " + url); 
             string message = "";
             try
             {
-                //MessageBox.Show("Filename: " + filename + "\n url: " + url + "\n");
-
                 FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 int length = (int)fs.Length;
                 byte[] content = new byte[length];
@@ -743,9 +724,6 @@ namespace MarkLogic_PowerPointAddin
 
            try
            {
-
-   //         PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
-
             string fullfilenamewithpath = "";
             string imgdirwithpath = "";
             string filename = "";
@@ -754,7 +732,6 @@ namespace MarkLogic_PowerPointAddin
             filename = fullfilenamewithpath.Split(new Char[] { '\\' }).Last();
 
             saveLocalCopy(fullfilenamewithpath);    
-   //         pptx.SaveAs(fullfilenamewithpath, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Microsoft.Office.Core.MsoTriState.msoFalse);
             imgdirwithpath = getTempPath() + convertFilenameToImageDir(fullfilenamewithpath);
 
             saveImages(imgdirwithpath, url, user, pwd);
@@ -773,7 +750,6 @@ namespace MarkLogic_PowerPointAddin
 
         public string saveImages(string imgdirwithpath, string url, string user, string pwd)
         {
-            //MessageBox.Show("SAVE IMAGES:\nimgdirwithpath: " + imgdirwithpath + "\nurl: " + url); 
             string message = "";
             string imgdir = imgdirwithpath.Split(new Char[] { '\\' }).Last();
         
