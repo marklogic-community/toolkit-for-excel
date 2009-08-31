@@ -346,7 +346,7 @@ MLA.insertSlide = function(tmpPath, filename,slideidx, url, user, pwd,retain)
 	var msg = window.external.insertSlide(tmpPath,filename,slideidx,url,user,pwd,retain);
 	var errMsg = MLA.errorCheck(msg);
 	if(errMsg!=null)
-	   throw("Error: Not able to copyPasteSlideToActive; "+errMsg);
+	   throw("Error: Not able to insertSlide; "+errMsg);
 
 	return msg;
 }
@@ -442,7 +442,6 @@ MLA.convertFilenameToImageDir = function(filename)
  */
 MLA.getPresentationPath = function()
 {
-	//alert("IN HERE");
 	var msg=window.external.getPresentationPath();
 	var errMsg = MLA.errorCheck(msg);
 
@@ -458,7 +457,6 @@ MLA.getPresentationPath = function()
  */
 MLA.getPresentationName = function()
 {
-	//alert("IN HERE");
 	var msg=window.external.getPresentationName();
 	var errMsg = MLA.errorCheck(msg);
 
@@ -468,33 +466,53 @@ MLA.getPresentationName = function()
 	return msg;
 }
 
+//saves .pptx on client
 MLA.saveLocalCopy = function(filename)
 {
-	alert("saving local copy");
 	var msg = window.external.saveLocalCopy(filename);
+        var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to saveLocalCopy; "+errMsg);
+
 	return msg;
 }
 
+//saves .pptx on client (already saved) to MarkLogic
+//.pptx must have path and name, must exist somewhere on client before saving to MarkLogic
 MLA.saveActivePresentation = function(filename, url, user, pwd)
-{//filename is path/name of where you want to save locally.  
- //url includes filename to save as on ML
-	alert("saving active presentation");
+{
+
 	var msg=window.external.saveActivePresentation(filename, url, user, pwd);
-	alert("after"+msg);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to saveActivePresentation; "+errMsg);
+
 	return msg;
 }
 
+//saves dir of images on client in _PNG dir, saves dir and contents to MarkLogic
 MLA.saveImages = function(imgdir, url, user, pwd)
 {
-	alert("saving images");
 	var msg = window.external.saveImages(imgdir,url,user,pwd);
-	alert("after"+msg);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to saveImages; "+errMsg);
+
 	return msg;
 }
 
-//MLA.saveActivePresentationAndImages = function()
+//saves .pptx on client , same .pptx saved to MarkLogic, associated images dir _PNG also saved to MarkLogic
 MLA.saveActivePresentationAndImages = function(saveasdir, saveasname, url, user, pwd)
 {
-	alert("saving active presentation and images");
+	var msg=window.external.saveActivePresentationAndImages(saveasdir, saveasname, url, user, pwd);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to saveActivePresentationAndImages; "+errMsg);
+
+	return msg;
 }
 
