@@ -576,11 +576,7 @@ return ppt:directory-uris($presentation-dir)
 /foo_pptx_parts/docProps/core.xml
 /foo_pptx_parts/docProps/thumbnail.jpeg
 /foo_pptx_parts/ppt/_rels/presentation.xml.rels
-/foo_pptx_parts/ppt/handoutMasters/_rels/handoutMaster1.xml.rels
-/foo_pptx_parts/ppt/handoutMasters/handoutMaster1.xml
-/foo_pptx_parts/ppt/media/image1.jpeg
-/foo_pptx_parts/ppt/media/image2.jpeg
-/foo_pptx_parts/ppt/media/image3.png
+/foo_pptx_parts/ppt/media/image1.png
 /foo_pptx_parts/ppt/presProps.xml
 /foo_pptx_parts/ppt/presentation.xml
 /foo_pptx_parts/ppt/slideLayouts/_rels/slideLayout1.xml.rels
@@ -608,14 +604,11 @@ return ppt:directory-uris($presentation-dir)
 /foo_pptx_parts/ppt/slideMasters/_rels/slideMaster1.xml.rels
 /foo_pptx_parts/ppt/slideMasters/slideMaster1.xml
 /foo_pptx_parts/ppt/slides/_rels/slide1.xml.rels
-/foo_pptx_parts/ppt/slides/_rels/slide2.xml.rels
 /foo_pptx_parts/ppt/slides/slide1.xml
-/foo_pptx_parts/ppt/slides/slide2.xml
 /foo_pptx_parts/ppt/tableStyles.xml
-/foo_pptx_parts/ppt/theme/_rels/theme1.xml.rels
 /foo_pptx_parts/ppt/theme/theme1.xml
-/foo_pptx_parts/ppt/theme/theme2.xml
 /foo_pptx_parts/ppt/viewProps.xml
+
 
        
                                       </pre>
@@ -826,7 +819,7 @@ Add notes here about what this function does/doesn't do.
                                          </td>
 				        </tr>
                                         <tr>
-					 <td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp;as&nbsp;node()</td>
+					 <td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp;as&nbsp;element(pkg:package)</td>
 				        </tr>
                                        </tbody>
                                       </table>
@@ -884,16 +877,98 @@ Add notes here about what this function does/doesn't do.
                                      <img src="images/varspace.gif" width="8">
                                      <font style="font-size: 10pt; font-family: Arial;"><b>Example:</b></font>
                                      <div style="margin-left: 0.5in; margin-right: 8px; font-size: 9pt; font-family: Courier;"> 
-                                      <pre xml:space="preserve">
+				      <pre xml:space="preserve">
 xquery version "1.0-ml";
-import module namespace excel= "http://marklogic.com/openxml/excel" 
-       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
-       
-excel:a1-row("D23")
+import module namespace ppt=  "http://marklogic.com/openxml/powerpoint" at "/MarkLogic/openxml/presentation-ml-support.xqy";
+
+let $presentation-dir:="/foo_pptx_parts/" 
+let $uris := ppt:directory-uris($presentation-dir) 
+return ppt:package-make($presentation-dir, $uris)
 =&gt;
-23
-       
-                                      </pre>
+&lt;pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage"&gt;
+  &lt;pkg:part pkg:name="/_rels/.rels" pkg:contentType="application/vnd.openxmlformats-package.relationships+xml" pkg:padding="512"&gt;
+    &lt;pkg:xmlData&gt;
+      &lt;Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"&gt;
+        &lt;Relationship Id="rId3" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/&gt;
+        &lt;Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail" Target="docProps/thumbnail.jpeg"/&gt;
+        &lt;Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="ppt/presentation.xml"/&gt;
+        &lt;Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/&gt;
+      &lt;/Relationships&gt;
+    &lt;/pkg:xmlData&gt;
+  &lt;/pkg:part&gt;
+  &lt;pkg:part pkg:name="/docProps/app.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"&gt;
+    &lt;pkg:xmlData&gt;
+      &lt;Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" 
+                     xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"&gt;
+        &lt;TotalTime&gt;0&lt;/TotalTime&gt;
+        &lt;Words&gt;4&lt;/Words&gt;
+        &lt;Application&gt;Microsoft Office PowerPoint&lt;/Application&gt;
+        &lt;PresentationFormat&gt;On-screen Show (4:3)&lt;/PresentationFormat&gt;
+        &lt;Paragraphs&gt;1&lt;/Paragraphs&gt;
+        &lt;Slides&gt;1&lt;/Slides&gt;
+        &lt;Notes&gt;0&lt;/Notes&gt;
+        &lt;HiddenSlides&gt;0&lt;/HiddenSlides&gt;
+        &lt;MMClips&gt;0&lt;/MMClips&gt;
+        &lt;ScaleCrop&gt;false&lt;/ScaleCrop&gt;
+        &lt;HeadingPairs&gt;
+          &lt;vt:vector size="4" baseType="variant"&gt;
+            &lt;vt:variant&gt;
+              &lt;vt:lpstr&gt;Theme&lt;/vt:lpstr&gt;
+            &lt;/vt:variant&gt;
+            &lt;vt:variant&gt;
+              &lt;vt:i4&gt;1&lt;/vt:i4&gt;
+            &lt;/vt:variant&gt;
+            &lt;vt:variant&gt;
+              &lt;vt:lpstr&gt;Slide Titles&lt;/vt:lpstr&gt;
+            &lt;/vt:variant&gt;
+            &lt;vt:variant&gt;
+              &lt;vt:i4&gt;1&lt;/vt:i4&gt;
+            &lt;/vt:variant&gt;
+          &lt;/vt:vector&gt;
+        &lt;/HeadingPairs&gt;
+        &lt;TitlesOfParts&gt;
+          &lt;vt:vector size="2" baseType="lpstr"&gt;
+            &lt;vt:lpstr&gt;Office Theme&lt;/vt:lpstr&gt;
+            &lt;vt:lpstr&gt;Slide 1&lt;/vt:lpstr&gt;
+          &lt;/vt:vector&gt;
+        &lt;/TitlesOfParts&gt;
+        &lt;Company&gt;Mark Logic Corporation&lt;/Company&gt;
+        &lt;LinksUpToDate&gt;false&lt;/LinksUpToDate&gt;
+        &lt;SharedDoc&gt;false&lt;/SharedDoc&gt;
+        &lt;HyperlinksChanged&gt;false&lt;/HyperlinksChanged&gt;
+        &lt;AppVersion&gt;12.0000&lt;/AppVersion&gt;
+      &lt;/Properties&gt;
+    &lt;/pkg:xmlData&gt;
+  &lt;/pkg:part&gt;
+  &lt;pkg:part pkg:name="/docProps/core.xml" pkg:contentType="application/vnd.openxmlformats-package.core-properties+xml"&gt;
+    &lt;pkg:xmlData&gt;
+      &lt;cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" 
+			    xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/"             
+                            xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+        &lt;dc:title&gt;Slide 1&lt;/dc:title&gt;
+        &lt;dc:creator&gt;paven&lt;/dc:creator&gt;
+        &lt;cp:lastModifiedBy&gt;paven&lt;/cp:lastModifiedBy&gt;
+        &lt;cp:revision&gt;1&lt;/cp:revision&gt;
+        &lt;dcterms:created xsi:type="dcterms:W3CDTF"&gt;2009-09-01T19:36:41Z&lt;/dcterms:created&gt;
+        &lt;dcterms:modified xsi:type="dcterms:W3CDTF"&gt;2009-09-01T19:37:25Z&lt;/dcterms:modified&gt;
+      &lt;/cp:coreProperties&gt;
+    &lt;/pkg:xmlData&gt;
+  &lt;/pkg:part&gt;
+  &lt;pkg:part pkg:name="/docProps/thumbnail.jpeg" pkg:contentType="image/jpeg" pkg:compression="store"&gt;
+    &lt;pkg:binaryData&gt;
+      /9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB
+      AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEB
+      ...
+      ... 
+      ...
+  &lt;/pkg:part&gt;
+&lt;/pkg:package&gt;
+				      </pre>
+<font style="font-family: arial; font-size: 10pt;"><i>
+Note: example above truncated for brevity.  All pieces of .pptx package are present and serialized within &lt;pkg:package&gt;, captured as &lt;pkg:part&gt; elements.<br/>
+Images in this model are captured as base64 encoded strings, following the Open XML format.  This file may be opened as <br/>
+a .XML file within PowerPoint.  Saving as XML in PowerPoint will generate this format for a .pptx package as well.<br/>
+</font></i>
                                      </div>
                                     </td>
 				   </tr>
@@ -926,12 +1001,7 @@ excel:a1-row("D23")
                                          </td>
 				        </tr>
                                         <tr>
-					 <td width="20"></td>
-					 <td style="font-size: 11pt; font-family: Courier;">$uris as xs:string*
-                                         </td>
-				        </tr>
-                                        <tr>
-					 <td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp;as&nbsp;node()</td>
+					 <td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp;as&nbsp;map:map</td>
 				        </tr>
                                        </tbody>
                                       </table>
@@ -945,7 +1015,7 @@ excel:a1-row("D23")
                                       <img src="images/varspace.gif" width="8">
                                       <b>Summary:</b>
                                       <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
-            This function returns a presentation in the OPC (Open Packaging Convention) format XML.
+This function returns a map for the specified presentation. Map keys are equivalent to the manifest for the .pptx zip package.  Map values are URIs for the package parts located in MarkLogic.
                                       </div><br>
                                      </td>
 				    </tr>
@@ -962,23 +1032,11 @@ excel:a1-row("D23")
                                            <font style="font-size: 11pt; font-family: Courier;">$directory:
                                            </font>
                                            <font style="font-family: arial; font-size: 10pt;">
-                The directory in MarkLogic that includes the files for an extracted presentation. 
+                The directory in MarkLogic that contains the files of extracted presentation to be used for map. 
                                            </font>
                                           </div> 
                                          </td>
 				        </tr>
-                                        <tr class="mainbody">
-					 <td style="font-size: 11pt; font-family: Arial;">
-                                          <img src="images/varspace.gif" width="8">
-                                          <div style="margin-left: 0.5in; margin-right: 8px;">
-                                          <font style="font-size: 11pt; font-family: Courier;">$uris:
-                                          </font>
-                                          <font style="font-family: arial; font-size: 10pt;">
-                The uris for the files within the $directory to use to as the pkg:parts of the OPC package. 
-                                          </font>
-                                         </div> 
-                                        </td>
-				       </tr>
                                       </tbody>
                                      </table>
                                      <br>
@@ -991,13 +1049,50 @@ excel:a1-row("D23")
                                      <div style="margin-left: 0.5in; margin-right: 8px; font-size: 9pt; font-family: Courier;"> 
                                       <pre xml:space="preserve">
 xquery version "1.0-ml";
-import module namespace excel= "http://marklogic.com/openxml/excel" 
-       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
-       
-excel:a1-row("D23")
+import module namespace ppt=  "http://marklogic.com/openxml/powerpoint" at "/MarkLogic/openxml/presentation-ml-support.xqy";
+
+let $presentation-dir:="/foo_pptx_parts/" 
+let $map := ppt:package-map($presentation-dir)
+return map:keys($map)
 =&gt;
-23
-       
+ppt/slideLayouts/slideLayout10.xml
+ppt/slideLayouts/slideLayout11.xml
+ppt/slideLayouts/slideLayout3.xml
+ppt/slideLayouts/slideLayout4.xml
+ppt/slideLayouts/slideLayout8.xml
+ppt/slideLayouts/_rels/slideLayout4.xml.rels
+ppt/media/image1.png
+ppt/slideLayouts/_rels/slideLayout1.xml.rels
+ppt/presProps.xml
+ppt/slideMasters/slideMaster1.xml
+docProps/thumbnail.jpeg
+ppt/slides/slide1.xml
+ppt/slideLayouts/_rels/slideLayout8.xml.rels
+ppt/slideLayouts/_rels/slideLayout5.xml.rels
+ppt/slideLayouts/_rels/slideLayout11.xml.rels
+ppt/slides/_rels/slide1.xml.rels
+ppt/presentation.xml
+ppt/tableStyles.xml
+ppt/viewProps.xml
+ppt/slideLayouts/slideLayout1.xml
+docProps/app.xml
+ppt/slideLayouts/slideLayout5.xml
+ppt/slideLayouts/slideLayout9.xml
+[Content_Types].xml
+docProps/core.xml
+ppt/slideLayouts/_rels/slideLayout2.xml.rels
+ppt/slideLayouts/_rels/slideLayout9.xml.rels
+ppt/slideLayouts/_rels/slideLayout6.xml.rels
+ppt/slideLayouts/_rels/slideLayout3.xml.rels
+ppt/slideLayouts/slideLayout2.xml
+ppt/_rels/presentation.xml.rels
+ppt/slideLayouts/slideLayout6.xml
+ppt/theme/theme1.xml
+ppt/slideLayouts/slideLayout7.xml
+_rels/.rels
+ppt/slideLayouts/_rels/slideLayout7.xml.rels
+ppt/slideLayouts/_rels/slideLayout10.xml.rels
+ppt/slideMasters/_rels/slideMaster1.xml.rels
                                       </pre>
                                      </div>
                                     </td>
@@ -1027,16 +1122,11 @@ excel:a1-row("D23")
 				        </tr>
                                         <tr>
 					 <td width="20"></td>
-					 <td style="font-size: 11pt; font-family: Courier;">$directory as xs:string
+					 <td style="font-size: 11pt; font-family: Courier;">$map as map:map
                                          </td>
 				        </tr>
                                         <tr>
-					 <td width="20"></td>
-					 <td style="font-size: 11pt; font-family: Courier;">$uris as xs:string*
-                                         </td>
-				        </tr>
-                                        <tr>
-					 <td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp;as&nbsp;node()</td>
+					 <td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp;as&nbsp;binary()</td>
 				        </tr>
                                        </tbody>
                                       </table>
@@ -1050,7 +1140,7 @@ excel:a1-row("D23")
                                       <img src="images/varspace.gif" width="8">
                                       <b>Summary:</b>
                                       <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
-            This function returns a presentation in the OPC (Open Packaging Convention) format XML.
+            This function returns the zip archive for the documents specified in the map.  
                                       </div><br>
                                      </td>
 				    </tr>
@@ -1064,26 +1154,15 @@ excel:a1-row("D23")
 					 <td style="font-size: 11pt; font-family: Arial;">
                                           <img src="images/varspace.gif" width="8">
                                           <div style="margin-left: 0.5in; margin-right: 8px;">
-                                           <font style="font-size: 11pt; font-family: Courier;">$directory:
+                                           <font style="font-size: 11pt; font-family: Courier;">$map:
                                            </font>
                                            <font style="font-family: arial; font-size: 10pt;">
-                The directory in MarkLogic that includes the files for an extracted presentation. 
+		The map to create a zip archive from. The map keys will be used for as the manifest values. 
+                <br/>The map values are either URIs for documents on the server, or the XML that should be used for the file specified by key.  
                                            </font>
                                           </div> 
                                          </td>
 				        </tr>
-                                        <tr class="mainbody">
-					 <td style="font-size: 11pt; font-family: Arial;">
-                                          <img src="images/varspace.gif" width="8">
-                                          <div style="margin-left: 0.5in; margin-right: 8px;">
-                                          <font style="font-size: 11pt; font-family: Courier;">$uris:
-                                          </font>
-                                          <font style="font-family: arial; font-size: 10pt;">
-                The uris for the files within the $directory to use to as the pkg:parts of the OPC package. 
-                                          </font>
-                                         </div> 
-                                        </td>
-				       </tr>
                                       </tbody>
                                      </table>
                                      <br>
@@ -1112,114 +1191,6 @@ excel:a1-row("D23")
 				   </tr>
 	                          </tbody>
 				 </table>
-
-
-
- <table class="mainbody" width="100%" border="0" cellpadding="0" cellspacing="0">
-				   <tbody>
-                                    <tr class="mainbody">
-				     <td><img src="images/varspace.gif" height="12">
-                                      <hr class="control-line" size="1">
-                                     </td>
-				    </tr>
-                                    <tr class="mainbody">
-				     <td>
-                                      <table>
-                                       <tbody>
-                                        <tr>
-					 <td colspan="2" style="font-size: 12pt; font-family: Courier;">
-                                          <a id="ppt:package-directory-uris"></a><b><font color="#c00831">ppt:directory-uris</font></b>(
-                                         </td>
-				        </tr>
-                                        <tr>
-					 <td width="20"></td>
-					 <td style="font-size: 11pt; font-family: Courier;">$directory as xs:string
-                                         </td>
-				        </tr>
-                                        <tr>
-					 <td width="20"></td>
-					 <td style="font-size: 11pt; font-family: Courier;">$uris as xs:string*
-                                         </td>
-				        </tr>
-                                        <tr>
-					 <td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp;as&nbsp;node()</td>
-				        </tr>
-                                       </tbody>
-                                      </table>
-                                     </td>
-				    </tr>
-                                    <tr class="mainbody">
-				     <td><img src="images/varspace.gif" height="12"></td>
-				    </tr>
-                                    <tr class="mainbody">
-				     <td style="font-size: 10pt; font-family: Arial;">
-                                      <img src="images/varspace.gif" width="8">
-                                      <b>Summary:</b>
-                                      <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
-            This function returns a presentation in the OPC (Open Packaging Convention) format XML.
-                                      </div><br>
-                                     </td>
-				    </tr>
-                                    <tr class="mainbody">
-				     <td style="font-size: 10pt; font-family: Arial;">
-                                      <img src="images/varspace.gif" width="8">
-                                      <b>Parameters:</b>
-                                      <table>
-                                       <tbody>
-                                        <tr class="mainbody">
-					 <td style="font-size: 11pt; font-family: Arial;">
-                                          <img src="images/varspace.gif" width="8">
-                                          <div style="margin-left: 0.5in; margin-right: 8px;">
-                                           <font style="font-size: 11pt; font-family: Courier;">$directory:
-                                           </font>
-                                           <font style="font-family: arial; font-size: 10pt;">
-                The directory in MarkLogic that includes the files for an extracted presentation. 
-                                           </font>
-                                          </div> 
-                                         </td>
-				        </tr>
-                                        <tr class="mainbody">
-					 <td style="font-size: 11pt; font-family: Arial;">
-                                          <img src="images/varspace.gif" width="8">
-                                          <div style="margin-left: 0.5in; margin-right: 8px;">
-                                          <font style="font-size: 11pt; font-family: Courier;">$uris:
-                                          </font>
-                                          <font style="font-family: arial; font-size: 10pt;">
-                The uris for the files within the $directory to use to as the pkg:parts of the OPC package. 
-                                          </font>
-                                         </div> 
-                                        </td>
-				       </tr>
-                                      </tbody>
-                                     </table>
-                                     <br>
-                                    </td>
-				   </tr>
-                                   <tr class="mainbody">
-				    <td>
-                                     <img src="images/varspace.gif" width="8">
-                                     <font style="font-size: 10pt; font-family: Arial;"><b>Example:</b></font>
-                                     <div style="margin-left: 0.5in; margin-right: 8px; font-size: 9pt; font-family: Courier;"> 
-                                      <pre xml:space="preserve">
-xquery version "1.0-ml";
-import module namespace excel= "http://marklogic.com/openxml/excel" 
-       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
-       
-excel:a1-row("D23")
-=&gt;
-23
-       
-                                      </pre>
-                                     </div>
-                                    </td>
-				   </tr>
-                                   <tr class="mainbody">
-				    <td></td>
-				   </tr>
-	                          </tbody>
-				 </table>
-
-
 <!--
         <table class="mainbody" width="100%" border="0" cellpadding="0" cellspacing="0">
 
