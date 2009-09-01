@@ -1,132 +1,124 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
-  
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>PresentationML Support Module Functions </title>
-    <meta name="Homepage" content="server, administration, Mark Logic, xml, xquery, database">
-    <meta name="Keywords" content="server, administration, Mark Logic, xml, xquery, database">
-    <meta name="Description" content="PresentationML Support Module Functions">
-    <link href="images/admin.css" type="text/css" rel="stylesheet">
-    <script type="text/javascript" language="javascript" src="images/tree.js"></script>
-  </head><div FirebugVersion="1.3.3" style="display: none;" id="_firebugConsole"></div><body>
-<form name="apidocs" action="apidocs.xqy" method="get">
-      <input name="fname" value="PresentationML" type="hidden">
-      <table width="100%" border="0" cellpadding="0" cellspacing="0" height="400">
-   <tbody><tr>
-	  
-	  <td class="mainbody" valign="top">
-  <table width="100%" border="0" cellpadding="0" cellspacing="0">
-    <tbody><tr style="background-color: rgb(160, 0, 46);" valign="top">
-		<td width="100%" align="left" height="90">
-        <div><img src="images/varspace.gif" alt="" width="178" height="1"></div>
-        <div class="host-details" style="padding-left: 20px; padding-top: 10px;">
-          <div>This page was generated</div>
-          <div>Sept.&nbsp;15,&nbsp;2009</div>
-          <div>11:01&nbsp;PM</div>
-        </div>
-      </td>
-		<td style="background-image: url(images/top-right-right-background.gif); background-repeat: no-repeat;" valign="bottom" width="420" align="left">
-      <div><img src="images/varspace.gif" alt="" width="420" height="1"></div>
-      <div class="page-name" style="text-align: right; padding-right: 8px; padding-bottom: 2px;">XQuery Function Reference</div>
-      </td>
-	      </tr>
-     <tr valign="top">
-		<td colspan="3" width="100%" align="left" height="100%">
-     <div><img src="images/varspace.gif" alt="" width="598" height="1"></div>
-  <table width="100%" align="center" cellpadding="4" cellspacing="1">
-    <tbody><tr valign="top">
-		      <td>
-      <table width="100%">
-      <tbody><tr align="center">
-			    <td><br>
-      <font size="+1"><b>
-      Module: PresentationML Support
-      </b><br></font>
-      <br>
-      </td>
-			  </tr>
- <tr>
-			    <td style="font-family: arial; font-size: 10pt;">
-
-      <p>The PresentationML function module is installed as the following 
-		  file:</p>
-    <ul>
-				<li><code><em>install_dir</em>/Modules/MarkLogic/openxml/presentation-ml-support.xqy</code></li>
-			      </ul>
-    <p>where <code><em>install_dir</em></code> is the directory in which 
-	    MarkLogic Server is installed.</p>
-    <p>To use the <code>presentation-ml-support.xqy</code> module in your own 
-    XQuery modules, 
-    include the following line in your XQuery prolog:</p>
-    <p><code>import module namespace ppt="http://marklogic.com/openxml/powerpoint" 
-		    at "/MarkLogic/MarkLogic/openxml/presentation-ml-support.xqy"</code></p>
-    <p>The PresentationML functions are used to manipulate Microsoft Office
-    Open XML documents.</p>
-      <table class="table-line" width="100%" align="center" bgcolor="#000000" cellpadding="4" cellspacing="1">
-      <tbody><tr bgcolor="#f2ebce">
-			    <td colspan="10">
-          <font size="+1"><b>Function Summary</b></font>
-        </td>
-			  </tr>
-      <tr class="mainbody">
-			    <td style="font-family: arial; font-size: 10pt;">
-          <a href="#ppt:insert-slide"><b>
-            ppt:insert-slide
-            </b></a> 
-          </td>
-			    <td style="font-family: arial; font-size: 10pt;">
-          This function returns updated map for the presentation, with slides inserted from presentations specified in parameters.
-          </td>
-			  </tr><tr class="mainbody">
-			    <td style="font-family: arial; font-size: 10pt;">
-          <a href="#ppt:package-make"><b>
-           ppt:package-make
-            </b></a> 
-          </td>
-			    <td style="font-family: arial; font-size: 10pt;">
-          This function returns a presentation in the OPC (Open Packaging Convention) format XML. 
-          </td>
-			  </tr>
-<tr class="mainbody">
-			    <td style="font-family: arial; font-size: 10pt;">
-          <a href="#ppt:package-map-create"><b>
-           ppt:package-map-create
-            </b></a> 
-          </td>
-			    <td style="font-family: arial; font-size: 10pt;">
-           This function returns a map for the specified presentation.
-          </td>
-			  </tr>
-
-<tr class="mainbody">
-			    <td style="font-family: arial; font-size: 10pt;">
-          <a href="#ppt:package-map-zip"><b>
-            ppt:package-map-zip
-            </b></a> 
-          </td>
-			    <td style="font-family: arial; font-size: 10pt;">
-          This function returns the zip archive for the documents specified in the map. 
-          </td>
-			  </tr><tr class="mainbody">
-			    <td style="font-family: arial; font-size: 10pt;">
-          <a href="#ppt:package-uris-from-directory"><b>
-            ppt:package-uris-from-directory
-            </b></a> 
-          </td>
-			    <td style="font-family: arial; font-size: 10pt;">
-          This function returns URIs for the presentation documents within the specified directory.
-          </td>
-			  </tr><tr class="mainbody">
-			    <td style="font-family: arial; font-size: 10pt;">
-          <a href="#ppt:package-files-only"><b>
-            ppt:package-files-only
-            </b></a> 
-          </td>
-			    <td style="font-family: arial; font-size: 10pt;">
-          This function returns all URIs that are not directories. (URIs that do not end with '/') 
-          </td>
-			  </tr><tr class="mainbody">
-			    <td style="font-family: arial; font-size: 10pt;">
-          <a href="#ppt:uri-app-props"><b>
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+     <title>PresentationML Support Module Functions </title>
+     <meta name="Homepage" content="server, administration, Mark Logic, xml, xquery, database">
+     <meta name="Keywords" content="server, administration, Mark Logic, xml, xquery, database">
+     <meta name="Description" content="PresentationML Support Module Functions">
+     <link href="images/admin.css" type="text/css" rel="stylesheet">
+     <script type="text/javascript" language="javascript" src="images/tree.js"></script>
+   </head>
+   <div FirebugVersion="1.3.3" style="display: none;" id="_firebugConsole"></div>
+   <body>
+     <form name="apidocs" action="apidocs.xqy" method="get">
+       <input name="fname" value="PresentationML" type="hidden">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" height="400">
+	 <tbody>
+           <tr>
+	     <td class="mainbody" valign="top">
+              <table width="100%" border="0" cellpadding="0" cellspacing="0">
+               <tbody>
+                 <tr style="background-color: rgb(160, 0, 46);" valign="top">
+		   <td width="100%" align="left" height="90">
+                     <div><img src="images/varspace.gif" alt="" width="178" height="1"></div>
+                     <div class="host-details" style="padding-left: 20px; padding-top: 10px;">
+                       <div>This page was generated</div>
+                       <div>Sept.&nbsp;15,&nbsp;2009</div>
+                       <div>11:01&nbsp;PM</div>
+                     </div>
+                   </td>
+		   <td style="background-image: url(images/top-right-right-background.gif); background-repeat: no-repeat;" valign="bottom" width="420" align="left">
+                     <div><img src="images/varspace.gif" alt="" width="420" height="1"></div>
+                     <div class="page-name" style="text-align: right; padding-right: 8px; padding-bottom: 2px;">XQuery Function Reference</div>
+                   </td>
+	         </tr>
+                 <tr valign="top">
+		   <td colspan="3" width="100%" align="left" height="100%">
+                    <div><img src="images/varspace.gif" alt="" width="598" height="1"></div>
+                    <table width="100%" align="center" cellpadding="4" cellspacing="1">
+                      <tbody><tr valign="top">
+		        <td>
+                          <table width="100%">
+			  <tbody>
+                            <tr align="center">
+			     <td><br>
+                              <font size="+1"><b>
+                               Module: PresentationML Support
+                               </b><br></font>
+                               <br>
+                             </td>
+			    </tr>
+                            <tr>
+			     <td style="font-family: arial; font-size: 10pt;">
+                               <p>The PresentationML function module is installed as the following file:</p>
+                               <ul>
+			         <li><code><em>install_dir</em>/Modules/MarkLogic/openxml/presentation-ml-support.xqy</code></li>
+			       </ul>
+                               <p>where <code><em>install_dir</em></code> is the directory in which MarkLogic Server is installed.</p>
+                               <p>To use the <code>presentation-ml-support.xqy</code> module in your own XQuery modules, 
+                                  include the following line in your XQuery prolog:</p>
+                               <p><code>import module namespace ppt="http://marklogic.com/openxml/powerpoint" 
+		                         at "/MarkLogic/MarkLogic/openxml/presentation-ml-support.xqy"</code></p>
+                               <p>The PresentationML functions are used to manipulate Microsoft Office
+                                  Open XML documents.</p>
+                               <table class="table-line" width="100%" align="center" bgcolor="#000000" cellpadding="4" cellspacing="1">
+				<tbody>
+                                  <tr bgcolor="#f2ebce">
+			            <td colspan="10">
+                                      <font size="+1"><b>Function Summary</b></font>
+                                    </td>
+			          </tr>
+                                  <tr class="mainbody">
+			            <td style="font-family: arial; font-size: 10pt;">
+                                       <a href="#ppt:insert-slide"><b>ppt:insert-slide</b></a> 
+                                    </td>
+			            <td style="font-family: arial; font-size: 10pt;">
+                                       This function returns updated map for the presentation, with slides inserted from presentations specified in parameters.
+                                    </td>
+				  </tr>
+                                  <tr class="mainbody">
+			            <td style="font-family: arial; font-size: 10pt;">
+                                       <a href="#ppt:package-make"><b>ppt:package-make</b></a> 
+                                    </td>
+			            <td style="font-family: arial; font-size: 10pt;">
+                                       This function returns a presentation in the OPC (Open Packaging Convention) format XML. 
+                                    </td>
+			          </tr>
+                                  <tr class="mainbody">
+			            <td style="font-family: arial; font-size: 10pt;">
+                                       <a href="#ppt:package-map-create"><b>ppt:package-map-create</b></a> 
+                                    </td>
+			            <td style="font-family: arial; font-size: 10pt;">
+                                       This function returns a map for the specified presentation.
+                                    </td>
+			          </tr>
+                                  <tr class="mainbody">
+			            <td style="font-family: arial; font-size: 10pt;">
+                                       <a href="#ppt:package-map-zip"><b>ppt:package-map-zip</b></a> 
+                                    </td>
+			            <td style="font-family: arial; font-size: 10pt;">
+                                       This function returns the zip archive for the documents specified in the map. 
+                                    </td>
+				  </tr>
+                                  <tr class="mainbody">
+			            <td style="font-family: arial; font-size: 10pt;">
+                                       <a href="#ppt:package-uris-from-directory"><b>ppt:package-uris-from-directory</b></a> 
+                                    </td>
+			            <td style="font-family: arial; font-size: 10pt;">
+                                       This function returns URIs for the presentation documents within the specified directory.
+                                    </td>
+				  </tr>
+                                  <tr class="mainbody">
+			            <td style="font-family: arial; font-size: 10pt;">
+                                       <a href="#ppt:package-files-only"><b>ppt:package-files-only</b></a> 
+                                    </td>
+			            <td style="font-family: arial; font-size: 10pt;">
+                                       This function returns all URIs that are not directories. (URIs that do not end with '/') 
+                                    </td>
+			          </tr><!--
+                                  <tr class="mainbody">
+			            <td style="font-family: arial; font-size: 10pt;">
+                                      <a href="#ppt:uri-app-props"><b>
             ppt:uri-app-props
             </b></a> 
           </td>
@@ -473,164 +465,157 @@
 			    <td style="font-family: arial; font-size: 10pt;">
           This function returns URI for _rels/ presentation package part.
           </td>
-			  </tr>
-      </tbody></table>
-      </td>
-		    </tr><tr>
-		      <td><img src="images/varspace.gif" height="10"></td>
-		    </tr><tr>
-		      <td>
-      <table class="table-line" width="100%" align="right" bgcolor="#000000" cellpadding="4" cellspacing="1">
-      <tbody><tr bgcolor="#f2ebce">
-			    <td colspan="10">
-          <font size="+1"><b>Function Detail</b></font>
-        </td>
-			  </tr>
-      <tr class="mainbody">
-			    <td>
-       <table class="mainbody" width="100%" border="0" cellpadding="0" cellspacing="0">
+			  </tr>-->
+                                </tbody>
+                              </table>
+                             </td>
+			    </tr>
+                            <tr>
+		             <td><img src="images/varspace.gif" height="10"></td>
+		            </tr>
+                            <tr>
+		             <td>
+                              <table class="table-line" width="100%" align="right" bgcolor="#000000" cellpadding="4" cellspacing="1">
+                               <tbody>
+                                 <tr bgcolor="#f2ebce">
+			          <td colspan="10">
+                                    <font size="+1"><b>Function Detail</b></font>
+                                  </td>
+			         </tr>
+                                 <tr class="mainbody">
+			          <td>
+                                   <table class="mainbody" width="100%" border="0" cellpadding="0" cellspacing="0">
+                                    <tbody>
+                                     <tr class="mainbody">
+				      <td>
+                                        <img src="images/varspace.gif" height="12">
+                                      </td>
+				     </tr>
+                                     <tr class="mainbody">
+				      <td>
+                                       <table>
+	                                <tbody>
+                                         <tr>
+					  <td colspan="2" style="font-size: 12pt; font-family: Courier;">
+                                           <a id="ppt:insert-slide"></a><b><font color="#c00831">ppt:insert-slide</font></b>(
+                                          </td>
+				         </tr>
+                                         <tr>
+					  <td width="20"></td>
+					  <td style="font-size: 11pt; font-family: Courier;">$to-pkg-map as map:map
+                                          </td>
+				         </tr>
+                                         <tr>
+					  <td width="20"></td>
+					  <td style="font-size: 11pt; font-family: Courier;">$from-pres as xs:string+
+                                          </td>
+				         </tr>
+                                         <tr>
+					  <td width="20"></td>
+					  <td style="font-size: 11pt; font-family: Courier;">$from-idx as xs:integer+
+                                          </td>
+				         </tr>
+                                         <tr>
+					  <td width="20"></td>
+					  <td style="font-size: 11pt; font-family: Courier;">$insert-idx as xs:integer
+                                          </td>
+				         </tr>
+                                         <tr>
+					  <td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp;as&nbsp;map:map</td>
+				         </tr>
+                                        </tbody>
+                                       </table>
+                                      </td>
+				     </tr>
+                                     <tr class="mainbody">
+				      <td><img src="images/varspace.gif" height="12"></td>
+				     </tr>
+                                     <tr class="mainbody">
+				      <td style="font-size: 10pt; font-family: Arial;">
+                                        <img src="images/varspace.gif" width="8">
+                                        <b>Summary:</b>
+                                        <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
+					  This function returns updated map for the presentation, with slides inserted from 
+                                          presentations specified in parameters.
+					<br/><br/>
 
-        <tbody><tr class="mainbody">
-				  <td><img src="images/varspace.gif" height="12">
-      </td>
-				</tr>
-
-        <tr class="mainbody">
-				  <td>
-
-            <table>
-	    <tbody>
-              <tr>
-					<td colspan="2" style="font-size: 12pt; font-family: Courier;">
-                 <a id="ppt:insert-slide"></a><b><font color="#c00831">
-                 ppt:insert-slide</font></b>(
-                    </td>
-				      </tr><tr>
-					<td width="20"></td>
-					<td style="font-size: 11pt; font-family: Courier;">
-                      $to-pkg-map as map:map
-                      </td>
-				      </tr>
-<tr>
-					<td width="20"></td>
-					<td style="font-size: 11pt; font-family: Courier;">
-                      $from-pres as xs:string+
-                      </td>
-				      </tr>
-<tr>
-					<td width="20"></td>
-					<td style="font-size: 11pt; font-family: Courier;">
-                       $from-idx as xs:integer+
-                      </td>
-				      </tr>
-<tr>
-					<td width="20"></td>
-					<td style="font-size: 11pt; font-family: Courier;">
-                       $insert-idx as xs:integer
-                      </td>
-				      </tr>
-                                      <tr>
-					<td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp;as&nbsp;map:map</td>
-				      </tr>
-            </tbody></table>
-
-          </td>
-				</tr>
-
-        <tr class="mainbody">
-				  <td><img src="images/varspace.gif" height="12"></td>
-				</tr>
-
-        <tr class="mainbody">
-				  <td style="font-size: 10pt; font-family: Arial;">
-          <img src="images/varspace.gif" width="8">
-          <b>Summary:</b>
-          <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
-	  This function returns updated map for the presentation, with slides inserted from presentations specified in parameters.
-<br/><br/>
   The keys for the map are the names for the files within a presentation .pptx package.  The value for the key is either<br/>
  A) a URI for a presentation part in MarkLogic, or B) the actual XML element for the respective presentation package part.
-<br/><br/>
+                                        <br/><br/>
 <i>Note: the lengths of the sequences of $from-pres and $from-idx must be equal, otherwise an Error is thrown. </i><br/><br/>
 <i>Note: a slide may be inserted into the presentation contained within $to-pkg-map at any slide index that is <br/>
 within the count of slides contained within the presentation +1.  Trying to insert a slide into an index that is not allowed results in Error.</i>
-          </div><br>
-          </td>
-				</tr>
-        <tr class="mainbody">
-				  <td style="font-size: 10pt; font-family: Arial;">
-    <img src="images/varspace.gif" width="8">
-    <b>Parameters:</b>
-      <table>
-          <tbody><tr class="mainbody">
-		<td style="font-size: 11pt; font-family: Arial;">
-               <img src="images/varspace.gif" width="8">
-                 <div style="margin-left: 0.5in; margin-right: 8px;">
-                 <font style="font-size: 11pt; font-family: Courier;">
-                   $to-pkg-map
-                   :
-                 </font>
-                 <font style="font-family: arial; font-size: 10pt;">
-                  The map for a .pptx presentation.
-                 </font>
-                 </div> 
-            </td>
+                                        </div><br>
+                                       </td>
 				      </tr>
-<tr class="mainbody">
-		<td style="font-size: 11pt; font-family: Arial;">
-               <img src="images/varspace.gif" width="8">
-                 <div style="margin-left: 0.5in; margin-right: 8px;">
-                 <font style="font-size: 11pt; font-family: Courier;">
-                   $from-pres
-                   :
-                 </font>
-                 <font style="font-family: arial; font-size: 10pt;">
+                                      <tr class="mainbody">
+				       <td style="font-size: 10pt; font-family: Arial;">
+                                        <img src="images/varspace.gif" width="8">
+                                        <b>Parameters:</b>
+                                        <table>
+                                         <tbody>
+                                          <tr class="mainbody">
+		                           <td style="font-size: 11pt; font-family: Arial;">
+                                            <img src="images/varspace.gif" width="8">
+                                            <div style="margin-left: 0.5in; margin-right: 8px;">
+                                             <font style="font-size: 11pt; font-family: Courier;">
+                                              $to-pkg-map:
+                                             </font>
+                                             <font style="font-family: arial; font-size: 10pt;">
+                                              The map for a .pptx presentation.
+                                             </font>
+                                            </div> 
+                                           </td>
+				          </tr>
+                                          <tr class="mainbody">
+		                           <td style="font-size: 11pt; font-family: Arial;">
+                                            <img src="images/varspace.gif" width="8">
+                                            <div style="margin-left: 0.5in; margin-right: 8px;">
+                                             <font style="font-size: 11pt; font-family: Courier;">
+                                              $from-pres:
+                                             </font>
+                                             <font style="font-family: arial; font-size: 10pt;">
                 The directory in MarkLogic for a presentation from which slides will be inserted into the presentation within $to-pkg-map.
-                 </font>
-                 </div> 
-            </td>
-				      </tr>
-<tr class="mainbody">
-		<td style="font-size: 11pt; font-family: Arial;">
-               <img src="images/varspace.gif" width="8">
-                 <div style="margin-left: 0.5in; margin-right: 8px;">
-                 <font style="font-size: 11pt; font-family: Courier;">
-                   $from-idx
-                   :
-                 </font>
-                 <font style="font-family: arial; font-size: 10pt;">
-                The index of the slide within the $from-pres that is to be inserted into $to-pkg-map.
-                 </font>
-                 </div> 
-            </td>
-				      </tr>
-<tr class="mainbody">
-		<td style="font-size: 11pt; font-family: Arial;">
-               <img src="images/varspace.gif" width="8">
-                 <div style="margin-left: 0.5in; margin-right: 8px;">
-                 <font style="font-size: 11pt; font-family: Courier;">
-                   $insert-idx
-                   :
-                 </font>
-                 <font style="font-family: arial; font-size: 10pt;">
+                                             </font>
+                                            </div> 
+                                           </td>
+				          </tr>
+                                         <tr class="mainbody">
+		                          <td style="font-size: 11pt; font-family: Arial;">
+                                           <img src="images/varspace.gif" width="8">
+                                           <div style="margin-left: 0.5in; margin-right: 8px;">
+                                            <font style="font-size: 11pt; font-family: Courier;">
+                                             $from-idx:
+                                            </font>
+                                            <font style="font-family: arial; font-size: 10pt;">
+                 The index of the slide within the $from-pres that is to be inserted into $to-pkg-map.
+                                            </font>
+                                           </div> 
+                                          </td>
+				         </tr>
+                                         <tr class="mainbody">
+		                          <td style="font-size: 11pt; font-family: Arial;">
+                                           <img src="images/varspace.gif" width="8">
+                                           <div style="margin-left: 0.5in; margin-right: 8px;">
+                                           <font style="font-size: 11pt; font-family: Courier;">
+                                            $insert-idx:
+                                           </font>
+                                           <font style="font-family: arial; font-size: 10pt;">
                 The insertion point for the presentation within $to-pkg-map, where the slide inserted from $from-pres will be inserted at.
-                 </font>
-                 </div> 
-            </td>
-				      </tr>
-         </tbody></table><br>
-    </td>
-				</tr>
- 
-        
-
-        
-
-        <tr class="mainbody">
-				  <td><img src="images/varspace.gif" width="8">
-            <font style="font-size: 10pt; font-family: Arial;"><b>Example:</b></font>
-            <div style="margin-left: 0.5in; margin-right: 8px; font-size: 9pt; font-family: Courier;"> 
-	    <pre xml:space="preserve">
+                                           </font>
+                                          </div> 
+                                         </td>
+				        </tr>
+                                       </tbody>
+                                      </table><br>
+                                     </td>
+				    </tr>
+                                    <tr class="mainbody">
+				     <td>
+                                      <img src="images/varspace.gif" width="8">
+                                      <font style="font-size: 10pt; font-family: Arial;"><b>Example:</b></font>
+                                      <div style="margin-left: 0.5in; margin-right: 8px; font-size: 9pt; font-family: Courier;"> 
+	                               <pre xml:space="preserve">
 xquery version "1.0-ml";
 import module namespace ppt=  "http://marklogic.com/openxml/powerpoint" at "/MarkLogic/openxml/presentation-ml-support.xqy";
 
@@ -659,110 +644,102 @@ Slides will use the master and layout of the presentation within the map.  Slide
 Add notes here about what this function does/doesn't do. 
 
  
-  </pre>
-  
-            </div>
-            </td>
-				</tr>
-
-        <tr class="mainbody">
-				  <td></td>
-				</tr>
-        </tbody></table><table class="mainbody" width="100%" border="0" cellpadding="0" cellspacing="0">
-
-        <tbody><tr class="mainbody">
-				  <td><img src="images/varspace.gif" height="12">
-      <hr class="control-line" size="1"></td>
-				</tr>
-
-        <tr class="mainbody">
-				  <td>
-
-            <table>
-            <tbody><tr>
-					<td colspan="2" style="font-size: 12pt; font-family: Courier;">
-                 <a id="ppt:package-make"></a><b><font color="#c00831">
-                 ppt:package-make</font></b>(
-                    </td>
-				      </tr>
-<tr>
-					<td width="20"></td>
-					<td style="font-size: 11pt; font-family: Courier;">
-                      $directory as xs:string
-                      </td>
-				      </tr>
-<tr>
-					<td width="20"></td>
-					<td style="font-size: 11pt; font-family: Courier;">
-                      $uris as xs:string*
-                      </td>
-				      </tr><tr>
-					<td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp;as&nbsp;node()</td>
-				      </tr>
-            </tbody></table>
-
-          </td>
-				</tr>
-
-        <tr class="mainbody">
-				  <td><img src="images/varspace.gif" height="12"></td>
-				</tr>
-
-        <tr class="mainbody">
-				  <td style="font-size: 10pt; font-family: Arial;">
-          <img src="images/varspace.gif" width="8">
-          <b>Summary:</b>
-          <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
+                                       </pre>
+                                      </div>
+                                     </td>
+				    </tr>
+                                    <tr class="mainbody">
+				     <td></td>
+				    </tr>
+                                   </tbody>
+                                  </table>
+                                  <table class="mainbody" width="100%" border="0" cellpadding="0" cellspacing="0">
+				   <tbody>
+                                    <tr class="mainbody">
+				     <td><img src="images/varspace.gif" height="12">
+                                      <hr class="control-line" size="1">
+                                     </td>
+				    </tr>
+                                    <tr class="mainbody">
+				     <td>
+                                      <table>
+                                       <tbody>
+                                        <tr>
+					 <td colspan="2" style="font-size: 12pt; font-family: Courier;">
+                                          <a id="ppt:package-make"></a><b><font color="#c00831">ppt:package-make</font></b>(
+                                         </td>
+				        </tr>
+                                        <tr>
+					 <td width="20"></td>
+					 <td style="font-size: 11pt; font-family: Courier;">$directory as xs:string
+                                         </td>
+				        </tr>
+                                        <tr>
+					 <td width="20"></td>
+					 <td style="font-size: 11pt; font-family: Courier;">$uris as xs:string*
+                                         </td>
+				        </tr>
+                                        <tr>
+					 <td colspan="2" style="font-size: 11pt; font-family: Courier;">)&nbsp;as&nbsp;node()</td>
+				        </tr>
+                                       </tbody>
+                                      </table>
+                                     </td>
+				    </tr>
+                                    <tr class="mainbody">
+				     <td><img src="images/varspace.gif" height="12"></td>
+				    </tr>
+                                    <tr class="mainbody">
+				     <td style="font-size: 10pt; font-family: Arial;">
+                                      <img src="images/varspace.gif" width="8">
+                                      <b>Summary:</b>
+                                      <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"> <br>
             This function returns a presentation in the OPC (Open Packaging Convention) format XML.
-          </div><br>
-          </td>
-				</tr>
-        <tr class="mainbody">
-				  <td style="font-size: 10pt; font-family: Arial;">
-    <img src="images/varspace.gif" width="8">
-    <b>Parameters:</b>
-      <table>
-          <tbody><tr class="mainbody">
-					<td style="font-size: 11pt; font-family: Arial;">
-               <img src="images/varspace.gif" width="8">
-                 <div style="margin-left: 0.5in; margin-right: 8px;">
-                 <font style="font-size: 11pt; font-family: Courier;">
-                   $directory
-                   :
-                 </font>
-                 <font style="font-family: arial; font-size: 10pt;">
+                                      </div><br>
+                                     </td>
+				    </tr>
+                                    <tr class="mainbody">
+				     <td style="font-size: 10pt; font-family: Arial;">
+                                      <img src="images/varspace.gif" width="8">
+                                      <b>Parameters:</b>
+                                      <table>
+                                       <tbody>
+                                        <tr class="mainbody">
+					 <td style="font-size: 11pt; font-family: Arial;">
+                                          <img src="images/varspace.gif" width="8">
+                                          <div style="margin-left: 0.5in; margin-right: 8px;">
+                                           <font style="font-size: 11pt; font-family: Courier;">$directory:
+                                           </font>
+                                           <font style="font-family: arial; font-size: 10pt;">
                 The directory in MarkLogic that includes the files for an extracted presentation. 
-                 </font>
-                 </div> 
-            </td>
-				      </tr>
-<tr class="mainbody">
-					<td style="font-size: 11pt; font-family: Arial;">
-               <img src="images/varspace.gif" width="8">
-                 <div style="margin-left: 0.5in; margin-right: 8px;">
-                 <font style="font-size: 11pt; font-family: Courier;">
-                   $uris
-                   :
-                 </font>
-                 <font style="font-family: arial; font-size: 10pt;">
+                                           </font>
+                                          </div> 
+                                         </td>
+				        </tr>
+                                        <tr class="mainbody">
+					 <td style="font-size: 11pt; font-family: Arial;">
+                                          <img src="images/varspace.gif" width="8">
+                                          <div style="margin-left: 0.5in; margin-right: 8px;">
+                                          <font style="font-size: 11pt; font-family: Courier;">$uris:
+                                          </font>
+                                          <font style="font-family: arial; font-size: 10pt;">
                 The uris for the files within the $directory to use to as the pkg:parts of the OPC package. 
-                 </font>
-                 </div> 
-            </td>
-				      </tr>
-         </tbody></table><br>
-    </td>
-				</tr>
- 
-        
-
-        
-
-        <tr class="mainbody">
-				  <td><img src="images/varspace.gif" width="8">
-            <font style="font-size: 10pt; font-family: Arial;"><b>Example:</b></font>
-            <div style="margin-left: 0.5in; margin-right: 8px; font-size: 9pt; font-family: Courier;"> 
-            <pre xml:space="preserve">xquery version "1.0-ml";
+                                          </font>
+                                         </div> 
+                                        </td>
+				       </tr>
+                                      </tbody>
+                                     </table>
+                                     <br>
+                                    </td>
+				   </tr>
+                                   <tr class="mainbody">
+				    <td>
+                                     <img src="images/varspace.gif" width="8">
+                                     <font style="font-size: 10pt; font-family: Arial;"><b>Example:</b></font>
+                                     <div style="margin-left: 0.5in; margin-right: 8px; font-size: 9pt; font-family: Courier;"> 
+                                      <pre xml:space="preserve">
+xquery version "1.0-ml";
 import module namespace excel= "http://marklogic.com/openxml/excel" 
        at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
        
@@ -770,22 +747,17 @@ excel:a1-row("D23")
 =&gt;
 23
        
-  </pre>
-  
-            </div>
-            </td>
-				</tr>
+                                      </pre>
+                                     </div>
+                                    </td>
+				   </tr>
+                                   <tr class="mainbody">
+				    <td></td>
+				   </tr>
+	                          </tbody>
+                                 </table>
 
-        <tr class="mainbody">
-				  <td></td>
-				</tr>
-	</tbody></table>
-
-
-
-
-           
-
+<!--
         <table class="mainbody" width="100%" border="0" cellpadding="0" cellspacing="0">
 
         <tbody><tr class="mainbody">
@@ -4468,7 +4440,7 @@ return excel:xlsx-manifest("/Default_xlsx_parts/",$uris)
         <tr class="mainbody">
 				  <td></td>
 				</tr>
-        </tbody></table>
+		</tbody></table>-->
        </td>
 			  </tr>
       </tbody></table>
