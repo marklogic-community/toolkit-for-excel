@@ -641,7 +641,7 @@ return ppt:directory-uris($presentation-dir)
 				         </tr>
                                          <tr>
 					  <td width="20"></td>
-					  <td style="font-size: 11pt; font-family: Courier;">$to-pkg-map as map:map
+					  <td style="font-size: 11pt; font-family: Courier;">$map as map:map
                                           </td>
 				         </tr>
                                          <tr>
@@ -682,7 +682,7 @@ return ppt:directory-uris($presentation-dir)
  A) a URI for a presentation part in MarkLogic, or B) the actual XML element for the respective presentation package part.
                                         <br/><br/>
 <i>Note: the lengths of the sequences of $from-pres and $from-idx must be equal, otherwise an Error is thrown. </i><br/><br/>
-<i>Note: a slide may be inserted into the presentation contained within $to-pkg-map at any slide index that is <br/>
+<i>Note: a slide may be inserted into the presentation contained within $map at any slide index that is <br/>
 within the count of slides contained within the presentation +1.  Trying to insert a slide into an index that is not allowed results in Error.</i>
                                         </div><br>
                                        </td>
@@ -698,7 +698,7 @@ within the count of slides contained within the presentation +1.  Trying to inse
                                             <img src="images/varspace.gif" width="8">
                                             <div style="margin-left: 0.5in; margin-right: 8px;">
                                              <font style="font-size: 11pt; font-family: Courier;">
-                                              $to-pkg-map:
+                                              $map:
                                              </font>
                                              <font style="font-family: arial; font-size: 10pt;">
                                               The map for a .pptx presentation.
@@ -714,7 +714,7 @@ within the count of slides contained within the presentation +1.  Trying to inse
                                               $from-pres:
                                              </font>
                                              <font style="font-family: arial; font-size: 10pt;">
-                The directory in MarkLogic for a presentation from which slides will be inserted into the presentation within $to-pkg-map.
+                The directory in MarkLogic for a presentation from which slides will be inserted into the presentation within $map.
                                              </font>
                                             </div> 
                                            </td>
@@ -727,7 +727,7 @@ within the count of slides contained within the presentation +1.  Trying to inse
                                              $from-idx:
                                             </font>
                                             <font style="font-family: arial; font-size: 10pt;">
-                 The index of the slide within the $from-pres that is to be inserted into $to-pkg-map.
+                 The index of the slide within the $from-pres that is to be inserted into $map.
                                             </font>
                                            </div> 
                                           </td>
@@ -740,7 +740,7 @@ within the count of slides contained within the presentation +1.  Trying to inse
                                             $insert-idx:
                                            </font>
                                            <font style="font-family: arial; font-size: 10pt;">
-                The insertion point for the presentation within $to-pkg-map, where the slide inserted from $from-pres will be inserted at.
+                The insertion point for the presentation within $map, where the slide inserted from $from-pres will be inserted at.
                                            </font>
                                           </div> 
                                          </td>
@@ -1175,12 +1175,15 @@ ppt/slideMasters/_rels/slideMaster1.xml.rels
                                      <div style="margin-left: 0.5in; margin-right: 8px; font-size: 9pt; font-family: Courier;"> 
                                       <pre xml:space="preserve">
 xquery version "1.0-ml";
-import module namespace excel= "http://marklogic.com/openxml/excel" 
-       at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
-       
-excel:a1-row("D23")
+import module namespace ppt=  "http://marklogic.com/openxml/powerpoint" at "/MarkLogic/openxml/presentation-ml-support.xqy";
+
+
+let $presentation-dir:="/foo_pptx_parts/" 
+let $map := ppt:package-map($presentation-dir)
+let $zip := ppt:package-map-zip($map)
+return xdmp:save("C:\foo2.pptx",$zip)
 =&gt;
-23
+foo2.pptx is saved on the filesystem.  this can be opened in PowerPoint.
        
                                       </pre>
                                      </div>
@@ -1270,7 +1273,7 @@ WID1048576. </div><br>
 				         </tr>
                                          <tr>
 					  <td width="20"></td>
-					  <td style="font-size: 11pt; font-family: Courier;">$to-pkg-map as map:map
+					  <td style="font-size: 11pt; font-family: Courier;">$map as map:map
                                           </td>
 				         </tr>
                                          <tr>
@@ -1311,7 +1314,7 @@ WID1048576. </div><br>
  A) a URI for a presentation part in MarkLogic, or B) the actual XML element for the respective presentation package part.
                                         <br/><br/>
 <i>Note: the lengths of the sequences of $from-pres and $from-idx must be equal, otherwise an Error is thrown. </i><br/><br/>
-<i>Note: a slide may be inserted into the presentation contained within $to-pkg-map at any slide index that is <br/>
+<i>Note: a slide may be inserted into the presentation contained within $map at any slide index that is <br/>
 within the count of slides contained within the presentation +1.  Trying to insert a slide into an index that is not allowed results in Error.</i>
                                         </div><br>
                                        </td>
@@ -1327,7 +1330,7 @@ within the count of slides contained within the presentation +1.  Trying to inse
                                             <img src="images/varspace.gif" width="8">
                                             <div style="margin-left: 0.5in; margin-right: 8px;">
                                              <font style="font-size: 11pt; font-family: Courier;">
-                                              $to-pkg-map:
+                                              $map:
                                              </font>
                                              <font style="font-family: arial; font-size: 10pt;">
                                               The map for a .pptx presentation.
@@ -1343,7 +1346,7 @@ within the count of slides contained within the presentation +1.  Trying to inse
                                               $from-pres:
                                              </font>
                                              <font style="font-family: arial; font-size: 10pt;">
-                The directory in MarkLogic for a presentation from which slides will be inserted into the presentation within $to-pkg-map.
+                The directory in MarkLogic for a presentation from which slides will be inserted into the presentation within $map.
                                              </font>
                                             </div> 
                                            </td>
@@ -1356,7 +1359,7 @@ within the count of slides contained within the presentation +1.  Trying to inse
                                              $from-idx:
                                             </font>
                                             <font style="font-family: arial; font-size: 10pt;">
-                 The index of the slide within the $from-pres that is to be inserted into $to-pkg-map.
+                 The index of the slide within the $from-pres that is to be inserted into $map.
                                             </font>
                                            </div> 
                                           </td>
@@ -1369,7 +1372,7 @@ within the count of slides contained within the presentation +1.  Trying to inse
                                             $insert-idx:
                                            </font>
                                            <font style="font-family: arial; font-size: 10pt;">
-                The insertion point for the presentation within $to-pkg-map, where the slide inserted from $from-pres will be inserted at.
+                The insertion point for the presentation within $map, where the slide inserted from $from-pres will be inserted at.
                                            </font>
                                           </div> 
                                          </td>
