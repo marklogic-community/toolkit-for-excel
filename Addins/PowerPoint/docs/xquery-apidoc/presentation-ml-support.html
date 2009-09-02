@@ -6,6 +6,7 @@
      <meta name="Keywords" content="server, administration, Mark Logic, xml, xquery, database">
      <meta name="Description" content="PresentationML Support Module Functions">
      <link href="images/admin.css" type="text/css" rel="stylesheet">
+     <link href="images/img.css" type="text/css" rel="stylesheet">
      <script type="text/javascript" language="javascript" src="images/tree.js"></script>
    </head>
    <div FirebugVersion="1.3.3" style="display: none;" id="_firebugConsole"></div>
@@ -752,16 +753,37 @@ within the count of slides contained within the presentation +1.  Trying to inse
                                     <tr class="mainbody">
 				     <td>
                                       <img src="images/varspace.gif" width="8">
-				      <font style="font-size: 10pt; font-family: Arial;"><b>Example:</b></font><br/>
+				      <font style="font-size: 10pt; font-family: Arial;"><b>Example:</b></font><br/><br/>
 <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;">
-<font style="font-family: arial; font-size: 10pt;">In the following example, we have 2 presentations we've saved: demo_one.pptx and demo_two.pptx.  These have both been unzipped and<br/> their respected parts have been saved to MarkLogic using the Office OpenXML Extract pipeline.</font>
+<font style="font-family: arial; font-size: 10pt;">In the following example, we have 2 presentations we've saved: demo_one.pptx and demo_two.pptx.  These have both been unzipped and<br/> their respectve parts saved to MarkLogic using the Office OpenXML Extract pipeline.  Opening the presentations (.pptx) in PowerPoint, the<br/> slides appear as follows:</font><br/><br/>
+</div>
+<div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;">
+<table style="border-width:15px;">
+<tr><td>demo_one.pptx</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>demo_two.pptx</td><tr>
+<tr>
+<td style="padding:5px; border-width:1px; border-style:solid; border-color:gray;"><img src="images/demo_one/Slide1.PNG" class="resize"></img></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="padding:5px; border-width:1px; border-style:solid; border-color:gray;"><img src="images/demo_two/Slide1.PNG" class="resize"></img></td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr>
+<td style="padding:5px; border-width:1px; border-style:solid; border-color:gray;"><img src="images/demo_one/Slide2.PNG" class="resize"></img></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td></td>
+</tr>
+<tr>
+</tr>
+</table>
 </div>
 
 
 <br/><br/>
 <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;">
-<font style="font-family: arial; font-size: 10pt;">We insert slide 1 of demo_two.pptx to position 2 of presentation demo_one.pptx to create demo_three.pptx as follows:</font>
+<font style="font-family: arial; font-size: 10pt;">demo_one.pptx has 2 slides, and demo_two.pptx has 1.  We can insert slide 1 of demo_two.pptx to position 2 of presentation demo_one.pptx from<br/>the extracted parts to create demo_three.pptx as follows:</font>
 </div>
+
                     
                                       <div style="margin-left: 0.5in; margin-right: 8px; font-size: 9pt; font-family: Courier;"> 
 				       <pre xml:space="preserve">
@@ -783,8 +805,17 @@ let $pptx-pkg := ppt:package-map-zip($new-map)
 return xdmp:save("C:\demo_three.pptx",$pptx-pkg)
 </pre></div><br/>
 <div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;">
-<font style="font-family: arial; font-size: 10pt;">The resulting presentation, when opened in PowerPoint:</font>
+<font style="font-family: arial; font-size: 10pt;">The resulting presentation, when opened in PowerPoint will be:</font><br/><br/>
 </div>
+<div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;">
+<table style="border-width:15px;">
+<tr><td>demo_three.pptx</td></tr>
+<tr><td style="padding:5px; border-width:1px; border-style:solid; border-color:gray;"><img src="images/demo_three/Slide1.PNG" class="resize"></img></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td style="padding:5px; border-width:1px; border-style:solid; border-color:gray;"><img src="images/demo_three/Slide2.PNG" class="resize"></img></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr><td style="padding:5px; border-width:1px; border-style:solid; border-color:gray;"><img src="images/demo_three/Slide3.PNG" class="resize"></img></td></tr>
+</table>
 <br/><br/>
 </td></tr>
 <tr class="mainbody">
@@ -792,10 +823,12 @@ return xdmp:save("C:\demo_three.pptx",$pptx-pkg)
 
 <td>
                                       <img src="images/varspace.gif" width="8">
-                                      <font style="font-size: 10pt; font-family: Arial;"><b>Example:</b></font>
+				      <font style="font-size: 10pt; font-family: Arial;"><b>Example:</b></font>
+<div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;"><br/>
+<font style="font-family: arial; font-size: 10pt;">We can insert slides from multiple source presentations into a single destination presentation as well.</font><br/>
+</div>
 <div style="margin-left: 0.5in; margin-right: 8px; font-size: 9pt; font-family: Courier;"> 
-				       <pre xml:space="preserve">
-
+ <pre xml:space="preserve">
 xquery version "1.0-ml";
 import module namespace ppt=  "http://marklogic.com/openxml/powerpoint" at "/MarkLogic/openxml/presentation-ml-support.xqy";
 
@@ -817,15 +850,18 @@ updated to include slide 1 from /two_pptx_parts/ and slide 15 from /three_pptx_p
 
 Assuming the presentation within /one_pptx_parts/ started with 3 slides, it now has 5 total, 
 and its original slides 2 and 3 have been shifted to 4 and 5 respectively.
-
-For each slide mapped within the map, images will be retained and references throughout the package will be updated. 
+</pre></div>
+<div style="margin-left: 0.5in; margin-right: 8px; font-family: arial; font-size: 10pt;">
+<font style="font-family: arial; font-size: 10pt;">
+For each slide mapped within the map, images will be retained and references throughout the package will be updated.<br/> 
 Slides will use the master and layout of the presentation within the map.  Slides inserted will retain the target presentation look and feel. 
 <br/><br/>
-Add notes here about what this function does/doesn't do. 
+Note: While this function works great for a certain class of Slides, and retains images, animations, and much more for a Slide when inserting<br/> from the original source into the target presentation, this function currently does not support Smart Art, Diagrams, Embeddings (.xlsx), or<br/> the ability to insert a Slide into a target presentation while maintaining the slideMaster and slideLayout from the original source presentation.<br/>  Also, while Notes are available in the target presentation, notes will not be retained for slides inserted from the source presentations. <br/><br/>
+</font>
+<div>
 
  
-                                       </pre>
-                                      </div>
+                                       
                                      </td>
 				    </tr>
                                     <tr class="mainbody">
