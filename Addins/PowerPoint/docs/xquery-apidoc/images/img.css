@@ -1,0 +1,10 @@
+.resize {
+    width: 100px;
+    height : auto;
+    
+}
+
+.resize {
+    width: auto;
+    height : 200px;
+}
