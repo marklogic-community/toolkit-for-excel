@@ -1,6 +1,6 @@
 xquery version "1.0-ml";
 (:
-Copyright 2008 Mark Logic Corporation
+Copyright 2009 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,14 +46,18 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 			<h2><a href="search/">Search »</a></h2>
 			<p>Search and explore PowerPoint 2007 content</p>
 		</li>
+                <li>
+			<h2><a href="officesearch/">Office Search »</a></h2>
+			<p>Search and explore Office 2007 content</p>
+                </li>
 		<li>
 			<h2><a href="metadata/metadata.xqy">Metadata »</a></h2>
 			<p>Create and edit custom document metadata</p>
 		</li>
-	        <li>
+	       <!-- <li> integrated into Search and Office Search
 			<h2><a href="images/insert-image.xqy">Images »</a></h2>
 			<p>Search images and insert into active presentation</p>
-		</li>
+		</li> -->
 	        <li>
 			<h2><a href="api/api-test.xqy">API »</a></h2>
 			<p>API</p>

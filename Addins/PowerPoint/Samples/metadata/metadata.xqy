@@ -23,7 +23,7 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 	<title>Custom Metadata</title>
 	<link rel="stylesheet" type="text/css" href="../css/office-blue.css"/>
 	<link rel="stylesheet" type="text/css" href="metadata.css"/>
-	<script type="text/javascript" src="../MarkLogicPowerPointAddin.js">//</script>
+	<script type="text/javascript" src="../js/MarkLogicPowerPointAddin.js">//</script>
 
 	<script type="text/javascript" src="metadata.js">//</script>
 </head>
