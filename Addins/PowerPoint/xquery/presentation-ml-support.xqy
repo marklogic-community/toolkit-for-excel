@@ -41,10 +41,12 @@ declare default element namespace "http://schemas.openxmlformats.org/package/200
 
 (: ================================== :)
 
-declare function ppt:formatbinary($s as xs:string*) as xs:string*
+declare function ppt:formatbinary(
+   $s as xs:string*
+) as xs:string*
 {
 
-  (: xdmp:invoke("formatbinary.xqy",( xs:QName("ppt:image"), $s)) :)
+  (:debug test:)(: xdmp:invoke("formatbinary.xqy",( xs:QName("ppt:image"), $s)) :)
 
  if(fn:string-length($s) > 0) then
      let $firstpart := fn:concat(fn:substring($s,1,76))
@@ -56,7 +58,9 @@ declare function ppt:formatbinary($s as xs:string*) as xs:string*
 
 };
 
-declare function ppt:get-part-content-type($uri as xs:string) as xs:string?
+declare function ppt:get-part-content-type(
+   $uri as xs:string
+) as xs:string?
 {
    if(fn:ends-with($uri,".rels"))
    then 
@@ -152,7 +156,9 @@ declare function ppt:get-part-content-type($uri as xs:string) as xs:string?
     
 };
 
-declare function ppt:get-part-attributes($uri as xs:string) as node()*
+declare function ppt:get-part-attributes(
+   $uri as xs:string
+) as node()*
 {
   let $cleanuri := fn:replace($uri,"\\","/")
   let $name := attribute pkg:name{$cleanuri}
@@ -180,7 +186,10 @@ declare function ppt:get-part-attributes($uri as xs:string) as node()*
   return ($name, $contenttype, $padding, $compression)
 };
 
-declare function ppt:get-package-part($directory as xs:string, $uri as xs:string) as node()?
+declare function ppt:get-package-part(
+   $directory as xs:string, 
+   $uri as xs:string
+) as node()?
 {
   let $fulluri := $uri
   let $docuri := fn:concat("/",fn:substring-after($fulluri,$directory))
@@ -196,7 +205,10 @@ declare function ppt:get-package-part($directory as xs:string, $uri as xs:string
   return  $part 
 };
 
-declare function ppt:package-make($directory as xs:string, $uris as xs:string*) as element(pkg:package)
+declare function ppt:package-make(
+   $directory as xs:string, 
+   $uris as xs:string*
+) as element(pkg:package)
 {
   	let $package := element pkg:package { 
                             for $uri in $uris
@@ -208,21 +220,28 @@ declare function ppt:package-make($directory as xs:string, $uris as xs:string*) 
 (: <?mso-application progid="PowerPoint.Show"?> :)
 };
 
-declare function ppt:directory-uris($docuri as xs:string) as xs:string*
+declare function ppt:directory-uris(
+   $docuri as xs:string
+) as xs:string*
 {
 
   	cts:uris("","document",cts:directory-query($docuri,"infinity"))
 
 };
 
-declare function ppt:directory-uris($docuri as xs:string, $depth as xs:string) as xs:string*
+declare function ppt:directory-uris(
+   $docuri as xs:string, 
+   $depth as xs:string
+) as xs:string*
 {
 
   	cts:uris("","document",cts:directory-query($docuri,$depth))
 
 };
 
-declare function ppt:package-files-only($uris as xs:string*) as xs:string*
+declare function ppt:package-files-only(
+   $uris as xs:string*
+) as xs:string*
 {
   	for $uri in $uris
   	let $u := if(fn:ends-with($uri,"/")) then () else $uri
@@ -434,34 +453,34 @@ declare function ppt:uri-ppt-view-props($dir as xs:string?) as xs:string
 };
 
 (: ===================== END file and dir helpers  ====================== :)
-(: ===================== BEGIN MAP file and dir helpers  ==================== :)
-declare function ppt:uri-ppt-handout-master-rels-map($pkg-map as map:map)
+
+declare function ppt:uri-ppt-handout-master-rels-map(
+   $pkg-map as map:map
+) as xs:string*
 {
    	let $keys := map:keys($pkg-map)
    	let $hm-dir :=  ppt:uri-ppt-handout-master-rels-dir(())
-   	let $hms := for $k in $keys
+   	return for $k in $keys
            	    let $hm := 	if(fn:matches($k, fn:concat($hm-dir,"handoutMaster\d+\.xml.rels?"))) then 
 					map:get($pkg-map,$k) 
 				else ()
                     return $hm
-   	return $hms
-
 };
 
-(: ===================== END MAP file and dir helpers  ====================== :)
-                                (:src               $dest (flip order, rename maps e) :)
-declare function ppt:map-update($map1 as map:map, $map2 as map:map)
+
+declare function ppt:map-update(
+   $target-map as map:map, 
+   $src-map as map:map
+) as map:map*
 {
-(:check built-ins :)
-        let $keys := map:keys($map1)
-        let $slide-upd := for $k in $keys
-                          let $kval := map:get($map1, $k)
-                          return map:put($map2, $k, $kval)
-        return $slide-upd
-
+         for $k in  map:keys($src-map)
+         let $kval := map:get($src-map, $k)
+         return map:put($target-map, $k, $kval)
 };
 
-declare function ppt:map-max-image-id($pkg as map:map)
+declare function ppt:map-max-image-id(
+   $pkg as map:map
+) as xs:integer
 {
    	let $keys := map:keys($pkg)
    	let $numbers := 
@@ -471,7 +490,12 @@ declare function ppt:map-max-image-id($pkg as map:map)
                         else ()
    	return fn:max($numbers)
 };
-declare function ppt:max-file-id($dir as xs:string*, $type as xs:string*, $depth as xs:string)
+
+declare function ppt:max-file-id(
+   $dir as xs:string*, 
+   $type as xs:string*, 
+   $depth as xs:string
+) as xs:integer
 {  (:fn:max on inner flwr, default return is 0 :)
   	let $files :=  ppt:directory-uris($dir,"1")
   	let $numbers := 
@@ -486,20 +510,26 @@ declare function ppt:max-file-id($dir as xs:string*, $type as xs:string*, $depth
 };
 
 
-declare function ppt:max-image-id($dir as xs:string*)
+declare function ppt:max-image-id(
+   $dir as xs:string*
+) as xs:integer
 {
   
   	ppt:max-file-id($dir, "image", "infinity") 
 
 };
 
-declare function ppt:max-slide-id($dir as xs:string*)
+declare function ppt:max-slide-id(
+   $dir as xs:string*
+) as xs:integer
 {
   	ppt:max-file-id($dir, "slide", "1") 
 };
 
-declare function ppt:handout-master-theme-index($hm-rels as xs:string*) as xs:string*
-{       (: xs:integer cast not reqd, being used in concat :)
+declare function ppt:handout-master-theme-index(
+   $hm-rels as xs:string*
+) as xs:string*
+{       (: xs:integer cast is not reqd, being used in concat :)
 	for $rel in $hm-rels
         let $doc := fn:doc($rel)
         let $theme := $doc/rel:Relationships/rel:Relationship/@Target
@@ -508,15 +538,20 @@ declare function ppt:handout-master-theme-index($hm-rels as xs:string*) as xs:st
 };
 
 (:may want a generic fileid function, similar to max :)
-declare function ppt:image-id($uri as xs:string) as xs:integer
+declare function ppt:image-id(
+   $uri as xs:string
+) as xs:integer
 {
   	xs:integer(fn:substring-before(fn:substring-after($uri,"image"),"."))
 };
 
-(: begin related to updating slide.xml.rels ============================ :)
-declare function ppt:update-rels-rel($r as node(), $n-idx as xs:integer)
+(:begin updating slide.xml.rels ============================ :)
+declare function ppt:update-rels-rel(
+   $r as node(), 
+   $n-idx as xs:integer
+) as node()*
 {
-(:only check for image now:)
+(:currently only updates for images :)
    	if(fn:matches($r/@Target,"slideLayout")) then $r
         else if(fn:matches($r/@Target,"notesSlide\d+\.xml?")) then () 
    	else if(fn:matches($r/@Target,"image")) then
@@ -529,36 +564,51 @@ declare function ppt:update-rels-rel($r as node(), $n-idx as xs:integer)
    	else $r
 };
 
-declare function ppt:passthru-rels($x as node(), $idx as xs:integer) as node()*
+declare function ppt:passthru-rels(
+   $x as node(), 
+   $idx as xs:integer
+) as node()*
 {
    	for $i in $x/node() return ppt:dispatch-slide-rels($i, $idx)
 };
 
-declare function ppt:dispatch-slide-rels($rels as node(), $new-img-idx as xs:integer) as node()*
+declare function ppt:dispatch-slide-rels(
+   $rels as node(), 
+   $new-img-idx as xs:integer
+) as node()*
 {
        typeswitch($rels)
         case text() return $rels
-        case document-node() return document{ppt:passthru-rels($rels, $new-img-idx)}
+        case document-node() return ppt:passthru-rels($rels, $new-img-idx)
         case element(rel:Relationship) return ppt:update-rels-rel($rels, $new-img-idx) 
         case element(rel:Relationships) return element{fn:QName("http://schemas.openxmlformats.org/package/2006/relationships","Relationships")} {$rels/namespace::*, $rels/@*,passthru-rels($rels, $new-img-idx)}
-        (:fn:nodename? check accessors (danny's xquery docs ) Qname(ns), localname :)
-        case element() return  element{fn:name($rels)} {$rels/@*,passthru-rels($rels, $new-img-idx)}
+        case element() return  element{fn:node-name($rels)} {$rels/@*,passthru-rels($rels, $new-img-idx)}
        default return $rels
 
 };
 
-declare function ppt:upd-slide-rels($orig-slide-rels as node(),$img-targs as xs:string*,$new-img-idx as xs:integer)
+declare function ppt:upd-slide-rels(
+   $orig-slide-rels as node(),
+   $img-targs as xs:string*,
+   $new-img-idx as xs:integer
+) as element(rel:Relationships)
 {
   	ppt:dispatch-slide-rels($orig-slide-rels, $new-img-idx)
 };
 
 
-(: end related to updating slide.xml.rels ============================== :)
-(:                                              $smap as map:map, $s-pres as xs:string, $s-idx as xs:integer, $start-idx as xs:integer:)
-declare function ppt:map-slide-and-relationships($to-pkg-map as map:map, $from-pres as xs:string, $from-idx as xs:integer, $to-idx as xs:integer)
-{
-(:now that we're using map, have to loop through and increment slide#.xml, slide#.xml.rels -keys and values in map - can just reset values of existing keys, for 1+, will add, otherwise overwrites existing.  will be overwriting with inserted slide. :)
+(:end updating slide.xml.rels ============================== :)
 
+declare function ppt:map-slide-and-relationships(
+   $to-pkg-map as map:map, 
+   $from-pres as xs:string, 
+   $from-idx as xs:integer, 
+   $to-idx as xs:integer
+) as map:map
+{
+     (:loop through and increment slide#.xml, slide#.xml.rels -keys and values in map 
+       reset values of existing keys, for 1+, will add new value, otherwise resets
+       existing (with new slide info as value) :)  
         let $to-uris := map:keys($to-pkg-map)
         let $orig-slide-name := ppt:uri-ppt-slide($from-pres,$from-idx)
         let $orig-slide-rels := ppt:uri-ppt-slide-rels($from-pres,$from-idx)
@@ -570,16 +620,14 @@ declare function ppt:map-slide-and-relationships($to-pkg-map as map:map, $from-p
 
   	let $img-targs := 
                   for $u in $targets
-                  let $image := if(fn:matches($u,"image")) then $u else ()
-                  return $image
+                  return if(fn:matches($u,"image")) then $u else ()
 
         let $new-img-idx := ppt:map-max-image-id($to-pkg-map)
-          
-(: add slide to map -not yet, have to munge other uris first :)
-(:let $slide := map:put($smap, $new-slide-name, $orig-slide-name) :)
-(:have slide and updated rels after this line -add images, increment other slide key/values, then add slide and slide.rels to map :)
+
+     (: update slide#.xml.rels :)
         let $upd-rels := ppt:upd-slide-rels($rels,$img-targs,$new-img-idx)
 
+     (:add slide associated images to map :)
         let $images := 
                for $i at $d in $img-targs 
                let $n-idx := ppt:image-id($i)+$new-img-idx
@@ -594,7 +642,6 @@ declare function ppt:map-slide-and-relationships($to-pkg-map as map:map, $from-p
                                               else
                                                () 
                            return $doc
-                          
 
         let $slide-rel-uris := for $y in $to-uris
                                let $s-rel-uri := if(fn:matches($y,"slide\d+\.xml.rels$")) then
@@ -603,87 +650,88 @@ declare function ppt:map-slide-and-relationships($to-pkg-map as map:map, $from-p
                                                 ()
                                return $s-rel-uri
       
-     (:need to loop thru, generate key, val pairs, then loop thru those to add to map; currently overwrite map with new key, when go to grab val with subsequent key, its been overwritten!:)
-        
+     (:loop thru uris, generate updated key, val pairs for slide#.xml docs
+       and add to tmp map to be used for updating package map :)
         let $upd-map1 := map:map()
-        let $slide-upd-map := for $s in $slide-uris
-                          (:want to increment keys, not values as they point to actual urls :) 
+        let $slide-upd-map := 
+                            for $s in $slide-uris
+                            (: increment keys, not values as values point to the actual urls we want to use 
+                               for the updated references :) 
                             let $key-idx := xs:integer(fn:substring-before(fn:substring-after($s,"slides/slide"),".xml"))
                             let $orig-slide-val := map:get($to-pkg-map,$s) 
-                                    (:move new-key-pfx to then below:) 
-                            let $new-key-pfx := fn:replace($s,"slide\d+\.xml$","")
                             let $final-key     := if($key-idx >= $to-idx) then
-                                                   fn:concat($new-key-pfx,"slide",($key-idx+1),".xml")
+                                                     fn:concat(fn:replace($s,"slide\d+\.xml$",""),"slide",($key-idx+1),".xml")
                                                  else $s
-(:return map here :)
-                            let $finmap :=  map:put($upd-map1 , $final-key, $orig-slide-val)
-                            return  (: $finmap :) <FOO>{($s, $final-key, $orig-slide-val, $upd-map1)}</FOO>
+                            return map:put($upd-map1 , $final-key, $orig-slide-val)
+
+     (:update package map with updated slide#.xml references :)
+        let $slide-upd := ppt:map-update($to-pkg-map, $upd-map1)
    
-        let $slide-upd := ppt:map-update($upd-map1, $to-pkg-map)
-   
+     (:loop thru uris, generate updated key, val pairs for slide#.xml.rels docs
+       and add to tmp map to be used for updating package map :)
         let $upd-map2 := map:map()
-        let $slide-rel-upd-map := for $sr in $slide-rel-uris
+        let $slide-rel-upd-map := 
+                              for $sr in $slide-rel-uris
                               let $key-idx := xs:integer(fn:substring-before(fn:substring-after($sr,"_rels/slide"),".xml.rels"))
                               let $orig-slide-rel-val := map:get($to-pkg-map,$sr)
-                                (:move new-key-pfx to then :)
-                              let $new-key-pfx := fn:replace($sr,"slide\d+\.xml.rels$","")
                               let $final-rel-key     := if($key-idx >= $to-idx) then
-                                                           fn:concat($new-key-pfx,"slide",($key-idx+1),".xml.rels")
+                                                           fn:concat(fn:replace($sr,"slide\d+\.xml.rels$",""),"slide",($key-idx+1),".xml.rels")
                                                         else $sr
                               return map:put($upd-map2 , $final-rel-key, $orig-slide-rel-val)
 
-        let $slide-rel-upd := ppt:map-update($upd-map2,$to-pkg-map)
+     (:update package map with updated slide#.xml.rels references :)
+        let $slide-rel-upd := ppt:map-update($to-pkg-map, $upd-map2)
    
-(:now we've incremented, so overwrite existing with added :)
-
+     (:add updated slide#.xml/slide#.xml.rels references, and slide to be inserted to package map:)
         let $map-rels :=  map:put($to-pkg-map,$new-slide-rels,$upd-rels)
         let $map-slide := map:put($to-pkg-map, $new-slide-name, $orig-slide-name)
 
 	return $to-pkg-map
-
 };
+
 (: ====================:)
 (:removes handout master from presentation.xml.rels :)
-declare function ppt:remove-hm-from-pres-rels($pres-rels as node())
+declare function ppt:remove-hm-from-pres-rels(
+   $pres-rels as node()
+) as element(rel:Relationships)
 {
-     	let $children := $pres-rels/node()
-     	let $upd-children := for $c in $children/Relationship
+     	let $upd-children := for $c in $pres-rels/Relationship
         	             let $rel := if(fn:matches($c/@Target, "handoutMaster")) then () else $c
                 	     return $rel
-     	return  document {element{fn:QName("http://schemas.openxmlformats.org/package/2006/relationships","Relationships")} 
-			   {$pres-rels/@*, $upd-children}}
+     	return element{fn:QName("http://schemas.openxmlformats.org/package/2006/relationships","Relationships")} 
+			   {$pres-rels/@*, $upd-children} 
 
 };
 (: ====================:)
-declare function ppt:rel-ids($rels as element(rel:Relationships))
+declare function ppt:rel-ids($rels as element(rel:Relationships)) as xs:string*
 {
    	$rels/rel:Relationship/@Id
 };
 (: ====================:)
 (:given a relationships node, and a type (matches on @Target : handout, slide, etc) returns id as integer :)
-declare function ppt:rels-rel-id($rels as node(), $type as xs:string*)
+declare function ppt:rels-rel-id($rels as node(), $type as xs:string*) as xs:integer
 {
-   (: $rels/r:Relationships/r:Relationship/@Target :)
     	let $hmId :=fn:substring-after($rels/rel:Relationships/rel:Relationship[fn:matches(@Target,$type)]/@Id,"rId")
     	return if((fn:empty($hmId)) or ($hmId eq "")) then () else xs:integer($hmId)
 };
 (: ====================:)
-declare function ppt:r-id-as-int($rId as xs:string)
+declare function ppt:r-id-as-int($rId as xs:string) as xs:integer
 {
   	xs:integer(fn:substring-after($rId,"rId"))
 };
 (: ====================:)
-declare function ppt:ppt-rels-insert-slide($pres-rels as node(), $start-idx as xs:integer)
+declare function ppt:ppt-rels-insert-slide(
+   $pres-rels as node(), 
+   $start-idx as xs:integer) as element(rel:Relationships)
 {
 (:pos don't matter, just name :)   
 (:incrementing by one here assumes one slideMaster, should query count of masters, then increment accordingly for new-r-id:)
-        let $pres-rels-doc := $pres-rels/node()
         let $new-r-id := 1 + $start-idx  (:change to + count of slidemaster :)
         (:if rId >= $new-r-id then increment :)
-    	let $non-slide-rels := $pres-rels-doc/Relationship[fn:not(fn:matches(@Target,"slide\d+\.xml"))]
+    	let $non-slide-rels := $pres-rels/Relationship[fn:not(fn:matches(@Target,"slide\d+\.xml"))]
    
         (:adjust slides: if slide#.xml >= to $start-idx, increment slide# and rId for slide# :)
-    	let $orig-slide-rels :=  $pres-rels-doc/Relationship[fn:matches(@Target,"slide\d+\.xml")]
+    	let $orig-slide-rels :=  $pres-rels/Relationship[fn:matches(@Target,"slide\d+\.xml")]
     	let $new-slide-rel := element{fn:QName("http://schemas.openxmlformats.org/package/2006/relationships","Relationship")} 
                                   {attribute Id {fn:concat("rId",$new-r-id  ) },
                                    attribute Type {"http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" },
@@ -706,8 +754,9 @@ declare function ppt:ppt-rels-insert-slide($pres-rels as node(), $start-idx as x
                                                   attribute Target {fn:concat("slides/slide",($slideIdx +1),".xml"  ) }
                                                  }
                                       else $o 
-                                     
-return document {element{fn:QName("http://schemas.openxmlformats.org/package/2006/relationships","Relationships")} {($new-non-slide-rels, $new-slide-rels, $new-slide-rel)} }
+
+        return element{fn:QName("http://schemas.openxmlformats.org/package/2006/relationships","Relationships")} 
+                      {($new-non-slide-rels, $new-slide-rels, $new-slide-rel)} 
 };
 
 (: ====================:)
@@ -737,16 +786,20 @@ declare function ppt:dispatch-remove-handoutlst($pres-xml as node())
 
 };
 
-declare function ppt:update-nm($pres-xml as node(), $new-nm-id as xs:string*)
+declare function ppt:update-nm(
+   $pres-xml as node(), 
+   $new-nm-id as xs:string*)
 {
   	element{fn:QName("http://schemas.openxmlformats.org/presentationml/2006/main","p:notesMasterId")} {attribute r:id{ $new-nm-id }}
 };
 
-declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
+declare function ppt:add-sld(
+   $pres-xml as node(), 
+   $new-sld-id as node())
 {
   (:$pres-xml:)
  (: need to account for 1- case when two slides have the same id 2-multiple slides will need children rIds updated :)
-  	let $children := $pres-xml/node()
+  	let $children := $pres-xml/node() (: /node() :)
   	let $new-sld-rId := ppt:r-id-as-int($new-sld-id/@r:id)
   	let $upd-sld-id := xs:integer($new-sld-id/@id) + 1 (: just take slide id we're adding, make all one greater as we add back to presentatin.xml:)
                                                            (:1256:)  (:rand  uniqueid-generator random-num and incremenet max of //rId:) 
@@ -767,19 +820,25 @@ declare function ppt:add-sld($pres-xml as node(), $new-sld-id as node())
         	          (:this doesn't order strings correctly, replaced order by $c/@r:id :) 
         	          order by xs:integer(fn:substring($c/@r:id,4))
                           return $c
-  	return document {element{fn:QName("http://schemas.openxmlformats.org/presentationml/2006/main","p:sldIdLst")}  {$pres-xml/@*, $ordered-c }} 
+  	return element{fn:QName("http://schemas.openxmlformats.org/presentationml/2006/main","p:sldIdLst")}  {$pres-xml/@*, $ordered-c } 
 };
 
-declare function ppt:passthru-add-slide-id($x as node(), $new-sld-id as node(), $new-nm-id as xs:string*) as node()*
+declare function ppt:passthru-add-slide-id(
+   $x as node(), 
+   $new-sld-id as node(), 
+   $new-nm-id as xs:string*) as node()*
 {
    	for $i in $x/node() return ppt:dispatch-add-slide-id($i, $new-sld-id, $new-nm-id)
 };
 
-declare function ppt:dispatch-add-slide-id($pres-xml as node(), $new-sld-id as node(), $new-nm-id as xs:string*) 
+declare function ppt:dispatch-add-slide-id(
+   $pres-xml as node(), 
+   $new-sld-id as node(), 
+   $new-nm-id as xs:string*) as node()*
 {
        typeswitch($pres-xml)
      	case text() return $pres-xml
-       	case document-node() return   document{ppt:passthru-add-slide-id($pres-xml,$new-sld-id, $new-nm-id)} 
+       	case document-node() return   ppt:passthru-add-slide-id($pres-xml,$new-sld-id, $new-nm-id)
        	case element(p:sldIdLst) return ppt:add-sld($pres-xml, $new-sld-id)
        	case element(p:notesMasterId) return ppt:update-nm($pres-xml, $new-nm-id)
        	case element() return  element{fn:name($pres-xml)} {$pres-xml/@*,  $pres-xml/namespace::*,passthru-add-slide-id($pres-xml,$new-sld-id, $new-nm-id)}
@@ -799,10 +858,10 @@ declare function ppt:update-pres-xml($pres-xml as node(),$final-pres-rels as nod
   	let $src-pres-slide-id := fn:doc(ppt:uri-ppt-presentation($src-dir))/p:presentation/p:sldIdLst/p:sldId[fn:matches(@r:id,$src-pres-rel-id)]/@id
 
         (:now check rId to use in $final-pres-rels :)
-  	let $new-pres-rel-id := $final-pres-rels/node()/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id 
+  	let $new-pres-rel-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id 
 
         (:could be more than one of these, have to account for :)
-  	let $new-nm-id := $final-pres-rels/node()/rel:Relationship[fn:ends-with(@Type,"notesMaster")]/@Id  
+  	let $new-nm-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Type,"notesMaster")]/@Id  
 
         (:construct new p:sldId:)
   	let $new-sld-id := element p:sldId{attribute id {$src-pres-slide-id } , attribute r:id { $new-pres-rel-id  } }
@@ -830,7 +889,10 @@ declare function ppt:validate-list-length-equal($list1 as xs:string+ , $list2 as
   	fn:count($list1) eq fn:count($list2)
 };
 
-declare function ppt:validate-slide-indexes-map($t-map as map:map, $from-pres as xs:string, $from-idx as xs:integer, $insert-index as xs:integer)
+declare function ppt:validate-slide-indexes-map(
+   $t-map as map:map, $from-pres as xs:string, 
+   $from-idx as xs:integer, 
+   $insert-index as xs:integer)
 {
 
    (:may want to break slide count from map out into own function :)
@@ -856,16 +918,15 @@ declare function ppt:validate-slide-indexes-map($t-map as map:map, $from-pres as
                    		fn:true()
    	return $test
 };
-(:spell slide out:)
-declare function ppt:sld-rel-image-types($map as map:map)
+
+declare function ppt:slide-rel-image-types($map as map:map)as xs:string*
 {
 	let $tKeys := map:keys($map)
 	let $rels := for $t in $tKeys
         	     let $doc := map:get($map,$t)
-             	     let $ret := 
-                         if($doc instance of xs:string) then () else $doc
-                     return $ret
-        (:check this, fn:distinct in a loop :)
+                     return if($doc instance of xs:string) then () else $doc
+
+        (:check -fn:distinct in  loop :)
 	let $imgTypes := for $r in $rels
                          let $targs := $r/rel:Relationships/rel:Relationship[fn:ends-with(@Type,"image")]/@Target
                          let $type := for $t in $targs
@@ -884,7 +945,11 @@ declare function ppt:sld-rel-image-types($map as map:map)
 (: $from-idx  := 2                    index of slide in from preso to copy to target    :)
 (: $insert-idx := 2                   insertion index of slide merged into preso in map :)
 
-declare function ppt:merge-slide-util($to-pkg-map as map:map?,$from-pres as xs:string, $from-idx as xs:integer, $insert-idx as xs:integer) as map:map
+declare function ppt:merge-slide-util(
+   $to-pkg-map as map:map?,
+   $from-pres as xs:string, 
+   $from-idx as xs:integer, 
+   $insert-idx as xs:integer) as map:map 
 {
 
         let $to-uris := map:keys($to-pkg-map)                   (:uris for target presentation files    :)
@@ -892,7 +957,6 @@ declare function ppt:merge-slide-util($to-pkg-map as map:map?,$from-pres as xs:s
         let $uri-handout-master-rels := ppt:uri-ppt-handout-master-rels-map($to-pkg-map) (:return handoutMaster uri from map :)
         let $theme-ids := ppt:handout-master-theme-index($uri-handout-master-rels) (:return indices for themes related to handoutMaster - 1,2..N :)
 
-(:HERE:)
         (:remove themes associated with handoutmaster from map:)
  	let $theme-uris := 
                    for $t in $to-uris
@@ -909,23 +973,29 @@ declare function ppt:merge-slide-util($to-pkg-map as map:map?,$from-pres as xs:s
                            return if(fn:matches($to,"handoutMaster")) then 
                                      map:delete($to-pkg-map, $to)
                            else () 
- 
-        (:inserts new slide, slide.xml.rels, and images, adjusting other slide #s appropriately :)
+        
+        (:inserts new slide, slide.xml.rels, and any associated images, 
+          adjusts references for other slide.xml, slide.xml.rels, and images :)
         let $new-slide-map := ppt:map-slide-and-relationships($to-pkg-map, $from-pres, $from-idx, $insert-idx)
+        
+        let $sld-rels-img-types := ppt:slide-rel-image-types($new-slide-map)
 
-        let $sld-rels-img-types := ppt:sld-rel-image-types($new-slide-map)
-
-        (:update presentation.xml.rels :)
+        (:get presentation.xml.rels for update :)
         let $to-pres-rels-val:= map:get($new-slide-map,ppt:uri-ppt-rels(()))
+
         (:check for uri or node val in map:)
-        let $to-pres-rels := if($to-pres-rels-val instance of xs:string) then fn:doc($to-pres-rels-val) else $to-pres-rels-val                         
+        let $to-pres-rels := if($to-pres-rels-val instance of xs:string) then fn:doc($to-pres-rels-val)/node() else $to-pres-rels-val                         
 
         let $pres-rels-no-hm := ppt:remove-hm-from-pres-rels($to-pres-rels)
 
+(:debug:) (:return $pres-rels-no-hm:)
+
         let $final-pres-rels := ppt:ppt-rels-insert-slide($pres-rels-no-hm, $insert-idx)
 
-        (: make document nodes , elements, can strongly type :) 
-        (: drop schema into config , validate :)
+        (:review notes: :) 
+        (: overall comment: strongly type :) 
+        (: think about: drop schema into config , validate :)
+(:HERE:)
         (:update [Content_Types].xml :) 
         let $c-types-val := map:get($new-slide-map,ppt:uri-content-types(()))
         let $c-types := if($c-types-val instance of xs:string) then fn:doc($c-types-val)/node() else $c-types-val
@@ -944,9 +1014,15 @@ declare function ppt:merge-slide-util($to-pkg-map as map:map?,$from-pres as xs:s
 
         return  $new-slide-map
 
-}; 
-(:check parameters ? :)
-declare function ppt:insert-slide($to-pkg-map as map:map?,$from-pres as xs:string+, $from-idx as xs:integer+, $insert-idx as xs:integer) as map:map
+
+};
+ 
+(: can we improve params? :)
+declare function ppt:insert-slide(
+   $to-pkg-map as map:map?,
+   $from-pres as xs:string+, 
+   $from-idx as xs:integer+, 
+   $insert-idx as xs:integer) as map:map
 {
  	let $return := 
    		if(ppt:validate-slide-indexes-map($to-pkg-map, $from-pres, $from-idx, $insert-idx)) then
@@ -957,7 +1033,7 @@ declare function ppt:insert-slide($to-pkg-map as map:map?,$from-pres as xs:strin
         			ppt:list-length-error()
    		else
         		ppt:slide-index-error()
-   	return $to-pkg-map
+   	return (:debug:) (:$return:) $to-pkg-map 
 };
 
 declare function ppt:package-map-zip($map as map:map*) as binary()
