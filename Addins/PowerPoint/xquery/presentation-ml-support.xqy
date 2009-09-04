@@ -249,205 +249,293 @@ declare function ppt:package-files-only(
 };
 
 (: ===================== BEGIN file and dir helpers ====================== :)
-declare function ppt:uri-content-types($dir as xs:string?) as xs:string
+declare function ppt:uri-content-types(
+   $dir as xs:string?
+) as xs:string
 {
 	fn:concat($dir,"[Content_Types].xml")
 };
 
-declare function ppt:uri-rels-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-rels-dir(
+   $dir as xs:string?
+) as xs:string
 {
   	fn:concat($dir,"_rels/")
 };
 
-declare function ppt:uri-rels($dir as xs:string?) as xs:string
+declare function ppt:uri-rels(
+   $dir as xs:string?
+) as xs:string
 {
     	fn:concat(ppt:uri-rels-dir($dir),".rels") 
 };
 
-declare function ppt:uri-docprops-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-docprops-dir(
+   $dir as xs:string?
+) as xs:string
 {
     	fn:concat($dir,"docProps/")
 };
 
-declare function ppt:uri-app-props($dir as xs:string?) as xs:string
+declare function ppt:uri-app-props(
+   $dir as xs:string?
+) as xs:string
 {
       	fn:concat(ppt:uri-docprops-dir($dir),"app.xml")
 };
 
-declare function ppt:uri-core-props($dir as xs:string?) as xs:string
+declare function ppt:uri-core-props(
+   $dir as xs:string?
+) as xs:string
 {
      	 fn:concat(ppt:uri-docprops-dir($dir),"core.xml")
 };
 
-declare function ppt:uri-ppt-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-dir(
+   $dir as xs:string?
+) as xs:string
 {
       	fn:concat($dir, "ppt/")
 };
 
-declare function ppt:uri-ppt-rels-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-rels-dir(
+   $dir as xs:string?
+) as xs:string
 {
       	fn:concat(ppt:uri-ppt-dir($dir),"_rels/")
 };
 
-declare function ppt:uri-ppt-rels($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-rels(
+   $dir as xs:string?
+) as xs:string
 {
      	fn:concat(ppt:uri-ppt-rels-dir($dir),"presentation.xml.rels")
 };
 
-declare function ppt:uri-ppt-handout-masters-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-handout-masters-dir(
+   $dir as xs:string?
+) as xs:string
 {
       	fn:concat(ppt:uri-ppt-dir($dir),"handoutMasters/")
 };
 
-declare function ppt:uri-ppt-handout-master-rels-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-handout-master-rels-dir(
+   $dir as xs:string?
+) as xs:string
 {
       	fn:concat(ppt:uri-ppt-handout-masters-dir($dir),"_rels/")
 };
 
-declare function ppt:uri-ppt-handout-master($dir as xs:string?, $idx as xs:integer) as xs:string
+declare function ppt:uri-ppt-handout-master(
+   $dir as xs:string?, 
+   $idx as xs:integer
+) as xs:string
 {
     	let $handoutMasterFile := fn:concat("handoutMaster",$idx,".xml")
    	return fn:concat(ppt:uri-ppt-handout-masters-dir($dir), $handoutMasterFile)
 };
 
-declare function ppt:uri-ppt-handout-master-rels($dir as xs:string?, $idx as xs:integer) as xs:string
+declare function ppt:uri-ppt-handout-master-rels(
+   $dir as xs:string?, 
+   $idx as xs:integer
+) as xs:string
 {
     	let $handoutMasterRelsFile := fn:concat("handoutMaster",$idx,".xml.rels")
     	return fn:concat( ppt:uri-ppt-handout-master-rels-dir($dir),$handoutMasterRelsFile)
 };
 
-declare function ppt:uri-ppt-media-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-media-dir(
+   $dir as xs:string?
+) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"media/")
 };
 
-declare function ppt:uri-ppt-notes-masters-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-notes-masters-dir(
+   $dir as xs:string?
+) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"notesMasters/")
 };
 
-declare function ppt:uri-ppt-notes-masters-rels-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-notes-masters-rels-dir(
+   $dir as xs:string?
+) as xs:string
 {
     	fn:concat(ppt:uri-ppt-notes-masters-dir($dir),"_rels/")
 }; 
 
-declare function ppt:uri-ppt-notes-master($dir as xs:string?, $idx as xs:integer) as xs:string
+declare function ppt:uri-ppt-notes-master(
+   $dir as xs:string?, 
+   $idx as xs:integer
+) as xs:string
 {
     	let $notesMasterFile := fn:concat("notesMaster",$idx,".xml")
     	return fn:concat(ppt:uri-ppt-notes-masters-dir($dir), $notesMasterFile)
 };
 
-declare function ppt:uri-ppt-notes-master-rels($dir as xs:string?, $idx as xs:integer) as xs:string
+declare function ppt:uri-ppt-notes-master-rels(
+   $dir as xs:string?, 
+   $idx as xs:integer
+) as xs:string
 {
     	let $notesMasterRelsFile := fn:concat("notesMaster",$idx,".xml.rels")
     	return fn:concat( ppt:uri-ppt-notes-masters-rels-dir($dir),$notesMasterRelsFile)
 };
 
-declare function ppt:uri-ppt-slide-layouts-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-slide-layouts-dir(
+   $dir as xs:string?
+) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"slideLayouts/")
 };
 
-declare function ppt:uri-ppt-slide-layout-rels-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-slide-layout-rels-dir(
+   $dir as xs:string?
+) as xs:string
 {
     	fn:concat(ppt:uri-ppt-slide-layouts-dir($dir),"_rels/")
 }; 
 
-declare function ppt:uri-ppt-slide-layout($dir as xs:string?, $idx as xs:integer) as xs:string
+declare function ppt:uri-ppt-slide-layout(
+   $dir as xs:string?, 
+   $idx as xs:integer
+) as xs:string
 {
     	let $slideLayoutFile := fn:concat("slideLayout",$idx,".xml")
     	return fn:concat(ppt:uri-ppt-slide-layouts-dir($dir), $slideLayoutFile)
 };
 
-declare function ppt:uri-ppt-slide-layout-rels($dir as xs:string?, $idx as xs:integer) as xs:string
+declare function ppt:uri-ppt-slide-layout-rels(
+   $dir as xs:string?, 
+   $idx as xs:integer
+) as xs:string
 {
     	let $slideLayoutRelsFile := fn:concat("slideLayout",$idx,".xml.rels")
     	return fn:concat( ppt:uri-ppt-slide-layout-rels-dir($dir),$slideLayoutRelsFile)
 };
 
-declare function ppt:uri-ppt-slide-masters-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-slide-masters-dir(
+   $dir as xs:string?
+) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"slideMasters/")
 };
 
-declare function ppt:uri-ppt-slide-master-rels-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-slide-master-rels-dir(
+   $dir as xs:string?
+) as xs:string
 {
     	fn:concat(ppt:uri-ppt-slide-masters-dir($dir),"_rels/")
 }; 
 
-declare function ppt:uri-ppt-slide-master($dir as xs:string?, $idx as xs:integer) as xs:string
+declare function ppt:uri-ppt-slide-master(
+   $dir as xs:string?, 
+   $idx as xs:integer
+) as xs:string
 {
     	let $slideMasterFile := fn:concat("slideMaster",$idx,".xml")
    	return fn:concat(ppt:uri-ppt-slide-masters-dir($dir), $slideMasterFile)
 };
 
-declare function ppt:uri-ppt-slide-master-rels($dir as xs:string?, $idx as xs:integer) as xs:string
+declare function ppt:uri-ppt-slide-master-rels(
+   $dir as xs:string?, 
+   $idx as xs:integer
+) as xs:string
 {
     	let $slideMasterRelsFile := fn:concat("slideMaster",$idx,".xml.rels")
     	return fn:concat( ppt:uri-ppt-slide-master-rels-dir($dir),$slideMasterRelsFile)
 };
 
-declare function ppt:uri-ppt-slides-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-slides-dir(
+   $dir as xs:string?
+) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"slides/")
 };
 
 
-declare function ppt:uri-ppt-slide-rels-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-slide-rels-dir(
+   $dir as xs:string?
+) as xs:string
 {
     	fn:concat(ppt:uri-ppt-slides-dir($dir),"_rels/")
 }; 
 
-declare function ppt:uri-ppt-slide($dir as xs:string?, $idx as xs:integer) as xs:string
+declare function ppt:uri-ppt-slide(
+   $dir as xs:string?, 
+   $idx as xs:integer
+) as xs:string
 {
     	let $slideFile := fn:concat("slide",$idx,".xml")
     	return fn:concat(ppt:uri-ppt-slides-dir($dir), $slideFile)
 };
 
-declare function ppt:uri-ppt-slide-rels($dir as xs:string?, $idx as xs:integer) as xs:string
+declare function ppt:uri-ppt-slide-rels(
+   $dir as xs:string?, 
+   $idx as xs:integer
+) as xs:string
 {
     	let $slideRelsFile := fn:concat("slide",$idx,".xml.rels")
     	return fn:concat( ppt:uri-ppt-slide-rels-dir($dir),$slideRelsFile)
 };
 
-declare function ppt:uri-ppt-theme-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-theme-dir(
+   $dir as xs:string?
+) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"theme/")
 };
 
-declare function ppt:uri-ppt-theme-rels-dir($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-theme-rels-dir(
+   $dir as xs:string?
+) as xs:string
 {
     	fn:concat(ppt:uri-ppt-theme-dir($dir),"_rels/")
 }; 
 
-declare function ppt:uri-ppt-theme($dir as xs:string?, $idx as xs:integer) as xs:string
+declare function ppt:uri-ppt-theme(
+   $dir as xs:string?, 
+   $idx as xs:integer
+) as xs:string
 {
     	let $themeFile := fn:concat("theme",$idx,".xml")
     	return fn:concat(ppt:uri-ppt-theme-dir($dir), $themeFile)
 };
 
-declare function ppt:uri-ppt-theme-rels($dir as xs:string?, $idx as xs:integer) as xs:string
+declare function ppt:uri-ppt-theme-rels(
+   $dir as xs:string?, 
+   $idx as xs:integer
+) as xs:string
 {
     	let $themeRelsFile := fn:concat("theme",$idx,".xml.rels")
     	return fn:concat( ppt:uri-ppt-theme-rels-dir($dir),$themeRelsFile)
 };
 
-declare function ppt:uri-ppt-presentation($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-presentation(
+   $dir as xs:string?
+) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"presentation.xml")
 };
 
-declare function ppt:uri-ppt-pres-props($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-pres-props(
+   $dir as xs:string?
+) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"presProps.xml")
 };
 
-declare function ppt:uri-ppt-table-styles($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-table-styles(
+   $dir as xs:string?
+) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"tableStyles.xml")
 };
 
-declare function ppt:uri-ppt-view-props($dir as xs:string?) as xs:string
+declare function ppt:uri-ppt-view-props(
+   $dir as xs:string?
+) as xs:string
 {
      	fn:concat(ppt:uri-ppt-dir($dir),"viewProps.xml")
 };
@@ -703,26 +791,34 @@ declare function ppt:remove-hm-from-pres-rels(
 
 };
 (: ====================:)
-declare function ppt:rel-ids($rels as element(rel:Relationships)) as xs:string*
+declare function ppt:rel-ids(
+   $rels as element(rel:Relationships)
+) as xs:string*
 {
    	$rels/rel:Relationship/@Id
 };
 (: ====================:)
 (:given a relationships node, and a type (matches on @Target : handout, slide, etc) returns id as integer :)
-declare function ppt:rels-rel-id($rels as node(), $type as xs:string*) as xs:integer
+declare function ppt:rels-rel-id(
+   $rels as node(), 
+   $type as xs:string*
+) as xs:integer
 {
     	let $hmId :=fn:substring-after($rels/rel:Relationships/rel:Relationship[fn:matches(@Target,$type)]/@Id,"rId")
     	return if((fn:empty($hmId)) or ($hmId eq "")) then () else xs:integer($hmId)
 };
 (: ====================:)
-declare function ppt:r-id-as-int($rId as xs:string) as xs:integer
+declare function ppt:r-id-as-int(
+   $rId as xs:string
+) as xs:integer
 {
   	xs:integer(fn:substring-after($rId,"rId"))
 };
 (: ====================:)
 declare function ppt:ppt-rels-insert-slide(
    $pres-rels as node(), 
-   $start-idx as xs:integer) as element(rel:Relationships)
+   $start-idx as xs:integer
+) as element(rel:Relationships)
 {
 (:pos don't matter, just name :)   
 (:incrementing by one here assumes one slideMaster, should query count of masters, then increment accordingly for new-r-id:)
@@ -761,7 +857,12 @@ declare function ppt:ppt-rels-insert-slide(
 
 (: ====================:)
 (:switched theme1.xml, theme2.xml ... themeN.xml to 1,2...N :)
-declare function ppt:update-c-types($c-types as node(), $slide-idx as xs:integer,$types as xs:string*, $theme-ids as xs:string*)
+declare function ppt:update-c-types(
+   $c-types as node(), 
+   $slide-idx as xs:integer,
+   $types as xs:string*, 
+   $theme-ids as xs:string*
+)
 {
         ppt:ct-utils-update-types($c-types, $slide-idx, $types, $theme-ids)
 };
@@ -769,13 +870,17 @@ declare function ppt:update-c-types($c-types as node(), $slide-idx as xs:integer
 (: ================================== :)
 (: BEGIN UPDATE FINAL PRESENTATION.XML ================================== :)
 
-declare function ppt:passthru-remove-handoutlst($x as node()) as node()*
+declare function ppt:passthru-remove-handoutlst(
+   $x as node()
+) as node()*
 {
    	for $i in $x/node() return ppt:dispatch-remove-handoutlst($i)
 };
 
 
-declare function ppt:dispatch-remove-handoutlst($pres-xml as node())
+declare function ppt:dispatch-remove-handoutlst(
+   $pres-xml as node()
+)
 {
        typeswitch($pres-xml)
 	case text() return $pres-xml
@@ -788,14 +893,16 @@ declare function ppt:dispatch-remove-handoutlst($pres-xml as node())
 
 declare function ppt:update-nm(
    $pres-xml as node(), 
-   $new-nm-id as xs:string*)
+   $new-nm-id as xs:string*
+)
 {
   	element{fn:QName("http://schemas.openxmlformats.org/presentationml/2006/main","p:notesMasterId")} {attribute r:id{ $new-nm-id }}
 };
 
 declare function ppt:add-sld(
    $pres-xml as node(), 
-   $new-sld-id as node())
+   $new-sld-id as node()
+)
 {
   (:$pres-xml:)
  (: need to account for 1- case when two slides have the same id 2-multiple slides will need children rIds updated :)
@@ -826,7 +933,8 @@ declare function ppt:add-sld(
 declare function ppt:passthru-add-slide-id(
    $x as node(), 
    $new-sld-id as node(), 
-   $new-nm-id as xs:string*) as node()*
+   $new-nm-id as xs:string*
+) as node()*
 {
    	for $i in $x/node() return ppt:dispatch-add-slide-id($i, $new-sld-id, $new-nm-id)
 };
@@ -834,7 +942,8 @@ declare function ppt:passthru-add-slide-id(
 declare function ppt:dispatch-add-slide-id(
    $pres-xml as node(), 
    $new-sld-id as node(), 
-   $new-nm-id as xs:string*) as node()*
+   $new-nm-id as xs:string*
+) as node()*
 {
        typeswitch($pres-xml)
      	case text() return $pres-xml
@@ -846,7 +955,12 @@ declare function ppt:dispatch-add-slide-id(
 
 };
 
-declare function ppt:update-pres-xml($pres-xml as node(),$final-pres-rels as node(),$src-dir as xs:string, $id as xs:integer)
+declare function ppt:update-pres-xml(
+   $pres-xml as node(),
+   $final-pres-rels as node(),
+   $src-dir as xs:string, 
+   $id as xs:integer
+)
 {
   	let $pres-no-hm-lst :=  ppt:dispatch-remove-handoutlst($pres-xml) (: , $final-pres-rels, $id) :)
   	(:let $newid := "256" :)
@@ -892,7 +1006,8 @@ declare function ppt:validate-list-length-equal($list1 as xs:string+ , $list2 as
 declare function ppt:validate-slide-indexes-map(
    $t-map as map:map, $from-pres as xs:string, 
    $from-idx as xs:integer, 
-   $insert-index as xs:integer)
+   $insert-index as xs:integer
+)
 {
 
    (:may want to break slide count from map out into own function :)
@@ -919,7 +1034,9 @@ declare function ppt:validate-slide-indexes-map(
    	return $test
 };
 
-declare function ppt:slide-rel-image-types($map as map:map)as xs:string*
+declare function ppt:slide-rel-image-types(
+   $map as map:map
+) as xs:string*
 {
 	let $tKeys := map:keys($map)
 	let $rels := for $t in $tKeys
@@ -949,7 +1066,8 @@ declare function ppt:merge-slide-util(
    $to-pkg-map as map:map?,
    $from-pres as xs:string, 
    $from-idx as xs:integer, 
-   $insert-idx as xs:integer) as map:map 
+   $insert-idx as xs:integer
+) as map:map 
 {
 
         let $to-uris := map:keys($to-pkg-map)                   (:uris for target presentation files    :)
@@ -1022,7 +1140,8 @@ declare function ppt:insert-slide(
    $to-pkg-map as map:map?,
    $from-pres as xs:string+, 
    $from-idx as xs:integer+, 
-   $insert-idx as xs:integer) as map:map
+   $insert-idx as xs:integer
+) as map:map
 {
  	let $return := 
    		if(ppt:validate-slide-indexes-map($to-pkg-map, $from-pres, $from-idx, $insert-idx)) then
@@ -1036,7 +1155,9 @@ declare function ppt:insert-slide(
    	return (:debug:) (:$return:) $to-pkg-map 
 };
 
-declare function ppt:package-map-zip($map as map:map*) as binary()
+declare function ppt:package-map-zip(
+   $map as map:map*
+) as binary()
 {
    
 	let $parts := 
@@ -1061,7 +1182,9 @@ declare function ppt:package-map-zip($map as map:map*) as binary()
 	return xdmp:zip-create($manifest, $finaldocs)
 };
 
-declare function ppt:package-map($src-dir as xs:string) as map:map
+declare function ppt:package-map(
+   $src-dir as xs:string
+) as map:map
 {
   	let $doc-map := map:map()
 	let $t-uris := ppt:directory-uris($src-dir)
