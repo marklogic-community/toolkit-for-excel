@@ -5,7 +5,7 @@ REM -f folder where .idt is found
 REM -d the .msi to be updated
 REM -i import the .idt
 REM (when these 3 arguments are passed, the command executes silently,without requesting user input)
-"C:\Program Files\Microsoft SDKs\Windows\v6.0A\bin\MsiDb" -f "C:\cygwin\home\paven\MLOS\Office2007\MarkLogic_WordAddin-1.0-20081023\Word\addin.deploy" -d "MarkLogic_WordAddin_Setup.msi" -i config.idt"
+"C:\Program Files\Microsoft SDKs\Windows\v6.0A\bin\MsiDb" -f "C:\unitTestAddin" -d "MarkLogic_PowerPointAddin_Setup.msi" -i config.idt"
 
 
 REM installs the .msi
@@ -14,14 +14,15 @@ REM options:
 REM /q - quiet
 REM /i - install
 REM TARGETDIR - directory to install msi to
-msiexec /q /i "C:\cygwin\home\paven\MLOS\Office2007\MarkLogic_WordAddin-1.0-20081023\Word\addin.deploy\MarkLogic_WordAddin_Setup.msi" TARGETDIR="C:\tmp"
+msiexec /q /i "C:\unitTestAddin\MarkLogic_PowerPointAddin_Setup.msi" TARGETDIR="C:\tmp"
 
 REM executes the C# app
-REM this will start Word, and close Word after 20 seconds
+REM this will start PowerPoint, and close PowerPoint after running tests specifed by parameter
+REM output file of test results writtent to C:\unitTestAdin\outputs\TestResults.txt
 REM the tests are run from the javascript in the page when it loads in the browswer
-MarkLogic_WordAddin_Test.exe
+MarkLogic_PowerPointAddin_Test.exe 1  
 
 REM uninstalls the Addin
-msiexec /q /x "C:\cygwin\home\paven\MLOS\Office2007\MarkLogic_WordAddin-1.0-20081023\Word\addin.deploy\MarkLogic_WordAddin_Setup.msi" 
+msiexec /q /x "C:\unitTestAddin\MarkLogic_PowerPointAddin_Setup.msi" 
 
 
