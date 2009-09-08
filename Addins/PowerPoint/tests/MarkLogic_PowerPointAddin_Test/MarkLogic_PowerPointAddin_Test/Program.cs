@@ -30,7 +30,6 @@ using System.Linq;
 using System.Text;
 
 
-
 namespace MarkLogic_PowerPointAddin_Test
 {
     class Program
