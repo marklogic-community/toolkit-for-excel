@@ -122,15 +122,22 @@ let $uris := ppt:directory-uris($presentation-dir)
 return xdmp:save("C:\unitTestAddin\outputs\testOne.xml",ppt:package-make($presentation-dir, $uris))
 };
 
+declare function ppt:test-eight()
+{
+let $presentation-dir:="/testOne_pptx_parts/"
+let $map := ppt:package-map($presentation-dir)
+return xdmp:save("C:\unitTestAddin\outputs\map.xml",text{$map}) 
+};
+
 ppt:test-one(),
 ppt:test-two(),
 ppt:test-three(),
 ppt:test-four(),
 ppt:test-five(),
 ppt:test-six(),
-(:saves .xml to outputs, test for open in ppt:)
-ppt:test-seven()
+(:saves pkg.xml to /outputs, test for open in ppt:)
+ppt:test-seven(),
+(:saves map.xml to /outputs :)
+ppt:test-eight()
 
-(:test package map on its own,directory-uris, output to outputs :)
-(: add more tests for supporting functions :)
 
