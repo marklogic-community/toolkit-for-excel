@@ -36,50 +36,60 @@ declare namespace zip="xdmp:zip";
 
 declare default element namespace "http://schemas.openxmlformats.org/package/2006/content-types";
 
-declare function  ppt:ct-utils-update-types($ctypes as node(), $start-idx as xs:integer,$types as xs:string*, $theme-ids as xs:string*)
+declare function  ppt:ct-utils-update-types(
+   $content-types as node(), 
+   $start-idx as xs:integer,
+   $img-types as xs:string*, 
+   $theme-ids as xs:string*
+) as element(types:Types)
 {
 
-    let $ctypes-no-theme := ppt:ct-utils-remove-themes($ctypes,$theme-ids)
+    let $ctypes-no-theme := ppt:ct-utils-remove-themes($content-types,$theme-ids)
     let $ctypes-no-hm := ppt:ct-utils-remove-hm($ctypes-no-theme)
     let $upd-ctypes := ppt:ct-utils-add-slide($ctypes-no-hm,$start-idx)
-    let $final-ctypes := if(fn:empty($types)) then 
-                             $upd-ctypes 
-                         else
-                             ppt:ct-utils-add-img-defaults($upd-ctypes,$types)
-    
-    return $final-ctypes 
+    return if(fn:empty($img-types)) then 
+              $upd-ctypes 
+           else
+              ppt:ct-utils-add-img-defaults($upd-ctypes,$img-types)
+  
 };
 
-declare function ppt:ct-utils-remove-themes($ctypes as node(),$theme-ids as xs:string*)
+declare function ppt:ct-utils-remove-themes(
+   $content-types as node(),
+   $theme-ids as xs:string*
+) as element(types:Types)
 {
-     let $children := $ctypes/node()
-     let $themes  := $ctypes/Override[fn:matches(@PartName,"theme\d+\.xml?")]
-     let $override := $ctypes/Override[fn:not(fn:matches(@PartName,"theme\d+\.xml?"))]
-     let $default := $ctypes/Default
+     let $children := $content-types/node()
+     let $themes  := $content-types/Override[fn:matches(@PartName,"theme\d+\.xml?")] (:add if below here:)
+     let $override := $content-types/Override[fn:not(fn:matches(@PartName,"theme\d+\.xml?"))]
+     let $default := $content-types/Default
    
      let $upd-themes := for $t in $themes
                          return if(fn:substring-before(fn:substring-after($t/@PartName,"/ppt/theme/theme"),".xml") = $theme-ids) then () else $t
      
     
-     return element{fn:name($ctypes)} {$ctypes/@*, $upd-themes, $override, $default} 
+     return element{fn:name($content-types)} {$content-types/@*, $upd-themes, $override, $default} 
 };
 
-declare function ppt:ct-utils-add-slide($ctypes as node(), $slide-idx as xs:integer)
+declare function ppt:ct-utils-add-slide(
+   $content-types as node(), 
+   $slide-idx as xs:integer
+) as element(types:Types)
 {
 	let $slidename := fn:concat("/ppt/slides/slide",$slide-idx,".xml")
 	let $overrideelem := element Override {attribute PartName{$slidename }, attribute ContentType {"application/vnd.openxmlformats-officedocument.presentationml.slide+xml" } }
-	let $test := $ctypes/Override[fn:ends-with(@PartName,$slidename)]
+	let $test := $content-types/Override[fn:ends-with(@PartName,$slidename)]
 	let $final := if(fn:empty($test)) then
-                 	let $children := $ctypes/node() 
-                 	return element{fn:name($ctypes)} {$ctypes/@*, $children, $overrideelem}
+                 	let $children := $content-types/node() 
+                 	return element{fn:name($content-types)} {$content-types/@*, $children, $overrideelem}
                       else  
                   (:some other function adjust all slides, add this one, blah :)
                    (:add function to test for image types and add :)
                     (:let $pngDefTest := <Default Extension="png" ContentType="image/png"/> :)
                   
-                    	let $non-slide-types := $ctypes/Override[fn:not(fn:matches(@PartName,"/ppt/slides/slide\d+\.xml"))] 
-                    	let $defaults := $ctypes/Default
-                    	let $slide-types :=$ctypes/Override[fn:matches(@PartName,"/ppt/slides/slide\d+\.xml")] 
+                    	let $non-slide-types := $content-types/Override[fn:not(fn:matches(@PartName,"/ppt/slides/slide\d+\.xml"))] 
+                    	let $defaults := $content-types/Default
+                    	let $slide-types :=$content-types/Override[fn:matches(@PartName,"/ppt/slides/slide\d+\.xml")] 
                     	let $upd-slide-types := 
                                             for $s in $slide-types
                                             let $o-slideIdx := xs:integer(fn:substring-before(fn:substring-after($s/@PartName, "slides/slide"),".xml"))
@@ -90,32 +100,41 @@ declare function ppt:ct-utils-add-slide($ctypes as node(), $slide-idx as xs:inte
                                                            else
                                                              $s
                                             return $finSld
-                   	return  element{fn:name($ctypes)} {$ctypes/@*, $defaults, $non-slide-types,$upd-slide-types, $overrideelem} 
+                   	return  element{fn:name($content-types)} {$content-types/@*, $defaults, $non-slide-types,$upd-slide-types, $overrideelem} 
 
 	return $final 
 
 };
 
-declare function ppt:ct-utils-remove-hm($ctypes as node())
+declare function ppt:ct-utils-remove-hm( 
+   $content-types as node()
+) as element(types:Types)
 {
-   	let $children := $ctypes/node()
+ (:path expression:)
+   	let $children := $content-types/node()
    	let $finalchildren := 
                          for $c in $children
                          let $n := if(fn:matches($c/@PartName,"handoutMaster\d+\.xml")) then () else $c
                          return $n
                           
-   	return element{fn:name($ctypes)} {$ctypes/@*, $finalchildren}
+   	return element{fn:name($content-types)} {$content-types/@*, $finalchildren}
 };
 
-(:CHANGE add image defaults :)
-declare function  ppt:ct-utils-add-img-defaults($ctypes as node(), $types as xs:string*)
+(: CHANGE add image defaults :)
+declare function  ppt:ct-utils-add-img-defaults(
+   $content-types as node(), 
+   $img-types as xs:string*
+) as element(types:Types)
 {
-        let $new-types := for $t in $types
+(: loop thru default,  :)
+(: $ctypes/Default[not(@Extension = $types :)
+
+        let $new-types := for $t in $img-types
                           let $ext := $t
                           let $ct := fn:concat("image/",$t)
                           return element Default {attribute Extension{$ext}, attribute ContentType{$ct}}
                         
-        let $default  := $ctypes/Default
+        let $default  := $content-types/Default
         let $all-def := ($new-types,$default)
    
         let $dist := fn:distinct-values($all-def/@Extension)
@@ -123,9 +142,9 @@ declare function  ppt:ct-utils-add-img-defaults($ctypes as node(), $types as xs:
                           return $all-def[@Extension = $d][1]
 
         
-        let $other  := $ctypes/* except $ctypes/Default
+        let $other  := $content-types/* except $content-types/Default
 
         
-        return element{fn:name($ctypes)} {$ctypes/@*,($final-def,$other)}
+        return element{fn:name($content-types)} {$content-types/@*,($final-def,$other)}
 };
 
