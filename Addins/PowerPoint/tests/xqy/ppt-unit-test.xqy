@@ -115,12 +115,22 @@ let $pptx-pkg := ppt:package-map-zip($new-map)
 return ($new-map   , xdmp:save("C:\unitTestAddin\pptx\VALIDATE_SIX.pptx",$pptx-pkg))
 };
 
+declare function ppt:test-seven()
+{
+let $presentation-dir:="/testOne_pptx_parts/" 
+let $uris := ppt:directory-uris($presentation-dir) 
+return xdmp:save("C:\unitTestAddin\outputs\testOne.xml",ppt:package-make($presentation-dir, $uris))
+};
+
 ppt:test-one(),
 ppt:test-two(),
 ppt:test-three(),
 ppt:test-four(),
 ppt:test-five(),
-ppt:test-six()
+ppt:test-six(),
+(:saves .xml to outputs, test for open in ppt:)
+ppt:test-seven()
 
-(:test package map on its own, package-make, directory-uris, output to outputs :)
+(:test package map on its own,directory-uris, output to outputs :)
+(: add more tests for supporting functions :)
 
