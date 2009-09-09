@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 :)
+import module namespace ppt=  "http://marklogic.com/openxml/powerpoint" at "/MarkLogic/openxml/presentation-ml-support.xqy";
 
 declare namespace pptadd="http://marklogic.com/openxml/pptaddin";
 declare namespace html = "http://www.w3.org/1999/xhtml";
@@ -50,9 +51,9 @@ let $type := for $s at $res in $slides
                         for $pic at $d in $new-uri
                         let $src := fn:concat("download-support.xqy?uid=",$pic)
                         let $prop := xdmp:document-properties($pic)
-                        let $pptx := $prop//pptx/text()
-                        let $slide := $prop//slide/text()
-                        let $index := $prop//index/text()
+                        let $pptx := $prop//ppt:pptx/text()
+                        let $slide := $prop//ppt:slide/text()
+                        let $index := $prop//ppt:index/text()
 
                         let $imageuri := $pic 
                         let $imganchor := fn:concat("#num",$d)
