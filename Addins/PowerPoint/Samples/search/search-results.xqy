@@ -38,21 +38,16 @@ if($searchtype eq "slide") then
 
      let $slideuris := for $s in $slides 
                        let $orig-uri := xdmp:node-uri($s)
-                       let $tmp-uri := fn:replace($orig-uri,"_pptx_parts/ppt/slides","_PNG")
-                       let $tmp-uri2 := fn:replace($tmp-uri,"slide","Slide")
-                       let $new-uri := fn:replace($tmp-uri2,".xml",".PNG")
-                       return $new-uri
-
+                       return xdmp:document-properties($orig-uri)/prop:properties/ppt:slideimg/text()
      let $disp-slides := 
          for $pic at $d in $slideuris
          let $src := fn:concat("download-support.xqy?uid=",$pic)
 
          let $prop := xdmp:document-properties($pic)
-         let $pptx := $prop//ppt:pptx/text()
-         let $slide := $prop//ppt:slide/text()
-         let $index := $prop//ppt:index/text()
+         let $pptx := $prop/prop:properties/ppt:pptx/text()
+         let $slide := $prop/prop:properties/ppt:slide/text()
+         let $index := $prop/prop:properties/ppt:index/text()
 
-         let $imageuri := $pic 
          let $imganchor := fn:concat("#num",$d)
          let $imgnum := fn:concat("num",$d)
          return
@@ -83,17 +78,15 @@ else if($searchtype eq "image") then
        let $imganchor := fn:concat("#num",$d)
        let $imgnum := fn:concat("num",$d) 
 
-       (:construct the url string in js, using config from Addin for url:)
-       let $imageuri := $pic (: fn:concat("http://localhost:8023/ppt/search/get-image.xqy?uid=",$pic)  :)
        return 
-         (<a name={$imgnum} href={$imganchor} onclick="insertImage('{$imageuri}')">
+         (<a name={$imgnum} href={$imganchor} onclick="insertImage('{$pic (:$imageuri:)}')">
           <img src="{$src}"></img>
           </a>,<br/>,<br/>)
 else
 let $slides := cts:search(//p:sld, cts:word-query($searchparam))
 let $docuris := for $s in $slides 
-                       let $orig-uri := xdmp:node-uri($s)
-                       return fn:replace(fn:replace($orig-uri,"/ppt/slides/slide\d+\.xml",""),"_pptx_parts",".pptx")
+                let $orig-uri := xdmp:node-uri($s)
+                return xdmp:document-properties($orig-uri)/prop:properties/ppt:pptx/text()
 let $finaldocs := for $doc in  fn:distinct-values($docuris)
                   let $docfolder := fn:replace($doc,".pptx","_pptx")
                   let $props := fn:concat($docfolder,"_parts/docProps/core.xml")
