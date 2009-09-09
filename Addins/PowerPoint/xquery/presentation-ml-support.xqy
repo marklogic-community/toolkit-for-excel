@@ -246,6 +246,23 @@ declare function ppt:package-files-only(
 };
 
 (: ================== BEGIN file and directory URI helper functions  ======== :)
+
+(: /foo_pptx_parts/ppt/slides/slide2.xml => /foo_PNG/Slide2.PNG :)
+declare function ppt:uri-slide-xml-to-slide-png(
+   $uri as xs:string
+) as xs:string
+{     
+        fn:replace($uri,"^(.*)(_pptx_parts/ppt/slides/)slide(\d+).xml$","$1_PNG/Slide$3.PNG")
+};
+
+(: /foo_PNG/Slide2.PNG => /foo_pptx_parts/ppt/slides/slide2.xml :)
+declare function ppt:uri-slide-png-to-slide-xml(
+   $uri as xs:string
+) as xs:string
+{
+       fn:replace($uri,"^(.*)(_PNG/)Slide(\d+).PNG$","$1_pptx_parts/ppt/slides/slide$3.xml")
+};
+
 declare function ppt:uri-content-types(
    $dir as xs:string?
 ) as xs:string
