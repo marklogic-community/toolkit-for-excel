@@ -6,6 +6,12 @@ Tests the functions found in presentation-ml-support.xqy. (edit the path/name as
 
 The .xqy tests are dependant on presentations saved and unzipped in the database.  Update accordingly.   PowerPoint files are saved to /unitTestAddin/pptx, other files can be found in /unitTestAddin/outputs.
 
+map.xml : output from ppt:package-map()
+
+testOne.xml : output from ppt:package-make()
+
+
+
 /MarkLogic_PowerPointAddin_Test :
 ====================================
 The source for MarkLogic_PowerPointAddin_Test.exe
@@ -18,6 +24,8 @@ and depending on Option:
 option 1:
  A) loops through a directory of .pptx, opening and closing each one.  These .pptx should be modified/generated using presentation-ml-support.xqy
  B) Quits PowerPoint application
+
+ Results are written to: /unitTestAddin/outputs/TestResults.txt
 
 
 option 2:
@@ -52,7 +60,7 @@ The paths are all configured to use C:\unitTestAddin, so if that works for you, 
 Running the .bat, the .exe that starts the PowerPoint application will run.
 When PowerPoint starts, the javascript will run tests onload and write the results out to a file in /unitTestAddin/outputs
 
-After the test runs, onload-testresults.txt can be found in unitTestAddin\outputs.
+Results of test are written to: /unitTestAddin/outputs.
 
 
 

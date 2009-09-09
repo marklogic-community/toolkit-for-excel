@@ -118,7 +118,7 @@ namespace MarkLogic_PowerPointAddin_Test
                     }
 
 
-                    //reenable addin
+               //reenable addin
                /*     foreach (Office.COMAddIn addin in pptApp.COMAddIns)
                     {
                         Console.WriteLine(addin.Description);
@@ -128,7 +128,7 @@ namespace MarkLogic_PowerPointAddin_Test
                         }
 
                     }
-                * */
+               * */
 
                     //quit PowerPoint
                     pptApp.Quit();
@@ -189,9 +189,7 @@ namespace MarkLogic_PowerPointAddin_Test
                     Console.WriteLine("ERROR: " + e.Message + e.StackTrace);
                 }
 
-            }
-
-            
+            }//end of option 2
 
         }
     }
