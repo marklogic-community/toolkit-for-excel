@@ -23,6 +23,8 @@ limitations under the License.
 :)
 import module namespace cpf = "http://marklogic.com/cpf" at "/MarkLogic/cpf/cpf.xqy";
 import module namespace cvt = "http://marklogic.com/cpf/convert" at "/MarkLogic/conversion/convert.xqy";
+import module namespace ppt=  "http://marklogic.com/openxml/powerpoint" at "/MarkLogic/openxml/presentation-ml-support.xqy";
+
 declare namespace html = "http://www.w3.org/1999/xhtml";
 declare namespace ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 declare namespace r="http://schemas.openxmlformats.org/officeDocument/2006/relationships";
@@ -39,46 +41,57 @@ try {
   let $map-type := $cpf:options//this:map-type/text()
   let $return := 
    if($map-type eq "image") then
-      let $image := 
+     let $slideprops :=
           if(fn:matches($cpf:document-uri,"Slide\d+\.PNG$")) then
              let $slidetokens := fn:tokenize($cpf:document-uri,"/")
-             let $slideimgname := $slidetokens[last()]
+             let $slideimgname := $slidetokens[last()] 
+             (: stamp out let!  :)
+             (:convert name in general library :)
              let $pptx-uri := fn:replace(fn:replace($cpf:document-uri,"_PNG",".pptx"),fn:concat("/",$slideimgname),"")
+
+             let $slidexmluri := fn:replace($cpf:document-uri,"^(.*)(_PNG/)Slide(\d+).PNG$","$1_pptx_parts/ppt/slides/slide$3.xml") 
+
+             (:
              let $slidexmlname := fn:replace(fn:replace($slideimgname,"S","s"),"PNG","xml")
-             let $slidedir := 
-fn:replace(fn:replace($cpf:document-uri,$slideimgname,""),"_PNG","_pptx_parts")
+             let $slidedir := fn:replace(fn:replace($cpf:document-uri,$slideimgname,""),"_PNG","_pptx_parts")
              let $slidexmluri := fn:concat($slidedir,"ppt/slides/",$slidexmlname) 
+             :)
+
              let $slide-idx := fn:replace(fn:replace($slideimgname,"Slide",""),".PNG","")
              return if(fn:empty(fn:doc($slidexmluri))) then
                       () 
-                    else 
-                      (xdmp:document-set-property($cpf:document-uri,<pptx>{$pptx-uri}</pptx>),
-                       xdmp:document-set-property($cpf:document-uri,<slide>{$slidexmluri}</slide>),
-                       xdmp:document-set-property($cpf:document-uri, <index>{$slide-idx}</index>),
-                       xdmp:document-set-property($slidexmluri, <slideimg>{$cpf:document-uri}</slideimg>))
+                    else (: namespace :) 
+                      (xdmp:document-set-property($cpf:document-uri,<ppt:pptx>{$pptx-uri}</ppt:pptx>),
+                       xdmp:document-set-property($cpf:document-uri,<ppt:slide>{$slidexmluri}</ppt:slide>),
+                       xdmp:document-set-property($cpf:document-uri,<ppt:index>{$slide-idx}</ppt:index>),
+                       xdmp:document-set-property($slidexmluri, <ppt:slideimg>{$cpf:document-uri}</ppt:slideimg>))
           else ()
-      return $image
+       return $slideprops
    else if($map-type eq "slide") then
       let $doc := fn:doc($cpf:document-uri)
-      let $slide :=
+      let $slideprops :=
           if(fn:empty($doc) or fn:not(fn:matches($cpf:document-uri,"slide\d+\.xml$"))) then
              ()
           else
              let $pptx-uri := fn:replace($cpf:document-uri,"_pptx_parts/ppt/slides/slide\d+\.xml",".pptx")
              let $slidetokens := fn:tokenize($cpf:document-uri,"/")
              let $origslidename := $slidetokens[last()]
+             let $slideimgname := fn:replace($cpf:document-uri,"^(.*)(_pptx_parts/ppt/slides/)slide(\d+).xml$","$1_PNG/Slide$3.PNG")
+
+             (: 
              let $slidedir := fn:replace(fn:replace(fn:replace($cpf:document-uri,$origslidename,""),"/ppt/slides/",""),"_pptx_parts","_PNG/")
              let $slideimgname := fn:concat($slidedir,fn:replace(fn:replace($origslidename,"slide","Slide"),".xml",".PNG"))
+             :)
+
              let $slideidx := fn:replace(fn:replace($origslidename,"slide",""),".xml","")
              return if(fn:empty(fn:doc($slideimgname))) then 
                       ()
                     else
-                      (xdmp:document-set-property($slideimgname ,<pptx>{$pptx-uri}</pptx>),
-                       xdmp:document-set-property($slideimgname ,<slide>{$cpf:document-uri}</slide>),
-                       xdmp:document-set-property($slideimgname ,<index>{$slideidx}</index> ),
-                       xdmp:document-set-property($cpf:document-uri, <slideimg>{$slideimgname}</slideimg>))
-      return $slide
-               
+                      (xdmp:document-set-property($slideimgname ,<ppt:pptx>{$pptx-uri}</ppt:pptx>),
+                       xdmp:document-set-property($slideimgname ,<ppt:slide>{$cpf:document-uri}</ppt:slide>),
+                       xdmp:document-set-property($slideimgname ,<ppt:index>{$slideidx}</ppt:index> ),
+                       xdmp:document-set-property($cpf:document-uri, <ppt:slideimg>{$slideimgname}</ppt:slideimg>))
+      return $slideprops
    else ()
   return ($return,
   cpf:success( $cpf:document-uri, $cpf:transition, ())) 
