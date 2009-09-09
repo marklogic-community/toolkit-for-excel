@@ -56,7 +56,9 @@ try {
                       (xdmp:document-set-property($cpf:document-uri,<ppt:pptx>{$pptx-uri}</ppt:pptx>),
                        xdmp:document-set-property($cpf:document-uri,<ppt:slide>{$slidexmluri}</ppt:slide>),
                        xdmp:document-set-property($cpf:document-uri,<ppt:index>{$slide-idx}</ppt:index>),
-                       xdmp:document-set-property($slidexmluri, <ppt:slideimg>{$cpf:document-uri}</ppt:slideimg>))
+                       xdmp:document-set-property($slidexmluri, <ppt:pptx>{$pptx-uri}</ppt:pptx>),
+                       xdmp:document-set-property($slidexmluri, <ppt:slideimg>{$cpf:document-uri}</ppt:slideimg>)
+                       )
           else ()
        return $slideprops
    else if($map-type eq "slide") then
@@ -78,7 +80,9 @@ try {
                       (xdmp:document-set-property($slideimgname ,<ppt:pptx>{$pptx-uri}</ppt:pptx>),
                        xdmp:document-set-property($slideimgname ,<ppt:slide>{$cpf:document-uri}</ppt:slide>),
                        xdmp:document-set-property($slideimgname ,<ppt:index>{$slideidx}</ppt:index> ),
-                       xdmp:document-set-property($cpf:document-uri, <ppt:slideimg>{$slideimgname}</ppt:slideimg>))
+                       xdmp:document-set-property($cpf:document-uri, <ppt:pptx>{$pptx-uri}</ppt:pptx>),
+                       xdmp:document-set-property($cpf:document-uri, <ppt:slideimg>{$slideimgname}</ppt:slideimg>)
+                      )
       return $slideprops
    else ()
   return ($return,
