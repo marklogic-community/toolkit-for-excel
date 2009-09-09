@@ -63,6 +63,10 @@ namespace MarkLogic_PowerPointAddin_Test
             string tmpdoc = "";
             object missing = Type.Missing;
 
+
+            //loops through powerpoints, open and close
+            //assumption these .pptx were modified using the xquery api
+            //if modification problematic, .pptx will fail to open
             if (type == 1 || type == 3)
             {
                 try
@@ -113,6 +117,19 @@ namespace MarkLogic_PowerPointAddin_Test
                         }
                     }
 
+
+                    //reenable addin
+               /*     foreach (Office.COMAddIn addin in pptApp.COMAddIns)
+                    {
+                        Console.WriteLine(addin.Description);
+                        if (addin.Description.ToUpper().Contains(MLAddin.ToUpper()))
+                        {
+                                addin.Connect = true;
+                        }
+
+                    }
+                * */
+
                     //quit PowerPoint
                     pptApp.Quit();
 
@@ -130,7 +147,51 @@ namespace MarkLogic_PowerPointAddin_Test
                     string errorMsg = e.Message;
                     message += "ERROR: " + errorMsg +"\n\n"+e.StackTrace;
                 }
+            }//end of option 1
+
+            //simpley opens and closes PowerPoint
+            //the tests are run from onLoad in test.js
+            if (type == 2 || type == 3)
+            {
+                //reenable addin if not enabled, then open ppt
+                //onload will run tests
+                //close
+
+                try
+                {
+                    //start PowerPoint app
+                    PPT.Application pptApp;
+                    PPT.Presentation ppt;
+                    pptApp = new PPT.Application();
+                    pptApp.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
+                    ppt = pptApp.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
+                    ppt.Slides.Add(1, Microsoft.Office.Interop.PowerPoint.PpSlideLayout.ppLayoutBlank);
+
+                    //re-enable addin
+                    foreach (Office.COMAddIn addin in pptApp.COMAddIns)
+                    {
+                        Console.WriteLine(addin.Description);
+                        if (addin.Description.ToUpper().Contains(MLAddin.ToUpper()))
+                        {
+                            addin.Connect = true;
+                        }
+
+                    }
+
+                    
+                    System.Threading.Thread.Sleep(50000);
+                    ppt.Close();
+                    pptApp.Quit();
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ERROR: " + e.Message + e.StackTrace);
+                }
+
             }
+
+            
 
         }
     }
