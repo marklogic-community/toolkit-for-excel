@@ -45,17 +45,9 @@ try {
           if(fn:matches($cpf:document-uri,"Slide\d+\.PNG$")) then
              let $slidetokens := fn:tokenize($cpf:document-uri,"/")
              let $slideimgname := $slidetokens[last()] 
-             (: stamp out let!  :)
-             (:convert name in general library :)
              let $pptx-uri := fn:replace(fn:replace($cpf:document-uri,"_PNG",".pptx"),fn:concat("/",$slideimgname),"")
 
-             let $slidexmluri := fn:replace($cpf:document-uri,"^(.*)(_PNG/)Slide(\d+).PNG$","$1_pptx_parts/ppt/slides/slide$3.xml") 
-
-             (:
-             let $slidexmlname := fn:replace(fn:replace($slideimgname,"S","s"),"PNG","xml")
-             let $slidedir := fn:replace(fn:replace($cpf:document-uri,$slideimgname,""),"_PNG","_pptx_parts")
-             let $slidexmluri := fn:concat($slidedir,"ppt/slides/",$slidexmlname) 
-             :)
+             let $slidexmluri := ppt:uri-slide-png-to-slide-xml($cpf:document-uri)
 
              let $slide-idx := fn:replace(fn:replace($slideimgname,"Slide",""),".PNG","")
              return if(fn:empty(fn:doc($slidexmluri))) then
@@ -76,12 +68,8 @@ try {
              let $pptx-uri := fn:replace($cpf:document-uri,"_pptx_parts/ppt/slides/slide\d+\.xml",".pptx")
              let $slidetokens := fn:tokenize($cpf:document-uri,"/")
              let $origslidename := $slidetokens[last()]
-             let $slideimgname := fn:replace($cpf:document-uri,"^(.*)(_pptx_parts/ppt/slides/)slide(\d+).xml$","$1_PNG/Slide$3.PNG")
 
-             (: 
-             let $slidedir := fn:replace(fn:replace(fn:replace($cpf:document-uri,$origslidename,""),"/ppt/slides/",""),"_pptx_parts","_PNG/")
-             let $slideimgname := fn:concat($slidedir,fn:replace(fn:replace($origslidename,"slide","Slide"),".xml",".PNG"))
-             :)
+             let $slideimgname := ppt:uri-slide-xml-to-slide-png($cpf:document-uri)
 
              let $slideidx := fn:replace(fn:replace($origslidename,"slide",""),".xml","")
              return if(fn:empty(fn:doc($slideimgname))) then 
