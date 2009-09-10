@@ -861,51 +861,62 @@ namespace MarkLogic_PowerPointAddin
         //and send  XML representation of tbl to function in Addin insertTable(string XML)
         public string insertJSONTable(string table) //parameterize rows, columns, vals
         {
-            MessageBox.Show("table: " + table);
+            string message = "";
+            //MessageBox.Show("table: " + table);
             //JavaScriptSerializer ser = new JavaScriptSerializer();
             try
             {
+                object missing = System.Type.Missing;
                 MYTABLE mytable = new MYTABLE();
                 mytable = new JavaScriptSerializer().Deserialize<MYTABLE>(table);
 
-              //MessageBox.Show("columns"+x.columns.Length);
-              //MessageBox.Show("Headers Count is: "+mytable.headers.Count+" Values count is:" +mytable.values.Count);
-              List<string> labels = mytable.headers;
-              foreach (string l in labels)
-              {
-                  //MessageBox.Show("header: " + l);
-              }
+                List<string> labels = mytable.headers;
+                List<string[]> vals = mytable.values;
 
-              List<string[]> vals = mytable.values;
-              foreach (string[] v in vals)
-              {
+                //labels = 1 row, labels.Count = #columns
+                //val count = rows, val count + 1 (for labels) = total # of rows
+                int columnslength = labels.Count;
+                int rowslength = vals.Count + 1;
+
+                //create table
+                int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
+                PPT.Shape s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddTable(rowslength, columnslength,50,50,450,70);
+                PPT.Table tbl = s.Table;
+
+                int lblcolidx = 1;
+                foreach (string l in labels)
+                {
+                  PPT.Cell cell = tbl.Rows[1].Cells[lblcolidx];
+                  cell.Shape.TextFrame.TextRange.Text = l;
+                  lblcolidx++;
+                
+                }
+
+                int rowidx = 2;
+                foreach (string[] v in vals)
+                {
                   //MessageBox.Show("Starting loop");
+                  int colidx = 1;
                   string[] vs = v;
                   for(int i=0;i<vs.Length;i++)
                   {
                       //MessageBox.Show("Value"+vs[i]);
+                      PPT.Cell cell = tbl.Rows[rowidx].Cells[colidx];
+                      cell.Shape.TextFrame.TextRange.Text = vs[i];
+                      colidx++;
                   }
-
-                  //MessageBox.Show(""+v.Length);
-              }
+                  rowidx++;
+                  //MessageBox.Show("vs count "+v.Length);
+                }
             }
             catch (Exception e)
             {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
                 MessageBox.Show("ERROR: " + e.Message + "      " + e.StackTrace);
             }
-            
-            // MessageBox.Show("In addin");
-            object missing = System.Type.Missing;
-            int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
-            PPT.Shape s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddTable(2, 3,50,50,450,70);
-            PPT.Table tbl = s.Table;
-            // MessageBox.Show(tbl.Rows.Count + "here");
-            PPT.Cell cell = tbl.Rows[1].Cells[1];
-            cell.Shape.TextFrame.TextRange.Text = "Foo";
-            // PPT.Shapes s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes;
-         
-
-            return "foo";
+           
+            return message;
         }
 
     }
