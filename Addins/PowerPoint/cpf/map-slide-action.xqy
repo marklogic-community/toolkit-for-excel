@@ -46,18 +46,22 @@ try {
              let $slidetokens := fn:tokenize($cpf:document-uri,"/")
              let $slideimgname := $slidetokens[last()] 
              let $pptx-uri := fn:replace(fn:replace($cpf:document-uri,"_PNG",".pptx"),fn:concat("/",$slideimgname),"")
+             let $pptx-dir := fn:replace(fn:replace($cpf:document-uri, $slideimgname,""),"_PNG/","_pptx_parts/")
 
              let $slidexmluri := ppt:uri-slide-png-to-slide-xml($cpf:document-uri)
 
              let $slide-idx := fn:replace(fn:replace($slideimgname,"Slide",""),".PNG","")
              return if(fn:empty(fn:doc($slidexmluri))) then
                       () 
-                    else (: namespace :) 
-                      (xdmp:document-set-property($cpf:document-uri,<ppt:pptx>{$pptx-uri}</ppt:pptx>),
-                       xdmp:document-set-property($cpf:document-uri,<ppt:slide>{$slidexmluri}</ppt:slide>),
-                       xdmp:document-set-property($cpf:document-uri,<ppt:index>{$slide-idx}</ppt:index>),
+                    else 
+                      (xdmp:document-set-property($cpf:document-uri, <ppt:pptx>{$pptx-uri}</ppt:pptx>),
+                       xdmp:document-set-property($cpf:document-uri, <ppt:pptxdir>{$pptx-dir}</ppt:pptxdir>),
+                       xdmp:document-set-property($cpf:document-uri, <ppt:slide>{$slidexmluri}</ppt:slide>),
+                       xdmp:document-set-property($cpf:document-uri, <ppt:index>{$slide-idx}</ppt:index>),
                        xdmp:document-set-property($slidexmluri, <ppt:pptx>{$pptx-uri}</ppt:pptx>),
-                       xdmp:document-set-property($slidexmluri, <ppt:slideimg>{$cpf:document-uri}</ppt:slideimg>)
+                       xdmp:document-set-property($slidexmluri, <ppt:pptxdir>{$pptx-dir}</ppt:pptxdir>),
+                       xdmp:document-set-property($slidexmluri, <ppt:slideimg>{$cpf:document-uri}</ppt:slideimg>),
+                       xdmp:document-set-property($slidexmluri, <ppt:index>{$slide-idx}</ppt:index>)
                        )
           else ()
        return $slideprops
@@ -67,21 +71,25 @@ try {
           if(fn:empty($doc) or fn:not(fn:matches($cpf:document-uri,"slide\d+\.xml$"))) then
              ()
           else
-             let $pptx-uri := fn:replace($cpf:document-uri,"_pptx_parts/ppt/slides/slide\d+\.xml",".pptx")
              let $slidetokens := fn:tokenize($cpf:document-uri,"/")
              let $origslidename := $slidetokens[last()]
-
+             let $pptx-uri := fn:replace($cpf:document-uri,"_pptx_parts/ppt/slides/slide\d+\.xml",".pptx")
+             let $pptx-dir := fn:replace($cpf:document-uri,"ppt/slides/slide\d+\.xml","")
+            
              let $slideimgname := ppt:uri-slide-xml-to-slide-png($cpf:document-uri)
 
-             let $slideidx := fn:replace(fn:replace($origslidename,"slide",""),".xml","")
+             let $slide-idx := fn:replace(fn:replace($origslidename,"slide",""),".xml","")
              return if(fn:empty(fn:doc($slideimgname))) then 
                       ()
                     else
-                      (xdmp:document-set-property($slideimgname ,<ppt:pptx>{$pptx-uri}</ppt:pptx>),
-                       xdmp:document-set-property($slideimgname ,<ppt:slide>{$cpf:document-uri}</ppt:slide>),
-                       xdmp:document-set-property($slideimgname ,<ppt:index>{$slideidx}</ppt:index> ),
+                      (xdmp:document-set-property($slideimgname, <ppt:pptx>{$pptx-uri}</ppt:pptx>),
+                       xdmp:document-set-property($slideimgname, <ppt:pptxdir>{$pptx-dir}</ppt:pptxdir>),
+                       xdmp:document-set-property($slideimgname, <ppt:slide>{$cpf:document-uri}</ppt:slide>),
+                       xdmp:document-set-property($slideimgname, <ppt:index>{$slide-idx}</ppt:index> ),
                        xdmp:document-set-property($cpf:document-uri, <ppt:pptx>{$pptx-uri}</ppt:pptx>),
-                       xdmp:document-set-property($cpf:document-uri, <ppt:slideimg>{$slideimgname}</ppt:slideimg>)
+                       xdmp:document-set-property($cpf:document-uri, <ppt:pptxdir>{$pptx-dir}</ppt:pptxdir>),
+                       xdmp:document-set-property($cpf:document-uri, <ppt:slideimg>{$slideimgname}</ppt:slideimg>),
+                       xdmp:document-set-property($cpf:document-uri, <ppt:index>{$slide-idx}</ppt:index> )
                       )
       return $slideprops
    else ()
