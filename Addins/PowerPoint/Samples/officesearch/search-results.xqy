@@ -51,13 +51,13 @@ let $type := for $s at $res in $slides
                         for $pic at $d in $new-uri
                         let $src := fn:concat("download-support.xqy?uid=",$pic)
                         let $prop := xdmp:document-properties($pic)
-                        let $pptx := $prop//ppt:pptx/text()
-                        let $slide := $prop//ppt:slide/text()
-                        let $index := $prop//ppt:index/text()
+                        let $pptx := $prop/prop:properties/ppt:pptx/text()
+                        let $slide := $prop/prop:properties/ppt:slide/text()
+                        let $index := $prop/prop:properties/ppt:index/text()
 
                         let $imageuri := $pic 
-                        let $imganchor := fn:concat("#num",$d)
-                        let $imgnum := fn:concat("num",$d)
+                        let $imganchor := fn:concat("#num",$res)
+                        let $imgnum := fn:concat("num",$res)
                         return
                         (
                          <div>
@@ -66,19 +66,15 @@ let $type := for $s at $res in $slides
                           <tr>
                            <td>
                             <a name={$imgnum} href={$imganchor} onclick="insertSlide('{$pptx}','{$index}','{$res}')">
-                            {(:<a name={$imgnum} href={$imganchor} onclick="insertSlide('{$pptx}','{$index}','{$res}')"> :)}
                              <img src="{$src}" class="resize"></img>
                             </a>
                            </td>
-                           <!--<td style="vertical-align: top;" >
-                            <input type="checkbox" id={fn:concat("retain",$res)} name="format"/>retain format
-                           </td>-->
                           </tr>
                          </table>
                               <ul>
                                <li>
                                   <form id={fn:concat("buttons",$res)}>
-                                    <input type="radio" name="{$orig-uri}" value="insertslide" id="searchtype"/>Insert Slide
+                                    <input type="radio" name="{$orig-uri}" value="insertslide" id="searchtype" checked="checked"/>Insert Slide
                                     <input type="radio" name="{$orig-uri}" value="embeddocument" id="searchtype" disabled="disabled"/>Embed Document
                                     <input type="radio" name="{$orig-uri}" value="opendocument" id="searchtype"/>Open Document
                                   </form>
