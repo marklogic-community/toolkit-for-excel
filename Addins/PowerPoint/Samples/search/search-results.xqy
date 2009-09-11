@@ -72,14 +72,16 @@ if($searchtype eq "slide") then
      
      return <div><ul class="thumb">{$disp-slides}</ul></div>
 else if($searchtype eq "image") then
-     let $pics := cts:uri-match(fn:concat("/",$searchparam,"*.jpg"))
+     let $pics := cts:search(fn:collection(), cts:properties-query($searchparam)) 
+                         (: cts:uri-match(fn:concat("/",$searchparam,"*.jpg")) :)
      for $pic at $d in $pics
-       let $src := fn:concat("download-support.xqy?uid=",$pic)
+       let $uri := xdmp:node-uri($pic)
+       let $src := fn:concat("download-support.xqy?uid=",$uri)
        let $imganchor := fn:concat("#num",$d)
        let $imgnum := fn:concat("num",$d) 
 
        return 
-         (<a name={$imgnum} href={$imganchor} onclick="insertImage('{$pic (:$imageuri:)}')">
+         (<a name={$imgnum} href={$imganchor} onclick="insertImage('{$uri (:$imageuri:)}')">
           <img src="{$src}"></img>
           </a>,<br/>,<br/>)
 else
