@@ -855,15 +855,13 @@ namespace MarkLogic_PowerPointAddin
             public List<string[]> values { get; set; }
         }
 
-        //this is interesting, not sure if we can use
-        //ppt, word, and excel "tables" are all different
+        //ppt, word, and excel (let alone html, etc.) "tables" are all different
         //ultimately might want a server side transform to create generalized table,
-        //and send  XML representation of tbl to function in Addin insertTable(string XML)
+        //and send XML representation of tbl to function in Addin insertTable(string XML)
         public string insertJSONTable(string table) //parameterize rows, columns, vals
         {
             string message = "";
-            //MessageBox.Show("table: " + table);
-            //JavaScriptSerializer ser = new JavaScriptSerializer();
+
             try
             {
                 object missing = System.Type.Missing;
@@ -878,9 +876,14 @@ namespace MarkLogic_PowerPointAddin
                 int columnslength = labels.Count;
                 int rowslength = vals.Count + 1;
 
+                int tmpwidth = 100 * columnslength;
+                int tmpheight = 30 * rowslength;
+                int width = (tmpwidth > 600)? 600: tmpwidth;
+                int height = (tmpheight > 600) ? 450 : tmpheight;
+
                 //create table
                 int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
-                PPT.Shape s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddTable(rowslength, columnslength,50,50,450,70);
+                PPT.Shape s = Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddTable(rowslength, columnslength,60,50,width,height);
                 PPT.Table tbl = s.Table;
 
                 int lblcolidx = 1;
@@ -895,25 +898,23 @@ namespace MarkLogic_PowerPointAddin
                 int rowidx = 2;
                 foreach (string[] v in vals)
                 {
-                  //MessageBox.Show("Starting loop");
+
                   int colidx = 1;
                   string[] vs = v;
                   for(int i=0;i<vs.Length;i++)
                   {
-                      //MessageBox.Show("Value"+vs[i]);
                       PPT.Cell cell = tbl.Rows[rowidx].Cells[colidx];
                       cell.Shape.TextFrame.TextRange.Text = vs[i];
                       colidx++;
                   }
                   rowidx++;
-                  //MessageBox.Show("vs count "+v.Length);
                 }
             }
             catch (Exception e)
             {
                 string errorMsg = e.Message;
                 message = "error: " + errorMsg;
-                MessageBox.Show("ERROR: " + e.Message + "      " + e.StackTrace);
+                //MessageBox.Show("ERROR: " + e.Message + "      " + e.StackTrace);
             }
            
             return message;

@@ -109,9 +109,9 @@ function openPPTX(docuri)
        var msg = MLA.openPPTX(tmpPath, filename, url, "oslo","oslo");
 }
 
-function actionDocument(t,txt)
+function actionDocument(idx,txt)
 {
-   var form=document.getElementById("buttons"+t);
+   var form=document.getElementById("buttons"+idx);
    var type="";
    var docname="";
 
@@ -126,6 +126,10 @@ function actionDocument(t,txt)
           if(type=="inserttext")
 	  {
 		  MLA.insertText(txt);
+	  }
+	  else if(type=="inserttable")
+	  {
+		  insertTable(idx);
 	  }
 	  else if(type=="opendocument")
 	  {
@@ -170,3 +174,56 @@ function actionDocument(t,txt)
 	  }
 
 }
+
+function insertTable(tblidx)
+{
+		var template =  "{"+
+                    "\"headers\": ['Header1', 'Header2','Header3', 'Header4'],"+
+		     "\"values\": ["+
+		                   "['JavaScript 101', 'Lu Sckrepter','4412', 'Some long description'],"+
+		                   "['Ajax with Java', 'Jean Bean','4413', 'Some long description']"+
+				   "]"+
+                                 "}";
+
+
+		  var tbl = document.getElementById("table"+tblidx);
+                  var rows=tbl.childNodes[0].childNodes;  //TBODY/TR 
+
+		  var hdrs="";
+		  var vals="";
+
+                  for (i=0;i<rows.length;i++)
+                  {
+	             //alert(rows[i].nodeName+" | "+rows[i].childNodes +" | "+rows[i].childNodes.length);
+	             var cells = rows[i].childNodes;
+
+	             for(j=0;j<cells.length;j++)
+	             {
+			     if(i==0)
+			     {
+			      hdrs=hdrs+"'"+cells[j].innerText+"'";
+			      if(!(j+1==cells.length))
+			      {
+				      hdrs = hdrs+",";
+			      } 
+			     }
+			     else
+			     {
+			      vals=vals+"'"+cells[j].innerText+"'";
+			      if(!(j+1==cells.length))
+			      {
+				      vals = vals+",";
+			      } 
+			     }
+	             }
+
+                  }
+		 
+                var headers = "\"headers\": ["+ hdrs +"],";
+		var values = "\"values\": [["+ vals +"]]";
+		var complete = "{"+headers+values+"}";
+
+		var x = window.external.insertJSONTable(complete);
+
+}
+

@@ -101,7 +101,7 @@ let $type := for $s at $res in $slides
                                </li>
                                <li>
                                   <form id={fn:concat("buttons",$res)}>
-                                    <input type="radio" name="{$uri}" value="inserttext" id="searchtype"/>Insert Text
+                                    <input type="radio" name="{$uri}" value="inserttext" id="searchtype" checked="checked"/>Insert Text
                                     <input type="radio" name="{$uri}" value="embeddocument" id="searchtype"/>Embed Document
                                     <input type="radio" name="{$uri}" value="opendocument" id="searchtype"/>Open Document
                                   </form>
@@ -127,14 +127,14 @@ let $type := for $s at $res in $slides
                                 <li>  
                                    {(:<a name={$name} class="test" href="{$anchor}" onclick="openDocument('{$res}')"> :) }
                                    <a name={$name} class="test" href="{$anchor}" onclick="actionDocument('{$res}','{$name}')"> 
-                                      <table class="ML-table">
+                                      <table class="ML-table" id={fn:concat("table",$res)}>
                                                   <tr>{$headers}</tr>
                                                   <tr>{$final}</tr>
                                       </table>
                                    </a>                                 </li>
                                 <li>
                                    <form id={fn:concat("buttons",$res)}>
-                                      <input type="radio" name="{$uri}" value="tableinsert" id="searchtype" /> Insert Table
+                                      <input type="radio" name="{$uri}" value="inserttable" id="searchtype" checked="checked"/> Insert Table
                                       <input type="radio" name="{$uri}" value="embeddocument" id="searchtype"/>Embed Document
                                       <input type="radio" name="{$uri}" value="opendocument" id="searchtype"/>Open Document
                                    </form>
