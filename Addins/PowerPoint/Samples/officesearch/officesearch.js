@@ -91,7 +91,11 @@ function insertSlide(docuri, slideidx, retainidx)
 
 		  var clean = docname.split("/");
 		  var title = clean[clean.length-1];
-		  var myref = window.location('http://localhost:8023/openbinary.xqy?url='+docuri+'&title='+title);
+
+		  var config = MLA.getConfiguration();
+                  var fullurl= config.url;
+		  var myref = window.location(fullurl+'/utils/openbinary.xqy?url='+docname+'&title='+title);
+
 	  }
 	  
 }
@@ -144,7 +148,10 @@ function actionDocument(idx,txt)
 		  
 		  var clean = docname.split("/");
 		  var title = clean[clean.length-1];
-		  var myref = window.location('http://localhost:8023/openbinary.xqy?url='+docname+'&title='+title);
+
+		  var config = MLA.getConfiguration();
+                  var fullurl= config.url;
+		  var myref = window.location(fullurl+"/utils/openbinary.xqy?url="+docname+"&title="+title);
 
 	  }
 	  else if(type=="embeddocument")
