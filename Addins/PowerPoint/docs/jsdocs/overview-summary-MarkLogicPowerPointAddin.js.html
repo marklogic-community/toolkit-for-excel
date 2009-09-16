@@ -176,7 +176,7 @@ String.<span class="reserved">prototype</span>.trim = <span class="reserved">fun
 <span class="comment">/**
  * Returns version of MarkLogicPowerPointAddin.js library.
  * <span class="attrib">@return</span> the version of MarkLogicWordAddin.js
- * <span class="attrib">@type</span> String
+ * <span class="attrib">@type</span> string
  */</span>
 MLA.getVersion = <span class="reserved">function</span>()
 {
@@ -304,7 +304,7 @@ MLA.getCustomXMLPart = <span class="reserved">function</span>(customXMLPartId)
 <span class="comment">/** Adds custom part to active Open XML package.  Returns the id of the part added.
  *<span class="attrib">@param</span> customPartXML Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. )
  *<span class="attrib">@return</span> id for custom part added 
- *<span class="attrib">@type</span> String
+ *<span class="attrib">@type</span> string
  *<span class="attrib">@throws</span> Exception if unable to add custom part
  */</span>
 MLA.addCustomXMLPart = <span class="reserved">function</span>(customPartXml)
@@ -381,6 +381,7 @@ MLA.getConfiguration = <span class="reserved">function</span>()
  *<span class="attrib">@param</span> url a url to XQuery module that will return the image when evaluated  
  *<span class="attrib">@param</span> user username for the MarkLogic Server the picuri connects with
  *<span class="attrib">@param</span> pwd password for the MarkLogic Server the picuri connects with
+ *<span class="attrib">@type</span> string
  *<span class="attrib">@throws</span> Exception if unable to insert image
  */</span>
 MLA.insertImage = <span class="reserved">function</span>(url,user,pwd)
@@ -403,6 +404,7 @@ MLA.insertImage = <span class="reserved">function</span>(url,user,pwd)
  *<span class="attrib">@param</span> user the username of the MarkLogic Server the url connects with
  *<span class="attrib">@param</span> pwd the password of the MarkLogic Server the url connects with
  *<span class="attrib">@param</span> retain true or false setting determines whether background style of copied slide will be retained when copied to active presentation
+ *<span class="attrib">@type</span> string
  *<span class="attrib">@throws</span> Exception if unable to copy slide to active presentation 
  */</span>
 MLA.insertSlide = <span class="reserved">function</span>(tmpPath, filename, slideidx, url, user, pwd,retain)
@@ -439,6 +441,7 @@ MLA.getTempPath = <span class="reserved">function</span>()
  *<span class="attrib">@param</span> url the url for fetching the .pptx to be downloaded
  *<span class="attrib">@param</span> user the username for the MarkLogic Server the url connects with
  *<span class="attrib">@param</span> pwd the password for the MarkLogic Server the url connects with
+ *<span class="attrib">@type</span> string
  *<span class="attrib">@throws</span> Exception if unable to download and open local copy 
  */</span>
 MLA.openPPTX = <span class="reserved">function</span>(tmpPath, docuri, url, user, pwd)
@@ -454,6 +457,7 @@ MLA.openPPTX = <span class="reserved">function</span>(tmpPath, docuri, url, user
 }
 <span class="comment">/** Inserts text into the Presentation at cursor position.  
  *<span class="attrib">@param</span> text text to inser
+ *<span class="attrib">@type</span> string
  *<span class="attrib">@throws</span> Exception if unable to insert text
  */</span>
 MLA.insertText = <span class="reserved">function</span>(text)
@@ -473,6 +477,7 @@ MLA.insertText = <span class="reserved">function</span>(text)
  *<span class="attrib">@param</span> url the url for the file to be downloaded and embedded
  *<span class="attrib">@param</span> user username for MarkLogic Server url connects with
  *<span class="attrib">@param</span> pwd password for MarkLogic Server url connects with
+ *<span class="attrib">@type</span> string
  *<span class="attrib">@throws</span> Exception if unable to embedOLE 
  */</span>
 MLA.embedOLE = <span class="reserved">function</span>(tmpPath, title, url, usr, pwd)
@@ -557,6 +562,7 @@ MLA.getPresentationName = <span class="reserved">function</span>()
 <span class="comment">/**
  * Saves .pptx for active Presentation on the client system.
  * <span class="attrib">@param</span> filename the filename (including path) to save Presentation as on client system
+ * <span class="attrib">@type</span> string
  * <span class="attrib">@throws</span> Exception if unable to save local copy
  */</span>
 MLA.saveLocalCopy = <span class="reserved">function</span>(filename)
@@ -576,6 +582,7 @@ MLA.saveLocalCopy = <span class="reserved">function</span>(filename)
  *<span class="attrib">@param</span> url the url on MarkLogic that the client calls to upload the presentation
  *<span class="attrib">@param</span> user username for MarkLogic Server url connects with
  *<span class="attrib">@param</span> pwd password for MarkLogic Server url connects with
+ *<span class="attrib">@type</span> string
  *<span class="attrib">@throws</span> Exception if unable to save the active Presentation
  */</span>
 MLA.saveActivePresentation = <span class="reserved">function</span>(filename, url, user, pwd)
@@ -596,6 +603,7 @@ MLA.saveActivePresentation = <span class="reserved">function</span>(filename, ur
  *<span class="attrib">@param</span> url the url on MarkLogic that the client calls to upload the image directory and contents to MarkLogic
  *<span class="attrib">@param</span> user username for MarkLogic Server url connects with
  *<span class="attrib">@param</span> pwd password for MarkLogic Server url connects with
+ *<span class="attrib">@type</span> string
  *<span class="attrib">@throws</span> Exception if unable to save images
  */</span>
 MLA.saveImages = <span class="reserved">function</span>(imgdir, url, user, pwd)
@@ -615,6 +623,7 @@ MLA.saveImages = <span class="reserved">function</span>(imgdir, url, user, pwd)
  *<span class="attrib">@param</span> url the url on MarkLogic that the client calls to upload the Presentation and images to MarkLogic
  *<span class="attrib">@param</span> user username for MarkLogic Server url connects with
  *<span class="attrib">@param</span> pwd password for MarkLogic Server url connects with
+ *<span class="attrib">@type</span> string
  *<span class="attrib">@throws</span> Exception if unable to save active Presentation and images
  */</span>
 MLA.saveActivePresentationAndImages = <span class="reserved">function</span>(saveasdir, saveasname, url, user, pwd)
@@ -627,6 +636,24 @@ MLA.saveActivePresentationAndImages = <span class="reserved">function</span>(sav
 
 	<span class="reserved">return</span> msg;
 }
+
+<span class="comment">/** Inserts JSON string as table in Active Presentation.  
+ * see template example in insertJSONTable() found in Samples/officesearch/officesearch.js for required JSON format.
+ *<span class="attrib">@param</span> table the JSON representation of the table to be inserted
+ *<span class="attrib">@type</span> string
+ *<span class="attrib">@throws</span> Exception if unable to save insert table into Presentation
+ */</span>
+MLA.insertJSONTable = <span class="reserved">function</span>(table)
+{
+	var msg=window.external.insertJSONTable(table);
+	var errMsg = MLA.errorCheck(msg);
+
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to insertJSONTable(); "</span>+errMsg);
+
+	<span class="reserved">return</span> msg;
+}
+
 
 </pre>
 	<hr>
@@ -686,6 +713,6 @@ MLA.saveActivePresentationAndImages = <span class="reserved">function</span>(sav
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Mon Aug 31 11:50:15 2009</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Sep 16 10:20:21 2009</div>
 </body>
 </html>
