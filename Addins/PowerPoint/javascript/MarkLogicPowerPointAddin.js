@@ -59,7 +59,7 @@ String.prototype.trim = function() {
 /**
  * Returns version of MarkLogicPowerPointAddin.js library.
  * @return the version of MarkLogicWordAddin.js
- * @type String
+ * @type string
  */
 MLA.getVersion = function()
 {
@@ -187,7 +187,7 @@ MLA.getCustomXMLPart = function(customXMLPartId)
 /** Adds custom part to active Open XML package.  Returns the id of the part added.
  *@param customPartXML Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. )
  *@return id for custom part added 
- *@type String
+ *@type string
  *@throws Exception if unable to add custom part
  */
 MLA.addCustomXMLPart = function(customPartXml)
@@ -264,6 +264,7 @@ MLA.getConfiguration = function()
  *@param url a url to XQuery module that will return the image when evaluated  
  *@param user username for the MarkLogic Server the picuri connects with
  *@param pwd password for the MarkLogic Server the picuri connects with
+ *@type string
  *@throws Exception if unable to insert image
  */
 MLA.insertImage = function(url,user,pwd)
@@ -286,6 +287,7 @@ MLA.insertImage = function(url,user,pwd)
  *@param user the username of the MarkLogic Server the url connects with
  *@param pwd the password of the MarkLogic Server the url connects with
  *@param retain true or false setting determines whether background style of copied slide will be retained when copied to active presentation
+ *@type string
  *@throws Exception if unable to copy slide to active presentation 
  */
 MLA.insertSlide = function(tmpPath, filename, slideidx, url, user, pwd,retain)
@@ -322,6 +324,7 @@ MLA.getTempPath = function()
  *@param url the url for fetching the .pptx to be downloaded
  *@param user the username for the MarkLogic Server the url connects with
  *@param pwd the password for the MarkLogic Server the url connects with
+ *@type string
  *@throws Exception if unable to download and open local copy 
  */
 MLA.openPPTX = function(tmpPath, docuri, url, user, pwd)
@@ -337,6 +340,7 @@ MLA.openPPTX = function(tmpPath, docuri, url, user, pwd)
 }
 /** Inserts text into the Presentation at cursor position.  
  *@param text text to inser
+ *@type string
  *@throws Exception if unable to insert text
  */
 MLA.insertText = function(text)
@@ -356,6 +360,7 @@ MLA.insertText = function(text)
  *@param url the url for the file to be downloaded and embedded
  *@param user username for MarkLogic Server url connects with
  *@param pwd password for MarkLogic Server url connects with
+ *@type string
  *@throws Exception if unable to embedOLE 
  */
 MLA.embedOLE = function(tmpPath, title, url, usr, pwd)
@@ -440,6 +445,7 @@ MLA.getPresentationName = function()
 /**
  * Saves .pptx for active Presentation on the client system.
  * @param filename the filename (including path) to save Presentation as on client system
+ * @type string
  * @throws Exception if unable to save local copy
  */
 MLA.saveLocalCopy = function(filename)
@@ -459,6 +465,7 @@ MLA.saveLocalCopy = function(filename)
  *@param url the url on MarkLogic that the client calls to upload the presentation
  *@param user username for MarkLogic Server url connects with
  *@param pwd password for MarkLogic Server url connects with
+ *@type string
  *@throws Exception if unable to save the active Presentation
  */
 MLA.saveActivePresentation = function(filename, url, user, pwd)
@@ -479,6 +486,7 @@ MLA.saveActivePresentation = function(filename, url, user, pwd)
  *@param url the url on MarkLogic that the client calls to upload the image directory and contents to MarkLogic
  *@param user username for MarkLogic Server url connects with
  *@param pwd password for MarkLogic Server url connects with
+ *@type string
  *@throws Exception if unable to save images
  */
 MLA.saveImages = function(imgdir, url, user, pwd)
@@ -498,6 +506,7 @@ MLA.saveImages = function(imgdir, url, user, pwd)
  *@param url the url on MarkLogic that the client calls to upload the Presentation and images to MarkLogic
  *@param user username for MarkLogic Server url connects with
  *@param pwd password for MarkLogic Server url connects with
+ *@type string
  *@throws Exception if unable to save active Presentation and images
  */
 MLA.saveActivePresentationAndImages = function(saveasdir, saveasname, url, user, pwd)
@@ -510,4 +519,22 @@ MLA.saveActivePresentationAndImages = function(saveasdir, saveasname, url, user,
 
 	return msg;
 }
+
+/** Inserts JSON string as table in Active Presentation.  
+ * see template example in insertJSONTable() found in Samples/officesearch/officesearch.js for required JSON format.
+ *@param table the JSON representation of the table to be inserted
+ *@type string
+ *@throws Exception if unable to save insert table into Presentation
+ */
+MLA.insertJSONTable = function(table)
+{
+	var msg=window.external.insertJSONTable(table);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to insertJSONTable(); "+errMsg);
+
+	return msg;
+}
+
 
