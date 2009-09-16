@@ -39,6 +39,8 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 			font-size: 110%;
 		}}
 	</style>
+       <!-- <script type="text/javascript" src="test.js">//</script>
+        <script type="text/javascript" src="js/MarkLogicPowerPointAddin.js">//</script> -->
 </head>
 <body>
 	<ul id="ML-Menu">
@@ -54,14 +56,10 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 			<h2><a href="metadata/metadata.xqy">Metadata »</a></h2>
 			<p>Create and edit custom document metadata</p>
 		</li>
-	       <!-- <li> integrated into Search and Office Search
-			<h2><a href="images/insert-image.xqy">Images »</a></h2>
-			<p>Search images and insert into active presentation</p>
-		</li> -->
-	        <li>
+	       <!--<li>
 			<h2><a href="api/api-test.xqy">API »</a></h2>
 			<p>API</p>
-		</li>
+		   </li>-->
 	</ul>
 </body>
 </html>

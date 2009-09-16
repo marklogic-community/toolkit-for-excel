@@ -223,7 +223,8 @@ function insertTable(tblidx)
 		var values = "\"values\": [["+ vals +"]]";
 		var complete = "{"+headers+values+"}";
 
-		var x = window.external.insertJSONTable(complete);
+		//var x = window.external.insertJSONTable(complete);
+		var x = MLA.insertJSONTable(complete);
 
 }
 
