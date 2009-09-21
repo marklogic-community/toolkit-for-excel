@@ -46,7 +46,8 @@ namespace MarkLogic_PowerPointAddin
         private string webUrl = "";
         private bool debug = false;
         private string color = "";
-        private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";
+        //private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";
+        private string addinVersion = "1.0-1";
         HtmlDocument htmlDoc;
 
         public UserControl1()
@@ -429,7 +430,8 @@ namespace MarkLogic_PowerPointAddin
                              {
                                  //defaulting args here.  these could be parameters.
                                  //you specify classtype or filename, not both
-                                 Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(left,top,width,height, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
+                                 Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(left, top, width, height, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
+
                              }
                          }
                          catch (Exception e)

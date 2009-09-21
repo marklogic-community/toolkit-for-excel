@@ -22,7 +22,7 @@ limitations under the License.
  * {@link http://www.marklogic.com} 
  *
  * @author Pete Aven pete.aven@marklogic.com
- * @version 0.1 
+ * @version 1.0-1 
  */
 
 
@@ -41,7 +41,7 @@ function MLA(){
 }
 */
 /** @ignore */
-MLA.version = { "release" : "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION" }; 
+MLA.version = { "release" : "1.0-1" };
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){

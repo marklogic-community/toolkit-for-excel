@@ -1,8 +1,4 @@
 xquery version "1.0-ml";
-declare namespace ms="http://schemas.openxmlformats.org/spreadsheetml/2006/main";
-declare namespace r="http://schemas.openxmlformats.org/officeDocument/2006/relationships";
-declare namespace excel= "http://marklogic.com/openxml/excel";
-import module "http://marklogic.com/openxml/excel" at "/MarkLogic/openxml/spreadsheet-ml-support.xqy";
 
 let $docname := xdmp:get-request-field("url")
 let $title := xdmp:get-request-field("title")

@@ -19,7 +19,7 @@ function insertImage(picuri)
        var config = MLA.getConfiguration();
        var fullurl= config.url;
        var picuri = fullurl + "/search/download-support.xqy?uid="+picuri;
-       var msg = MLA.insertImage(picuri,"oslo","oslo");
+       var msg = MLA.insertImage(picuri,"uname","pwd");
 }
 
 function insertSlide(docuri, slideidx, retainidx)
@@ -34,7 +34,7 @@ function insertSlide(docuri, slideidx, retainidx)
       
        var tokens = docuri.split("/");
        var filename = tokens[tokens.length-1]; 
-       var msg = MLA.insertSlide(tmpPath, filename,slideidx, url, "oslo","oslo",retain);
+       var msg = MLA.insertSlide(tmpPath, filename,slideidx, url, "uname","pwd",retain);
 }
 
 function openPPTX(docuri)
@@ -47,6 +47,6 @@ function openPPTX(docuri)
        var fullurl= config.url;
        var url = fullurl + "/search/download-support.xqy?uid="+docuri;
 
-       var msg = MLA.openPPTX(tmpPath, filename, url, "oslo","oslo");
+       var msg = MLA.openPPTX(tmpPath, filename, url, "uname","pwd");
 }
 

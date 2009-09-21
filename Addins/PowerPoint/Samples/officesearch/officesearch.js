@@ -52,7 +52,7 @@ function insertImage(picuri)
        var config = MLA.getConfiguration();
        var fullurl= config.url;
        var picuri = fullurl + "/officesearch/download-support.xqy?uid="+picuri;
-       var msg = MLA.insertImage(picuri,"oslo","oslo");
+       var msg = MLA.insertImage(picuri,"uname","pwd");
 }
 
 function insertSlide(docuri, slideidx, retainidx)
@@ -81,7 +81,7 @@ function insertSlide(docuri, slideidx, retainidx)
       
                   var tokens = docuri.split("/");
                   var filename = tokens[tokens.length-1]; 
-                  var msg = MLA.insertSlide(tmpPath, filename,slideidx, url, "oslo","oslo",retain);
+                  var msg = MLA.insertSlide(tmpPath, filename,slideidx, url, "uname","pwd",retain);
 	  }
 	  else if(type=="opendocument")
 	  { 
@@ -110,7 +110,7 @@ function openPPTX(docuri)
        var fullurl= config.url;
        var url = fullurl + "/officesearch/download-support.xqy?uid="+docuri;
 
-       var msg = MLA.openPPTX(tmpPath, filename, url, "oslo","oslo");
+       var msg = MLA.openPPTX(tmpPath, filename, url, "uname","pwd");
 }
 
 function actionDocument(idx,txt)
@@ -177,7 +177,7 @@ function actionDocument(idx,txt)
                   var url = fullurl + "/officesearch/download-support.xqy?uid="+docname;
 		  //alert("tmppath: "+tmpPath+"\n  url: "+url+ "\n   title: "+title);
 
-                  var msg = MLA.embedOLE(tmpPath, title, url, "oslo","oslo");
+                  var msg = MLA.embedOLE(tmpPath, title, url, "uname","pwd");
 	  }
 
 }
