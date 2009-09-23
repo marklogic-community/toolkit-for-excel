@@ -605,6 +605,37 @@ namespace MarkLogic_WordAddin
 
         }
 
+        public String getDocumentName()
+        {
+            string filename = "";
+            try
+            {
+                filename = Globals.ThisAddIn.Application.ActiveDocument.Name;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                filename = "error: " + errorMsg;
+            }
+
+            return filename;
+        }
+
+        public String getDocumentPath()
+        {
+            string path = "";
+            try
+            {
+                path = Globals.ThisAddIn.Application.ActiveDocument.Path;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                path = "error: " + errorMsg;
+            }
+            return path;
+        }
+
         public String getTempPath()
         {
             string tmpPath = "";
@@ -710,6 +741,182 @@ namespace MarkLogic_WordAddin
 
             return wpml;
 
+        }
+
+        private void downloadFile(string url, string sourcefile, string user, string pwd)
+        {
+            try
+            {
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+                Client.DownloadFile(url, sourcefile);
+                Client.Dispose();
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
+        }
+
+        private void uploadData(string url, byte[] content, string user, string pwd)
+        {
+            try
+            {
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.Headers.Add("enctype", "multipart/form-data");
+                Client.Headers.Add("Content-Type", "application/octet-stream");
+                Client.Credentials = new System.Net.NetworkCredential(user, pwd);
+
+                Client.UploadData(url, "POST", content);
+                Client.Dispose();
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
+        }
+
+        public String openDOCX(string path, string title, string url, string user, string pwd)
+        {
+            //MessageBox.Show("in the addin path:"+path+  "      title:"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
+            string message = "";
+            object missing = Type.Missing;
+            string tmpdoc = "";
+           
+
+            try
+            {
+                tmpdoc = path + title;
+                downloadFile(url, tmpdoc, user, pwd);
+                object filename = tmpdoc;
+                object t = true;
+                object f = false;
+                Word.Document d = Globals.ThisAddIn.Application.Documents.Open(ref filename, ref f, ref f, ref t, ref missing, ref missing, ref f, ref f, ref missing, ref missing, ref missing, ref t, ref t, ref missing, ref missing, ref missing);
+                
+               // PPT.Presentation ppt = Globals.ThisAddIn.Application.Presentations.Open(tmpdoc, Office.MsoTriState.msoFalse, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue);
+            }
+            catch (Exception e)
+            {
+                //not always true, need to improve error handling or message or both
+                string origmsg = "A presentation with the name '" + title + "' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
+                MessageBox.Show(origmsg);
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string embedOLE(string path, string title, string url, string user, string pwd)
+        {
+            string message = "";
+            string tmpdoc = "";
+            object missing = System.Type.Missing;
+            bool proceed = false;
+            //int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
+            object left = 60;
+            object top = 105;
+            object width = 600;
+            object height = 300;
+
+            if (title.EndsWith(".docx") || title.EndsWith(".docm") ||
+               title.EndsWith(".dotx") || title.EndsWith(".dotm"))
+            {
+                left = 220;
+                width = 300;
+            }
+
+            try
+            {
+                tmpdoc = path + title;
+                downloadFile(url, tmpdoc, user, pwd);
+                proceed = true;
+
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            try
+            {
+                if (proceed)
+                {
+                    object filename = tmpdoc;
+                    //defaulting args here.  these could be parameters.
+                    //you specify classtype or filename, not both
+                    Globals.ThisAddIn.Application.ActiveDocument.Shapes.AddOLEObject(ref missing, ref filename, ref missing, ref missing, ref missing, ref missing, ref missing, ref left, ref top, ref width, ref height, ref missing);
+                    //(left, top, width, height, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
+                    //Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(left, top, width, height, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
+
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message + e.StackTrace;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+
+        public string saveActiveDocument(string filename, string url, string user, string pwd)
+        {
+            string message = "";
+            try
+            {
+                FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                int length = (int)fs.Length;
+                byte[] content = new byte[length];
+                fs.Read(content, 0, length);
+
+                try
+                {
+                    uploadData(url, content, user, pwd);
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+
+                fs.Dispose();
+                fs.Close();
+
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string saveLocalCopy(string filename)
+        {
+            string message = "";
+            object missing = System.Type.Missing;
+            object fname = filename;
+            object format = Word.WdSaveFormat.wdFormatDocument;
+            object t = true;
+
+            try
+            {
+                Word.Document d = Globals.ThisAddIn.Application.ActiveDocument;
+                d.SaveAs(ref fname,ref format, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref t, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing,ref missing);
+                //PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
+                //pptx.SaveAs(filename, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Microsoft.Office.Core.MsoTriState.msoFalse);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
         }
 
 
