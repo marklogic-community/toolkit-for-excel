@@ -798,7 +798,7 @@ namespace MarkLogic_WordAddin
             catch (Exception e)
             {
                 //not always true, need to improve error handling or message or both
-                string origmsg = "A presentation with the name '" + title + "' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
+                string origmsg = "A document with the name '" + title + "' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
                 MessageBox.Show(origmsg);
                 string errorMsg = e.Message;
                 message = "error: " + errorMsg;
@@ -900,7 +900,7 @@ namespace MarkLogic_WordAddin
             string message = "";
             object missing = System.Type.Missing;
             object fname = filename;
-            object format = Word.WdSaveFormat.wdFormatDocument;
+            object format = Word.WdSaveFormat.wdFormatDocumentDefault;
             object t = true;
 
             try

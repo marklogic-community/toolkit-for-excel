@@ -36,6 +36,7 @@ namespace MarkLogic_WordAddin
         private string rbnBtnLbl = "";
         private string rbnGrpLbl = "";
         private string ctpTtlLbl = "";
+        private string uploadXqy = "";
 
         private string isPaneEnabled = "";
         private bool paneEnabled = false;
@@ -82,6 +83,11 @@ namespace MarkLogic_WordAddin
                 rbnBtnLbl = (string)regKey1.GetValue("RbnBtnLbl");
                 isPaneEnabled = (string)regKey1.GetValue("CTPEnabled");
 
+                //only used user/auth for button, can pass into function from js
+                //user = (string)regKey1.GetValue("User");
+                //auth = (string)regKey1.GetValue("Auth");
+                uploadXqy = (string)regKey1.GetValue("UploadXqy");
+
                 if(isPaneEnabled.ToUpper().Equals("TRUE"))
                 {
                     paneEnabled=true;
@@ -121,6 +127,21 @@ namespace MarkLogic_WordAddin
         public bool getPaneEnabled()
         {
             return paneEnabled;
+        }
+    /*  
+        public string getUser()
+        {
+            return user;
+        }
+
+        public string getAuth()
+        {
+            return auth;
+        }
+    */
+        public string getUploadXqy()
+        {
+            return uploadXqy;
         }
     }
 

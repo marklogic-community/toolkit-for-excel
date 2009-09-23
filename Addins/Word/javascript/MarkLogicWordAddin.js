@@ -588,3 +588,152 @@ MLA.insertImage = function(picuri,uname,pwd)
 	   throw("Error: Not able to insertImage; "+errMsg);
 
 }
+
+/**
+ * Returns the path being used for the /temp dir on the client system.
+ * @return /temp path on client system
+ * @type string
+ * @throws Exception if unable to retrieve the /temp path
+ */
+MLA.getTempPath = function()
+{
+	//alert("IN HERE");
+	var msg=window.external.getTempPath();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getTempPath; "+errMsg);
+
+	return msg;
+}
+
+/** Opens .docx  into Word from local copy saved to client from MarkLogic.
+ *@param tmpPath the directory (including path) where the local copy of document will be saved.  
+ *@param docuri the uri of the .docx within MarkLogic
+ *@param url the url for fetching the .docx to be downloaded
+ *@param user the username for the MarkLogic Server the url connects with
+ *@param pwd the password for the MarkLogic Server the url connects with
+ *@type string
+ *@throws Exception if unable to download and open local copy 
+ */
+MLA.openDOCX = function(tmpPath, docuri, url, user, pwd)
+{
+	//alert("tmpPath: "+tmpPath+" docuri: "+docuri+" url:"+url+" user/pwd:"+ user+pwd);
+	var msg = window.external.openDOCX(tmpPath, docuri, url, user, pwd);
+        var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to openDOCX; "+errMsg);
+
+	return msg;
+}
+
+/** Embeds OLE into the Document. the OLE is downloaded to client and saved into Document from local file.
+ *@param tmpPath the directory (including path) where the local copy of object to be embedded will be saved.  
+ *@param filename the name of the file to be embedded. tmpPath + filename should be the name and path of file on client.  
+ *@param url the url for the file to be downloaded and embedded
+ *@param user username for MarkLogic Server url connects with
+ *@param pwd password for MarkLogic Server url connects with
+ *@type string
+ *@throws Exception if unable to embedOLE 
+ */
+MLA.embedOLE = function(tmpPath, title, url, usr, pwd)
+{
+	var msg = window.external.embedOLE(tmpPath, title, url, usr, pwd);
+	var errMsg = MLA.errorCheck(msg);
+        //alert("errMsg"+errMsg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to embedOLE; "+errMsg);
+
+	return msg;
+}
+
+/**
+ * Returns the path being used for the active document on the client system.
+ * @return path path is path for where current document is saved on client
+ * @type string
+ * @throws Exception if unable to retrieve the document path
+ */
+MLA.getDocumentPath = function()
+{
+	var msg=window.external.getDocumentPath();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getDocumentPath; "+errMsg);
+
+	return msg;
+}
+
+/**
+ * Returns the name being used for the active Document on the client system.
+ * @return document_name the name of the active Document
+ * @type string
+ * @throws Exception if unable to retrieve the Document name
+ */
+MLA.getDocumentName = function()
+{
+	var msg=window.external.getDocumentName();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getDocumentName; "+errMsg);
+
+	return msg;
+}
+
+/**
+ * Saves .docx for active Document on the client system.
+ * @param filename the filename (including path) to save Document as on client system
+ * @type string
+ * @throws Exception if unable to save local copy
+ */
+MLA.saveLocalCopy = function(filename)
+{
+	var msg = window.external.saveLocalCopy(filename);
+        var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to saveLocalCopy; "+errMsg);
+
+	return msg;
+}
+
+/** Saves active Document to MarkLogic from client system.  .docx being saved to ML must already exist (be saved) on client and have both path and name.
+ *@param filename the name of the file (including path) to be saved to MarkLogic  
+ *@param url the url on MarkLogic that the client calls to upload the presentation
+ *@param user username for MarkLogic Server url connects with
+ *@param pwd password for MarkLogic Server url connects with
+ *@type string
+ *@throws Exception if unable to save the active Presentation
+ */
+MLA.saveActiveDocument = function(filename, url, user, pwd)
+{
+
+	var msg=window.external.saveActiveDocument(filename, url, user, pwd);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to saveActiveDocument; "+errMsg);
+
+	return msg;
+}
+
+/** Inserts JSON string as table in Active Document.  
+ * see template example in insertJSONTable() found in Samples/api/api.js for required JSON format.
+ *@param table the JSON representation of the table to be inserted
+ *@type string
+ *@throws Exception if unable to save insert table into Presentation
+ */
+MLA.insertJSONTable = function(table)
+{
+	var msg=window.external.insertJSONTable(table);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to insertJSONTable(); "+errMsg);
+
+	return msg;
+}
+
+

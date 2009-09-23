@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_012033B88F46A88DDD38697DA2FEF344"
-        "OwnerKey" = "8:_9D0F69714F3D451F8B4C5D2A8D5D7442"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_066D5F184F31A0DCE89079641E0371C8"
         "OwnerKey" = "8:_A118B0E0EFA249D018EE0ADAC3914F42"
         "MsmSig" = "8:_UNDEFINED"
@@ -28,6 +22,12 @@
         "Entry"
         {
         "MsmKey" = "8:_066D5F184F31A0DCE89079641E0371C8"
+        "OwnerKey" = "8:_9D0F69714F3D451F8B4C5D2A8D5D7442"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0A954C46684498B52B9D82CD267518ED"
         "OwnerKey" = "8:_9D0F69714F3D451F8B4C5D2A8D5D7442"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -214,6 +214,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_0A954C46684498B52B9D82CD267518ED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_A118B0E0EFA249D018EE0ADAC3914F42"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -221,12 +227,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_066D5F184F31A0DCE89079641E0371C8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_012033B88F46A88DDD38697DA2FEF344"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -443,20 +443,20 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_012033B88F46A88DDD38697DA2FEF344"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_066D5F184F31A0DCE89079641E0371C8"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:DocumentFormat.OpenXml, Version=1.0.1803.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Office.Tools.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_012033B88F46A88DDD38697DA2FEF344"
+                    "_066D5F184F31A0DCE89079641E0371C8"
                     {
-                    "Name" = "8:DocumentFormat.OpenXml.dll"
+                    "Name" = "8:Microsoft.Office.Tools.v9.0.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:DocumentFormat.OpenXml.dll"
+            "SourcePath" = "8:Microsoft.Office.Tools.v9.0.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B58A056769CB45EA95D5564DDCA69A1B"
@@ -474,20 +474,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_066D5F184F31A0DCE89079641E0371C8"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0A954C46684498B52B9D82CD267518ED"
             {
             "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Office.Tools.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:DocumentFormat.OpenXml, Version=1.0.1803.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_066D5F184F31A0DCE89079641E0371C8"
+                    "_0A954C46684498B52B9D82CD267518ED"
                     {
-                    "Name" = "8:Microsoft.Office.Tools.v9.0.dll"
+                    "Name" = "8:DocumentFormat.OpenXml.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Microsoft.Office.Tools.v9.0.dll"
+            "SourcePath" = "8:DocumentFormat.OpenXml.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B58A056769CB45EA95D5564DDCA69A1B"
@@ -922,7 +922,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MarkLogic Add-in for Word®"
         "ProductCode" = "8:{40D875B9-AF8C-456F-BC8E-107A5095C42E}"
-        "PackageCode" = "8:{3E74D4BF-89A2-4110-BB9F-299765E0D32F}"
+        "PackageCode" = "8:{532273A8-CC53-4773-A1B2-2ABAC1D94F00}"
         "UpgradeCode" = "8:{BA58D1F8-2509-467D-A6A5-C6982D44FE7A}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -1133,6 +1133,14 @@
                                     "Transitive" = "11:FALSE"
                                     "ValueTypes" = "3:1"
                                     "Value" = "8:My Group"
+                                    }
+                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_A8C65A6284D644CABABEFE0ECB086A77"
+                                    {
+                                    "Name" = "8:UploadXqy"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "ValueTypes" = "3:1"
+                                    "Value" = "8:/utils/upload.xqy?uid="
                                     }
                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_BD33264EAACF4A22960868B9139C701B"
                                     {
