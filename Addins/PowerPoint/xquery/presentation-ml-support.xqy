@@ -43,7 +43,7 @@ declare function ppt:formatbinary(
    $s as xs:string*
 ) as xs:string*
 {
-  (:debug test:)(: xdmp:invoke("formatbinary.xqy",( xs:QName("ppt:image"), $s)) :)
+ (:debug test:)(: xdmp:invoke("formatbinary.xqy",( xs:QName("ppt:image"), $s)) :)
 
  if(fn:string-length($s) > 0) then
      let $firstpart := fn:concat(fn:substring($s,1,76))
@@ -74,6 +74,9 @@ declare function ppt:get-part-content-type(
    else if(fn:matches($uri, "notesSlide\d+\.xml"))
    then 
       "application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml"
+   else if(fn:matches($uri, "commentAuthors.xml"))
+   then
+      "application/vnd.openxmlformats-officedocument.presentationml.commentAuthors+xml"
    else if(fn:matches($uri, "slideMaster\d+\.xml"))
    then 
       "application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml"
@@ -83,6 +86,9 @@ declare function ppt:get-part-content-type(
    else if(fn:matches($uri,"theme\d+\.xml"))
    then
        "application/vnd.openxmlformats-officedocument.theme+xml"
+   else if(fn:matches($uri,"handoutMaster\d+\.xml"))
+   then
+        "application/vnd.openxmlformats-officedocument.presentationml.handoutMaster+xml"
    else if(fn:matches($uri,"notesMaster\d+\.xml"))
    then
        "application/vnd.openxmlformats-officedocument.presentationml.notesMaster+xml"
@@ -99,7 +105,6 @@ declare function ppt:get-part-content-type(
    else if(fn:ends-with($uri,"tableStyles.xml"))
    then
        "application/vnd.openxmlformats-officedocument.presentationml.tableStyles+xml"
-
 
    else if(fn:ends-with($uri,"styles.xml"))
    then 
@@ -131,16 +136,16 @@ declare function ppt:get-part-content-type(
    else if(fn:ends-with($uri,"docProps/custom.xml")) 
    then
       "application/vnd.openxmlformats-officedocument.custom-properties+xml"
-   else if(fn:ends-with($uri,"jpeg")) 
+   else if(fn:ends-with(fn:upper-case($uri),"JPEG")) 
    then
       "image/jpeg"
-   else if(fn:ends-with($uri,"wmf")) 
+   else if(fn:ends-with(fn:upper-case($uri),"WMF")) 
    then
       "image/x-wmf"
-   else if(fn:ends-with($uri,"png")) 
+   else if(fn:ends-with(fn:upper-case($uri),"PNG")) 
    then
       "image/png"
-   else if(fn:ends-with($uri,"gif"))
+   else if(fn:ends-with(fn:upper-case($uri),"GIF"))
    then
        "image/gif"
    else if(fn:matches($uri,"customXml/itemProps\d+\.xml")) then
@@ -165,7 +170,8 @@ declare function ppt:get-part-attributes(
                         fn:starts-with($cleanuri,"/ppt/slides/_rels") or
                         fn:starts-with($cleanuri,"/ppt/notesSlides/_rels") or
                         fn:starts-with($cleanuri,"/ppt/slideLayouts/_rels") or
-                        fn:starts-with($cleanuri,"/ppt/slideMasters/_rels")
+                        fn:starts-with($cleanuri,"/ppt/slideMasters/_rels") or
+                        fn:starts-with($cleanuri,"/ppt/handoutMasters/_rels")
                        ) then
                          ()
                     
@@ -175,7 +181,9 @@ declare function ppt:get-part-attributes(
                       attribute pkg:padding{ "256" }
                   else
                      ()
-  let $compression := if(fn:ends-with($cleanuri,"jpeg") or fn:ends-with($cleanuri,"png")) then 
+  let $compression := if(fn:ends-with(fn:upper-case($cleanuri),"JPEG") or 
+                         fn:ends-with(fn:upper-case($cleanuri),"PNG") or
+                         fn:ends-with(fn:upper-case($cleanuri),"GIF")) then 
                          attribute pkg:compression { "store" } 
                       else ()
   
@@ -192,12 +200,16 @@ declare function ppt:get-package-part(
   let $data := fn:doc($fulluri)
 
   let $part := if(fn:empty($data) or fn:ends-with($fulluri,"[Content_Types].xml")) then () 
-               else if(fn:ends-with($fulluri,".jpeg") or fn:ends-with($fulluri,".wmf") or fn:ends-with($fulluri,".png")) then
-                  let $bin :=   xs:base64Binary(xs:hexBinary($data)) cast as xs:string 
+               else 
+                 if(fn:ends-with(fn:upper-case($fulluri),".JPEG") or 
+                    fn:ends-with(fn:upper-case($fulluri),".WMF") or 
+                    fn:ends-with(fn:upper-case($fulluri),".GIF") or 
+                    fn:ends-with(fn:upper-case($fulluri),".PNG")) then
+                   let $bin := xs:base64Binary(xs:hexBinary($data)) cast as xs:string 
                     let $formattedbin := fn:string-join(ppt:formatbinary($bin),"&#x9;&#xA;") 
-                  return  element pkg:part { ppt:get-part-attributes($docuri), element pkg:binaryData { $formattedbin  }   }
-               else
-                  element pkg:part { ppt:get-part-attributes($docuri), element pkg:xmlData { $data }}
+                    return  element pkg:part { ppt:get-part-attributes($docuri), element pkg:binaryData { $formattedbin  }   }
+                 else
+                   element pkg:part { ppt:get-part-attributes($docuri), element pkg:xmlData { $data }}
   return  $part 
 };
 
@@ -911,8 +923,9 @@ declare function ppt:add-slide(
    $new-sld-id as node()
 ) as element(p:sldIdLst)
 {
-  	let $children := $pres-xml/node() 
-  	let $new-sld-rId := ppt:r-id-as-int($new-sld-id/@r:id)
+  	let $children := $pres-xml/node()
+ 	let $new-sld-rId := ppt:r-id-as-int($new-sld-id/@r:id)
+
         (:take slide id for slide being added, make all one greater as we add back to presentation.xml :)
   	let $upd-sld-id := xs:integer($new-sld-id/@id) + 1
   	let $upd-children := 
@@ -929,6 +942,7 @@ declare function ppt:add-slide(
         	          order by xs:integer(fn:substring($c/@r:id,4))
                           return $c
   	return element{fn:QName("http://schemas.openxmlformats.org/presentationml/2006/main","p:sldIdLst")}  {$pres-xml/@*, $ordered-c } 
+
 };
 
 declare function ppt:passthru-add-slide-id(
@@ -960,31 +974,34 @@ declare function ppt:update-presentation-xml(
    $presentation-xml as node(),
    $final-pres-rels as node(),
    $src-dir as xs:string, 
-   $id as xs:integer
-)as element(p:presentation)
+   $from-idx as xs:integer,
+   $to-idx as xs:integer
+) as element(p:presentation)
 {
   	let $pres-no-hm-lst :=  ppt:dispatch-remove-handoutlst($presentation-xml)
 
-  	let $slide-xml :=fn:concat("slide",$id,".xml")
+  	let $slide-xml :=fn:concat("slide",$from-idx,".xml")
+        let $new-slide-xml := fn:concat("slide",$to-idx,".xml")
 
         (: original rId of slide in original presentation.xml.rels --to check in presentation.xml-- for slide#.xml :)
   	let $src-pres-rel-id := fn:doc(ppt:uri-ppt-rels($src-dir))/rel:Relationships/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id
 
         (: original id of slide in original presentation.xml for slide#.xml :)
-  	let $src-pres-slide-id := fn:doc(ppt:uri-ppt-presentation($src-dir))/p:presentation/p:sldIdLst/p:sldId[fn:matches(@r:id,$src-pres-rel-id)]/@id
+  	let $src-pres-slide-id := fn:doc(ppt:uri-ppt-presentation($src-dir))/p:presentation/p:sldIdLst/p:sldId[@r:id eq $src-pres-rel-id]/@id
 
         (:now check rId to use in $final-pres-rels :)
-  	let $new-pres-rel-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Target,$slide-xml)]/@Id 
+  	let $new-pres-rel-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Target,$new-slide-xml)]/@Id 
 
         (:could be more than one of these, have to account for :)
   	let $new-nm-id := $final-pres-rels/rel:Relationship[fn:ends-with(@Type,"notesMaster")]/@Id  
 
         (:construct new p:sldId:)
-  	let $new-sld-id := element p:sldId{attribute id {$src-pres-slide-id } , attribute r:id { $new-pres-rel-id  } }
+        let $new-sld-id := element p:sldId{attribute id {$src-pres-slide-id } , attribute r:id { $new-pres-rel-id  } } 
 
 	let $new-pres-xml := ppt:dispatch-add-slide-id($pres-no-hm-lst, $new-sld-id, $new-nm-id)  
   
   	return $new-pres-xml 
+
 };
 
 (: ================== END update presentation.xml =========================== :)
@@ -1048,7 +1065,6 @@ declare function ppt:slide-rel-image-types(
         	     let $doc := map:get($map,$t)
                      return if($doc instance of xs:string) then () else $doc
 
-        (:check -fn:distinct in  loop :)
 	let $imgTypes := for $r in $rels
                          let $targs := $r/rel:Relationships/rel:Relationship[fn:ends-with(@Type,"image")]/@Target
                          let $type := for $t in $targs
@@ -1115,10 +1131,6 @@ declare function ppt:merge-slide-util(
 
         let $final-pres-rels := ppt:ppt-rels-insert-slide($pres-rels-no-hm, $insert-idx)
 
-        (:review notes: :) 
-        (: overall comment: strongly type :) 
-        (: think about: drop schema into config , validate :)
-
         (:update [Content_Types].xml :) 
         let $c-types-val := map:get($new-slide-map,ppt:uri-content-types(()))
         let $c-types := if($c-types-val instance of xs:string) then fn:doc($c-types-val)/node() else $c-types-val
@@ -1128,7 +1140,7 @@ declare function ppt:merge-slide-util(
         let $pres-xml-val := map:get($new-slide-map,ppt:uri-ppt-presentation(()))
         let $pres-xml := if($pres-xml-val instance of xs:string) then fn:doc($pres-xml-val) else $pres-xml-val
 
-        let $final-pres := ppt:update-presentation-xml($pres-xml,$final-pres-rels, $from-pres, $from-idx)
+        let $final-pres := ppt:update-presentation-xml($pres-xml,$final-pres-rels, $from-pres, $from-idx, $insert-idx)
 
         (:add 3 updates above to map:)
         let $mapupd1 := map:put( $new-slide-map, ppt:uri-ppt-presentation(()), $final-pres)
@@ -1155,7 +1167,7 @@ declare function ppt:insert-slide(
         			ppt:list-length-error()
    		else
         		ppt:slide-index-error()
-   	return (:debug:) (:$return:) $to-pkg-map 
+   	return $to-pkg-map 
 };
 
 declare function ppt:package-map-zip(
