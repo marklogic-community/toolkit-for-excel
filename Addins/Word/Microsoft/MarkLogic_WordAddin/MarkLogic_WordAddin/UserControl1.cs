@@ -32,6 +32,8 @@ using Office = Microsoft.Office.Core;
 using Microsoft.Win32;
 using System.Windows.Forms.Integration;
 using DocumentFormat.OpenXml.Packaging;
+using System.Web;
+
 
 
 namespace MarkLogic_WordAddin
@@ -52,6 +54,9 @@ namespace MarkLogic_WordAddin
         {
             InitializeComponent();
             webUrl = ac.getWebURL();
+         //experimenting with where to add controls when multiple docs opened
+         // Globals.ThisAddIn.Application.ActiveDocument.ContentControlOnEnter += new Word.DocumentEvents2_ContentControlOnEnterEventHandler(this.ThisDocument_ContentControlOnEnter);
+         // Globals.ThisAddIn.Application.ActiveDocument.ContentControlOnExit += new Word.DocumentEvents2_ContentControlOnExitEventHandler(this.ThisDocument_ContentControlOnExit);
 
             if (webUrl.Equals(""))
             {
@@ -70,22 +75,53 @@ namespace MarkLogic_WordAddin
                 webBrowser1.Navigate(webUrl);
                 webBrowser1.ScriptErrorsSuppressed = true;
 
-                this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted); 
-               
+                this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
+           //   Globals.ThisAddIn.Application.ActiveDocument.ContentControlOnEnter += new Word.DocumentEvents2_ContentControlOnEnterEventHandler(this.ThisDocument_ContentControlOnEnter);
+           //   Globals.ThisAddIn.Application.ActiveDocument.ContentControlOnExit += new Word.DocumentEvents2_ContentControlOnExitEventHandler(this.ThisDocument_ContentControlOnExit);
+                
             }   
 
         }
 
+
+        public void contentControlOnEnter(string ccID, string ccTag, string ccTitle, string ccType,string ccParentTag, string ccParentID)
+        {
+            webBrowser1.Document.InvokeScript("contentControlOnEnter", new String[] { ccID, ccTag, ccTitle, ccType , ccParentTag, ccParentID});
+        }
+
+        public void contentControlOnExit(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
+        {
+            webBrowser1.Document.InvokeScript("contentControlOnExit", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID});
+        }
+
+  /*    trying different things for drag/drop
+   *    private void ButtonDown(object sender, HtmlElementEventArgs mea)  //MouseEventArgs mea)
+        {
+            this.webBrowser1.DoDragDrop("test", DragDropEffects.Copy);
+           // MessageBox.Show("TEST");
+        }
+
+        private void MouseTest(object sender, MouseEventArgs mea)
+        {
+          //  this.webBrowser1.DoDragDrop("test", DragDropEffects.Copy);
+          //  MessageBox.Show("HERE");
+        }
+        */
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
            
             if (webBrowser1.Document != null)
             {
                 htmlDoc = webBrowser1.Document;
-
                 htmlDoc.Click += htmlDoc_Click;
+              
+                //this.webBrowser1.DoDragDrop  MouseDown += new MouseEventHandler(this.MouseTest);
+              //revisit for cust and pastte             
+              // this.webBrowser1.Document.MouseDown += new HtmlElementEventHandler(this.ButtonDown);
+                //htmlDoc.MouseMove += new MouseEventHandler(Element_MouseMove);
+                //htmlDoc.MouseDown  += new MouseButtonEventHandler(Element_MouseLeftButtonDown);
+                //htmlDoc.MouseUp += new MouseButtonEventHandler(Element_MouseLeftButtonUp);
                 
-
             }
 
         }
@@ -99,18 +135,40 @@ namespace MarkLogic_WordAddin
                      webBrowser1.Parent.Focus();
                      webBrowser1.Document.Focus();
                   
-
                  }
                  
               }
         }
 
+
+      /*  private void ThisDocument_ContentControlOnEnter(Word.ContentControl contentControl)
+        {
+
+            MessageBox.Show(String.Format(
+
+              "ContentControl of type {0} with ID {1} and Tag {2} entered.",
+
+              contentControl.Type, contentControl.ID, contentControl.Tag));
+
+        }
+
+        private void ThisDocument_ContentControlOnExit( Word.ContentControl contentControl, ref bool cancel)
+        {
+
+            MessageBox.Show(String.Format(
+
+              "ContentControl of type {0} with ID {1} exited.",
+
+              contentControl.Type, contentControl.ID));
+
+        }
+       * */
       //public Word.Document Document { get; set; }
 
       //internal void Clear()
       //{
       //}
-
+        
         //configuration info
         public enum ColorScheme : int
         {
@@ -157,6 +215,7 @@ namespace MarkLogic_WordAddin
 
         public String getCustomXMLPartIds()
         {
+            
             
             string ids = "";
 
@@ -328,6 +387,7 @@ namespace MarkLogic_WordAddin
             {
                 Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
                 doc.Application.Selection.InsertXML(Transform.ConvertToWPML(wpml), ref missing);
+
             } 
             catch (Exception e)
             {
@@ -339,6 +399,26 @@ namespace MarkLogic_WordAddin
                 docxml = "error: TESTING ERRORS";
 
             return docxml;
+        }
+
+        public String insertWordOpenXML(string opc_xml)
+        {
+            string message = "";
+            object missing = Type.Missing;
+
+            try
+            {
+                Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
+                doc.Application.Selection.InsertXML(opc_xml, ref missing);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+                //MessageBox.Show("ERROR " + message);
+            }
+
+            return message;
         }
 
         public String getActiveDocXml()
@@ -426,6 +506,7 @@ namespace MarkLogic_WordAddin
                catch (Exception e)
                {
                    tblExists = false;
+                   string donothing_removewarning = e.Message;
                }
 
                 if (stTst < edTst)
@@ -602,7 +683,6 @@ namespace MarkLogic_WordAddin
 
             return message;
 
-
         }
 
         public String getDocumentName()
@@ -691,8 +771,6 @@ namespace MarkLogic_WordAddin
                 Globals.ThisAddIn.Application.Selection.Range.Paste();
                 if(!(text.Equals("")))
                    Clipboard.SetText(text);
-                
-
 
             }catch(Exception e)
             {
@@ -776,34 +854,74 @@ namespace MarkLogic_WordAddin
             }
         }
 
+    /*    public String openDOCXDirect(string docurl, string username, string pwd)
+        {
+            MessageBox.Show("trying this drama");
+            //string path, string title, string url, string user, string pwd
+            string message = "";
+            try
+            {
+                //Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
+
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.Credentials = new System.Net.NetworkCredential(username, pwd);
+                byte[] byteArray = Client.DownloadData(docurl);
+
+                using (MemoryStream mem = new MemoryStream())
+                {
+
+                    mem.Write(byteArray, 0, (int)byteArray.Length);
+                    using (WordprocessingDocument wordDoc =
+                        WordprocessingDocument.Open(mem, true))
+                    {
+
+                       
+                    }
+                  
+
+                    
+                    using (FileStream fileStream = new FileStream(@"C:\Test2.docx",System.IO.FileMode.CreateNew))
+                    {
+                        mem.WriteTo(fileStream);
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                string errMsg = e.Message;
+                message = "error: " + errMsg;
+            }
+
+            return message;
+        }
+        */
         public String openDOCX(string path, string title, string url, string user, string pwd)
         {
-            //MessageBox.Show("in the addin path:"+path+  "      title:"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
             string message = "";
             object missing = Type.Missing;
             string tmpdoc = "";
-           
 
             try
             {
                 tmpdoc = path + title;
+               
                 downloadFile(url, tmpdoc, user, pwd);
                 object filename = tmpdoc;
                 object t = true;
                 object f = false;
-                Word.Document d = Globals.ThisAddIn.Application.Documents.Open(ref filename, ref f, ref f, ref t, ref missing, ref missing, ref f, ref f, ref missing, ref missing, ref missing, ref t, ref t, ref missing, ref missing, ref missing);
-                
-               // PPT.Presentation ppt = Globals.ThisAddIn.Application.Presentations.Open(tmpdoc, Office.MsoTriState.msoFalse, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue);
+ 
+                Word.Document d = Globals.ThisAddIn.Application.Documents.Open(ref filename, ref missing, ref f, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref t, ref missing, ref missing, ref missing, ref missing);
+                d.Activate();
+
             }
             catch (Exception e)
             {
                 //not always true, need to improve error handling or message or both
                 string origmsg = "A document with the name '" + title + "' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
-                MessageBox.Show(origmsg);
                 string errorMsg = e.Message;
                 message = "error: " + errorMsg;
             }
-
             return message;
         }
 
@@ -813,17 +931,19 @@ namespace MarkLogic_WordAddin
             string tmpdoc = "";
             object missing = System.Type.Missing;
             bool proceed = false;
-            //int sid = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.SlideIndex;
+
             object left = 60;
             object top = 105;
-            object width = 600;
-            object height = 300;
+            object width = 500; 
+            object height = 150;
 
-            if (title.EndsWith(".docx") || title.EndsWith(".docm") ||
-               title.EndsWith(".dotx") || title.EndsWith(".dotm"))
+
+            if (title.EndsWith(".pptx") || title.EndsWith(".pptm") ||
+                title.EndsWith(".ppsx") || title.EndsWith(".ppsm") ||
+                title.EndsWith(".potx") || title.EndsWith(".potm")                                                 )
             {
-                left = 220;
                 width = 300;
+                height = 200;
             }
 
             try
@@ -847,9 +967,6 @@ namespace MarkLogic_WordAddin
                     //defaulting args here.  these could be parameters.
                     //you specify classtype or filename, not both
                     Globals.ThisAddIn.Application.ActiveDocument.Shapes.AddOLEObject(ref missing, ref filename, ref missing, ref missing, ref missing, ref missing, ref missing, ref left, ref top, ref width, ref height, ref missing);
-                    //(left, top, width, height, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
-                    //Globals.ThisAddIn.Application.ActivePresentation.Slides[sid].Shapes.AddOLEObject(left, top, width, height, "", tmpdoc, Microsoft.Office.Core.MsoTriState.msoFalse, "", 0, "", Microsoft.Office.Core.MsoTriState.msoFalse);
-
                 }
             }
             catch (Exception e)
@@ -907,8 +1024,27 @@ namespace MarkLogic_WordAddin
             {
                 Word.Document d = Globals.ThisAddIn.Application.ActiveDocument;
                 d.SaveAs(ref fname,ref format, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref t, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing,ref missing);
-                //PPT.Presentation pptx = Globals.ThisAddIn.Application.ActivePresentation;
-                //pptx.SaveAs(filename, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsOpenXMLPresentation, Microsoft.Office.Core.MsoTriState.msoFalse);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+    //---------------------------------------------------------------------------//
+        //undocumented - do we want to pursue bookmarks?
+        public string insertBookmarkText(string bookmark, string text)
+        {
+            string message = "";
+
+            try
+            {
+                Word.Bookmarks bs = Globals.ThisAddIn.Application.ActiveDocument.Bookmarks;
+                object idx = 1;
+                Word.Bookmark b = bs.get_Item(ref idx);
+                //MessageBox.Show("Bookmark Name:" + b.Name);
             }
             catch (Exception e)
             {
@@ -919,6 +1055,886 @@ namespace MarkLogic_WordAddin
             return message;
         }
 
+        public string getContentControlIds()
+        {   //id always present, system generated; consistent (unlike customxmlparts); check in XML
+            string message = "";
+            string ids = "";
+
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    //MessageBox.Show("Control Tag:" + cc.Tag + " title: " + cc.Title + " id: "+cc.ID);
+                    ids = ids + cc.ID + "|";
+                }
+
+                ids=ids.Remove(ids.Length-1);
+                message = ids;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string getContentControlInfo(string ccid)
+        {
+            string message = "";
+            string info = "";
+            string parentTag = "";
+            string parentID = "";
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                    {
+                        try
+                        {
+                            Word.ContentControl parent = cc.ParentContentControl;
+                            parentTag = parent.Tag;
+                            parentID = parent.ID;
+
+                        }
+                        catch (Exception e)
+                        {
+                            //do nothing, not parent
+                            string donothing_removewarning = e.Message;
+                        }
+
+                        info = info + cc.Tag + "|" + cc.Title + "|" + cc.Type +"|" + parentTag +"|"+parentID;;
+                    }
+                } 
+
+                message = info;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+
+        public string insertContentControlImage(string ccid, string imageuri, string username, string pwd)
+        {
+            string message = "";
+
+            try
+            {
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.Credentials = new System.Net.NetworkCredential(username, pwd);
+                byte[] bytearray = Client.DownloadData(imageuri);
+                Image img = byteArrayToImage(bytearray);
+
+                //backup clipboard
+                IDataObject bak = Clipboard.GetDataObject();
+                string text = "";
+                if (bak.GetDataPresent(DataFormats.Text))
+                {
+                    text = (String)bak.GetData(DataFormats.Text);
+                }
+
+                //place on clipboard
+                System.Windows.Forms.Clipboard.SetImage(img);
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    //if (cc.Tag.Equals(tag))
+                    if(cc.ID.Equals(ccid))
+                    {
+                        cc.Range.Paste();
+                    }
+                }
+
+                if (!(text.Equals("")))
+                    Clipboard.SetText(text);
+            }         
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+
+        }
+
+        delegate string ICT(string ccid, string text);
+
+        public string insertTextForControl(string ccid, string text)
+        {
+            string message = "";
+
+            Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+            foreach (Word.ContentControl cc in ccs)
+            {
+                //if (cc.Tag.Equals(tag))
+                if(cc.ID.Equals(ccid))
+                {
+                    cc.Range.InsertAfter(text);
+                }
+            }
+
+            return message;
+        }
+
+        public  void Done(IAsyncResult result)
+        {
+          ICT ict = (ICT)result.AsyncState;
+          string isSuccessful = ict.EndInvoke(result);
+        }
+
+        public string insertContentControlText(string ccid, string text)
+        {
+            string message = "";
+            try
+            {
+                ICT ict = insertTextForControl;
+                ict.BeginInvoke(ccid, text, Done, ict);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+
+    /*    not needed at this time, just lock parent for editing/control removal - similar functionality
+     *    -group locks by default, only option to set to not be removed
+     *    -can't lock for editing, but in desing mode, this goes away? #fail
+     *    -better off using a regular richtext control and locking for now
+     * public string groupContentControls(string tag, string controls)
+        {
+            string message = "";
+            string[] tokens = controls.Split('|');
+            return message;
+
+        }
+     * */
+
+        public string addContentControl(string tag, string title, string type, string insertpara, string parent)
+        {
+            string message = "";
+            bool breakflag = false;
+          
+            if (insertpara.ToUpper().Equals("TRUE"))
+                  breakflag = true;
+
+            try
+            {
+                string upperbb = "wdContentControlBuildingBlockGallery".ToUpper();
+                string upperpic = "wdContentControlPicture".ToUpper();
+                string uppercombo = "wdContentControlComboBox".ToUpper();
+                string upperdropdown = "wdContentControlDropdownList".ToUpper();
+                string upperdate = "wdContentControlDate".ToUpper();
+                string uppergroup = "wdContentControlGroup".ToUpper();
+                string uppertext = "wdContentControlText".ToUpper();
+
+                Word.WdContentControlType ccType;
+
+                if (type.ToUpper().Equals(upperpic))
+                    ccType = Word.WdContentControlType.wdContentControlPicture;
+                else if (type.ToUpper().Equals(uppercombo))
+                    ccType = Word.WdContentControlType.wdContentControlComboBox;
+                else if (type.ToUpper().Equals(upperdropdown))
+                    ccType = Word.WdContentControlType.wdContentControlDropdownList;
+                else if (type.ToUpper().Equals(upperdate))
+                    ccType = Word.WdContentControlType.wdContentControlDate;
+                else if (type.ToUpper().Equals(uppergroup))
+                    ccType = Word.WdContentControlType.wdContentControlGroup;
+                else if (type.ToUpper().Equals(uppertext))
+                    ccType = Word.WdContentControlType.wdContentControlText;
+                else if (type.ToUpper().Equals(upperbb))
+                    ccType = Word.WdContentControlType.wdContentControlBuildingBlockGallery;
+                else
+                    ccType = Word.WdContentControlType.wdContentControlRichText;
+
+
+                object missing = Type.Missing;
+                Globals.ThisAddIn.Application.Selection.Range.Select();
+
+                //check based on flag
+                if(breakflag)
+                  Globals.ThisAddIn.Application.Selection.Range.InsertParagraphAfter();
+                else
+                  Globals.ThisAddIn.Application.Selection.Range.InsertAfter("  ");
+
+                Globals.ThisAddIn.Application.Selection.Range.Select();
+
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                if (!(parent.Equals("")))
+                {
+
+                    foreach (Word.ContentControl cc in ccs)
+                    {
+                        //if (cc.Tag.Equals(parent))
+                        if(cc.ID.Equals(parent))
+                        {
+                           
+                            try
+                            {
+
+                                cc.Range.Select();
+
+                                if (breakflag)
+                                {
+                                    cc.Range.InsertParagraphAfter();
+                                }
+                                else
+                                {
+                                    cc.Range.Application.Selection.InsertAfter("  "); 
+                                }
+
+                                cc.Range.Select();
+
+                                object startRange = cc.Range.Application.Selection.Range.Characters.Last; // r selection.Range.Characters.First;
+                                Word.ContentControl newCC = ccs.Add(ccType, ref startRange);
+                                newCC.Range.Text = "";
+                                newCC.Tag = tag;
+                                newCC.Title = title;
+
+                                message = newCC.ID;
+                                break;
+
+
+                            }
+                            catch (Exception e)
+                            {
+                                string errorMsg = e.Message;
+                                message = "error: " + errorMsg;
+                            }
+
+                        }
+                    }
+
+                }
+                else
+                {
+                    Word.ContentControl myControl = ccs.Add(ccType/*Word.WdContentControlType.wdContentControlRichText*/, ref missing);
+                    myControl.Tag = tag;
+                    myControl.Title = title;
+                    message = myControl.ID;
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+
+        }
+
+        public string removeContentControl(string ccid, string deletecontents)
+        {
+            string message = "";
+
+            bool delete = false;
+            try
+            {
+                if (deletecontents.ToUpper().Equals("TRUE"))
+                    delete = true;
+
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                    {
+                        cc.Delete(delete);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+
+
+        }
+
+        //could add other functions to handle ContentControlDate* options , ComboBox, etc.
+
+        //could return bool ("true" or "false"), if we passed id instead of tag
+        //or do we want a property on SimpleContentControl, or a function to check lockStatus?
+        //sets whether or not control can be deleted
+        public string lockContentControl(string ccid)
+        {
+            string message = "";
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                    {
+                        cc.LockContentControl = true;
+                    
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+
+        //could return bool ("true" or "false"), if we passed id instead of tag
+        //or do we want a property on SimpleContentControl, or a function to check lockStatus?
+        //sets whether or not control can be deleted
+        public string unlockContentControl(string ccid)
+        {
+            string message = "";
+
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                        cc.LockContentControl = false;
+
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        //could potentially return a bool if we passed id instead of tag
+        public string lockContentControlContents(string ccid)
+        {
+            string message = "";
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                        cc.LockContents = true;
+
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        //could potentially return a bool if we passed id instead of tag
+        public string unlockContentControlContents(string ccid)
+        {
+            string message = "";
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                        cc.LockContents = false;
+
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        //void, could return bool, change to id(vs. tag)?
+        public string mapContentControl(string ccid, string xpath, string prefix, string cid)
+        {
+            string message = "";
+            bool mapped = false;
+
+            try
+            {
+                Office.CustomXMLPart mypart = Globals.ThisAddIn.Application.ActiveDocument.CustomXMLParts.SelectByID(cid);
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    //if (cc.Tag.Equals(tag/*"pttesttag"*/))
+                    if(cc.ID.Equals(ccid))
+                    {
+                         mapped = cc.XMLMapping.SetMapping(xpath, prefix, mypart);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string getContentControlDropDownListEntrySelectedText(string ccid)
+        {
+            string message = "";
+
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                    {
+                        message = cc.Range.Text;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+
+        }
+
+        public string getContentControlDropDownListEntrySelectedValue(string ccid)
+        {
+            string message = "";
+
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                    {
+                        string displaytext =  cc.Range.Text;
+                        
+                        Word.ContentControlListEntries ccles = cc.DropdownListEntries;
+                        foreach (Word.ContentControlListEntry ccle in ccles)
+                        {
+                            if (ccle.Text.Equals(displaytext))
+                                message = ccle.Value;
+
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+
+        }
+
+        public string addContentControlDropDownListEntries(string ccid, string text, string value, string index)
+        {
+            string message = "";
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    //if (cc.Tag.Equals(tag))
+                    if(cc.ID.Equals(ccid))
+                    {
+                        cc.DropdownListEntries.Add(text, value, Int32.Parse(index));
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string getParentContentControlInfo()
+        {
+            string message = "";
+            string info = "";
+            string parentTag = "";
+            string parentID = "";
+
+            Word.Range current = Globals.ThisAddIn.Application.Selection.Range;
+            try
+            {
+                Word.ContentControl cc = current.ParentContentControl;
+                info = info +cc.ID+"|"+ cc.Tag + "|" + cc.Title + "|" + cc.Type;
+
+                try
+                {
+                    Word.ContentControl parent = cc.ParentContentControl;
+                    parentTag = parent.Tag;
+                    parentID = parent.ID;
+                    info = info + "|" + parentTag + "|" + parentID;
+                }catch(Exception e)
+                {
+                    string donothing_removewarning = e.Message;
+                    info = info + "|" + parentTag + "|" + parentID;;
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                info = "error: " + errorMsg;
+            }
+
+            message = info;
+            return message;
+        }
+
+        public string setContentControlFocus(string ccid)
+        {          
+            string message = "";
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    //if (cc.Tag.Equals(tag))
+                    if(cc.ID.Equals(ccid))
+                    {
+                        object dir = Word.WdCollapseDirection.wdCollapseStart;
+
+                        Word.Range r = cc.Range;
+                        r.Collapse(ref dir);
+
+                        r.Select();
+                    }
+                }
+            }catch(Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+                //MessageBox.Show(message);
+            }
+
+            return message;
+                    
+        }
+
+        public string setContentControlPlaceholderText(string ccid, string pltext,string cleartext)
+        {
+             string message = "";
+             bool clear = false;
+
+             if (cleartext.ToUpper().Equals("TRUE"))
+             {
+                  clear = true;
+             }
+
+             try
+             {
+                 Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+                 
+                 foreach (Word.ContentControl cc in ccs)
+                 {
+                     if (cc.ID.Equals(ccid))
+                     {
+                         object missing = Type.Missing;
+
+                         if (clear)
+                         {
+                             cc.Range.Text = "";
+                         }
+
+                         cc.SetPlaceholderText(null, null, pltext);
+                         
+                     }
+                 }
+             }
+             catch (Exception e)
+             {
+                 string errorMsg = e.Message;
+                 message = "error: " + errorMsg;
+             }
+
+             return message;
+        }
+
+        public string getContentControlText(string ccid)
+        {         
+             string message = "";
+             try
+             {
+                 Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                 foreach (Word.ContentControl cc in ccs)
+                 {
+                     if (cc.ID.Equals(ccid))
+                     {
+                         message = cc.Range.Text;
+                        
+                     }
+                 }
+
+             }catch (Exception e)
+             {
+                 string errorMsg = e.Message;
+                 message = "error: " + errorMsg;
+             }
+
+             return message;
+        }
+
+        public string getContentControlWordOpenXML(string ccid)
+        {
+            string message = "";
+
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                    {
+                        message = cc.Range.WordOpenXML;
+
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string setContentControlTag(string ccid, string tag)
+        {
+            string message = "";
+
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                    {
+                        cc.Tag = tag;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+
+        }
+
+        public string setContentControlTitle(string ccid, string title)
+        {
+            string message = "";
+
+            try
+            { 
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                    {
+                        cc.Title = title;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+
+        }
+
+        public string setContentControlStyle(string ccid, string style)
+        {
+            string message = "";
+            object styleHeading2 = style;
+          //  object styleHeading3 = "Heading 3";
+
+
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if(cc.ID.Equals(ccid))
+                       cc.Range.set_Style(ref styleHeading2);
+ 
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string hideContentControlRange(string ccid)
+        {
+            string message = "";
+
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                        cc.Range.Font.Hidden = 1;
+
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string displayContentControlRange(string ccid)
+        {
+            string message = "";
+
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    if (cc.ID.Equals(ccid))
+                        cc.Range.Font.Hidden = 0;
+
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+/*
+        public string insert2003XML()
+        {
+            string message = "";
+
+            string xml = "<w:document xmlns:w='http://schemas.microsoft.com/office/word/2003/wordml'>" +  // xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'>" +
+     "<w:body>" +
+       "<w:p>" +
+         "<w:pPr>" +
+           "<w:rPr>" +
+             "<w:u w:val='single'/>" +
+           "</w:rPr>" +
+         "</w:pPr>" + 
+         "<w:r>" +
+                  "<w:rPr>" +
+             "<w:u w:val='single'/>" +
+           "</w:rPr>" +
+           "<w:t>TEST UNDERLINE.</w:t>" +
+         "</w:r>" +
+       "</w:p>"+
+         "</w:body>" +
+       "</w:document>" ;
+
+            try
+            {
+                object missing = Type.Missing;
+                Word.Range r = Globals.ThisAddIn.Application.Selection.Range;
+                r.InsertXML(xml, ref missing);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR: " + e.Message);
+            }
+            return message;
+        }
+
+        public string testDragDrop()
+        {
+            string message = "";
+            //this.MouseDown += new MouseEventHandler(this.webBrowser1);
+
+            IDataObject bak = Clipboard.GetDataObject();
+            string text = "";
+            if (bak.GetDataPresent(DataFormats.Text))
+            {
+                text = (String)bak.GetData(DataFormats.Text);
+            }
+            object fo = "t";
+          //  DataObject dragData = new DataObject(typeof(string), PetesMethodOfDoom(mqr));
+            //DataObject dragData = new DataObject(typeof(string), PetesMethodOfDoom(mqr));
+
+            //DragDrop.DoDragDrop(TestBox, dragData, DragDropEffects.All);
+           
+            //System.Windows.DragDrop.DoDragDrop(fo, "test", System.Windows.DragDropEffects.Copy);
+            //webBrowser1.DoDragDrop("test", DragDropEffects.All);
+            return message;
+        }
+
+        
+        */
 
     }
 }

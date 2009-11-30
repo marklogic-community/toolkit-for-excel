@@ -338,7 +338,21 @@ namespace MarkLogic_WordAddin
             try
             {
                 Globals.ThisAddIn.Application.ActiveDocument.Content.Select();
+
                 string docx = Globals.ThisAddIn.Application.Selection.WordOpenXML;
+
+                //write to file here:
+              /*  System.Windows.Forms.MessageBox.Show(docx);
+                TextWriter tw = new StreamWriter(@"C:\origdocx.xml");
+                tw.WriteLine(docx);
+                tw.Close();
+
+                System.Windows.Forms.MessageBox.Show(documentXml);
+                TextWriter tw2 = new StreamWriter(@"C:\sdtxml.xml");
+                tw2.WriteLine(documentXml);
+                tw2.Close();
+               * */
+
                 document.LoadXml(docx);
 
                 XmlNode doc = document.SelectSingleNode(documentXPath, NamespaceManager);
