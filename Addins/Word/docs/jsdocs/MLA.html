@@ -44,7 +44,7 @@ parent.document.title="MLA";
 &nbsp;<B>PREV CLASS</B><!-- 
    NEXT CLASS 
 -->
-&nbsp;<B>NEXT CLASS</B></FONT></TD>
+&nbsp;<A HREF="MLA/SimpleContentControl.html"><B>NEXT CLASS</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
   <A HREF="index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
 &nbsp;<A HREF="" TARGET="_top"><B>NO FRAMES</B></A>  &nbsp;
@@ -96,6 +96,22 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 
 <!-- ======== NESTED CLASS SUMMARY ======== -->
 
+<A NAME="inner_classes"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Nested Class Summary</B></FONT></TD>
+</TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&nbsp;class&gt;</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="MLA/SimpleContentControl.html">MLA.SimpleContentControl</A></B></CODE></TD>
+   </TR>
+
+</TABLE>
+&nbsp;
+
 <!-- ======== END NESTED CLASS SUMMARY ======== -->
 
 
@@ -141,6 +157,40 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 <B>Method Summary</B></FONT></TD>
 </TR>
 
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!addContentControl">addContentControl</A></B>(tag, title, type, insertPara, parentID)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Adds Content Control to active document.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!addContentControlDropDownListEntries">addContentControlDropDownListEntries</A></B>(id, text, value, index)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Adds dropdown list entries to a combobox or dropdownlist content control.
+      </TD>
+   </TR>
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
@@ -213,6 +263,23 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!embedOLE">embedOLE</A></B>(tmpPath, title, url, usr, pwd)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Embeds OLE into the Document.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
 	    <CODE>&lt;static&gt;&nbsp;Microsoft.XMLDOM object</CODE>
 	 </FONT>
       </TD>
@@ -264,6 +331,91 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getContentControlDropDownListEntrySelectedText">getContentControlDropDownListEntrySelectedText</A></B>(id)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns selected content control dropdown list entry range text specified by id in the active document.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getContentControlDropDownListEntrySelectedValue">getContentControlDropDownListEntrySelectedValue</A></B>(id)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns selected content control dropdown list entry value specified by id in the active document.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;Array</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getContentControlIds">getContentControlIds</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns ids for all content controls in the active document.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getContentControlText">getContentControlText</A></B>(id)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns text for range of content control identified by id in active document.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;Microsoft.XMLDOM object</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getContentControlWordOpenXML">getContentControlWordOpenXML</A></B>(id)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns WordOpenXML property for range of control in active document specified by id.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
 	    <CODE>&lt;static&gt;&nbsp;Microsoft.XMLDOM object</CODE>
 	 </FONT>
       </TD>
@@ -292,6 +444,57 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	 Returns ids for custom parts (not built-in) that are part of the active Open XML package.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getDocumentName">getDocumentName</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns the name being used for the active Document on the client system.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getDocumentPath">getDocumentPath</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns the path being used for the active document on the client system.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;SimpleContentControl</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getParentContentControlInfo">getParentContentControlInfo</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns SimpleContentControl for nearest parent control of current cursor position in the active document.
       </TD>
    </TR>
 
@@ -349,6 +552,40 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;Array</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getSimpleContentControls">getSimpleContentControls</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns array of SimpleContentControl objects.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getTempPath">getTempPath</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns the path being used for the /temp dir on the client system.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
 	    <CODE>&lt;static&gt;&nbsp;String</CODE>
 	 </FONT>
       </TD>
@@ -377,6 +614,40 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	 Inserts block-level xml into the ActiveDocument in Word at the current cursor position, or over the selected range (if selected).
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!insertContentControlImage">insertContentControlImage</A></B>(id, picuri, user, pwd)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Insert image into picture control identified by id.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!insertContentControlText">insertContentControlText</A></B>(id, text)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Insert text into plain or rich text control identified by id.
       </TD>
    </TR>
 
@@ -423,11 +694,266 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       <TD>
 	 <CODE>
 	    <B>
+	       <A HREF="#!s!insertWordOpenXML">insertWordOpenXML</A></B>(opc_xml)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Inserts WordOpenXML at the current cursor position in the active document.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!lockContentControl">lockContentControl</A></B>(id)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Locks Content Control in active document identified by id.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!lockContentControlContents">lockContentControlContents</A></B>(id)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Locks contents of Content Control in active document identified by id.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!mapContentControl">mapContentControl</A></B>(id, xpath, prefix, partid)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Maps Content Control in active document identified by id to Custom XML Part in .docx package.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!openDOCX">openDOCX</A></B>(tmpPath, docuri, url, user, pwd)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Opens .docx  into Word from local copy saved to client from MarkLogic.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!removeContentControl">removeContentControl</A></B>(id, deletecontents)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Removes Content Control from active document.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!saveActiveDocument">saveActiveDocument</A></B>(filename, url, user, pwd)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Saves active Document to MarkLogic from client system.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!saveLocalCopy">saveLocalCopy</A></B>(filename)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Saves .docx for active Document on the client system.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
 	       <A HREF="#!s!setActiveDocXml">setActiveDocXml</A></B>(documentXml)
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	 Inserts document.xml into the ActiveDocument package in Word.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!setContentControlFocus">setContentControlFocus</A></B>(id)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Sets focus in active document to beginning of control specified by id.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!setContentControlPlaceholderText">setContentControlPlaceholderText</A></B>(id, placeholdertext, cleartext)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Insert image into picture control identified by id.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!setContentControlStyle">setContentControlStyle</A></B>(id, style)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Sets the style for the content control specified by id in active document
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!setContentControlTag">setContentControlTag</A></B>(id, tag)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Sets the tag for content control specified by id in active document
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!setContentControlTitle">setContentControlTitle</A></B>(id, title)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Sets the title for content control specified by id in active document
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!unlockContentControl">unlockContentControl</A></B>(id)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Unlocks Content Control in active document identified by id.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!unlockContentControlContents">unlockContentControlContents</A></B>(id)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Unlocks contents of Content Control in active document identified by id.
       </TD>
    </TR>
 
@@ -497,6 +1023,101 @@ MLA</H3>
 
 <!-- One single method detail entry -->
 
+   <A NAME="!s!addContentControl"><!-- --></A>
+   <H3>addContentControl</H3>
+   <PRE>&lt;static&gt; String <B>addContentControl</B>(tag, title, type, insertPara, parentID)</PRE>
+   
+   <UL>Adds Content Control to active document.  Returns the id of the control added. </UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>tag</CODE> -  the tag identifier for the control.  
+      </UL> 
+   
+     <UL><CODE>title</CODE> -  the title identifier for the control.  
+      </UL> 
+   
+     <UL><CODE>type</CODE> -  the type of control.  
+      </UL> 
+   
+     <UL><CODE>insertPara</CODE> -  [optional] true/false; true: inserts paragraph after control, (default)false: inserts space after control.  
+      </UL> 
+   
+     <UL><CODE>parentID</CODE> -  [optional] the id for the parent which the control should be embedded within.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        id the id for the Content Control added.   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add content control</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!addContentControlDropDownListEntries"><!-- --></A>
+   <H3>addContentControlDropDownListEntries</H3>
+   <PRE>&lt;static&gt; void <B>addContentControlDropDownListEntries</B>(id, text, value, index)</PRE>
+   
+      <UL>Adds dropdown list entries to a combobox or dropdownlist content control.  Both look like similar controls.  But combobox controls allow users to edit/add entries to the drop down list, while dropdownlist controls will only allow the user to select and use the entries available in the list.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id of the control to add list entries to.  
+      </UL> 
+   
+     <UL><CODE>text</CODE> -  the text to be displayed in the list entry of the control.  
+      </UL> 
+   
+     <UL><CODE>value</CODE> -  the value for the list entry in the control. (not displayed)  
+      </UL> 
+   
+     <UL><CODE>index</CODE> -  the index where to insert the entry in the drop down list  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add dropdown list entries.</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!addCustomXMLPart"><!-- --></A>
    <H3>addCustomXMLPart</H3>
    <PRE>&lt;static&gt; String <B>addCustomXMLPart</B>(customPartXml)</PRE>
@@ -509,7 +1130,7 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>customPartXML</CODE> -  Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. ) 
+     <UL><CODE>customPartXML</CODE> -  Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. )  
       </UL> 
    
    </UL>
@@ -520,7 +1141,7 @@ MLA</H3>
    <UL>
    <B>Returns:</B>
         <UL>
-        id for custom part added   
+        id for custom part added    
         </UL>
    </UL>
    
@@ -546,7 +1167,7 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>textstring</CODE> -  the string to be converted into a WordprocessingML paragraph 
+     <UL><CODE>textstring</CODE> -  the string to be converted into a WordprocessingML paragraph  
       </UL> 
    
    </UL>
@@ -557,7 +1178,7 @@ MLA</H3>
    <UL>
    <B>Returns:</B>
         <UL>
-        Microsoft.XMLDOM object that is a WordprocessingML paragraph  
+        Microsoft.XMLDOM object that is a WordprocessingML paragraph   
         </UL>
    </UL>
    
@@ -583,7 +1204,7 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>xmlString</CODE> -  the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML. 
+     <UL><CODE>xmlString</CODE> -  the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML.  
       </UL> 
    
    </UL>
@@ -594,7 +1215,7 @@ MLA</H3>
    <UL>
    <B>Returns:</B>
         <UL>
-        Microsoft.XMLDOM object  
+        Microsoft.XMLDOM object   
         </UL>
    </UL>
    
@@ -620,7 +1241,7 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>customXMLPartId</CODE> -  the id of the custom part to be deleted from the active Open XML package. 
+     <UL><CODE>customXMLPartId</CODE> -  the id of the custom part to be deleted from the active Open XML package.  
       </UL> 
    
    </UL>
@@ -628,11 +1249,67 @@ MLA</H3>
    <!-- METHOD PARAMETERS END -->
 
    
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
 
    <!-- ADDITIONAL ATTRIBUTES START -->
    
    <UL>   
-   <B>Throws:</B><UL>- Exception if unable to delete custom part    </UL>
+   <B>Throws:</B><UL>- Exception if unable to delete custom part</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!embedOLE"><!-- --></A>
+   <H3>embedOLE</H3>
+   <PRE>&lt;static&gt; void <B>embedOLE</B>(tmpPath, title, url, usr, pwd)</PRE>
+   
+      <UL>Embeds OLE into the Document. the OLE is downloaded to client and saved into Document from local file.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>tmpPath</CODE> -  the directory (including path) where the local copy of object to be embedded will be saved.    
+      </UL> 
+   
+     <UL><CODE>url</CODE> -  the url for the file to be downloaded and embedded  
+      </UL> 
+   
+     <UL><CODE>pwd</CODE> -  password for MarkLogic Server url connects with  
+      </UL> 
+   
+     <UL><CODE>filename</CODE> -  the name of the file to be embedded. tmpPath + filename should be the name and path of file on client.    
+      </UL> 
+   
+     <UL><CODE>user</CODE> -  username for MarkLogic Server url connects with  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to embedOLE</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -719,6 +1396,159 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="!s!getContentControlDropDownListEntrySelectedText"><!-- --></A>
+   <H3>getContentControlDropDownListEntrySelectedText</H3>
+   <PRE>&lt;static&gt; String <B>getContentControlDropDownListEntrySelectedText</B>(id)</PRE>
+   
+      <UL>Returns selected content control dropdown list entry range text specified by id in the active document.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        the text for the selected dropdown list entry. If nothing is selected the placeholder text (if available) is returned.  If there is no placeholder text, then the empty string is returned.   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get content control dropdown list entry selected text.</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getContentControlDropDownListEntrySelectedValue"><!-- --></A>
+   <H3>getContentControlDropDownListEntrySelectedValue</H3>
+   <PRE>&lt;static&gt; String <B>getContentControlDropDownListEntrySelectedValue</B>(id)</PRE>
+   
+      <UL>Returns selected content control dropdown list entry value specified by id in the active document.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        the value for the selected dropdown list entry. If nothing is selected, then the empty string is returned.   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get content control dropdown list entry selected value.</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getContentControlIds"><!-- --></A>
+   <H3>getContentControlIds</H3>
+   <PRE>&lt;static&gt; Array <B>getContentControlIds</B>()</PRE>
+   
+      <UL>Returns ids for all content controls in the active document.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        the ids for all content controls in the active document as array of string   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get content control ids.</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getContentControlText"><!-- --></A>
+   <H3>getContentControlText</H3>
+   <PRE>&lt;static&gt; String <B>getContentControlText</B>(id)</PRE>
+   
+      <UL>Returns text for range of content control identified by id in active document.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        text contents of range within control   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get content control text.</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getContentControlWordOpenXML"><!-- --></A>
+   <H3>getContentControlWordOpenXML</H3>
+   <PRE>&lt;static&gt; Microsoft.XMLDOM object <B>getContentControlWordOpenXML</B>(id)</PRE>
+   
+      <UL>Returns WordOpenXML property for range of control in active document specified by id.  The WordOpenXML property returns the control as if it were its own Word document, saved as .xml.  The represenation is also called Flat OPC, following the Open Packaging Convention.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id of the control.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        Microsoft.XMLDOM object that is the content control contents in the WordOpenXML property format.   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get content control WordOpenXML</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!getCustomXMLPart"><!-- --></A>
    <H3>getCustomXMLPart</H3>
    <PRE>&lt;static&gt; Microsoft.XMLDOM object <B>getCustomXMLPart</B>(customXMLPartId)</PRE>
@@ -781,6 +1611,93 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="!s!getDocumentName"><!-- --></A>
+   <H3>getDocumentName</H3>
+   <PRE>&lt;static&gt; String <B>getDocumentName</B>()</PRE>
+   
+      <UL>Returns the name being used for the active Document on the client system.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        document_name the name of the active Document   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to retrieve the Document name</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getDocumentPath"><!-- --></A>
+   <H3>getDocumentPath</H3>
+   <PRE>&lt;static&gt; String <B>getDocumentPath</B>()</PRE>
+   
+      <UL>Returns the path being used for the active document on the client system.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        path path is path for where current document is saved on client   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to retrieve the document path</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getParentContentControlInfo"><!-- --></A>
+   <H3>getParentContentControlInfo</H3>
+   <PRE>&lt;static&gt; SimpleContentControl <B>getParentContentControlInfo</B>()</PRE>
+   
+      <UL>Returns SimpleContentControl for nearest parent control of current cursor position in the active document.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        a SimpleContentControl for the parent content control of the nearest control that the cursor is embedde within in the active document.   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get parent content control info.</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!getSelection"><!-- --></A>
    <H3>getSelection</H3>
    <PRE>&lt;static&gt; Array <B>getSelection</B>()</PRE>
@@ -796,7 +1713,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Returns:</B>
         <UL>
-        the blocks of XML currently selected by the user in the ActiveDocument as XMLDOM objects. If nothing is selected, an empty array is returned.  
+        the blocks of XML currently selected by the user in the ActiveDocument as XMLDOM objects. If nothing is selected, an empty array is returned.   
         </UL>
    </UL>
    
@@ -822,7 +1739,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>delimiter</CODE> -  (optional) Text from tables will be returned as a single string, with cells delimited by tabs (default).  This param may be used to assign a different delimiter.  Note: there is no delimiter for text from paragraphs, as each paragraph will be captured in separate array elements. 
+     <UL><CODE>delimiter</CODE> -  (optional) Text from tables will be returned as a single string, with cells delimited by tabs (default).  This param may be used to assign a different delimiter.  Note: there is no delimiter for text from paragraphs, as each paragraph will be captured in separate array elements.  
       </UL> 
    
    </UL>
@@ -833,7 +1750,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Returns:</B>
         <UL>
-        the text selected by the user in the ActiveDocument as strings. If nothing is selected, an empty array is returned.  
+        the text selected by the user in the ActiveDocument as strings. If nothing is selected, an empty array is returned.   
         </UL>
    </UL>
    
@@ -862,7 +1779,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Returns:</B>
         <UL>
-        the block of XML, as XMLDOM object,  for the Sentence immediately preceding the cursor position.  
+        the block of XML, as XMLDOM object,  for the Sentence immediately preceding the cursor position.   
         </UL>
    </UL>
    
@@ -871,6 +1788,65 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    
    <UL>   
    <B>Throws:</B><UL>- Exception if unable to retrieve the XML for the Sentence.</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getSimpleContentControls"><!-- --></A>
+   <H3>getSimpleContentControls</H3>
+   <PRE>&lt;static&gt; Array <B>getSimpleContentControls</B>()</PRE>
+   
+   <UL>Returns array of SimpleContentControl objects.<br/><br/>
+	   A SimpleContentControl is returned for each content control in the active document.  To see what properties are available, please review <B><A HREF="MLA/SimpleContentControl.html">MLA.SimpleContentControl</A></B> </UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        array of SimpleContentControl objects.   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get SimpleContentControls.</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getTempPath"><!-- --></A>
+   <H3>getTempPath</H3>
+   <PRE>&lt;static&gt; String <B>getTempPath</B>()</PRE>
+   
+      <UL>Returns the path being used for the /temp dir on the client system.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        /temp path on client system   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to retrieve the /temp path</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -915,10 +1891,10 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>stylesXml</CODE> -  (optional) this parameter is either A) an XMLDOM object that contains Styles.xml for the pacakge, or B)a String, which is the serialized, well-formed XML that represents Styles.xml for the ActiveDocument package in Word. 
+     <UL><CODE>stylesXml</CODE> -  (optional) this parameter is either A) an XMLDOM object that contains Styles.xml for the pacakge, or B)a String, which is the serialized, well-formed XML that represents Styles.xml for the ActiveDocument package in Word.  
       </UL> 
    
-     <UL><CODE>blockXml</CODE> -  this parameter may either be A) and XMLDOM object that is the block-level XML to be inserted,or an array of such objects,or B) a String, that is the serialized, well-formed XML of the block to be inserted, or an Array of such Strings. 
+     <UL><CODE>blockXml</CODE> -  this parameter may either be A) and XMLDOM object that is the block-level XML to be inserted,or an array of such objects,or B) a String, that is the serialized, well-formed XML of the block to be inserted, or an Array of such Strings.  
       </UL> 
    
    </UL>
@@ -936,6 +1912,92 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="!s!insertContentControlImage"><!-- --></A>
+   <H3>insertContentControlImage</H3>
+   <PRE>&lt;static&gt; void <B>insertContentControlImage</B>(id, picuri, user, pwd)</PRE>
+   
+      <UL>Insert image into picture control identified by id.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id of the control where image will be inserted.  
+      </UL> 
+   
+     <UL><CODE>user</CODE> -  the MarkLogic Server user.  
+      </UL> 
+   
+     <UL><CODE>pwd</CODE> -  the MarkLogic Server pwd.  
+      </UL> 
+   
+     <UL><CODE>uri</CODE> -  the uri of the image within MarkLogic Server.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to insert content control image</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!insertContentControlText"><!-- --></A>
+   <H3>insertContentControlText</H3>
+   <PRE>&lt;static&gt; void <B>insertContentControlText</B>(id, text)</PRE>
+   
+      <UL>Insert text into plain or rich text control identified by id.  Text uses insertAfter() for append.  To remove control text, see the function setContentControlPlaceholderText().</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id of the control where text will be inserted.  
+      </UL> 
+   
+     <UL><CODE>text</CODE> -  the text to be inserted as the control contents.  insert is asynchronous within the active document.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to insert content control text</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!insertImage"><!-- --></A>
    <H3>insertImage</H3>
    <PRE>&lt;static&gt; void <B>insertImage</B>(picuri,uname,pwd)</PRE>
@@ -948,13 +2010,13 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>uname</CODE> -  username for Server 
+     <UL><CODE>uname</CODE> -  username for Server  
       </UL> 
    
-     <UL><CODE>pwd</CODE> -  password for Server 
+     <UL><CODE>pwd</CODE> -  password for Server  
       </UL> 
    
-     <UL><CODE>picurl</CODE> -  a url to an XQuery module that will return the image when evaluated.   
+     <UL><CODE>picurl</CODE> -  a url to an XQuery module that will return the image when evaluated.    
       </UL> 
    
    </UL>
@@ -962,11 +2024,18 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- METHOD PARAMETERS END -->
 
    
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
 
    <!-- ADDITIONAL ATTRIBUTES START -->
    
    <UL>   
-   <B>Throws:</B><UL>- Exception if unable to insert text    </UL>
+   <B>Throws:</B><UL>- Exception if unable to insert text</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -984,7 +2053,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>textToInsert</CODE> -  the text to be inserted at the current cursor position in the ActiveDocument. 
+     <UL><CODE>textToInsert</CODE> -  the text to be inserted at the current cursor position in the ActiveDocument.  
       </UL> 
    
    </UL>
@@ -997,6 +2066,328 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    
    <UL>   
    <B>Throws:</B><UL>- Exception if unable to insert text     </UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!insertWordOpenXML"><!-- --></A>
+   <H3>insertWordOpenXML</H3>
+   <PRE>&lt;static&gt; void <B>insertWordOpenXML</B>(opc_xml)</PRE>
+   
+      <UL>Inserts WordOpenXML at the current cursor position in the active document.  WordOpenXML is the XML for a Word document in Flat OPC format (the Open Packaging Convention).  It is the same format as if you'd saved a .docx as .xml in Word.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>opc_xml</CODE> -  the XML to be inserted. Parameter type can be either A) an XMLDOM object that is the WordOpenXML to be inserted into the active Open XML package, or B)the string serialization of the WordOpenXML to be inserted into the active Open XML package.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to insertWordOpenXML</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!lockContentControl"><!-- --></A>
+   <H3>lockContentControl</H3>
+   <PRE>&lt;static&gt; void <B>lockContentControl</B>(id)</PRE>
+   
+      <UL>Locks Content Control in active document identified by id.  Locking a Content Control disables the ability to remove the control from the document.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id identifier of the Content Control to be locked in the active document.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to lock Content Control</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!lockContentControlContents"><!-- --></A>
+   <H3>lockContentControlContents</H3>
+   <PRE>&lt;static&gt; void <B>lockContentControlContents</B>(id)</PRE>
+   
+      <UL>Locks contents of Content Control in active document identified by id.  Locking Content Control contents disables editing of contents within the control.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id identifier of the Content Control containing contents to be locked.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to lock Content Control contents</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!mapContentControl"><!-- --></A>
+   <H3>mapContentControl</H3>
+   <PRE>&lt;static&gt; void <B>mapContentControl</B>(id, xpath, prefix, partid)</PRE>
+   
+      <UL>Maps Content Control in active document identified by id to Custom XML Part in .docx package.  XPath identifies which value to be displayed in active document from custom part.  Changes in custom part are immediately reflected in the active document.  Likewise, edits made to mapped control contents in the active document are immediately reflected in the custom part.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id identifier of the Content Control to be mapped.  
+      </UL> 
+   
+     <UL><CODE>xpath</CODE> -  the xpath expression identifying which value to use for the control contents.   
+      </UL> 
+   
+     <UL><CODE>prefix</CODE> -  namespace identifier for the custom XML part.  
+      </UL> 
+   
+     <UL><CODE>partid</CODE> -  the identifier of the custom XML Part which the control is to be mapped to.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to map Content Control</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!openDOCX"><!-- --></A>
+   <H3>openDOCX</H3>
+   <PRE>&lt;static&gt; void <B>openDOCX</B>(tmpPath, docuri, url, user, pwd)</PRE>
+   
+      <UL>Opens .docx  into Word from local copy saved to client from MarkLogic.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>tmpPath</CODE> -  the directory (including path) where the local copy of document will be saved.    
+      </UL> 
+   
+     <UL><CODE>docuri</CODE> -  the uri of the .docx within MarkLogic  
+      </UL> 
+   
+     <UL><CODE>url</CODE> -  the url for fetching the .docx to be downloaded  
+      </UL> 
+   
+     <UL><CODE>user</CODE> -  the username for the MarkLogic Server the url connects with  
+      </UL> 
+   
+     <UL><CODE>pwd</CODE> -  the password for the MarkLogic Server the url connects with  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to download and open local copy</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!removeContentControl"><!-- --></A>
+   <H3>removeContentControl</H3>
+   <PRE>&lt;static&gt; void <B>removeContentControl</B>(id, deletecontents)</PRE>
+   
+      <UL>Removes Content Control from active document.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id of the control to be removed.  
+      </UL> 
+   
+     <UL><CODE>deletecontents</CODE> -  [optional] true/false ; true: deletes contents of control.  (default)false: removes control but document retains control contents.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to remove content control</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!saveActiveDocument"><!-- --></A>
+   <H3>saveActiveDocument</H3>
+   <PRE>&lt;static&gt; String <B>saveActiveDocument</B>(filename, url, user, pwd)</PRE>
+   
+      <UL>Saves active Document to MarkLogic from client system.  .docx being saved to ML must already exist (be saved) on client and have both path and name.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>filename</CODE> -  the name of the file (including path) to be saved to MarkLogic    
+      </UL> 
+   
+     <UL><CODE>url</CODE> -  the url on MarkLogic that the client calls to upload the presentation  
+      </UL> 
+   
+     <UL><CODE>user</CODE> -  username for MarkLogic Server url connects with  
+      </UL> 
+   
+     <UL><CODE>pwd</CODE> -  password for MarkLogic Server url connects with  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to save the active Presentation</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!saveLocalCopy"><!-- --></A>
+   <H3>saveLocalCopy</H3>
+   <PRE>&lt;static&gt; void <B>saveLocalCopy</B>(filename)</PRE>
+   
+      <UL>Saves .docx for active Document on the client system.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>filename</CODE> -  the filename (including path) to save Document as on client system  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to save local copy</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -1016,7 +2407,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>documentXml</CODE> -  this parameter may either be A) an XMLDOM object that is the XML equivalent of the document.xml to be inserted,or B) a String, that is the serialized, well-formed XML of the document.xml to be inserted. 
+     <UL><CODE>documentXml</CODE> -  this parameter may either be A) an XMLDOM object that is the XML equivalent of the document.xml to be inserted,or B) a String, that is the serialized, well-formed XML of the document.xml to be inserted.  
       </UL> 
    
    </UL>
@@ -1029,6 +2420,280 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    
    <UL>   
    <B>Throws:</B><UL>- Exception if unable to set the documentXml    </UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!setContentControlFocus"><!-- --></A>
+   <H3>setContentControlFocus</H3>
+   <PRE>&lt;static&gt; void <B>setContentControlFocus</B>(id)</PRE>
+   
+      <UL>Sets focus in active document to beginning of control specified by id.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id identifying the control to which focus will be set in active document.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to set content control focus.</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!setContentControlPlaceholderText"><!-- --></A>
+   <H3>setContentControlPlaceholderText</H3>
+   <PRE>&lt;static&gt; void <B>setContentControlPlaceholderText</B>(id, placeholdertext, cleartext)</PRE>
+   
+      <UL>Insert image into picture control identified by id.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id of the control in which to set placeholder text.  
+      </UL> 
+   
+     <UL><CODE>placeholdertext</CODE> -  the placeholder text to be used for the control.  
+      </UL> 
+   
+     <UL><CODE>cleartext</CODE> -  [optional] true/false; true: delete existing text for control range. (default)false: do not delete control range text contents.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to set content control placeholder text</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!setContentControlStyle"><!-- --></A>
+   <H3>setContentControlStyle</H3>
+   <PRE>&lt;static&gt; void <B>setContentControlStyle</B>(id, style)</PRE>
+   
+      <UL>Sets the style for the content control specified by id in active document</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id of the control.  
+      </UL> 
+   
+     <UL><CODE>style</CODE> -  the style property to be set for the control.  This style can be any of the styles available in Office.  For example "Subtitle","Heading 1","Heading 2", etc.  For more options, see the 'styles' group on the 'Home' tab of Word.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to set content control style</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!setContentControlTag"><!-- --></A>
+   <H3>setContentControlTag</H3>
+   <PRE>&lt;static&gt; void <B>setContentControlTag</B>(id, tag)</PRE>
+   
+      <UL>Sets the tag for content control specified by id in active document</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id of the control.  
+      </UL> 
+   
+     <UL><CODE>tag</CODE> -  the tag to be set for the control.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to set content control tag</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!setContentControlTitle"><!-- --></A>
+   <H3>setContentControlTitle</H3>
+   <PRE>&lt;static&gt; void <B>setContentControlTitle</B>(id, title)</PRE>
+   
+      <UL>Sets the title for content control specified by id in active document</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id of the control.  
+      </UL> 
+   
+     <UL><CODE>title</CODE> -  the title to be set for the control.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to set content control title</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!unlockContentControl"><!-- --></A>
+   <H3>unlockContentControl</H3>
+   <PRE>&lt;static&gt; void <B>unlockContentControl</B>(id)</PRE>
+   
+      <UL>Unlocks Content Control in active document identified by id.  Unlocking a Content Control enables the ability to remove the control from the document.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id identifier of the Content Control to be unlocked in the active document.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to unlock Content Control</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!unlockContentControlContents"><!-- --></A>
+   <H3>unlockContentControlContents</H3>
+   <PRE>&lt;static&gt; void <B>unlockContentControlContents</B>(id)</PRE>
+   
+      <UL>Unlocks contents of Content Control in active document identified by id.  Unlocking Content Control contents enables editing of contents within the control.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>id</CODE> -  the id identifier of the Content Control containing contents to be unlocked.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to unlock Content Control contents</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -1069,7 +2734,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
 &nbsp;<B>PREV CLASS</B><!-- 
    NEXT CLASS 
 -->
-&nbsp;<B>NEXT CLASS</B></FONT></TD>
+&nbsp;<A HREF="MLA/SimpleContentControl.html"><B>NEXT CLASS</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
   <A HREF="index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
 &nbsp;<A HREF="" TARGET="_top"><B>NO FRAMES</B></A>  &nbsp;
@@ -1100,6 +2765,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 <FONT SIZE="-1">
 
 </FONT>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Mon Mar 23 11:00:48 2009</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Nov 11 16:00:07 2009</div>
 </BODY>
 </HTML>

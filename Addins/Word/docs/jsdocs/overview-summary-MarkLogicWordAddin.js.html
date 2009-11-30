@@ -106,6 +106,11 @@ function asd() {
     <td>&nbsp;</td>
     </tr>
     
+    <tr bgcolor="white" class="TableRowColor">
+    <td width="15%"><b><a href="MLA/SimpleContentControl.html">MLA.SimpleContentControl</a></b></td>
+    <td>A basic SimpleContentControl class.</td>
+    </tr>
+    
     </table>
     <hr/> 
 
@@ -116,7 +121,7 @@ function asd() {
 
 
         <pre class="sourceview"><span class="comment">/* 
-Copyright 2008 Mark Logic Corporation
+Copyright 2008-2009 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -141,7 +146,7 @@ MarkLogicWordAddin.js - javascript api for interacting with webBrowser control w
  * {<span class="attrib">@link</span> http://www.marklogic.com} 
  *
  * <span class="attrib">@author</span> Pete Aven pete.aven<span class="attrib">@marklogic</span>.com
- * <span class="attrib">@version</span> 0.1 
+ * <span class="attrib">@version</span> 1.1 
  */</span>
 
 
@@ -201,9 +206,9 @@ MLA.errorCheck = <span class="reserved">function</span>(message)
 }
 <span class="comment">/** Utility function for creating Microsoft.XMLDOM object from string
  *
- *<span class="attrib">@param</span> xmlString the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML.
- *<span class="attrib">@return</span> Microsoft.XMLDOM object
- *<span class="attrib">@throws</span> Exception if unable to create the XMLDOM object
+ * <span class="attrib">@param</span> xmlString the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML.
+ * <span class="attrib">@return</span> Microsoft.XMLDOM object
+ * <span class="attrib">@throws</span> Exception if unable to create the XMLDOM object
  */</span>
 MLA.createXMLDOM = <span class="reserved">function</span>(xmlstring)
 {
@@ -247,9 +252,9 @@ MLA.escapeXMLCharEntities = function(stringtoconvert)
 }
 <span class="comment">/** Utility function to create a default WordprocessingML paragraph &lt;w:p&gt;, with no styles, for a given string.
  *
- *<span class="attrib">@param</span> textstring the string to be converted into a WordprocessingML paragraph
- *<span class="attrib">@return</span> Microsoft.XMLDOM object that is a WordprocessingML paragraph
- *<span class="attrib">@throws</span> Exception if unable to create the paragraph
+ * <span class="attrib">@param</span> textstring the string to be converted into a WordprocessingML paragraph
+ * <span class="attrib">@return</span> Microsoft.XMLDOM object that is a WordprocessingML paragraph
+ * <span class="attrib">@throws</span> Exception if unable to create the paragraph
  */</span>
 MLA.createParagraph = <span class="reserved">function</span>(textstring)
 { 
@@ -261,8 +266,8 @@ MLA.createParagraph = <span class="reserved">function</span>(textstring)
 	<span class="reserved">return</span> newPara;
 }
 <span class="comment">/** Inserts text into the ActiveDocument at current cursor position.  Text will be styled according to whatever is the currently chosen style for text within Word. 
- *<span class="attrib">@param</span> textToInsert the text to be inserted at the current cursor position in the ActiveDocument.
- *<span class="attrib">@throws</span> Exception if unable to insert text 
+ * <span class="attrib">@param</span> textToInsert the text to be inserted at the current cursor position in the ActiveDocument.
+ * <span class="attrib">@throws</span> Exception if unable to insert text 
  */</span>
 MLA.insertText = <span class="reserved">function</span>(textToInsert)
 {
@@ -276,10 +281,10 @@ MLA.insertText = <span class="reserved">function</span>(textToInsert)
 }
 <span class="comment">/**
  *  Returns the text currently selected (highlighted) by the user in the ActiveDocument.  Whatever is highlighted by the user will be returned in this function as a string.  A user may highlight text from multiple paragraphs or from tables.  For this reason, the function returns an array, where each element of the array is a string that contains the text contained by the structure highlighted by the user in the ActiveDocument.  The order of elements in the array represents the order of items that are highlighted in the ActiveDocument.
- *<span class="attrib">@return</span> the text selected by the user in the ActiveDocument as strings. If nothing is selected, an empty array is returned.
- *<span class="attrib">@type</span> Array
- *<span class="attrib">@param</span> delimiter (optional) Text from tables will be returned as a single string, with cells delimited by tabs (default).  This param may be used to assign a different delimiter.  Note: there is no delimiter for text from paragraphs, as each paragraph will be captured in separate array elements.
- *<span class="attrib">@throws</span> Exception if unable to retrieve the Selection
+ * <span class="attrib">@return</span> the text selected by the user in the ActiveDocument as strings. If nothing is selected, an empty array is returned.
+ * <span class="attrib">@type</span> Array
+ * <span class="attrib">@param</span> delimiter (optional) Text from tables will be returned as a single string, with cells delimited by tabs (default).  This param may be used to assign a different delimiter.  Note: there is no delimiter for text from paragraphs, as each paragraph will be captured in separate array elements.
+ * <span class="attrib">@throws</span> Exception if unable to retrieve the Selection
  */</span>
 MLA.getSelectionText = <span class="reserved">function</span>(delimiter)
 {
@@ -397,10 +402,10 @@ MLA.getCustomXMLPart = <span class="reserved">function</span>(customXMLPartId)
 }
 
 <span class="comment">/** Adds custom part to active Open XML package.  Returns the id of the part added.
- *<span class="attrib">@param</span> customPartXML Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. )
- *<span class="attrib">@return</span> id for custom part added 
- *<span class="attrib">@type</span> String
- *<span class="attrib">@throws</span> Exception if unable to add custom part
+ * <span class="attrib">@param</span> customPartXML Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. )
+ * <span class="attrib">@return</span> id for custom part added 
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to add custom part
  */</span>
 MLA.addCustomXMLPart = <span class="reserved">function</span>(customPartXml)
 {
@@ -427,8 +432,10 @@ MLA.addCustomXMLPart = <span class="reserved">function</span>(customPartXml)
 }
 
 <span class="comment">/** Deletes custom part from Active Open XML package identified by id.
- *<span class="attrib">@param</span> customXMLPartId the id of the custom part to be deleted from the active Open XML package.
- *<span class="attrib">@throws</span> Exception if unable to delete custom part
+ * <span class="attrib">@param</span> customXMLPartId the id of the custom part to be deleted from the active Open XML package.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to delete custom part
  */</span>
 MLA.deleteCustomXMLPart = <span class="reserved">function</span>(customXMLPartId)
 {
@@ -444,9 +451,9 @@ MLA.deleteCustomXMLPart = <span class="reserved">function</span>(customXMLPartId
 }
 
 <span class="comment">/** Returns the XML that represents what is currently selected (highlighted) by the user in the ActiveDocument as an XMLDOM object.  Whatever is highlighted by the user will be returned in this function as a block level element.  A user may highlight text that will be materialized as multiple sibling block elements in the XML.  For this reason, the function returns an array, where each element of the array is an XMLDOM object that contains the XML for the blocks highlighted by the user in the ActiveDocument.  The order of elements in the array represents the order of items that are highlighted in the ActiveDocument.
- *<span class="attrib">@return</span> the blocks of XML currently selected by the user in the ActiveDocument as XMLDOM objects. If nothing is selected, an empty array is returned.
- *<span class="attrib">@type</span> Array
- *<span class="attrib">@throws</span> Exception if unable to retrieve the Selection
+ * <span class="attrib">@return</span> the blocks of XML currently selected by the user in the ActiveDocument as XMLDOM objects. If nothing is selected, an empty array is returned.
+ * <span class="attrib">@type</span> Array
+ * <span class="attrib">@throws</span> Exception if unable to retrieve the Selection
 */</span>
 MLA.getSelection = <span class="reserved">function</span>()
 {
@@ -515,9 +522,9 @@ MLA.getSelection = <span class="reserved">function</span>()
 }
 
 <span class="comment">/** Returns the final XML block that represents the Sentence at the current cursor position.  Nothing is required to be highlighted in the ActiveDocument.  If a selection is highlighted, this returns the XML for the sentence at the the current cursor position.  If there is no selection, the XML for the sentence at the current cursor position is still returned. 
- *<span class="attrib">@return</span> the block of XML, as XMLDOM object,  for the Sentence immediately preceding the cursor position.
- *<span class="attrib">@type</span> Microsoft.XMLDOM object
- *<span class="attrib">@throws</span> Exception if unable to retrieve the XML for the Sentence.
+ * <span class="attrib">@return</span> the block of XML, as XMLDOM object,  for the Sentence immediately preceding the cursor position.
+ * <span class="attrib">@type</span> Microsoft.XMLDOM object
+ * <span class="attrib">@throws</span> Exception if unable to retrieve the XML for the Sentence.
 */</span>
 MLA.getSentenceAtCursor = <span class="reserved">function</span>()
 {
@@ -555,7 +562,7 @@ MLA.getActiveDocXml = <span class="reserved">function</span>()
 <span class="comment">/** Returns the Styles.xml for the ActiveDocument as XMLDOM object. 
  * <span class="attrib">@return</span> Styles.xml if no Styles.xml present in ActiveDocument package, returns null.
  * <span class="attrib">@type</span> Microsoft.XMLDOM object
- *<span class="attrib">@throws</span> Exception if unable to retrieve Styles.xml from the ActiveDocument.
+ * <span class="attrib">@throws</span> Exception if unable to retrieve Styles.xml from the ActiveDocument.
  */</span>
 MLA.getActiveDocStylesXml = <span class="reserved">function</span>()
 { 
@@ -576,8 +583,8 @@ MLA.getActiveDocStylesXml = <span class="reserved">function</span>()
  *
  * As this only allows insert of document.xml, it is assumed that whatever references required by document.xml by other xml files in the package currently being authored (styles, themes, etc.) already exist.
  * 
- *<span class="attrib">@param</span> documentXml this parameter may either be A) an XMLDOM object that is the XML equivalent of the document.xml to be inserted,or B) a String, that is the serialized, well-formed XML of the document.xml to be inserted.
- *<span class="attrib">@throws</span> Exception if unable to set the documentXml
+ * <span class="attrib">@param</span> documentXml this parameter may either be A) an XMLDOM object that is the XML equivalent of the document.xml to be inserted,or B) a String, that is the serialized, well-formed XML of the document.xml to be inserted.
+ * <span class="attrib">@throws</span> Exception if unable to set the documentXml
  */</span>
 MLA.setActiveDocXml = <span class="reserved">function</span>(documentXml)
 {
@@ -612,9 +619,9 @@ MLA.isArray = <span class="reserved">function</span>(obj)
  *
  * There are two main levels of content in the document.xml; block-level and inline content. Block level describes the structure of the document, and includes paragraphs and tables. Anything that can be inserted under &lt;w:body&gt; may be inserted here
  * 
- *<span class="attrib">@param</span> blockXml this parameter may either be A) and XMLDOM object that is the block-level XML to be inserted,or an array of such objects,or B) a String, that is the serialized, well-formed XML of the block to be inserted, or an Array of such Strings.
- *<span class="attrib">@param</span> stylesXml (optional) this parameter is either A) an XMLDOM object that contains Styles.xml for the pacakge, or B)a String, which is the serialized, well-formed XML that represents Styles.xml for the ActiveDocument package in Word.
- *<span class="attrib">@throws</span> Exception if unable to insert the blockContent or Styles.xml
+ * <span class="attrib">@param</span> blockXml this parameter may either be A) and XMLDOM object that is the block-level XML to be inserted,or an array of such objects,or B) a String, that is the serialized, well-formed XML of the block to be inserted, or an Array of such Strings.
+ * <span class="attrib">@param</span> stylesXml (optional) this parameter is either A) an XMLDOM object that contains Styles.xml for the pacakge, or B)a String, which is the serialized, well-formed XML that represents Styles.xml for the ActiveDocument package in Word.
+ * <span class="attrib">@throws</span> Exception if unable to insert the blockContent or Styles.xml
  */</span>
 MLA.insertBlockContent = <span class="reserved">function</span>(blockContentXml,stylesXml)
 {
@@ -668,9 +675,9 @@ MLA.insertBlockContent = <span class="reserved">function</span>(blockContentXml,
 
 <span class="comment">/**
  *
- *Returns MLA.config. The fields for this object are version, url, and theme.  
+ * Returns MLA.config. The fields for this object are version, url, and theme.  
 version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color scheme used by Office. 
- *<span class="attrib">@throws</span> Exception if unable to create MLA.config object
+ * <span class="attrib">@throws</span> Exception if unable to create MLA.config object
  */</span>
 MLA.getConfiguration = <span class="reserved">function</span>()
 {
@@ -691,10 +698,12 @@ MLA.getConfiguration = <span class="reserved">function</span>()
 }
 <span class="comment">/**
  * Inserts image into the ActiveDocument at current cursor position.  
- *<span class="attrib">@param</span> picurl a url to an XQuery module that will return the image when evaluated.  
- *<span class="attrib">@param</span> uname username for Server
- *<span class="attrib">@param</span> pwd password for Server
- *<span class="attrib">@throws</span> Exception if unable to insert text
+ * <span class="attrib">@param</span> picurl a url to an XQuery module that will return the image when evaluated.  
+ * <span class="attrib">@param</span> uname username for Server
+ * <span class="attrib">@param</span> pwd password for Server
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to insert text
  */</span>
 MLA.insertImage = <span class="reserved">function</span>(picuri,uname,pwd)
 {
@@ -704,7 +713,716 @@ MLA.insertImage = <span class="reserved">function</span>(picuri,uname,pwd)
 	<span class="reserved">if</span>(errMsg!=null)
 	   throw(<span class="literal">"Error: Not able to insertImage; "</span>+errMsg);
 
+	<span class="reserved">return</span> inserted;
+
 }
+
+<span class="comment">/**
+ * Returns the path being used for the /temp dir on the client system.
+ * <span class="attrib">@return</span> /temp path on client system
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to retrieve the /temp path
+ */</span>
+MLA.getTempPath = <span class="reserved">function</span>()
+{
+	<span class="comment">//alert("IN HERE");</span>
+	var msg=window.external.getTempPath();
+	var errMsg = MLA.errorCheck(msg);
+
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to getTempPath; "</span>+errMsg);
+
+	<span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Opens .docx  into Word from local copy saved to client from MarkLogic.
+ * <span class="attrib">@param</span> tmpPath the directory (including path) where the local copy of document will be saved.  
+ * <span class="attrib">@param</span> docuri the uri of the .docx within MarkLogic
+ * <span class="attrib">@param</span> url the url for fetching the .docx to be downloaded
+ * <span class="attrib">@param</span> user the username for the MarkLogic Server the url connects with
+ * <span class="attrib">@param</span> pwd the password for the MarkLogic Server the url connects with
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to download and open local copy 
+ */</span>
+MLA.openDOCX = <span class="reserved">function</span>(tmpPath, docuri, url, user, pwd)
+{
+	<span class="comment">//alert("tmpPath: "+tmpPath+" docuri: "+docuri+" url:"+url+" user/pwd:"+ user+pwd);</span>
+	var msg = window.external.openDOCX(tmpPath, docuri, url, user, pwd);
+        var errMsg = MLA.errorCheck(msg);
+
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to openDOCX; "</span>+errMsg);
+
+	<span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Embeds OLE into the Document. the OLE is downloaded to client and saved into Document from local file.
+ * <span class="attrib">@param</span> tmpPath the directory (including path) where the local copy of object to be embedded will be saved.  
+ * <span class="attrib">@param</span> filename the name of the file to be embedded. tmpPath + filename should be the name and path of file on client.  
+ * <span class="attrib">@param</span> url the url for the file to be downloaded and embedded
+ * <span class="attrib">@param</span> user username for MarkLogic Server url connects with
+ * <span class="attrib">@param</span> pwd password for MarkLogic Server url connects with
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to embedOLE 
+ */</span>
+MLA.embedOLE = <span class="reserved">function</span>(tmpPath, title, url, usr, pwd)
+{
+	var msg = window.external.embedOLE(tmpPath, title, url, usr, pwd);
+	var errMsg = MLA.errorCheck(msg);
+        <span class="comment">//alert("errMsg"+errMsg);</span>
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to embedOLE; "</span>+errMsg);
+
+	<span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Returns the path being used for the active document on the client system.
+ * <span class="attrib">@return</span> path path is path for where current document is saved on client
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to retrieve the document path
+ */</span>
+MLA.getDocumentPath = <span class="reserved">function</span>()
+{
+	var msg=window.external.getDocumentPath();
+	var errMsg = MLA.errorCheck(msg);
+
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to getDocumentPath; "</span>+errMsg);
+
+	<span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Returns the name being used for the active Document on the client system.
+ * <span class="attrib">@return</span> document_name the name of the active Document
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to retrieve the Document name
+ */</span>
+MLA.getDocumentName = <span class="reserved">function</span>()
+{
+	var msg=window.external.getDocumentName();
+	var errMsg = MLA.errorCheck(msg);
+
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to getDocumentName; "</span>+errMsg);
+
+	<span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Saves .docx for active Document on the client system.
+ * <span class="attrib">@param</span> filename the filename (including path) to save Document as on client system
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to save local copy
+ */</span>
+MLA.saveLocalCopy = <span class="reserved">function</span>(filename)
+{
+	var msg = window.external.saveLocalCopy(filename);
+        var errMsg = MLA.errorCheck(msg);
+
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to saveLocalCopy; "</span>+errMsg);
+
+	<span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Saves active Document to MarkLogic from client system.  .docx being saved to ML must already exist (be saved) on client and have both path and name.
+ * <span class="attrib">@param</span> filename the name of the file (including path) to be saved to MarkLogic  
+ * <span class="attrib">@param</span> url the url on MarkLogic that the client calls to upload the presentation
+ * <span class="attrib">@param</span> user username for MarkLogic Server url connects with
+ * <span class="attrib">@param</span> pwd password for MarkLogic Server url connects with
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to save the active Presentation
+ */</span>
+MLA.saveActiveDocument = <span class="reserved">function</span>(filename, url, user, pwd)
+{
+	var msg=window.external.saveActiveDocument(filename, url, user, pwd);
+	var errMsg = MLA.errorCheck(msg);
+
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to saveActiveDocument; "</span>+errMsg);
+
+	<span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Locks Content Control in active document identified by Tag.  Locking a Content Control disables the ability to remove the control from the document.  
+ * <span class="attrib">@param</span> Tag the tag identifier of the Content Control to be locked in the active document.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to lock Content Control
+ */</span>
+MLA.lockContentControl = <span class="reserved">function</span>(tag)
+{
+	var msg=window.external.lockContentControl(tag);
+	var errMsg = MLA.errorCheck(msg);
+
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to lockContentControl(); "</span>+errMsg);
+
+	<span class="reserved">if</span>(msg==<span class="literal">""</span>)
+	  msg = null;
+
+	<span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Unlocks Content Control in active document identified by Tag.  Unlocking a Content Control enables the ability to remove the control from the document.  
+ * <span class="attrib">@param</span> Tag the tag identifier of the Content Control to be unlocked in the active document.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to unlock Content Control
+ */</span>
+MLA.unlockContentControl = <span class="reserved">function</span>(tag)
+{
+	var msg=window.external.unlockContentControl(tag);
+	var errMsg = MLA.errorCheck(msg);
+
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to unlockContentControl(); "</span>+errMsg);
+
+	<span class="reserved">if</span>(msg==<span class="literal">""</span>)
+	  msg = null;
+
+	<span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Locks contents of Content Control in active document identified by Tag.  Locking Content Control contents disables editing of contents within the control.
+ * <span class="attrib">@param</span> Tag the tag identifier of the Content Control containing contents to be locked.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to lock Content Control contents
+ */</span>
+MLA.lockContentControlContents = <span class="reserved">function</span>(tag)
+{
+	var msg=window.external.lockContentControlContents(tag);
+	var errMsg = MLA.errorCheck(msg);
+
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to lockContentControlContents(); "</span>+errMsg);
+
+        <span class="reserved">if</span>(msg==<span class="literal">""</span>)
+	  msg = null;
+
+	<span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Unlocks contents of Content Control in active document identified by Tag.  Unlocking Content Control contents enables editing of contents within the control.
+ * <span class="attrib">@param</span> Tag the tag identifier of the Content Control containing contents to be unlocked.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to unlock Content Control contents
+ */</span>
+MLA.unlockContentControlContents = <span class="reserved">function</span>(tag)
+{
+	var msg=window.external.unlockContentControlContents(tag);
+	var errMsg = MLA.errorCheck(msg);
+
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to unlockContentControlContents(); "</span>+errMsg);
+
+	<span class="reserved">if</span>(msg==<span class="literal">""</span>)
+	  msg = null;
+
+	<span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Adds Content Control to active document.  Returns the id of the control added.
+ * <span class="attrib">@param</span> tag the tag identifier for the control.
+ * <span class="attrib">@param</span> title the title identifier for the control.
+ * <span class="attrib">@param</span> type the type of control.
+ * <span class="attrib">@param</span> insertPara [optional] true/false; true: inserts paragraph after control, (default)false: inserts space after control.
+ * <span class="attrib">@param</span> parentTag [optional] the tag for the parent which the control should be embedded within.
+ * <span class="attrib">@return</span> id the id for the Content Control added.
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to add content control
+ */</span>
+MLA.addContentControl = <span class="reserved">function</span>(tag, title, type, insertPara, parentTag)
+{      <span class="comment">//returns id of added control</span>
+
+       <span class="reserved">if</span>(parentTag == null || parentTag == <span class="literal">""</span>)
+       {
+	       parentTag=<span class="literal">""</span>;
+       }
+
+       <span class="reserved">if</span>(insertPara == null || insertPara == <span class="literal">""</span>)
+       {
+	       insertPara=<span class="literal">""</span>;
+       }
+
+       var msg=window.external.addContentControl(tag,title,type,insertPara,parentTag);
+       var errMsg = MLA.errorCheck(msg);
+
+       <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to addContentControl(); "</span>+errMsg);
+
+       <span class="comment">//alert("message"+msg);</span>
+       <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Removes Content Control from active document.
+ * <span class="attrib">@param</span> id the id of the control to be removed.
+ * <span class="attrib">@param</span> deletecontents [optional] true/false ; true: deletes contents of control.  (default)false: removes control but document retains control contents.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to remove content control
+ */</span>
+MLA.removeContentControl = <span class="reserved">function</span>(id, deletecontents)
+{
+       var msg=window.external.removeContentControl(id,deletecontents);
+       var errMsg = MLA.errorCheck(msg);
+
+       <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to removeContentControl(); "</span>+errMsg);
+
+       <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Maps Content Control in active document identified by Tag to Custom XML Part in .docx package.  XPath identifies which value to be displayed in active document from custom part.  Changes in custom part are immediately reflected in the active document.  Likewise, edits made to mapped control contents in the active document are immediately reflected in the custom part.
+ * <span class="attrib">@param</span> tag the tag identifier of the Content Control to be mapped.
+ * <span class="attrib">@param</span> xpath the xpath expression identifying which value to use for the control contents. 
+ * <span class="attrib">@param</span> prefix namespace identifier for the custom XML part.
+ * <span class="attrib">@param</span> partid the identifier of the custom XML Part which the control is to be mapped to.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to map Content Control
+ */</span>
+MLA.mapContentControl = <span class="reserved">function</span>(tag, xpath, prefix, partid)
+{
+       var msg=window.external.mapContentControl(tag, xpath, prefix, partid);
+       var errMsg = MLA.errorCheck(msg);
+
+       <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to mapContentControl(); "</span>+errMsg);
+
+       <span class="reserved">if</span>(msg==<span class="literal">""</span>)
+	  msg = null;
+
+       <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Insert text into plain or rich text control identified by tag.  Text uses insertAfter() for append.  To remove control text, see the function setContentControlPlaceholderText().
+ * <span class="attrib">@param</span> tag the tag of the control where text will be inserted.
+ * <span class="attrib">@param</span> text the text to be inserted as the control contents.  insert is asynchronous within the active document.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to insert content control text
+ */</span>
+MLA.insertContentControlText = <span class="reserved">function</span>(tag, text)
+{
+       var msg = window.external.insertContentControlText(tag,text);
+       var errMsg = MLA.errorCheck(msg);
+
+       <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to insertContentControlText(); "</span>+errMsg);
+
+       <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Insert image into picture control identified by tag.
+ * <span class="attrib">@param</span> tag the tag of the control where image will be inserted.
+ * <span class="attrib">@param</span> uri the uri of the image within MarkLogic Server.
+ * <span class="attrib">@param</span> user the MarkLogic Server user.
+ * <span class="attrib">@param</span> pwd the MarkLogic Server pwd.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to insert content control image
+ */</span>
+MLA.insertContentControlImage = <span class="reserved">function</span>(tag, picuri, user, pwd)
+{
+      var msg = window.external.insertContentControlImage(tag, picuri,user, pwd);
+      var errMsg = MLA.errorCheck(msg);
+
+      <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to insertContentControlImage(); "</span>+errMsg);
+
+      <span class="reserved">return</span> msg;
+}
+
+<span class="comment">//void (similar to insertImage/Text - in C# : ContentControlListEntry</span>
+
+<span class="comment">/** Adds dropdown list entries to a combobox or dropdownlist content control.  Both look like similar controls.  But combobox controls allow users to edit/add entries to the drop down list, while dropdownlist controls will only allow the user to select and use the entries available in the list.
+ * <span class="attrib">@param</span> tag the tag of the control to add list entries to.
+ * <span class="attrib">@param</span> text the text to be displayed in the list entry of the control.
+ * <span class="attrib">@param</span> value the value for the list entry in the control. (not displayed)
+ * <span class="attrib">@param</span> index the index where to insert the entry in the drop down list
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to add dropdown list entries.
+ */</span>
+MLA.addContentControlDropDownListEntries = <span class="reserved">function</span>(tag, text, value, index)
+{
+      var msg = window.external.addContentControlDropDownListEntries(tag, text, value, index);
+      var errMsg = MLA.errorCheck(msg);
+
+      <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to addContentControlDropDownListEntries(); "</span>+errMsg);
+
+      <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Returns selected content control dropdown list entry range text specified by id in the active document.
+ * <span class="attrib">@returns</span> the text for the selected dropdown list entry. If nothing is selected the placeholder text (if available) is returned.  If there is no placeholder text, then the empty string is returned.
+ * <span class="attrib">@type</span> String 
+ * <span class="attrib">@throws</span> Exception if unable to get content control dropdown list entry selected text.
+ */</span>
+MLA.getContentControlDropDownListEntrySelectedText = <span class="reserved">function</span>(id)
+{
+      var msg = window.external.getContentControlDropDownListEntrySelectedText(id);
+      var errMsg = MLA.errorCheck(msg);
+
+      <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to getContentControlDropDownListEntrySelectedText(); "</span>+errMsg);
+
+      <span class="reserved">return</span> msg;
+}
+
+ <span class="comment">/**
+ * Returns selected content control dropdown list entry value specified by id in the active document.
+ * <span class="attrib">@returns</span> the value for the selected dropdown list entry. If nothing is selected, then the empty string is returned.
+ * <span class="attrib">@type</span> String 
+ * <span class="attrib">@throws</span> Exception if unable to get content control dropdown list entry selected value.
+ */</span>
+MLA.getContentControlDropDownListEntrySelectedValue = <span class="reserved">function</span>(id)
+{
+      var msg = window.external.getContentControlDropDownListEntrySelectedValue(id);
+      var errMsg = MLA.errorCheck(msg);
+
+      <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to getContentControlDropDownListEntrySelectedValue(); "</span>+errMsg);
+
+      <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Returns ids for all content controls in the active document.
+ * <span class="attrib">@returns</span> the ids for all content controls in the active document as array of string
+ * <span class="attrib">@type</span> Array 
+ * <span class="attrib">@throws</span> Exception if unable to get content control ids.
+ */</span>
+MLA.getContentControlIds = <span class="reserved">function</span>()
+{
+        var controlIds = window.external.getContentControlIds();
+	var errMsg = MLA.errorCheck(controlIds);
+
+	<span class="reserved">if</span>(errMsg!=null)
+	  throw(<span class="literal">"Error: Not able to getContentControlIds(); "</span>+errMsg);
+
+	var contentControlIds = controlIds.split(<span class="literal">"|"</span>);
+
+	<span class="reserved">if</span>(contentControlIds.length ==1)
+	{
+		<span class="reserved">if</span> (contentControlIds[0] == null || contentControlIds[0] == <span class="literal">""</span>)
+		{
+			contentControlIds.length = 0;
+		}
+	}
+
+	<span class="reserved">return</span> contentControlIds;
+
+}
+
+<span class="comment">/** <span class="attrib">@ignore</span> */</span>
+MLA.getContentControlInfo = <span class="reserved">function</span>(cid)
+{ 
+	var info = window.external.getContentControlInfo(cid);
+	var errMsg = MLA.errorCheck(info);
+
+	<span class="reserved">if</span>(errMsg!=null)
+	  throw(<span class="literal">"Error: Not able to getContentControlInfo(); "</span>+errMsg);
+
+	<span class="comment">//alert("info: "+info);</span>
+	<span class="reserved">return</span> info;
+
+}
+
+<span class="comment">//SimpleContentControl</span>
+<span class="comment">/**
+ * Returns SimpleContentControl for nearest parent control of current cursor position in the active document. 
+ * <span class="attrib">@returns</span> a SimpleContentControl for the parent content control of the nearest control that the cursor is embedde within in the active document.
+ * <span class="attrib">@type</span> SimpleContentControl 
+ * <span class="attrib">@throws</span> Exception if unable to get parent content control info.
+ */</span>
+MLA.getParentContentControlInfo = <span class="reserved">function</span>()
+{
+        var info = window.external.getParentContentControlInfo();
+	var errMsg = MLA.errorCheck(info);
+
+        <span class="reserved">if</span>(errMsg!=null)
+	  throw(<span class="literal">"Error: Not able to getParentContentControlInfo(); "</span>+errMsg);
+
+
+	var tokens = info.split(<span class="literal">"|"</span>);
+
+	var controlid = tokens[0];
+        var mlacontrolref = new MLA.SimpleContentControl(controlid); 
+	    mlacontrolref.tag = tokens[1];
+            mlacontrolref.title = tokens[2];  
+	    mlacontrolref.type = tokens[3];
+            mlacontrolref.parentTag = tokens[4];
+
+	<span class="reserved">return</span> mlacontrolref;
+}
+
+<span class="comment">/**
+ * Sets focus in active document to beginning of control specified by id. 
+ * <span class="attrib">@param</span> id the id identifying the control to which focus will be set in active document.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to set content control focus.
+ */</span>
+MLA.setContentControlFocus= <span class="reserved">function</span>(tag)
+{
+   var msg = window.external.setContentControlFocus(tag);
+
+   var errMsg = MLA.errorCheck(info);
+
+   <span class="reserved">if</span>(errMsg!=null)
+      throw(<span class="literal">"Error: Not able to setContentControlFocus(); "</span>+errMsg);
+
+   <span class="reserved">return</span> msg;
+
+}
+
+<span class="comment">/** Insert image into picture control identified by tag.
+ * <span class="attrib">@param</span> tag the tag of the control in which to set placeholder text.
+ * <span class="attrib">@param</span> placeholdertext the placeholder text to be used for the control.
+ * <span class="attrib">@param</span> cleartext [optional] true/false; true: delete existing text for control range. (default)false: do not delete control range text contents.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to set content control placeholder text
+ */</span>
+MLA.setContentControlPlaceholderText= <span class="reserved">function</span>(tag, placeholdertext, cleartext)
+{
+
+    <span class="reserved">if</span> (cleartext == null || cleartext == <span class="literal">""</span>)
+    {
+       cleartext=<span class="literal">"false"</span>;
+    }
+
+    var msg = window.external.setContentControlPlaceholderText(tag, placeholdertext, cleartext);
+    var errMsg = MLA.errorCheck(msg);
+
+
+    <span class="reserved">if</span>(errMsg!=null)
+      throw(<span class="literal">"Error: Not able to setContentControlPlaceholderText(); "</span>+errMsg);
+
+    <span class="reserved">return</span> msg;
+       
+}
+
+<span class="comment">/**
+ * Returns text for range of content control identified by id in active document. 
+ * <span class="attrib">@id</span> the id of the control
+ * <span class="attrib">@returns</span> text contents of range within control
+ * <span class="attrib">@type</span> String 
+ * <span class="attrib">@throws</span> Exception if unable to get content control text.
+ */</span>
+MLA.getContentControlText = <span class="reserved">function</span>(id)
+{
+    var msg = window.external.getContentControlText(id);
+    var errMsg = MLA.errorCheck(msg);
+
+    <span class="reserved">if</span>(errMsg!=null)
+      throw(<span class="literal">"Error: Not able to getContentControlText(); "</span>+errMsg);
+
+    <span class="reserved">return</span> msg;
+       
+}
+
+<span class="comment">/** Returns WordOpenXML property for range of control in active document specified by id.  The WordOpenXML property returns the control as if it were its own Word document, saved as .xml.  The represenation is also called Flat OPC, following the Open Packaging Convention.
+ *
+ * <span class="attrib">@param</span> id the id of the control.
+ * <span class="attrib">@return</span> Microsoft.XMLDOM object that is the content control contents in the WordOpenXML property format.
+ * <span class="attrib">@type</span> Microsoft.XMLDOM object
+ * <span class="attrib">@throws</span> Exception if unable to get content control WordOpenXML
+ */</span>
+MLA.getContentControlWordOpenXML = <span class="reserved">function</span>(id)
+{
+    var msg = window.external.getContentControlWordOpenXML(id);
+    var errMsg = MLA.errorCheck(msg);
+
+    <span class="reserved">if</span>(errMsg!=null)
+      throw(<span class="literal">"Error: Not able to getContentControlWordOpenXML(); "</span>+errMsg);
+
+    var v_documentXml = MLA.createXMLDOM(msg);
+    <span class="reserved">return</span> v_documentXml;
+       
+}
+
+<span class="comment">/** Sets the tag for content control specified by id in active document 
+ *
+ * <span class="attrib">@param</span> id the id of the control.
+ * <span class="attrib">@param</span> tag the tag to be set for the control.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to set content control tag
+ */</span>
+MLA.setContentControlTag = <span class="reserved">function</span>(id, tag)
+{
+    var msg = window.external.setContentControlTag(id,tag);
+    var errMsg = MLA.errorCheck(msg);
+
+    <span class="reserved">if</span>(errMsg!=null)
+      throw(<span class="literal">"Error: Not able to setContentControlTag(); "</span>+errMsg);
+
+    <span class="reserved">return</span> msg;
+       
+}
+
+<span class="comment">/** Sets the title for content control specified by id in active document 
+ *
+ * <span class="attrib">@param</span> id the id of the control.
+ * <span class="attrib">@param</span> title the title to be set for the control.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to set content control title
+ */</span>
+MLA.setContentControlTitle = <span class="reserved">function</span>(id, title)
+{
+    var msg = window.external.setContentControlTitle(id, title);
+    var errMsg = MLA.errorCheck(msg);
+
+    <span class="reserved">if</span>(errMsg!=null)
+      throw(<span class="literal">"Error: Not able to setContentControlTitle(); "</span>+errMsg);
+
+    <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/** Sets the style for the content control specified by id in active document 
+ *
+ * <span class="attrib">@param</span> id the id of the control.
+ * <span class="attrib">@param</span> style the style property to be set for the control.  This style can be any of the styles available in Office.  For example "Subtitle","Heading 1","Heading 2", etc.  For more options, see the 'styles' group on the 'Home' tab of Word.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to set content control style
+ */</span>
+MLA.setContentControlStyle = <span class="reserved">function</span>(id, style)
+{
+    var msg = window.external.setContentControlStyle(id, style);
+    var errMsg = MLA.errorCheck(msg);
+
+    <span class="reserved">if</span>(errMsg!=null)
+      throw(<span class="literal">"Error: Not able to setContentControlStyle(); "</span>+errMsg);
+
+    <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Returns array of SimpleContentControl objects. A SimpleContentControl is returned for each content control in the active document. Properties include:
+ *
+ * <span class="attrib">@returns</span> array of SimpleContentControl objects.
+ * <span class="attrib">@type</span> Array 
+ * <span class="attrib">@throws</span> Exception if unable to get SimpleContentControls.
+ */</span>
+MLA.getSimpleContentControls = <span class="reserved">function</span>()
+{
+        var controlIds = window.external.getContentControlIds();
+	var errMsg = MLA.errorCheck(controlIds);
+
+	<span class="reserved">if</span>(errMsg!=null)
+	  throw(<span class="literal">"Error: Not able to getContentControlIds(); "</span>+errMsg);
+
+	var contentControlIds = controlIds.split(<span class="literal">"|"</span>);
+        var controlArray = new Array();
+      
+
+	<span class="reserved">if</span> (contentControlIds[0] == null || contentControlIds[0] == <span class="literal">""</span>)
+	{
+			contentControlIds.length = 0;
+		
+	}<span class="reserved">else</span>
+	{
+	       <span class="reserved">for</span>(var i =0; i&lt;contentControlIds.length; i++)
+	       {
+	  	  var controlid = contentControlIds[i];
+	          var mlacontrolref = new MLA.SimpleContentControl(controlid);
+		  var contentControlInfo = MLA.getContentControlInfo(controlid);
+
+		  var info = contentControlInfo.split(<span class="literal">"|"</span>);
+
+		  mlacontrolref.tag = info[0];
+		  mlacontrolref.title = info[1]; 
+		  mlacontrolref.type = info[2];
+		  mlacontrolref.parentTag = info[3]; 
+
+		  controlArray[i]=mlacontrolref;
+	       }
+	}
+
+	<span class="reserved">return</span> controlArray;
+}
+
+<span class="comment">/** Inserts WordOpenXML at the current cursor position in the active document.  WordOpenXML is the XML for a Word document in Flat OPC format (the Open Packaging Convention).  It is the same format as if you'd saved a .docx as .xml in Word.  
+ *
+ * <span class="attrib">@param</span> opc_xml the XML to be inserted. Parameter type can be either A) an XMLDOM object that is the WordOpenXML to be inserted into the active Open XML package, or B)the string serialization of the WordOpenXML to be inserted into the active Open XML package.
+ * <span class="attrib">@return</span> void
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to insertWordOpenXML
+ */</span>
+MLA.insertWordOpenXML = <span class="reserved">function</span>(opc_xml)
+{
+     var v_docx=<span class="literal">""</span>;
+
+     <span class="reserved">if</span>(opc_xml.xml)
+     { 
+        v_docx = opc_xml.xml;
+     }
+     <span class="reserved">else</span>
+     { 
+	v_docx = opc_xml;
+     }
+
+    var msg = window.external.insertWordOpenXML(v_docx);
+    var errMsg = MLA.errorCheck(msg);
+
+    <span class="reserved">if</span>(errMsg!=null)
+      throw(<span class="literal">"Error: Not able to insertWordOpenXML(); "</span>+errMsg);
+
+    <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Create a new SimpleContentControl instance. 
+ * <span class="attrib">@class</span> A basic SimpleContentControl class.
+ */</span>
+MLA.SimpleContentControl = <span class="reserved">function</span>()
+{
+ 
+  var title;
+  var tag;
+  var id;
+  var type;
+  var parentTag;
+
+  switch (typeof arguments[0])
+  {
+    <span class="comment">//case 'number' : MLA.ContentControlRef.$int.apply(this, arguments); break;</span>
+    case <span class="literal">'string'</span> : MLA.SimpleContentControl.$str.apply(<span class="reserved">this</span>, arguments); break;
+    default : <span class="comment">/*NOP*/</span>
+  }
+  
+
+}
+<span class="comment">/**
+ * Create a new SimpleContentControl instance. 
+ * <span class="attrib">@class</span> a basic SimpleContentControl class.
+ * <span class="attrib">@constructor</span>
+ * <span class="attrib">@param</span> {string} the ID property of the ContentControl
+ * <span class="attrib">@see</span> MLA.SimpleContentControl() is the base class for this
+ */</span>
+MLA.SimpleContentControl.$str = <span class="reserved">function</span>(cid) {
+<span class="reserved">this</span>.id= cid;
+<span class="comment">//var cell = MLA.convertA1ToR1C1(coord);</span>
+<span class="comment">//var c_values = cell.split(":");</span>
+<span class="comment">//this.rowIdx= c_values[1];</span>
+<span class="comment">//this.colIdx=c_values[0];</span>
+<span class="comment">//</span>
+}
+
 </pre>
 	<hr>
 
@@ -763,6 +1481,6 @@ MLA.insertImage = <span class="reserved">function</span>(picuri,uname,pwd)
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Mon Mar 23 11:00:48 2009</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Nov 11 16:00:07 2009</div>
 </body>
 </html>
