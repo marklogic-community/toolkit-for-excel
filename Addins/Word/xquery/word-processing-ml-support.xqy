@@ -20,7 +20,6 @@ declare namespace w="http://schemas.openxmlformats.org/wordprocessingml/2006/mai
 declare namespace v="urn:schemas-microsoft-com:vml";
 declare namespace ve="http://schemas.openxmlformats.org/markup-compatibility/2006";
 declare namespace o="urn:schemas-microsoft-com:office:office";
-
 declare namespace m="http://schemas.openxmlformats.org/officeDocument/2006/math";
 declare namespace wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing";
 declare namespace w10="urn:schemas-microsoft-com:office:word";
@@ -32,8 +31,26 @@ declare namespace pr = "http://schemas.openxmlformats.org/package/2006/relations
 declare namespace types = "http://schemas.openxmlformats.org/package/2006/content-types";
 declare namespace zip   = "xdmp:zip";
 
-
 import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy";
+
+declare variable $ooxml:TYPES := "http://schemas.openxmlformats.org/package/2006/content-types";
+declare variable $ooxml:PKG-RELATIONSHIPS := "http://schemas.openxmlformats.org/package/2006/relationships";
+declare variable $ooxml:DOC-RELATIONSHIPS := "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+declare variable $ooxml:DRAWINGML := "http://schemas.openxmlformats.org/drawingml/2006/main";
+declare variable $ooxml:WORDPROCESSINGML := "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+declare variable $ooxml:VML := "urn:schemas-microsoft-com:vml";
+declare variable $ooxml:COMPATABILITY := "http://schemas.openxmlformats.org/markup-compatibility/2006";
+declare variable $ooxml:OFFICE := "urn:schemas-microsoft-com:office:office";
+declare variable $ooxml:MATH := "http://schemas.openxmlformats.org/officeDocument/2006/math";
+declare variable $ooxml:WORDPROCESSING-DRAWING := "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing";
+declare variable $ooxml:WORD := "urn:schemas-microsoft-com:office:word";
+declare variable $ooxml:WORDML := "http://schemas.microsoft.com/office/word/2006/wordml";
+declare variable $ooxml:PACKAGE := "http://schemas.microsoft.com/office/2006/xmlPackage";
+declare variable $ooxml:PICTURE := "http://schemas.openxmlformats.org/drawingml/2006/picture";
+declare variable $ooxml:EXT-PROPERTIES := "http://schemas.openxmlformats.org/officeDocument/2006/extended-properties";
+declare variable $ooxml:CORE-PROPERTIES := "http://schemas.openxmlformats.org/package/2006/metadata/core-properties";
+declare variable $ooxml:CUSTOM-PROPERTIES := "http://schemas.openxmlformats.org/officeDocument/2006/custom-properties";
+declare variable $ooxml:CUSTOM-XML-PROPS := "http://schemas.openxmlformats.org/officeDocument/2006/customXml";
 
 declare function ooxml:error($message as xs:string)
 {
@@ -48,18 +65,18 @@ declare function ooxml:get-mimetype(
 };
 
 declare function ooxml:directory-uris(
-  $docuri as xs:string
+  $directory as xs:string
 ) as xs:string*
 {
-    cts:uris("","document",cts:directory-query($docuri,"infinity"))
+    ooxml:directory-uris($directory,"infinity")
 };
 
 declare function ooxml:directory-uris(
-  $docuri as xs:string, 
+  $directory as xs:string, 
   $depth as xs:string
 ) as xs:string*
 {
-    cts:uris("","document",cts:directory-query($docuri,$depth))
+    cts:uris("","document",cts:directory-query($directory,$depth))
 };
 
 declare function ooxml:create-paragraph(
@@ -69,7 +86,7 @@ declare function ooxml:create-paragraph(
     element w:p{ element w:r { element w:t {$para}}}
 };
 
-(: BEGIN REMOVE w:p PROPERTIES =============================================================== :)
+(: BEGIN REMOVE w:p PROPERTIES ==============================================  :)
 declare function ooxml:passthru-para(
   $x as node()
 ) as node()*
@@ -96,8 +113,8 @@ declare function ooxml:remove-paragraph-styles(
 {
     ooxml:dispatch-paragraph-to-clean($paragraph)
 };
+(: END REMOVE w:p PROPERTIES ================================================  :)
 
-(: END REMOVE w:p PROPERTIES ================================================================= :)
 declare function ooxml:get-paragraph-styles(
   $paragraph as element(w:p)*
 ) as element(w:pPr)*
@@ -146,8 +163,8 @@ declare function ooxml:replace-style-definition(
                        $styles/* except $styles//w:style[@w:styleId=$newstyle/@w:styleId],
                        $newstyle }
 };
-(: BEGIN SET PARAGRAPH STYLES ================================================================  :)
 
+(: BEGIN SET PARAGRAPH STYLES ===============================================  :)
 declare function ooxml:set-paragraph-styles-passthru(
   $x as node()*, 
   $props as element()?, 
@@ -211,8 +228,7 @@ declare function ooxml:replace-run-styles(
 {
     ooxml:set-paragraph-styles-dispatch($block,$wrProps,"wr")
 };
-
-(: END SET PARAGRAPH STYLES ==================================================================== :)
+(: END SET PARAGRAPH STYLES =================================================  :)
 
 declare function ooxml:custom-xml(
   $content as element(), 
@@ -233,7 +249,7 @@ declare function ooxml:custom-xml(
      default return ()
 };
 
-(: BEGIN SET CUSTOM XML TAG ==================================================================== :)
+(: BEGIN SET CUSTOM XML TAG =================================================  :)
 declare function ooxml:set-custom-xml-passthru(
   $x as node()*, 
   $oldtag as xs:string, 
@@ -280,7 +296,7 @@ declare function ooxml:replace-custom-xml-element(
     let $newblock := ooxml:set-custom-xml-dispatch($content, $oldtag, $newtag) 
     return $newblock
 };
-(: END SET CUSTOM XML TAG ====================================================================== :)
+(: END SET CUSTOM XML TAG ===================================================  :)
 
 declare function ooxml:get-custom-xml-ancestor(
   $doc as element()
@@ -297,8 +313,7 @@ declare function ooxml:get-custom-xml-ancestor(
     return $final
 };
 
-(: BEGIN SIMPLE SEARCH ================================================================================ :)
-
+(: BEGIN SIMPLE SEARCH ======================================================  :)
 declare function ooxml:paragraph-search($query as cts:query) as node()*
 {
     let $doc := cts:search(//w:p ,$query)
@@ -316,11 +331,9 @@ declare function ooxml:custom-search-all($query as cts:query, $begin as xs:integ
     let $sdt := cts:search( //(w:sdt | w:customXml | w:p ), ($query))[$begin to $end]
     return $sdt
 };
+(: END SIMPLE SEARCH ========================================================  :)
 
-(: END SIMPLE SEARCH ================================================================================== :)
-
-(: BEGIN w:customXml HIGHLIGHT ================================================================= :)
-
+(: BEGIN w:customXml HIGHLIGHT ==============================================  :)
 declare function ooxml:passthru-chlt(
   $x as node()*
 ) as node()*
@@ -430,8 +443,7 @@ declare function ooxml:custom-xml-highlight(
     ooxml:custom-xml-highlight-exec($nodes,$highlight-term,$tag-name)
 };
 
-(: added Entity Hightlight :)
-declare function ooxml:custom-xml-entity-highlight(
+declare function ooxml:custom-xml-entity-highlight( (: normalized text ? :)
   $nodes as node()*
 ) as node()*
 {
@@ -443,92 +455,87 @@ declare function ooxml:custom-xml-entity-highlight(
     return $final
   
 };
-
-(: END w:customXml HIGHLIGHT =================================================================== :)
+(: END w:customXml HIGHLIGHT ================================================  :)
 
 (: added OPC Package serialization support :)
-
-declare function ooxml:formatbinary(
-  $s as xs:string*
-) as xs:string*
+declare function ooxml:format-binary(
+$binstring as xs:string
+)as xs:string*
 {
- if(fn:string-length($s) > 0) then
-     let $firstpart := fn:concat(fn:substring($s,1,76))
-     let $tail := fn:substring-after($s,$firstpart)
-     return ($firstpart,ooxml:formatbinary($tail))
-                  else
-             ()
-  
-  (: let $x := "PETE"
-     let $y := "O"
-     return ($x, $y)
-  :)
+    for $i in 0 to (fn:string-length($binstring) idiv 76)
+    let $start := ($i * 76)
+    return fn:substring($binstring,$start,76) 
 };
 
 declare function ooxml:get-part-content-type(
-  $uri as xs:string
+  $node as node()
 ) as xs:string?
 {
-    if(fn:ends-with($uri,".rels"))
+    if(fn:node-name($node) eq fn:QName($ooxml:PKG-RELATIONSHIPS, "Relationships"))
     then 
         "application/vnd.openxmlformats-package.relationships+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "document")) 
+    then
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml" 
+    else if(fn:node-name($node) eq fn:QName($ooxml:DRAWINGML, "theme")) 
+    then
+        "application/vnd.openxmlformats-officedocument.theme+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "numbering")) 
+    then
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "settings")) 
+    then
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "styles"))
+    then 
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "fonts"))
+    then
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "webSettings"))
+    then
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "ftr"))
+    then 
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "hdr"))
+    then
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "endnotes"))
+    then
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "footnotes"))
+    then
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:EXT-PROPERTIES, "Properties"))
+    then
+        "application/vnd.openxmlformats-officedocument.extended-properties+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:CORE-PROPERTIES, "coreProperties"))
+    then
+        "application/vnd.openxmlformats-package.core-properties+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:CUSTOM-PROPERTIES, "Properties"))
+    then
+        "application/vnd.openxmlformats-officedocument.custom-properties+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:CUSTOM-XML-PROPS, "datastoreItem"))
+    then 
+        "application/vnd.openxmlformats-officedocument.customXmlProperties+xml"
+    (: else if(fn:matches($uri,"customXml/item\d+\.xml")) then :)
+    else 
+        "application/xml"
+
+   (:  need to account for glossary
     else if(fn:ends-with($uri,"glossary/document.xml"))
     then
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml"
-    else if(fn:ends-with($uri,"document.xml"))
-    then
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml" 
-    else if(fn:matches($uri, "theme\d+\.xml"))
-    then 
-        "application/vnd.openxmlformats-officedocument.theme+xml"
-    else if(fn:ends-with($uri,"word/numbering.xml"))
-    then 
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"
-   (: else if(fn:ends-with($uri,"word/settings.xml")):)
-    else if(fn:ends-with($uri,"settings.xml"))
-    then 
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"
-   (:else if(fn:ends-with($uri,"word/styles.xml")):)
-    else if(fn:ends-with($uri,"styles.xml"))
-    then 
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"
-   (: else if(fn:ends-with($uri,"word/webSettings.xml")) :)
-    else if(fn:ends-with($uri,"webSettings.xml"))
-    then 
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"
-   (: else if(fn:ends-with($uri,"word/fontTable.xml")) :)
-    else if(fn:ends-with($uri,"fontTable.xml"))
-    then 
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"
-    else if(fn:ends-with($uri,"word/footnotes.xml"))
-    then 
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"
-    else if(fn:matches($uri, "header\d+\.xml"))
-    then 
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"
-    else if(fn:matches($uri, "footer\d+\.xml"))
-    then 
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"
-    else if(fn:ends-with($uri,"word/endnotes.xml"))
-    then
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml"
-    else if(fn:ends-with($uri,"docProps/core.xml"))
-    then
-        "application/vnd.openxmlformats-package.core-properties+xml"
-    else if(fn:ends-with($uri,"docProps/app.xml"))
-    then
-        "application/vnd.openxmlformats-officedocument.extended-properties+xml"
-    else if(fn:ends-with($uri,"docProps/custom.xml")) 
-    then
-        "application/vnd.openxmlformats-officedocument.custom-properties+xml"
-  (:  else if(fn:ends-with($uri,"jpeg")) 
-    then
-        "image/jpeg"
-    else if(fn:ends-with($uri,"wmf")) 
-    then
-        "image/x-wmf"
-  :)
-    else if(fn:ends-with(fn:upper-case($uri),"JPEG")) 
+   :)
+};
+
+
+declare function get-image-part-content-type(
+  $uri as xs:string
+)as xs:string?
+{
+    if(fn:ends-with(fn:upper-case($uri),"JPEG")) 
     then
         "image/jpeg"
     else if(fn:ends-with(fn:upper-case($uri),"WMF")) 
@@ -540,41 +547,37 @@ declare function ooxml:get-part-content-type(
     else if(fn:ends-with(fn:upper-case($uri),"GIF"))
     then
          "image/gif"
-    else if(fn:matches($uri,"customXml/itemProps\d+\.xml")) then
-        "application/vnd.openxmlformats-officedocument.customXmlProperties+xml"
-    else if(fn:matches($uri,"customXml/item\d+\.xml")) then
-        "application/xml"
-    else
-       ()
-    
+    else ()
 };
 
 declare function ooxml:get-part-attributes(
-  $uri as xs:string
+  $node as node()
 ) as node()*
 {
-  (:not sure if this is needed, for serverside generated docx, path comes through as \path\name , if path has /mixed\separators\for\path/example, it chokes when opening in word :)
-    let $cleanuri := fn:replace($uri,"\\","/")
-    let $name := attribute pkg:name{$cleanuri}
-    let $contenttype := attribute pkg:contentType{ooxml:get-part-content-type($cleanuri)}
-    let $padding := if(fn:ends-with($cleanuri,".rels")) then
+    let $uri := fn:substring-after(fn:base-uri($node), "docx_parts")
+    let $name := attribute pkg:name{$uri}
 
-                      if(fn:starts-with($cleanuri,"/word/glossary")) then
+    let $contenttype := if (xdmp:node-kind($node) eq "binary") then
+                            attribute pkg:contentType{ooxml:get-image-part-content-type($uri)}
+                        else
+                             attribute pkg:contentType{ooxml:get-part-content-type($node)} 
+
+    let $padding := if(fn:ends-with($uri,".rels")) then
+
+                      if(fn:starts-with($uri,"/word/glossary")) then
                           ()
                     
-                      else if(fn:starts-with($cleanuri,"/_rels")) then
+                      else if(fn:starts-with($uri,"/_rels")) then
                        attribute pkg:padding{ "512" }
                       else    
                        attribute pkg:padding{ "256" }
                     else
                       ()
-    (: let $compression := if(fn:ends-with($cleanuri,"jpeg")) then 
-                           attribute pkg:compression { "store" } 
-                        else ()
-:)
-    let $compression := if(fn:ends-with(fn:upper-case($cleanuri),"JPEG") or 
-                           fn:ends-with(fn:upper-case($cleanuri),"PNG") or
-                           fn:ends-with(fn:upper-case($cleanuri),"GIF")) then 
+
+    (:not required for .WMF:)
+    let $compression := if(fn:ends-with(fn:upper-case($uri),"JPEG") or 
+                           fn:ends-with(fn:upper-case($uri),"PNG") or
+                           fn:ends-with(fn:upper-case($uri),"GIF")) then 
                              attribute pkg:compression { "store" } 
                         else ()
  
@@ -583,64 +586,53 @@ declare function ooxml:get-part-attributes(
 };
 
 declare function ooxml:get-package-part(
-  $directory as xs:string, 
-  $uri as xs:string
+  $node as node()
 ) as node()?
 {
-    let $fulluri := $uri
-    let $docuri := fn:concat("/",fn:substring-after($fulluri,$directory))
-    let $data := fn:doc($fulluri)
-
-    let $part := if(fn:empty($data) or fn:ends-with($fulluri,"[Content_Types].xml")) then () 
+    let $part := if(fn:empty($node) or 
+                   (fn:node-name($node) eq fn:QName($ooxml:TYPES, "Types"))) then () 
+                 else if(xdmp:node-kind($node) eq "binary") then 
+                       let $bin :=   xs:base64Binary(xs:hexBinary($node)) cast as xs:string  
+                       let $formattedbin := fn:string-join(ooxml:format-binary($bin),"&#x9;&#xA;") 
+                       return element pkg:part { ooxml:get-part-attributes($node), element pkg:binaryData { $formattedbin  } } 
                  else 
-                  (:if(fn:ends-with($fulluri,".jpeg") or fn:ends-with($fulluri,".wmf")) then:)
-                    if(fn:ends-with(fn:upper-case($fulluri),".JPEG") or 
-                       fn:ends-with(fn:upper-case($fulluri),".WMF") or 
-                       fn:ends-with(fn:upper-case($fulluri),".GIF") or 
-                       fn:ends-with(fn:upper-case($fulluri),".PNG")) then
-                     let $bin :=   xs:base64Binary(xs:hexBinary($data)) cast as xs:string 
-                     let $formattedbin := fn:string-join(ooxml:formatbinary($bin),"&#x9;&#xA;") 
-                  (: let $formattedbin := fn:string-join(ooxml:formatbinary($bin),"\r\n") :)
-                  (:let $formattedbin := mlos:formatbinary($bin):)
-                    return  element pkg:part { ooxml:get-part-attributes($docuri), element pkg:binaryData { $formattedbin  }   }
-                  (: element pkg:part { mlos:get-part-attributes($docuri), element pkg:binaryData {  xs:base64Binary(xs:hexBinary($data))    }   } :)
-                 else
-                    element pkg:part { ooxml:get-part-attributes($docuri), element pkg:xmlData { $data }}
-  return  $part (: <T>{$fulluri}</T>   :) 
+                       element pkg:part { ooxml:get-part-attributes($node), element pkg:xmlData { $node }}
+  return  $part 
 };
 
+(: two functions, one function, give the directory, call the other one, which takes sequence of nodes :)
 declare function ooxml:package(
-  $directory as xs:string, 
-  $uris as xs:string*
+  $directory as xs:string
 ) as element(pkg:package)*
 {
-    let $package := element pkg:package { 
-                         for $uri in $uris
-                         let $part := ooxml:get-package-part($directory,$uri)
-                         return $part }
-                           
-    return $package
+
+    let $uris := ooxml:directory-uris($directory)
+    let $validuris := ooxml:package-files-only($uris)
+    return
+            element pkg:package { 
+                    for $uri in $validuris
+                    let $part := ooxml:get-package-part(fn:doc($uri)/node())
+                    return $part 
+                                }      
+};
+
 (: processing instructions generated when Word or PPT 'Save As' XML:)
 (: not currently required for Office to open file :)
 (: <?mso-application progid="Word.Document"?>, $package :)
 (: <?mso-application progid="PowerPoint.Show"?> :)
 
-};
-
 declare function ooxml:package-files-only(
   $uris as xs:string*
 ) as xs:string*
 {
-    for $uri in $uris
-    let $u := if(fn:ends-with($uri,"/")) then () else $uri
-    return $u
+    $uris[fn:not(fn:ends-with(.,"/"))] 
 };
 
 (: end OPC Package serialization :)
 
 
 (:BEGIN new functions for server side document creation :)
-declare function ooxml:package-rels(
+declare function ooxml:package-rels(  (: default-package-rels :)
 ) as element(pr:Relationships)
 {   
     <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
@@ -649,8 +641,8 @@ declare function ooxml:package-rels(
      
 };
 
-declare function ooxml:content-types(
-  $default as xs:boolean?
+declare function ooxml:content-types( (:default-content-types, simple-content-types for now,with eye to richer function in the future, look at ppt again :)
+  $default as xs:boolean
 ) as element(types:Types)
 {
     if($default) then
@@ -1493,11 +1485,11 @@ declare function ooxml:text(
 declare function ooxml:run(
   $text as element(w:t)*
 ) as element(w:r)
-{
-    <w:r>{$text}</w:r>
+{ 
+    ooxml:run($text,())
 };
 
-declare function ooxml:run(
+declare function ooxml:run( (: should $text be a + ? :)
   $text as element(w:t)*,
   $rProps as element(w:rPr)?
 ) as element(w:r)
@@ -1522,13 +1514,17 @@ declare function ooxml:paragraph(
     <w:p>
      {$pProps}
      {
-      for $r in $runs
-      return $r
+      $runs
      }
     </w:p>
 };
 
-declare function ooxml:body(
+(: if using schema, can check for type/substitution group for what can be 
+   child of $body.  need to check .xsd for type.  Or, 
+   list types, check for block level children, if not acceptable, throw error
+   for now doing nothing, leave function as is.   
+:)
+declare function ooxml:body( 
   $block-content as element()* 
 ) as element(w:body)
 {
@@ -1542,17 +1538,22 @@ declare function ooxml:document(
 };
 
 declare function ooxml:document(
-  $body as element(w:body)?
+  $body as element(w:body)
 ) as element(w:document)
 {
-    <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+    <w:document>
      {$body}
     </w:document>
 };
 
-(:pass in 1 for bulleted list, pass in 2 for numbering :)
-(:subsequent paragraphs continue style (2 paras in row with num-id 2, will be numbered 1. , 2. ,etc. :)
-declare function ooxml:list-paragraph-property(
+
+(: pass in 1 for bulleted list, pass in 2 for numbering 
+   subsequent paragraphs continue style (2 paras in row with num-id 2, 
+   will be numbered 1. , 2. ,etc.  
+   should we pass text instead of id? use "bulleted" or "numbered", 
+   if only 2 options, make boolean. 
+:)
+declare function ooxml:list-paragraph-property( 
   $num-id as xs:string
 ) as element(w:pPr)
 {
@@ -1575,6 +1576,12 @@ declare function ooxml:create-simple-docx(
     return $package
 };
 
+(: for now, leaving with two  ooxml:docx-package functions for 2 document
+   types; simple/default.  This is good for now as docx pkg requirement are
+   clear and signatures/function bodies help others to understand the formats. 
+   In future may like a separate function that generates package based on 
+   element node-name 
+:)
 declare function ooxml:docx-package(
   $content-types as element(types:Types),
   $rels          as element(pr:Relationships),
@@ -1591,7 +1598,7 @@ declare function ooxml:docx-package(
          xdmp:zip-create($manifest, $parts)
 };
 
-declare function ooxml:docx-package(
+declare function ooxml:docx-package( 
   $content-types as element(types:Types),
   $rels          as element(pr:Relationships),
   $document      as element(w:document),
@@ -1636,12 +1643,11 @@ declare function ooxml:dispatch-doc-replace(
   $document-xml as element(w:document)
 ) as node()?
 {
-
     typeswitch($x)
-     case text() return $x
-     case document-node() return document {$x/@*,ooxml:passthru-pkg-doc($x, $document-xml)}
+     (: case text() return $x :) (: move document-node after element :)
      case element(w:document) return ($document-xml) 
      case element() return  element{fn:node-name($x)} {$x/@* ,passthru-pkg-doc($x, $document-xml)}
+     case document-node() return document {$x/@*,ooxml:passthru-pkg-doc($x, $document-xml)}
      default return $x
 };
 
@@ -1668,8 +1674,3 @@ declare function ooxml:docx-manifest(
     }
     </parts>
 };
-
-
-
-
-
