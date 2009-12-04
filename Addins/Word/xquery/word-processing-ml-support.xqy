@@ -457,7 +457,7 @@ declare function ooxml:custom-xml-entity-highlight( (: normalized text ? :)
 };
 (: END w:customXml HIGHLIGHT ================================================  :)
 
-(: added OPC Package serialization support :)
+(: BEGIN FLAT OPC Package serialization =====================================  :)
 declare function ooxml:format-binary(
 $binstring as xs:string
 )as xs:string*
@@ -627,12 +627,10 @@ declare function ooxml:package-files-only(
 {
     $uris[fn:not(fn:ends-with(.,"/"))] 
 };
+(: END FLAT OPC Package serialization =======================================  :)
 
-(: end OPC Package serialization :)
-
-
-(:BEGIN new functions for server side document creation :)
-declare function ooxml:package-rels(  (: default-package-rels :)
+(:BEGIN functions for server side document creation =========================  :)
+declare function ooxml:package-rels( 
 ) as element(pr:Relationships)
 {   
     <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
@@ -641,11 +639,13 @@ declare function ooxml:package-rels(  (: default-package-rels :)
      
 };
 
-declare function ooxml:content-types( (:default-content-types, simple-content-types for now,with eye to richer function in the future, look at ppt again :)
-  $default as xs:boolean
+(: creating ooxml:default-content-types/ooxml:simple-content-types for now
+   with eye to richer function in the future.  In future maybe pass sequence of
+   docs and based on node-name/uri, generate, will also look at ppt again 
+:)
+declare function ooxml:default-content-types(
 ) as element(types:Types)
 {
-    if($default) then
        <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
           <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
           <Default Extension="xml" ContentType="application/xml"/>
@@ -655,8 +655,12 @@ declare function ooxml:content-types( (:default-content-types, simple-content-ty
           <Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>
           <Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/>
           <Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/>
-       </Types> 
-    else
+       </Types>
+};
+
+declare function ooxml:simple-content-types(
+) as element(types:Types) 
+{ 
        <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
 	  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml" />
 	  <Default Extension="xml" ContentType="application/xml" />
@@ -1570,7 +1574,7 @@ declare function ooxml:create-simple-docx(
   $document as element(w:document)
 ) as binary()
 {
-    let $content-types := ooxml:content-types(())
+    let $content-types := ooxml:simple-content-types()
     let $rels :=  ooxml:package-rels()
     let $package := ooxml:docx-package($content-types, $rels, $document)
     return $package
@@ -1627,9 +1631,9 @@ declare function ooxml:docx-package(
     return
          xdmp:zip-create($manifest, $parts)
 };
+(: END functions for server side document creation ==========================  :)
 
-
-(: BEGIN replace document.xml within Flat OPC Package XML :)
+(: BEGIN replace document.xml within Flat OPC Package XML ===================  :)
 declare function ooxml:passthru-pkg-doc(
   $x as node(), 
   $document-xml as element(w:document)
@@ -1658,7 +1662,7 @@ declare function ooxml:replace-package-document(
 {
    ooxml:dispatch-doc-replace($pkg-xml, $document-xml)
 };
-(: END replace document.xml within Flat OPC Package XML :)
+(: END replace document.xml within Flat OPC Package XML ===================  :)
 
 declare function ooxml:docx-manifest(
   $directory as xs:string, 
