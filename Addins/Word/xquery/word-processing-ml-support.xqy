@@ -585,35 +585,43 @@ declare function ooxml:get-part-attributes(
     return ($name, $contenttype, $padding, $compression)
 };
 
-declare function ooxml:get-package-part(
-  $node as node()
-) as node()?
+declare function ooxml:package(
+  $nodes as element()*
+) as element(pkg:package) (: node()? :)
 {
-    let $part := if(fn:empty($node) or 
-                   (fn:node-name($node) eq fn:QName($ooxml:TYPES, "Types"))) then () 
-                 else if(xdmp:node-kind($node) eq "binary") then 
-                       let $bin :=   xs:base64Binary(xs:hexBinary($node)) cast as xs:string  
-                       let $formattedbin := fn:string-join(ooxml:format-binary($bin),"&#x9;&#xA;") 
-                       return element pkg:part { ooxml:get-part-attributes($node), element pkg:binaryData { $formattedbin  } } 
-                 else 
-                       element pkg:part { ooxml:get-part-attributes($node), element pkg:xmlData { $node }}
-  return  $part 
+    element pkg:package { 
+      for $node in $nodes
+
+      let $part := if(fn:empty($node) or 
+                     (fn:node-name($node) eq fn:QName($ooxml:TYPES, "Types"))) then () 
+                   else if(xdmp:node-kind($node) eq "binary") then 
+                         let $bin :=   xs:base64Binary(xs:hexBinary($node)) cast as xs:string  
+                         let $formattedbin := fn:string-join(ooxml:format-binary($bin),"&#x9;&#xA;") 
+                         return element pkg:part { ooxml:get-part-attributes($node), element pkg:binaryData { $formattedbin  } } 
+                   else 
+                         element pkg:part { ooxml:get-part-attributes($node), element pkg:xmlData { $node }}
+      return  $part 
+                       }
 };
 
-(: two functions, one function, give the directory, call the other one, which takes sequence of nodes :)
-declare function ooxml:package(
+declare function ooxml:get-directory-package(
   $directory as xs:string
-) as element(pkg:package)*
+) as element(pkg:package)
 {
 
     let $uris := ooxml:directory-uris($directory)
     let $validuris := ooxml:package-files-only($uris)
+    let $nodes := fn:doc(($uris))/node()
+    return ooxml:package($nodes)
+
+(:
     return
             element pkg:package { 
                     for $uri in $validuris
                     let $part := ooxml:get-package-part(fn:doc($uri)/node())
                     return $part 
-                                }      
+                                }    
+:)  
 };
 
 (: processing instructions generated when Word or PPT 'Save As' XML:)

@@ -5,7 +5,7 @@ REM -f folder where .idt is found
 REM -d the .msi to be updated
 REM -i import the .idt
 REM (when these 3 arguments are passed, the command executes silently,without requesting user input)
-"C:\Program Files\Microsoft SDKs\Windows\v6.0A\bin\MsiDb" -f "C:\cygwin\home\paven\MLOS\Office2007\MarkLogic_WordAddin-1.0-20081023\Word\addin.deploy" -d "MarkLogic_WordAddin_Setup.msi" -i config.idt"
+"C:\Program Files\Microsoft SDKs\Windows\v6.0A\bin\MsiDb" -f "C:\cygwin\home\paven\MLOS\Office2007\MarkLogic_WordAddin-1.1-20081023\Word\addin.deploy" -d "MarkLogic_WordAddin_Setup.msi" -i config.idt"
 
 
 REM installs the .msi

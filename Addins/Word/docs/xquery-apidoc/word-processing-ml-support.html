@@ -88,7 +88,7 @@ import module namespace ooxml="http://marklogic.com/openxml"
           This function creates a document body (w:body) element.
           </td>
      </tr>
-     <tr class="mainbody">
+     <!--<tr class="mainbody">
 			    <td style="font-family: arial; font-size: 10pt;">
           <a href="#ooxml:content-types"><b>
             ooxml:content-types
@@ -97,7 +97,7 @@ import module namespace ooxml="http://marklogic.com/openxml"
 			    <td style="font-family: arial; font-size: 10pt;">
           This function creates a default content types element for the .docx package ([Content_Types].xml).
           </td>
-     </tr>
+     </tr>-->
 
       <tr class="mainbody">
 			    <td style="font-family: arial; font-size: 10pt;">
@@ -158,6 +158,16 @@ import module namespace ooxml="http://marklogic.com/openxml"
 		  to the term.
           </td>
 			  </tr>
+      <tr class="mainbody">
+			    <td style="font-family: arial; font-size: 10pt;">
+          <a href="#ooxml:default-content-types"><b>
+            ooxml:default-content-types
+            </b></a> 
+          </td>
+			    <td style="font-family: arial; font-size: 10pt;">
+          This function creates a default content types element for the .docx package ([Content_Types].xml).
+          </td>
+     </tr>
      <tr class="mainbody">
 			    <td style="font-family: arial; font-size: 10pt;">
           <a href="#ooxml:directory-uris"><b>
@@ -234,6 +244,15 @@ import module namespace ooxml="http://marklogic.com/openxml"
 		  element.
           </td>
 			  </tr>
+     <tr class="mainbody">
+			    <td style="font-family: arial; font-size: 10pt;">
+          <a href="#ooxml:get-directory-package"><b>
+            ooxml:get-directory-package           </b></a> 
+          </td>
+			    <td style="font-family: arial; font-size: 10pt;">
+          This function returns a document in the OPC (Open Packaging Convention) format XML. 
+          </td>
+     </tr>
      <tr class="mainbody">
 			    <td style="font-family: arial; font-size: 10pt;">
           <a href="#ooxml:get-mimetype"><b>
@@ -442,6 +461,16 @@ import module namespace ooxml="http://marklogic.com/openxml"
           This function creates a default w:settings element for a .docx package (word/settings.xml).
           </td>
      </tr>
+ <tr class="mainbody">
+			    <td style="font-family: arial; font-size: 10pt;">
+          <a href="#ooxml:simple-content-types"><b>
+            ooxml:simple-content-types
+            </b></a> 
+          </td>
+			    <td style="font-family: arial; font-size: 10pt;">
+          This function creates a content types element for a .docx package of minimal parts ([Content_Types].xml).
+          </td>
+     </tr>
      <tr class="mainbody">
 			    <td style="font-family: arial; font-size: 10pt;">
           <a href="#ooxml:styles"><b>
@@ -591,139 +620,6 @@ return ooxml:body($para)
 				  <td></td>
 				</tr>
 	</table>
-
-  <table border="0" width="100%" class="mainbody" cellspacing="0" cellpadding="0">
-
-        <tr class="mainbody">
-				  <td><img src="images/varspace.gif" height="12"/> <hr class="control-line" size="1"/>
-      </td>
-				</tr>
-
-        <tr class="mainbody">
-				  <td>
-
-            <table>
-            <tr>
-					<td colspan="2" style="font-size:12pt;font-family:Courier">
-                 <a id="ooxml:content-types"></a><b><font color="#c00831">
-                 ooxml:content-types</font></b>(
-                    </td>
-				      </tr><tr>
-					<td width="20"></td>
-					<td style="font-size:11pt;font-family:Courier">
-                      $default as xs:boolean?
-                      </td>
-				      </tr><tr>
-					<td colspan="2" style="font-size:11pt;font-family:Courier">)&#160; as &#160;element(types:Types)</td>
-				      </tr>
-            </table>
-
-          </td>
-				</tr>
-
-        <tr class="mainbody">
-				  <td><img src="images/varspace.gif" height="12"/></td>
-				</tr>
-
-        <tr class="mainbody">
-				  <td style="font-size:10pt;font-family:Arial">
-          <img src="images/varspace.gif" width="8"/>
-          <b>Summary:</b>
-          <div style="margin-left:.5in; margin-right:8px; font-family:arial;                        font-size:10pt"> <br/>
-             This function creates a default content types element for the .docx package ([Content_Types].xml).
-          </div><br/>
-          </td>
-				</tr>
-        <tr class="mainbody">
-				  <td style="font-size:10pt;font-family:Arial">
-    <img src="images/varspace.gif" width="8"/>
-    <b>Parameters:</b>
-      <table>
-          <tr class="mainbody">
-					<td style="font-size:11pt;font-family:Arial">
-               <img src="images/varspace.gif" width="8"/>
-                 <div style="margin-left:.5in; margin-right:8px">
-                 <font style="font-size:11pt;font-family:Courier">
-                   $default
-                   :
-                 </font>
-                 <font style="font-family:arial;font-size:10pt">
-                 If true, [Content_Types].xml for a default .docx package is created.
-                 </font>
-                 </div> 
-            </td>
-				      </tr>
-         </table><br/>
-    </td>
-				</tr>
- <tr class="mainbody">
-				  <td style="font-size:10pt;font-family:Arial">
-        <img src="images/varspace.gif" width="8"/>
-        <b>Usage Notes:</b>
-            <div style="margin-left:.5in; margin-right:8px; font-family:arial;font-size:10pt">
-            <br/>
-  If false, or not specified, [Content_Types].xml for a .docx pacakge with the minimum number of parts required is returned.  <br/><br/>
-  The minimum .docx package includes: [Content_Types].xml, _rels/.rels, word/document.xml <br/><br/>
-	</td>
-				</tr>
- 
-        
-
-        
-
-        <tr class="mainbody">
-				  <td><img src="images/varspace.gif" width="8"/>
-	    <font style="font-size:10pt;font-family:Arial"><b>Example:</b></font>
-            <div style="margin-left:.5in; margin-right:8px; font-size:9pt;                          font-family:Courier"> 
-            <pre xml:space="preserve">
-xquery version "1.0-ml";
-import module namespace ooxml= "http://marklogic.com/openxml" 
-          at "/MarkLogic/openxml/word-processing-ml-support.xqy";
-
-ooxml:content-types(fn:true()))
-=&gt; 
-&lt;Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"&gt;
-  &lt;Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/&gt;
-  &lt;Default Extension="xml" ContentType="application/xml"/&gt;
-  &lt;Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/&gt;
-  &lt;Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/&gt;
-  &lt;Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/&gt;
-  &lt;Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/&gt;
-  &lt;Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/&gt;
-  &lt;Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/&gt;
-&lt;/Types&gt;
-  </pre>
-  
-            </div>
-            </td>
-				</tr>
- <tr class="mainbody">
-				  <td><img src="images/varspace.gif" width="8"/>
-	    <font style="font-size:10pt;font-family:Arial"><b>Example:</b></font>
-            <div style="margin-left:.5in; margin-right:8px; font-size:9pt;                          font-family:Courier"> 
-            <pre xml:space="preserve">
-xquery version "1.0-ml";
-import module namespace ooxml= "http://marklogic.com/openxml" 
-          at "/MarkLogic/openxml/word-processing-ml-support.xqy";
-
-ooxml:content-types(fn:false()))
-=&gt; 
-&lt;Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"&gt;
-  &lt;Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/&gt;
-  &lt;Default Extension="xml" ContentType="application/xml"/&gt;
-  &lt;Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/&gt;
-&lt;/Types&gt;
-  </pre>
-  
-            </div>
-            </td>
-				</tr>
-
-        <tr class="mainbody">
-				  <td></td>
-				</tr>
-	</table>
-
 
   <table border="0" width="100%" class="mainbody" cellspacing="0" cellpadding="0">
 
@@ -1462,17 +1358,93 @@ return  ooxml:custom-xml-highlight($wp,$wordquery,"MYTAG", $attributes, $values)
 
 
 
+ <table border="0" width="100%" class="mainbody" cellspacing="0" cellpadding="0">
 
+        <tr class="mainbody">
+				  <td><img src="images/varspace.gif" height="12"/> <hr class="control-line" size="1"/>
+      </td>
+				</tr>
 
+        <tr class="mainbody">
+				  <td>
 
+            <table>
+            <tr>
+					<td colspan="2" style="font-size:12pt;font-family:Courier">
+                 <a id="ooxml:default-content-types"></a><b><font color="#c00831">
+                 ooxml:default-content-types</font></b>(
+                    </td>
+				      </tr>
+				      <tr>
+					<td colspan="2" style="font-size:11pt;font-family:Courier">)&#160; as &#160;element(types:Types)</td>
+				      </tr>
+            </table>
 
+          </td>
+				</tr>
 
+        <tr class="mainbody">
+				  <td><img src="images/varspace.gif" height="12"/></td>
+				</tr>
 
+        <tr class="mainbody">
+				  <td style="font-size:10pt;font-family:Arial">
+          <img src="images/varspace.gif" width="8"/>
+          <b>Summary:</b>
+          <div style="margin-left:.5in; margin-right:8px; font-family:arial;                        font-size:10pt"> <br/>
+             This function creates a default content types element for the .docx package ([Content_Types].xml).
+          </div><br/>
+          </td>
+				</tr>
+        <tr class="mainbody">
+				  <td style="font-size:10pt;font-family:Arial">
+    <img src="images/varspace.gif" width="8"/>
+    <b>Parameters:</b>
+	 <br/><br/>
+    </td>
+				</tr>
+ <tr class="mainbody">
+				  <td style="font-size:10pt;font-family:Arial">
+        <img src="images/varspace.gif" width="8"/>
+        <b>Usage Notes:</b>
+            <div style="margin-left:.5in; margin-right:8px; font-family:arial;font-size:10pt">
+            <br/>
+	</td>
+				</tr>
+ 
+        
 
+        
 
+        <tr class="mainbody">
+				  <td><img src="images/varspace.gif" width="8"/>
+	    <font style="font-size:10pt;font-family:Arial"><b>Example:</b></font>
+            <div style="margin-left:.5in; margin-right:8px; font-size:9pt;                          font-family:Courier"> 
+            <pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace ooxml= "http://marklogic.com/openxml" 
+          at "/MarkLogic/openxml/word-processing-ml-support.xqy";
 
-
-
+ooxml:default-content-types()
+=&gt; 
+&lt;Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"&gt;
+  &lt;Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/&gt;
+  &lt;Default Extension="xml" ContentType="application/xml"/&gt;
+  &lt;Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/&gt;
+  &lt;Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/&gt;
+  &lt;Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/&gt;
+  &lt;Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/&gt;
+  &lt;Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/&gt;
+  &lt;Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/&gt;
+&lt;/Types&gt;
+  </pre>
+            </div>
+            </td>
+				</tr>
+        <tr class="mainbody">
+				  <td></td>
+				</tr>
+	</table>
 <table border="0" width="100%" class="mainbody" cellspacing="0" cellpadding="0">
 
         <tr class="mainbody">
@@ -2049,8 +2021,9 @@ Just using the constructors provided its possible to generate a .docx dynamicall
 1) a simplified .docx with just [Content_Types].xml, .rels, and document.xml. or <br/>
 2) a default .docx package that consists of those 3 parts plus any provided additional optional parts.  <br/>
 <br/>
-The provided ooxml:content-types() returns either 1) the [Content_Types].xml for a minimum .docx package, or <br/>
-2) [Content-Types].xml for a .docx package with all optional parts included.  Depending on your requirement, you may need<br/>
+The provided ooxml:simple-content-types() returns the [Content_Types].xml for a minimum .docx package.<br/>
+ooxml:default-content-types() returns the [Content-Types].xml for a .docx package with all optional parts included.<br/>
+These are intended to jumpstart your knowledge of parts required for a .docx package.  Depending on your requirement, you may need<br/>
 to update your [Content_Types].xml accordingly.  Also, default constructors have been provided for all optional parts.<br/><br/>
 
 Finally, it is possilbe for a .docx to have more/less parts depending on the information in the document.  This <br/>
@@ -2238,7 +2211,7 @@ xquery version "1.0-ml";
 import module namespace ooxml= "http://marklogic.com/openxml" at
                                "/MarkLogic/openxml/word-processing-ml-support.xqy";
 
-let $content-types:= ooxml:content-types(fn:false())
+let $content-types:= ooxml:simple-content-types()
 let $rels := ooxml:package-rels()
 let $para := ooxml:create-paragraph("Hello, World!")
 let $doc := ooxml:document(ooxml:body($para))
@@ -2469,6 +2442,138 @@ return  ooxml:get-custom-xml-ancestor($wp1)
   
             </div>
             </td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td></td>
+				</tr>
+	</table>
+
+
+
+<table border="0" width="100%" class="mainbody" cellspacing="0" cellpadding="0">
+
+        <tr class="mainbody">
+				  <td><img src="images/varspace.gif" height="12"/>
+      <hr class="control-line" size="1"/></td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td>
+
+            <table>
+            <tr>
+					<td colspan="2" style="font-size:12pt;font-family:Courier">
+                 <a id="ooxml:get-directory-package"></a><b><font color="#c00831">
+                 ooxml:get-directory-package</font></b>(
+                    </td>
+				      </tr><tr>
+					<td width="20"></td>
+					<td style="font-size:11pt;font-family:Courier">
+                      $directory as xs:string
+                      </td>
+				      </tr>
+				      <tr>
+					<td colspan="2" style="font-size:11pt;font-family:Courier">)&#160;as&#160;element(pkg:package)</td>
+				      </tr>
+            </table>
+
+          </td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td><img src="images/varspace.gif" height="12"/></td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td style="font-size:10pt;font-family:Arial">
+          <img src="images/varspace.gif" width="8"/>
+          <b>Summary:</b>
+          <div style="margin-left:.5in; margin-right:8px; font-family:arial;                        font-size:10pt"> <br/>
+          This function returns a document in the OPC (Open Packaging Convention) format XML. 
+	  
+          </div><br/>
+          </td>
+				</tr>
+        <tr class="mainbody">
+				  <td style="font-size:10pt;font-family:Arial">
+    <img src="images/varspace.gif" width="8"/>
+    <b>Parameters:</b>
+      <table>
+          <tr class="mainbody">
+					<td style="font-size:11pt;font-family:Arial">
+               <img src="images/varspace.gif" width="8"/>
+                 <div style="margin-left:.5in; margin-right:8px">
+                 <font style="font-size:11pt;font-family:Courier">
+                    $directory: 
+                   
+                 </font>
+                 <font style="font-family:arial;font-size:10pt">
+                 The directory containing the extracted parts for a .docx package
+                 </font>
+                 </div> 
+            </td>
+				      </tr>
+	 </table>
+         <br/>
+    </td>
+				</tr>
+ 
+        
+
+        <tr class="mainbody">
+				  <td style="font-size:10pt;font-family:Arial">
+        <img src="images/varspace.gif" width="8"/>
+        <b>Usage Notes:</b>
+            <div style="margin-left:.5in; margin-right:8px; font-family:arial; font-size:10pt">
+            <br/>
+            </div><br/>
+        </td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td><img src="images/varspace.gif" width="8"/>
+            <font style="font-size:10pt;font-family:Arial"><b>Example:</b></font>
+            <div style="margin-left:.5in; margin-right:8px; font-size:9pt;                          font-family:Courier"> 
+            <pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace ooxml= "http://marklogic.com/openxml" at
+                               "/MarkLogic/openxml/word-processing-ml-support.xqy";
+
+ooxml:get-directory-package("/sampleManuscript_docx_parts/")
+=&gt;
+&lt;pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage"&gt;
+  &lt;pkg:part pkg:name="/_rels/.rels" pkg:contentType="application/vnd.openxmlformats-package.relationships+xml" pkg:padding="512"&gt;
+    &lt;pkg:xmlData&gt;
+      &lt;Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"&gt;
+        ...
+      &lt;/Relationships&gt;
+    &lt;/pkg:xmlData&gt;
+  &lt;/pkg:part&gt;
+  &lt;pkg:part pkg:name="/word/document.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"&gt;
+    &lt;pkg:xmlData&gt;
+      &lt;w:document&gt;
+        &lt;w:body&gt;
+           &lt;w:p&gt; ... &lt;/w:p&gt;
+        &lt;/w:body&gt;
+      &lt;/w:document&gt;
+    &lt;/pkg:xmlData&gt;
+  &lt;/pkg:part&gt;
+    ...
+&lt;pkg:package&gt;
+</pre>
+</div>
+
+<div style="margin-left:.5in; margin-right:8px; font-family:arial; font-size:10pt">
+<i>Note: example above truncated for brevity. All pieces of .docx package are present and serialized <br/>
+within &lt;pkg:package&gt;, captured as &lt;pkg:part&gt; elements.<br/><br/>
+Images in this format are captured as base64 encoded strings, following the Open XML format. This <br/>
+file may be opened as a .XML file within Word. Saving as XML in Word will generate this format <br/>
+for a .docx package as well.
+</i>
+       
+	    </div>
+       </td>
 				</tr>
 
         <tr class="mainbody">
@@ -3370,15 +3475,10 @@ ooxml:numbering()
 				      </tr><tr>
 					<td width="20"></td>
 					<td style="font-size:11pt;font-family:Courier">
-                      $directory as xs:string,
+                      $parts as element()*
                       </td>
-				      </tr><tr>
-<tr>
-					<td width="20"></td>
-					<td style="font-size:11pt;font-family:Courier">
-                      $uris as xs:string*
-                      </td>
-				      </tr><tr>
+				      </tr>
+				      <tr>
 					<td colspan="2" style="font-size:11pt;font-family:Courier">)&#160;as&#160;element(pkg:package)</td>
 				      </tr>
             </table>
@@ -3410,32 +3510,17 @@ ooxml:numbering()
                <img src="images/varspace.gif" width="8"/>
                  <div style="margin-left:.5in; margin-right:8px">
                  <font style="font-size:11pt;font-family:Courier">
-                    $directory: 
+                    $parts: 
                    
                  </font>
                  <font style="font-family:arial;font-size:10pt">
-                 The directory in MarkLogic that includes the files for an extracted presentation.
-	    element.
+                 The xml parts that together compose a .docx package
                  </font>
                  </div> 
             </td>
 				      </tr>
 	 </table>
- <table>
-          <tr class="mainbody">
-					<td style="font-size:11pt;font-family:Arial">
-               <img src="images/varspace.gif" width="8"/>
-                 <div style="margin-left:.5in; margin-right:8px">
-                 <font style="font-size:11pt;font-family:Courier">
-                    $uris:
-                 </font>
-                 <font style="font-family:arial;font-size:10pt">
-                 The uris for the files within the $directory to use to as the pkg:parts of the OPC package. 
-                 </font>
-                 </div> 
-            </td>
-				      </tr>
-         </table><br/>
+         <br/>
     </td>
 				</tr>
  
@@ -3460,10 +3545,11 @@ xquery version "1.0-ml";
 import module namespace ooxml= "http://marklogic.com/openxml" at
                                "/MarkLogic/openxml/word-processing-ml-support.xqy";
 
-let $directory:="/sampleManuscript_docx_parts/" 
+let $directory := "/sampleManuscript_docx_parts/"
 let $uris := ooxml:directory-uris($directory)
-let $package := ooxml:package($directory, $uris)
-return $package
+let $validuris := ooxml:package-files-only($uris)
+let $parts := fn:doc(($uris))/node()
+return ooxml:package($parts)
 =&gt;
 &lt;pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage"&gt;
   &lt;pkg:part pkg:name="/_rels/.rels" pkg:contentType="application/vnd.openxmlformats-package.relationships+xml" pkg:padding="512"&gt;
@@ -5078,6 +5164,87 @@ ooxml:settings()
 				</tr>
 	</table>
 
+  <table border="0" width="100%" class="mainbody" cellspacing="0" cellpadding="0">
+
+        <tr class="mainbody">
+				  <td><img src="images/varspace.gif" height="12"/> <hr class="control-line" size="1"/>
+      </td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td>
+
+            <table>
+            <tr>
+					<td colspan="2" style="font-size:12pt;font-family:Courier">
+                 <a id="ooxml:simple-content-types"></a><b><font color="#c00831">
+                 ooxml:simple-content-types</font></b>(
+                    </td>
+				      </tr>
+				      <tr>
+					<td colspan="2" style="font-size:11pt;font-family:Courier">)&#160; as &#160;element(types:Types)</td>
+				      </tr>
+            </table>
+
+          </td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td><img src="images/varspace.gif" height="12"/></td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td style="font-size:10pt;font-family:Arial">
+          <img src="images/varspace.gif" width="8"/>
+          <b>Summary:</b>
+          <div style="margin-left:.5in; margin-right:8px; font-family:arial;                        font-size:10pt"> <br/>
+             This function creates a content types element for a .docx package of minimal parts ([Content_Types].xml).
+          </div><br/>
+          </td>
+				</tr>
+        <tr class="mainbody">
+				  <td style="font-size:10pt;font-family:Arial">
+    <img src="images/varspace.gif" width="8"/>
+    <b>Parameters:</b>
+	 <br/><br/>
+    </td>
+				</tr>
+ <tr class="mainbody">
+				  <td style="font-size:10pt;font-family:Arial">
+        <img src="images/varspace.gif" width="8"/>
+        <b>Usage Notes:</b>
+            <div style="margin-left:.5in; margin-right:8px; font-family:arial;font-size:10pt">
+            <br/>
+  The minimum .docx package includes: [Content_Types].xml, _rels/.rels, word/document.xml <br/><br/>
+	</td>
+				</tr>
+ 
+ <tr class="mainbody">
+				  <td><img src="images/varspace.gif" width="8"/>
+	    <font style="font-size:10pt;font-family:Arial"><b>Example:</b></font>
+            <div style="margin-left:.5in; margin-right:8px; font-size:9pt;                          font-family:Courier"> 
+            <pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace ooxml= "http://marklogic.com/openxml" 
+          at "/MarkLogic/openxml/word-processing-ml-support.xqy";
+
+ooxml:simple-content-types()
+=&gt; 
+&lt;Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"&gt;
+  &lt;Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/&gt;
+  &lt;Default Extension="xml" ContentType="application/xml"/&gt;
+  &lt;Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/&gt;
+&lt;/Types&gt;
+  </pre>
+  
+            </div>
+            </td>
+				</tr>
+
+        <tr class="mainbody">
+				  <td></td>
+				</tr>
+	</table>
 
 <table border="0" width="100%" class="mainbody" cellspacing="0" cellpadding="0">
 
