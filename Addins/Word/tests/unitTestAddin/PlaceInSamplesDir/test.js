@@ -103,26 +103,26 @@ function testAddCustomPiece()
         document.getElementById("ML-Id").value    = v_identifier;
 	
 	var customPiece = generateTemplate(v_title,v_description,v_publisher,v_identifier);
-        var newid = MLA.addCustomPiece(customPiece);
+        var newid = MLA.addCustomXMLPart(customPiece);
 	return newid;
        
 }
 
 function testGetCustomPieceIds()
 {
-	var ids = MLA.getCustomPieceIds();
+	var ids = MLA.getCustomXMLPartIds();
 	return ids[0];
 }
 
 function testGetCustomPiece(cid)
 {
-	var piece = MLA.getCustomPiece(cid);
+	var piece = MLA.getCustomXMLPart(cid);
 	return piece;
 }
 
 function testDeleteCustomPiece(id)
 {
-	var deletedPiece = MLA.deleteCustomPiece(id);
+	var deletedPiece = MLA.deleteCustomXMLPart(id);
 	return deletedPiece;
 }
 
@@ -142,7 +142,7 @@ function writeToFile(output)
 {
   try {
    var fso = new ActiveXObject("Scripting.FileSystemObject");
-   var a = fso.CreateTextFile("c:\\testfile.txt", true);
+   var a = fso.CreateTextFile("C:\\testfile.txt", true);
    a.WriteLine(output);
    a.Close();
  }
@@ -202,7 +202,7 @@ function updateMetadata(i)
 	if(debug)
            alert("Saving Custom Piece");
         
-	var customPieceIds = MLA.getCustomPieceIds();
+	var customPieceIds = MLA.getCustomXMLPartIds();
 	var customPieceId = null;
 	for(i=0;i<customPieceIds.length;i++)
 	{
@@ -210,7 +210,7 @@ function updateMetadata(i)
 		  //do nothing
 	  }else{
 	        customPieceId = customPieceIds[i];
-		var delPiece = MLA.deleteCustomPiece(customPieceId);
+		var delPiece = MLA.deleteCustomXMLPart(customPieceId);
 		edited=true;
 	  }
 	        
@@ -237,7 +237,7 @@ function updateMetadata(i)
 	if(debug)
 	   alert(customPiece);
 
-        var newid = MLA.addCustomPiece(customPiece);
+        var newid = MLA.addCustomXMLPart(customPiece);
 
 	if(edited){
  	 //alert("Metadata Edited"); 
@@ -256,7 +256,7 @@ function updateMetadata(i)
    else
    {    if(debug)
 	   alert("Removing Custom Piece");
-	var customPieceIds = MLA.getCustomPieceIds();
+	var customPieceIds = MLA.getCustomXMLPartIds();
 	var customPieceId = null;
 	for(i=0;i<customPieceIds.length;i++)
 	{
@@ -264,7 +264,7 @@ function updateMetadata(i)
 		  //do nothing
 	  }else{
 	        customPieceId = customPieceIds[i];
-		var delPiece = MLA.deleteCustomPiece(customPieceId);
+		var delPiece = MLA.deleteCustomXMLPart(customPieceId);
 	  }
 	        
 	}
