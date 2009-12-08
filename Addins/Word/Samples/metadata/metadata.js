@@ -1,5 +1,5 @@
 /*
-Copyright 2008 Mark Logic Corporation
+Copyright 2008-2009 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,17 +25,14 @@ document.observe(
 		 * @return {String} The text serialization of the XML
 		 */
 		function generateTemplate(title, description, publisher, id) {
-			var v_template = "<metadata "
-					+ "xmlns='http://example.org/myapp/' "
-					+ "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' "
-					+ "xsi:schemaLocation='http://example.org/myapp/ http://example.org/myapp/schema.xsd' "
+			var v_template = "<dc:metadata "
 					+ "xmlns:dc='http://purl.org/dc/elements/1.1/'>"
 					+ "<dc:title>" + title + "</dc:title>"
 					+ "<dc:description>" + description
 					+ "</dc:description>" + "<dc:publisher>"
 					+ publisher + "</dc:publisher>"
 					+ "<dc:identifier>" + id + "</dc:identifier>"
-					+ "</metadata>";
+					+ "</dc:metadata>";
 			return v_template;
 	
 		}

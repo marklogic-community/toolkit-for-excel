@@ -1,6 +1,6 @@
 xquery version "1.0-ml";
 (:
-Copyright 2008 Mark Logic Corporation
+Copyright 2008-2009 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Samples</title>
-	<link rel="stylesheet" type="text/css" href="../css/office-blue.css"/>
+	<link rel="stylesheet" type="text/css" href="css/office-blue.css"/>
 	<style type="text/css">
 		body {{
 			padding: 2em 4em;
