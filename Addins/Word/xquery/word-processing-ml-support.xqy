@@ -52,6 +52,8 @@ declare variable $ooxml:CORE-PROPERTIES := "http://schemas.openxmlformats.org/pa
 declare variable $ooxml:CUSTOM-PROPERTIES := "http://schemas.openxmlformats.org/officeDocument/2006/custom-properties";
 declare variable $ooxml:CUSTOM-XML-PROPS := "http://schemas.openxmlformats.org/officeDocument/2006/customXml";
 
+(:version 1.1-1:)
+
 declare function ooxml:error($message as xs:string)
 {
     fn:error(xs:QName("DOCX-ERROR"),$message)

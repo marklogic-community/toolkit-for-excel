@@ -24,7 +24,7 @@ MarkLogicWordAddin.js - javascript api for interacting with webBrowser control w
  * {@link http://www.marklogic.com} 
  *
  * @author Pete Aven pete.aven@marklogic.com
- * @version 1.1 
+ * @version 1.1-1 
  */
 
 
