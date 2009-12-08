@@ -157,10 +157,10 @@ function writeToFile(output)
 
 function generateTemplate(title,description,publisher,id)
 {
-	 var v_template ="<metadata "+
-           "xmlns='http://example.org/myapp/' "+
-           "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' "+
-           "xsi:schemaLocation='http://example.org/myapp/ http://example.org/myapp/schema.xsd' "+
+	 var v_template ="<dc:metadata "+
+           //"xmlns='http://example.org/myapp/' "+
+           //"xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' "+
+           //"xsi:schemaLocation='http://example.org/myapp/ http://example.org/myapp/schema.xsd' "+
            "xmlns:dc='http://purl.org/dc/elements/1.1/'>"+
            "<dc:title>"+
              title+
@@ -174,7 +174,7 @@ function generateTemplate(title,description,publisher,id)
            "<dc:identifier>"+
              id+
            "</dc:identifier>"+
-           "</metadata>";
+           "</dc:metadata>";
 	 return v_template;
 
 }

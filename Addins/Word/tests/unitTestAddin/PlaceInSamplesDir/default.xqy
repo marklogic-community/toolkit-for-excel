@@ -1,58 +1,73 @@
-xquery version "1.0-ml";
-(:
-Copyright 2008 Mark Logic Corporation
+xquery version "0.9-ml"
+declare namespace w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-default.xqy - landing page for samples
-:)
-
-(
 xdmp:set-response-content-type('text/html;charset=utf-8'),
 '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Samples</title>
-	<link rel="stylesheet" type="text/css" href="../css/office-blue.css"/>
-	<style type="text/css">
-		body {{
-			padding: 2em 4em;
-		}}
-		h2 {{
-			font-size: 200%;
-			margin: 0.5em 0;
-		}}
-		p {{
-			line-height: 1.45;
-			margin: 0.5em 2em;
-			font-size: 110%;
-		}}
-	</style>
-	<script type="text/javascript" src="../js/prototype-1.6.0.3.js">//</script>
-	<script type="text/javascript" src="../js/test.js">//</script>
+	<title>Custom Metadata</title>
+	<link rel="stylesheet" type="text/css" href="office-blue.css"/>
+	<link rel="stylesheet" type="text/css" href="test.css"/>
+	<script type="text/javascript" src="MarkLogicWordAddin.js">//</script>
+	<script type="text/javascript" src="test.js">//</script>
 </head>
-<body>
-	<ul id="ML-Menu">
-		<li>
-			<h2><a href="search/">Search »</a></h2>
-			<p>Search and explore Word 2007 content. Insert results into the active document.</p>
-		</li>
-		<li>
-			<h2><a href="metadata/">Metadata »</a></h2>
-			<p>Create and edit custom document metadata.</p>
-		</li>
-	</ul>
-</body>
+ <body>
+	 <div id="ML-Add-in">
+		<form id="ML-Metadata" action="." method="get">
+			<div class="ML-control">
+				<div class="ML-label">
+					<label for="ML-Title">Title</label>
+				</div>
+				<div class="ML-input">
+					<input id="ML-Title"/>
+				</div>
+			</div>
+			<div class="ML-control">
+				<div class="ML-label">
+					<label for="ML-Desc">Description</label>
+				</div>
+				<div class="ML-input">
+					<textarea id="ML-Desc"></textarea>
+				</div>
+			</div>
+			<div class="ML-control">
+				<div class="ML-label">
+					<label for="ML-Publisher">Publisher</label>
+				</div>
+				<div class="ML-input">
+					<input id="ML-Publisher"/>
+				</div>
+			</div>
+			<div class="ML-control">
+				<div class="ML-label">
+					<label for="ML-Id">Identifier</label>
+				</div>
+				<div class="ML-input">
+					<input id="ML-Id"/>
+				</div>
+			</div>
+		<div>
+		<button id="ML-Save" class="ML-action" onclick="updateMetadata(1)">Save</button>&nbsp;&nbsp;
+		<button id="ML-Remove" class="ML-action" onclick="updateMetadata(2)" title="Remove the metadata from the current document">
+			<img src="delete.png"/> Remove
+		</button>
+		 
+		<p id="ML-Message"></p>  
+		
+		<div id="ML-Intro">
+			<h1>Custom Metadata</h1>
+			<p>Use the above form to manage custom metadata associated with the current document. 
+			Upon saving the active document, this Dublin Core snippet is stored within the document’s <code>.docx</code> package as a XML document.</p>
+			<p>Use the <code>Remove</code> button to discard the metadata.</p>
+		</div>
+		
+				                
+		</div> 
+		</form>
+	  <div id="ML-Navigation">
+			<a href="default.xqy">« Samples</a>
+		</div>
+	</div>
+ </body>
 </html>
-)
