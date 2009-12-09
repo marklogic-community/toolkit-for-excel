@@ -4,86 +4,237 @@ var debug = false;
 
 function initPage()
 {
-        var test1Results = testInsertText();
-	var test2Results = testAddCustomPiece();
-	var test3Results = testGetCustomPieceIds();
-	var test4Results = testGetCustomPiece(test3Results);
-	var test5Results = testDeleteCustomPiece(test3Results);
-	var test6Results = testCreateParagraph("THIS IS A TEST");
-	var test7Results = testInsertBlockContent(test6Results);
+	var testOutput="";
+	var fName ="";
+        //alert(MLA.getDocumentName());
+	var docname = MLA.getDocumentName();
+
+	if(docname == "maptest.docx") //ccMapTest.docx
+	{
+	   //var tag = "pttesttag";
+           //var tag = "3495257";
+           var tag = "19232534";
+	   var ids = MLA.getCustomXMLPartIds();
+           var xpath = "dc:metadata/dc:title";
+           var prefix = "xmlns:dc='http://purl.org/dc/elements/1.1/'";
+	   //alert("HERE");
+	   testOutput = MLA.mapContentControl(tag, xpath, prefix, ids[0])
+	   fName = "maptest.txt";
+	}
+	else if(docname == "controlstest.docx")
+	{
+	  var test1Results = MLA.getTempPath();
+	  var test2Results = MLA.getDocumentPath();
+	  var test3Results = MLA.getDocumentName();
+          var test4Results = MLA.addContentControl("FOOBAR","FANCYTITLE","wdContentControlRichText","false","");
+	  var test5Results = addComplexControl();
+
+	  MLA.setContentControlFocus(test5Results);
+	  var info = MLA.getParentContentControlInfo();
+	  var test6Results = "ID: "+info.id + "  tag: " +info.tag+"  title: "+info.title+
+		             " type: "+info.type+" parentTag: "+info.parentTag+
+			     " parentID: "+info.parentID;
+
+	  MLA.setContentControlFocus(test4Results);
+	  var test7Results = insertXML();
+	  //var test8Results = listContentControls();
+
+	  testOutput = "<tests>"+
+		         "<test>"+test1Results+"</test>"+
+		         "<test>"+test2Results+"</test>"+
+		         "<test>"+test3Results+"</test>"+
+		         "<test>"+test4Results+"</test>"+
+		         "<test>"+test5Results+"</test>"+
+		         "<test>"+test6Results+"</test>"+
+		         "<test>"+test7Results+"</test>"+
+		       "</tests>";
+
+	  fName = "controlstest.txt";
+	  
+	  
+	}
+	else if(docname == "gettexttest.docx")
+	{
+	  displayControlRange();
+	  var test1Results = setControlStyle();
+	  var test2Results = setControlTag();
+	  var test3Results = setControlTitle();
+	  setControlFocus();
+	  var test4Results = getControlText();
+	  var test5Results = getControlXML();
+	  hideControlRange();
+
+	  testOutput = "<tests>"+
+		         "<test>"+test1Results+"</test>"+
+		         "<test>"+test2Results+"</test>"+
+		         "<test>"+test3Results+"</test>"+
+		         "<test>"+test4Results+"</test>"+
+		         "<test>"+test5Results.text+"</test>"+
+		       "</tests>";
+
+	  fName="gettexttest.txt";
+	}
+	else
+	{
+          var test1Results = testInsertText();
+	  var test2Results = testAddCustomPiece();
+	  var test3Results = testGetCustomPieceIds();
+	  var test4Results = testGetCustomPiece(test3Results);
+	  var test5Results = testDeleteCustomPiece(test3Results);
+	  var test6Results = testCreateParagraph("THIS IS A TEST");
+	  var test7Results = testInsertBlockContent(test6Results);
 
 	//can write to file, or just save one big xml file to ML
-	var testOutput = generateTestTemplate(test1Results,test2Results,test3Results,test4Results.xml,test5Results,test6Results.xml, test7Results);
-	writeToFile(testOutput);
+	  testOutput = generateTestTemplate(test1Results,test2Results,test3Results,test4Results.xml,test5Results,test6Results.xml, test7Results);
+	  fName="originaltests.txt";
+	}
+
+	writeToFile(testOutput,fName);
 
 	if(debug)
 	  alert("initializing page");
 
-/*	var customPieceIds = MLA.getCustomPieceIds();
-	var customPieceId = null;
-	var tmpCustomPieceXml = null;
-	for(i=0;i<customPieceIds.length;i++)
-	{
-	  if(customPieceIds[i] == null || customPieceIds ==""){
-	     // do nothing
-	  }else{
-
-		if(debug)
-		   alert("PIECE ID: "+customPieceIds[i]);
-
-	        customPieceId = customPieceIds[i];
-		tmpCustomPieceXml = MLA.getCustomPiece(customPieceId);
-		if(debug)
-		   alert(tmpCustomPieceXml.xml);
-	  }
-	        
-	}
-
-	if(tmpCustomPieceXml != null)// && tmpCustomPieceXml.length > 1)
-	{
-	    //alert("IN IF");
-            var xmlDoc = tmpCustomPieceXml;
-            // xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
-            // xmlDoc.async="false";
-            // xmlDoc.loadXML(tmpCustomPieceXml);
-	         	var v_title="";
-			var v_description="";
-			var v_publisher="";
-			var v_identifier="";
-
-			if(xmlDoc.getElementsByTagName("dc:title")[0].hasChildNodes()) 
-			   v_title = xmlDoc.getElementsByTagName("dc:title")[0].childNodes[0].nodeValue;
-
-			if(xmlDoc.getElementsByTagName("dc:description")[0].hasChildNodes()) 
-			   v_description = xmlDoc.getElementsByTagName("dc:description")[0].childNodes[0].nodeValue;
-
-			if(xmlDoc.getElementsByTagName("dc:publisher")[0].hasChildNodes()) 
-			   v_publisher = xmlDoc.getElementsByTagName("dc:publisher")[0].childNodes[0].nodeValue;
-			
-			if(xmlDoc.getElementsByTagName("dc:identifier")[0].hasChildNodes()) 
-			   v_identifier = xmlDoc.getElementsByTagName("dc:identifier")[0].childNodes[0].nodeValue;
-*/
-          /*   var v_title       = xmlDoc.getElementsByTagName("dc:title")[0].childNodes[0].nodeValue;
-             var v_description = xmlDoc.getElementsByTagName("dc:description")[0].childNodes[0].nodeValue;
-             var v_publisher   = xmlDoc.getElementsByTagName("dc:publisher")[0].childNodes[0].nodeValue;
-             var v_identifier  = xmlDoc.getElementsByTagName("dc:identifier")[0].childNodes[0].nodeValue;
-	  */
-/*             
-             document.getElementById("ML-Title").value = v_title;
-             document.getElementById("ML-Desc").value  = v_description;
-             document.getElementById("ML-Publisher").value   = v_publisher;
-             document.getElementById("ML-Id").value    = v_identifier;
-	    
-	     document.getElementById("ML-Message").innerHTML = "Metadata Saved with Document";
-	     
-
-	}else
-	{ 
-              document.getElementById("ML-Message").innerHTML="No Metadata Saved with Document";
-	//	alert("TEST");
-	}
-*/
 }
+
+/* ================ BEGIN CONTROLS TESTS ====================================*/
+function addComplexControl()
+{
+	var msg15=MLA.addContentControl("FOOBAR","FANCYTITLE","wdContentControlRichText","true","");
+	var parentID = msg15;
+	var msg16=MLA.addContentControl("BAR16","FANCYTITLE6","wdContentControlRichText","true",parentID);
+        var secondParentID=msg16;
+	var msg17=MLA.addContentControl("BAR17","FANCYTITLE7","wdContentControlRichText","true",parentID);
+	
+
+	var msgg1 = MLA.setContentControlPlaceholderText(msg16,"THIS IS MY MESSAGE 1","true");
+	var msgg2 = MLA.setContentControlPlaceholderText(msg17,"THIS IS MY MESSAGE 2");
+
+	var msg18=MLA.addContentControl("FOO16A","FANCY16A","wdContentControlRichText","false",secondParentID);
+	var msg19=MLA.addContentControl("FOO16B","FANCY16B","wdContentControlRichText","false",secondParentID);
+
+	//alert(msg19);
+	return msg19;
+
+}
+
+function insertXML()
+{
+	url  =  "http://localhost:8023/wordQATests/fetchWordOpenXml.xqy";
+        var opc_xml = loadXMLDoc(url);
+        //alert(opc_xml);
+	MLA.insertWordOpenXML(opc_xml);
+
+	var mydom = MLA.createXMLDOM(opc_xml);
+	MLA.insertWordOpenXML(mydom);
+	return "inserted WordOpenXML both text and DOM style";
+
+}
+
+function loadXMLDoc(url) 
+{
+    if (window.XMLHttpRequest) {
+        req = new XMLHttpRequest();
+        req.onreadystatechange = processReqChange;
+        req.open("GET", url, false);
+        req.send(null);
+        response = req.responseText;
+        return response; 
+    } else if (window.ActiveXObject) {
+        req = new ActiveXObject("Microsoft.XMLHTTP");
+        if (req) {
+            req.onreadystatechange = processReqChange;
+            req.open("GET", url, true);
+            req.send();
+        }
+    }
+}
+
+function processPostReqChange() 
+{
+    if (req2.readyState == 4) {
+        if (req2.status == 200) {
+            response = req2.responseText;
+        } else {
+            alert("There was a problem retrieving the XML data:\n" + req2.statusText);
+        }
+    }
+}
+
+function processReqChange() 
+{
+    // only if req shows "complete"
+    if (req.readyState == 4) {
+        // only if "OK"
+        if (req.status == 200) {
+            // ...processing statements go here...
+
+     response = req.responseText;
+        } else {
+            alert("There was a problem retrieving the XML data:\n" + req.statusText);
+        }
+    }
+}
+/* ================ END CONTROLS TESTS ======================================*/
+
+/* ================ BEGIN GETTEXT TESTS =====================================*/
+function setControlStyle()
+{
+	//MLA.setContentControlStyle("13255863", "test");
+	MLA.setContentControlStyle("13255863", "Heading 1");
+	MLA.setContentControlStyle("13255870", "Subtitle");
+	return "set style";
+}
+
+function setControlTag()
+{
+	MLA.setContentControlTag("13255863", "MYAWESOMETAG");
+	return "set tag";
+}
+
+function setControlTitle()
+{
+	MLA.setContentControlTitle("13255863", "MYAWESOMETITLE");
+	return "set title";
+}
+
+function setControlFocus()
+{
+	var msg = MLA.setContentControlFocus("13255863");
+	//window.external.setContentControlFocus("BAR6");
+	return "set focus";
+}
+
+function getControlText()
+{
+        var txt = MLA.getContentControlText("13255863");
+	//alert(txt);
+	return txt;
+}
+
+function getControlXML()
+{
+	var myxml =MLA.getContentControlWordOpenXML("13255863");
+	//alert(myxml.xml);
+        return myxml;
+}
+
+function hideControlRange()
+{
+	var hidden = MLA.hideContentControlRange("13255863");
+	return hidden;
+}
+
+function displayControlRange()
+{
+	
+	var displayed = MLA.displayContentControlRange("13255863");
+	return displayed;
+}
+
+
+/* ================ END GETTEXT TESTS =======================================*/
+
+/* ================ BEGIN ORIGINAL TESTS ====================================*/
 
 function testInsertText()
 {
@@ -138,11 +289,13 @@ function testInsertBlockContent(block)
 	return bret;
 }
 
-function writeToFile(output)
+/* ================ END ORIGINAL TESTS ======================================*/
+
+function writeToFile(output, filename)
 {
   try {
    var fso = new ActiveXObject("Scripting.FileSystemObject");
-   var a = fso.CreateTextFile("C:\\testfile.txt", true);
+   var a = fso.CreateTextFile("C:\\tmp\\testOutput\\"+filename, true);
    a.WriteLine(output);
    a.Close();
  }
