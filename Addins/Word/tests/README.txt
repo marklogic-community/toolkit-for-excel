@@ -37,7 +37,11 @@ MarkLogic_WordAddin_Test
 +++++++++++++++++++++++++++++++++++++
 the source for the .exe (C#)
 
-wordQATests (aka PlaceInSamplesDir)
+PlaceInServer
++++++++++++++++++++++++++++++++++++++
+sdt.xml - this is the file used for the insertXML() test in test.js
+
+wordQATests (aka /PlaceInSamples)
 +++++++++++++++++++++++++++++++++++++
 test.xqy is the page loaded by the Addin on startup
 test.js contains the tests
