@@ -19,7 +19,7 @@ msiexec /q /i "C:\tmp\MarkLogic_Addin_For_Word_Setup.msi" TARGETDIR="C:\tmp"
 REM executes the C# app
 REM this will start Word, and close Word after 20 seconds
 REM the tests are run from the javascript in the page when it loads in the browswer
-MarkLogic_WordAddin_Test.exe
+MarkLogic_WordAddin_Test.exe "c:\\tmp\\testOutput\\test1.docx"
 
 REM uninstalls the Addin
 msiexec /q /x "C:\tmp\MarkLogic_Addin_For_Word_Setup.msi" 

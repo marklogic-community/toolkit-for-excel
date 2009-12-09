@@ -40,6 +40,7 @@ addinSampleQATest
 +++++++++++++++++++++++++++++++++++++
 test.xqy is the page loaded by the Addin on startup
 test.js contains the tests
+MarkLogicWordAddin.js - add this 
 
 place this directory in the server.  Before running testMsi.bat, 
 provide the url for where test.xqy can be found in config.idt.
