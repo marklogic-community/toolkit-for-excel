@@ -25,7 +25,7 @@ namespace MarkLogic_WordAddin_Test
                object missing = System.Reflection.Missing.Value;
 
               //For Save As
-               object file = "c:\\test.docx";
+               object file = args[0];//"c:\\"+args[0];
                object FileFormat = Word.WdSaveFormat.wdFormatDocumentDefault;
                object LockComments = false;
                object pwd = "";
