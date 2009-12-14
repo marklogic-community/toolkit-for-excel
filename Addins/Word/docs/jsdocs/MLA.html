@@ -480,6 +480,23 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 Returns the path being used for the active document on the client system.
       </TD>
    </TR>
+      <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;Microsoft.XMLDOM object</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getDocumentWordOpenXML">getDocumentWordOpenXML</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns WordOpenXML property for the active document. 
+      </TD>
+   </TR>
+
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
@@ -531,6 +548,23 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 Returns the text currently selected (highlighted) by the user in the ActiveDocument.
       </TD>
    </TR>
+         <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;Microsoft.XMLDOM object</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getSelectionWordOpenXML">getSelectionWordOpenXML</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns WordOpenXML property for selection in active document.
+      </TD>
+   </TR>
+
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
@@ -922,6 +956,24 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 Sets the title for content control specified by id in active document
       </TD>
    </TR>
+      <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!setDocumentWordOpenXML">setDocumentWordOpenXML</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	  Sets WordOpenXML for the active document. The WordOpenXML property is read only in the Word Object Model.  This function however rewrites the active document package with the XML passed here as a parameter. 
+      </TD>
+   </TR>
+
+
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
@@ -1667,6 +1719,41 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
+
+   <HR>
+
+   <A NAME="!s!getDocumentWordOpenXML"><!-- --></A>
+   <H3>getDocumentWordOpenXML</H3>
+   <PRE>&lt;static&gt; Microsoft.XMLDOM object <B>getDocumentWordOpenXML</B>()</PRE>
+   
+      <UL>Returns WordOpenXML property for the active document.  The WordOpenXML property returns the document as a Word document saved as .xml.  This representation is also called Flat OPC, following the Open Packaging Convention.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        Microsoft.XMLDOM object that is the active document contents in the WordOpenXML property format.   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get active document WordOpenXML</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+
 <HR>
 
    <A NAME="!s!getParentContentControlInfo"><!-- --></A>
@@ -1762,6 +1849,45 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
+
+
+      <HR>
+
+   <A NAME="!s!getSelectionWordOpenXML"><!-- --></A>
+   <H3>getSelectionWordOpenXML</H3>
+   <PRE>&lt;static&gt; Microsoft.XMLDOM object <B>getDocumentWordOpenXML</B>()</PRE>
+   
+      <UL>Returns WordOpenXML property for selection in active document.  If nothing is selected, the document.xml part will have an empty body. The WordOpenXML property returns the selection as if it were its own Word document, saved as .xml.  The representation is also called Flat OPC, following the Open Packaging Convention.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        Microsoft.XMLDOM object that is the active document contents in the WordOpenXML property format.   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get selection WordOpenXML</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+
+
+
+
 <HR>
 
    <A NAME="!s!getSentenceAtCursor"><!-- --></A>
@@ -2620,6 +2746,44 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    
    <UL>   
    <B>Throws:</B><UL>- Exception if unable to set content control title</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+
+   <HR>
+
+   <A NAME="!s!setDocumentWordOpenXML"><!-- --></A>
+   <H3>setDocumentWordOpenXML</H3>
+   <PRE>&lt;static&gt; void <B>setDocumentWordOpenXML</B>(opc_xml)</PRE>
+   
+      <UL>Sets WordOpenXML for the active document.  The WordOpenXML property is read only in the Word Object Model.  This function however rewrites the active document package with the XML passed here as a parameter.  The package representation is also called Flat OPC, following the Open Packaging Convention.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>opc_xml</CODE> -  the XML to be inserted as the active document. Parameter type can be either A) an XMLDOM object that is the WordOpenXML to be inserted, or B)the string serialization of the WordOpenXML to be inserted as the active Open XML package.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to insertWordOpenXML</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->

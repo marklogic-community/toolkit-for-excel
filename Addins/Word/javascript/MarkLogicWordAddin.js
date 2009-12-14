@@ -1113,7 +1113,7 @@ MLA.getContentControlText = function(id)
        
 }
 
-/** Returns WordOpenXML property for range of control in active document specified by id.  The WordOpenXML property returns the control as if it were its own Word document, saved as .xml.  The represenation is also called Flat OPC, following the Open Packaging Convention.
+/** Returns WordOpenXML property for range of control in active document specified by id.  The WordOpenXML property returns the control as if it were its own Word document, saved as .xml.  The representation is also called Flat OPC, following the Open Packaging Convention.
  *
  * @param id the id of the control.
  * @return Microsoft.XMLDOM object that is the content control contents in the WordOpenXML property format.
@@ -1131,6 +1131,88 @@ MLA.getContentControlWordOpenXML = function(id)
     var v_documentXml = MLA.createXMLDOM(msg);
     return v_documentXml;
        
+}
+
+/** Returns WordOpenXML property for selection in active document.  If nothing is selected, the document.xml part will have an empty body. The WordOpenXML property returns the selection as if it were its own Word document, saved as .xml.  The representation is also called Flat OPC, following the Open Packaging Convention.
+ *
+ * @return Microsoft.XMLDOM object that is the selection in the WordOpenXML property format.
+ * @type Microsoft.XMLDOM object
+ * @throws Exception if unable to get selection WordOpenXML
+ */
+MLA.getSelectionWordOpenXML = function()
+{
+    var v_documentXml;
+    var msg = window.external.getSelectionWordOpenXML();
+    var errMsg = MLA.errorCheck(msg);
+
+    if(errMsg!=null)
+      throw("Error: Not able to getSelectionWordOpenXML(); "+errMsg);
+
+    if(msg=="")
+    {
+	v_documentXMl=null; 
+    }
+    else
+    {
+	v_documentXml = MLA.createXMLDOM(msg);
+    }
+
+    return v_documentXml;
+}
+
+/** Returns WordOpenXML property for the active document.  The WordOpenXML property returns the document as a Word document saved as .xml.  This representation is also called Flat OPC, following the Open Packaging Convention.
+ *
+ * @return Microsoft.XMLDOM object that is the active document in the WordOpenXML property format.
+ * @type Microsoft.XMLDOM object
+ * @throws Exception if unable to get the document WordOpenXML
+ */
+MLA.getDocumentWordOpenXML = function()
+{
+    var v_documentXml;
+    var msg = window.external.getDocumentWordOpenXML();
+    var errMsg = MLA.errorCheck(msg);
+
+    if(errMsg!=null)
+      throw("Error: Not able to getDocumentWordOpenXML(); "+errMsg);
+
+    if(msg=="")
+    {
+	v_documentXMl=null; 
+    }
+    else
+    {
+	v_documentXml = MLA.createXMLDOM(msg);
+    }
+
+    return v_documentXml;
+}
+/** Sets WordOpenXML for the active document.  The WordOpenXML property is read only in the Word Object Model.  This function however rewrites the active document package with the XML passed here as a parameter.  The package representation is also called Flat OPC, following the Open Packaging Convention.
+ *
+ * @param opc_xml the XML to be inserted. Parameter type can be either A) an XMLDOM object that is the WordOpenXML to be inserted into the active Open XML package, or B)the string serialization of the WordOpenXML to be inserted into the active Open XML package
+ * @return void
+ * @type void
+ * @throws Exception if unable to setDocumentWordOpenXML
+ */
+MLA.setDocumentWordOpenXML = function(opc_xml)
+{
+     var v_docx="";
+
+     if(opc_xml.xml)
+     { 
+        v_docx = opc_xml.xml;
+     }
+     else
+     { 
+	v_docx = opc_xml;
+     }
+
+    var msg = window.external.setDocumentWordOpenXML(v_docx);
+    var errMsg = MLA.errorCheck(msg);
+
+    if(errMsg!=null)
+      throw("Error: Not able to setDocumentWordOpenXML(); "+errMsg);
+
+    return msg;
 }
 
 /** Sets the tag for content control specified by id in active document 

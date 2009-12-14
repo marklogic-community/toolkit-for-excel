@@ -21,7 +21,9 @@ REM this will start Word, and close Word after 20 seconds
 REM the tests are run from the javascript in the page when it loads in the browswer
 REM usage:> MarkLogic_WordAddin_Test.exe outputfile [inputfile]
 REM         if not input file provided, a new doc is created in Word
-MarkLogic_WordAddin_Test.exe "c:\\tmp\\testOutput\\controlstest.docx" "c:\\tmp\\testInput\\ccControlsTest.docx"  
+MarkLogic_WordAddin_Test.exe "c:\\tmp\\testOutput\\addcontrolstest.docx"  
+REM MarkLogic_WordAddin_Test.exe "c:\\tmp\\testOutput\\lockcontroltest.docx" "c:\\tmp\\testInput\\ccLockControlTest.docx"  
+REM MarkLogic_WordAddin_Test.exe "c:\\tmp\\testOutput\\controlstest.docx" "c:\\tmp\\testInput\\ccControlsTest.docx"  
 REM MarkLogic_WordAddin_Test.exe "c:\\tmp\\testOutput\\gettexttest.docx" "c:\\tmp\\testInput\\ccGetTextTest.docx"  
 REM MarkLogic_WordAddin_Test.exe "c:\\tmp\\testOutput\\maptest.docx" "c:\\tmp\\testInput\\ccMapTest.docx" 
 REM MarkLogic_WordAddin_Test.exe "c:\\tmp\\testOutput\\originaltests.docx"

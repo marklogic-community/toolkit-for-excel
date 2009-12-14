@@ -21,6 +21,36 @@ function initPage()
 	   testOutput = MLA.mapContentControl(tag, xpath, prefix, ids[0])
 	   fName = "maptest.txt";
 	}
+	else if(docname == "addcontrolstest.docx")
+	{
+	  var test1Results = addControlWithImage(); 
+          var test2Results = addControlWithText();
+	  var test3Results = addControlWithList();
+
+	  testOutput = "<tests>"+
+		         "<test>"+test1Results+"</test>"+
+		         "<test>"+test2Results+"</test>"+
+		         "<test>"+test3Results+"</test>"+
+		       "</tests>";
+
+	  fName="addcontrolstest.txt";
+	}
+	else if(docname == "lockcontroltest.docx")
+	{
+
+	  lockControl();
+	  unlockControlContents();
+	  MLA.setContentControlFocus("21730512"); 
+	  MLA.insertText("This is another test.");
+	  lockControlContents();
+
+	  var test1Results = "test completed";
+
+	  testOutput = "<tests>"+
+		         "<test>"+test1Results+"</test>"+
+		       "</tests>";
+	  fName = "lockcontroltest.txt";
+	}
 	else if(docname == "controlstest.docx")
 	{
 	  var test1Results = MLA.getTempPath();
@@ -95,6 +125,67 @@ function initPage()
 	  alert("initializing page");
 
 }
+
+/* ================ BEGIN ADD CONTROLS TESTS ================================*/
+function addControlWithImage()
+{
+       var pic = "/ackbar.jpg";
+       var config = MLA.getConfiguration();
+       var fullurl= config.url;
+       var picuri = fullurl + "/download-support.xqy?uid="+pic;
+
+       var msg2 = MLA.addContentControl("FOOBAR2","FANCYTITLE2","wdContentControlPicture","true");
+       var msg = MLA.insertContentControlImage(msg2, picuri,"oslo","oslo");
+       return msg2;
+
+}
+
+function addControlWithText()
+{
+	var msg8=MLA.addContentControl("BAR8","FANCYTITLE7","wdContentControlRichText","false");
+        MLA.insertContentControlText(msg8,"FOOBAR");
+	return msg8;
+}
+
+function addControlWithList()
+{
+        var dropdownid = MLA.addContentControl("FOOBAR3","FANCYTITLE3","wdContentControlDropdownList","true");
+        var msg =  MLA.addContentControlDropDownListEntries(dropdownid,"FOO","BAR",0);
+	var msg2 = MLA.addContentControlDropDownListEntries(dropdownid,"FOO2","BAR2",0);
+	var msg3 = MLA.addContentControlDropDownListEntries(dropdownid,"FOO3","BAR3",0);
+	var msg4 = MLA.addContentControlDropDownListEntries(dropdownid,"FOO4","BAR4",0);
+	var msg5 = MLA.addContentControlDropDownListEntries(dropdownid,"FOO6","BAR56",0);
+	return dropdownid;
+}
+
+/* ================ END ADD CONTROLS TESTS ==================================*/
+
+/* ================ BEGIN LOCK CONTROLS TESTS ===============================*/
+function lockControl()
+{
+	var msg = MLA.lockContentControl("21730501");
+	var msg = MLA.lockContentControl("21730512");
+}
+
+function unlockControl()
+{
+	var msg = MLA.unlockContentControl("21730501");
+	var msg = MLA.unlockContentControl("21730512");
+}
+
+function lockControlContents()
+{
+	var msg = MLA.lockContentControlContents("21730501");
+	var msg2 = MLA.lockContentControlContents("21730512");
+}
+
+function unlockControlContents()
+{
+	var msg =  MLA.unlockContentControlContents("21730501");
+	var msg2 = MLA.unlockContentControlContents("21730512");
+}
+
+/* ================ END LOCK CONTROLS TESTS =================================*/
 
 /* ================ BEGIN CONTROLS TESTS ====================================*/
 function addComplexControl()
