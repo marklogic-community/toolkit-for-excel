@@ -589,7 +589,7 @@ declare function ooxml:get-part-attributes(
 
 declare function ooxml:package(
   $nodes as node()*
-) as element(pkg:package) (: node()? :)
+) as element(pkg:package)
 {
     element pkg:package { 
       for $node in $nodes
