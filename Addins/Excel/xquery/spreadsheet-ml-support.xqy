@@ -1,5 +1,5 @@
 xquery version "1.0-ml";
-(: Copyright 2008 Mark Logic Corporation
+(: Copyright 2009 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ declare function excel:sharedstring-uri(
     cts:uri-match(fn:concat($directory,"*sharedStrings.xml"))
 };
 
-declare function cell-string-value(
+declare function excel:cell-string-value(
   $cells          as element(ms:c)*,
   $shared-strings as element(ms:sst)
 ) as xs:string*
@@ -819,14 +819,14 @@ declare function excel:gregorian-to-julian(
 
 (:rename width; optional colcustwidth and tabstyle params :)
 
-declare function create-xlsx-from-xml-table(
+declare function excel:create-xlsx-from-xml-table(
 $originalxml as node()
 ) as binary()?
 {
     create-xlsx-from-xml-table($originalxml,(),())
 };
 
-declare function create-xlsx-from-xml-table(
+declare function excel:create-xlsx-from-xml-table(
 $originalxml as node(),
 $colcustwidth as xs:string?
 ) as binary()?
@@ -834,7 +834,7 @@ $colcustwidth as xs:string?
     create-xlsx-from-xml-table($originalxml,$colcustwidth,()) 
 };
 
-declare function create-xlsx-from-xml-table(
+declare function excel:create-xlsx-from-xml-table(
 $originalxml as node(),
 $colcustwidth as xs:string?,
 $auto-filter as xs:boolean?
@@ -844,7 +844,7 @@ $auto-filter as xs:boolean?
 };
 
 
-declare function create-xlsx-from-xml-table(
+declare function excel:create-xlsx-from-xml-table(
 $originalxml as node(),
 $colcustwidth as xs:string?,
 $auto-filter as xs:boolean?,
