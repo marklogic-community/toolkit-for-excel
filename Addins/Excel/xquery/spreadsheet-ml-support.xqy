@@ -26,6 +26,7 @@ declare default element namespace  "http://schemas.openxmlformats.org/spreadshee
 
 (: import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy"; ? :)
 
+(:version 1.0-2:)
 
 declare function excel:error($message as xs:string)
 {
