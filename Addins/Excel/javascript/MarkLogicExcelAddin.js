@@ -1,5 +1,5 @@
 /* 
-Copyright 2009 Mark Logic Corporation
+Copyright 2009-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ MarkLogicExcelAddin.js - javascript api for interacting with webBrowser control 
  * {@link http://www.marklogic.com} 
  *
  * @author Pete Aven pete.aven@marklogic.com
- * @version 0.1 
+ * @version 1.0-2 
  */
 
 
@@ -112,7 +112,7 @@ this.colIdx=c_values[0];
 }
 
 /** @ignore */
-MLA.version = { "release" : "1.0-20090420" }; 
+MLA.version = { "release" : "1.0-20100120" }; 
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){

@@ -1,5 +1,5 @@
 xquery version "1.0-ml";
-(: Copyright 2002-2009 Mark Logic Corporation.  All Rights Reserved. :)
+(: Copyright 2002-2010 Mark Logic Corporation.  All Rights Reserved. :)
 
 (: map-sharedstrings
 ::

@@ -1,4 +1,4 @@
-﻿/*Copyright 2009 Mark Logic Corporation
+﻿/*Copyright 2009-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,7 +48,8 @@ namespace MarkLogic_ExcelAddin
             private bool debug = false;
             private bool debugMsg = false;
             private string color = "";
-            private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";
+            //private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";  
+            private string addinVersion = "1.0-2"; 
             HtmlDocument htmlDoc;
 
             public UserControl1()
@@ -655,7 +656,7 @@ namespace MarkLogic_ExcelAddin
                     int start = 1;
                     int end = r.Count;
                     int count = 1;
-                    MessageBox.Show("COUNT" + r.Count);
+                    //MessageBox.Show("COUNT" + r.Count);
 
                     foreach (Excel.Range r2 in r)
                     { 
@@ -684,7 +685,7 @@ namespace MarkLogic_ExcelAddin
 
             public String getSelectedCells()
             {
-                MessageBox.Show("IN FUNCTION");
+                //MessageBox.Show("IN FUNCTION");
                 object missing = Type.Missing;
                 string coordinate = "";
                 string col = "";
@@ -762,7 +763,7 @@ namespace MarkLogic_ExcelAddin
                     }
 
                     message = row + ":" + col + ":" + value2 + ":" + formula;
-                    MessageBox.Show("MESSAGE " + message);
+                    //MessageBox.Show("MESSAGE " + message);
                 }
                 catch (Exception e)
                 {
@@ -786,7 +787,7 @@ namespace MarkLogic_ExcelAddin
                     row = r.Row.ToString();
                     col = r.Column.ToString();
                     cell = r.Column + ":" + r.Row;
-                    MessageBox.Show("ID: " + r.ID + "value is :" + r.Text + " formula: " + r.Formula + "XPATH: " + r.XPath);
+                    //MessageBox.Show("ID: " + r.ID + "value is :" + r.Text + " formula: " + r.Formula + "XPATH: " + r.XPath);
                 }
                 catch (Exception e)
                 {
@@ -815,7 +816,6 @@ namespace MarkLogic_ExcelAddin
                 r4.Activate();
 
                 //MessageBox.Show(r4.get_Address(true, true, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, null, null));
-
                 //MessageBox.Show("PAUSING");
 
                 //sets active cell using a1
@@ -1136,18 +1136,27 @@ namespace MarkLogic_ExcelAddin
 
             public String openXlsx(string path, string title, string url, string user, string pwd)
             {
-                // MessageBox.Show("in the addin filename:"+filename+ "   uri: "+uri);
+               // MessageBox.Show("in the addin path:"+path+  "      title"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
                 string message = "";
                 object missing = Type.Missing;
                 string tmpdoc = "";
+               
+               // title=title.Replace("/","");
 
                 try
                 {
                     System.Net.WebClient Client = new System.Net.WebClient();
                     Client.Credentials = new System.Net.NetworkCredential(user, pwd);
                     tmpdoc = path + title;
+                    //works thought path ends with / and doc starts with \ so you have C:tmp/\foo.xslx
+                    //may need to fix
+                    //MessageBox.Show("Tempdoc"+tmpdoc);
                     //Client.DownloadFile("http://w2k3-32-4:8000/test.xqy?uid=/Default.xlsx", tmpdoc);//@"C:\test2.xlsx");
                     Client.DownloadFile(url, tmpdoc);//@"C:\test2.xlsx");
+
+                    //something weird with underscores, saves growth_model.xlsx becomes growth.model.xlsx
+                    //may have to fix
+
                     Excel.Workbook wb = Globals.ThisAddIn.Application.Workbooks.Open(tmpdoc, missing, false, missing, missing, missing, true, missing, missing, true, true, missing, missing, missing, missing);
 
                     /*
@@ -1179,6 +1188,7 @@ namespace MarkLogic_ExcelAddin
                 }
                 catch (Exception e)
                 {
+                    //not always true, need to improve error handling or message or both
                     string origmsg = "A document with the name '"+title+"' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
                     MessageBox.Show(origmsg);
                     string errorMsg = e.Message;
@@ -1275,7 +1285,7 @@ namespace MarkLogic_ExcelAddin
                 // Excel.Worksheet xls = null;
                 Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
 
-                MessageBox.Show("ws index: " + ws.Index + "  ws name:" + ws.Name);
+                //MessageBox.Show("ws index: " + ws.Index + "  ws name:" + ws.Name);
                 //getX();
 
                 //    ws = ( Excel.Worksheet)ws.Next;
