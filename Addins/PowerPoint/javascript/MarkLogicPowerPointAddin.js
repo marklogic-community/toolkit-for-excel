@@ -1,5 +1,5 @@
 /* 
-Copyright 2009 Mark Logic Corporation
+Copyright 2009-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ limitations under the License.
  * {@link http://www.marklogic.com} 
  *
  * @author Pete Aven pete.aven@marklogic.com
- * @version 1.0-1 
+ * @version 1.0-3
  */
 
 
@@ -41,7 +41,7 @@ function MLA(){
 }
 */
 /** @ignore */
-MLA.version = { "release" : "1.0-1" };
+MLA.version = { "release" : "1.0-3" };
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){

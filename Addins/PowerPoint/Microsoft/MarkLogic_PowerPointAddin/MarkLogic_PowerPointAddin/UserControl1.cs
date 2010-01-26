@@ -1,4 +1,4 @@
-﻿/*Copyright 2009 Mark Logic Corporation
+﻿/*Copyright 2009-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ namespace MarkLogic_PowerPointAddin
         private bool debug = false;
         private string color = "";
         //private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";
-        private string addinVersion = "1.0-1";
+        private string addinVersion = "1.0-3";
         HtmlDocument htmlDoc;
 
         public UserControl1()
@@ -338,6 +338,7 @@ namespace MarkLogic_PowerPointAddin
             return filename;
         }
 
+
         public String getPresentationPath()
         {
             string path = "";
@@ -572,14 +573,18 @@ namespace MarkLogic_PowerPointAddin
 
         public string convertFilenameToImageDir(string filename)
         {
+            //MessageBox.Show("filename: " + filename);
             string imgDir = "";
             string tmpDir = "";
             string fname = "";
 
             string[] split = filename.Split(new Char[] { '\\' });
             fname = split.Last();
+            //MessageBox.Show("fname: " + fname);
             tmpDir = filename.Replace(fname, "");
+           
             fname = fname.Replace(".pptx", "_PNG");
+            //MessageBox.Show("imgdir: " + fname);
             imgDir = fname; //getTempPath() + fname;
             return imgDir;
 
@@ -732,10 +737,11 @@ namespace MarkLogic_PowerPointAddin
 
             fullfilenamewithpath = saveasdirectory + saveasname; // useSaveFileDialog()+".pptx";
             filename = fullfilenamewithpath.Split(new Char[] { '\\' }).Last();
-
+            //MessageBox.Show("filename" + fullfilenamewithpath);
             saveLocalCopy(fullfilenamewithpath);    
             imgdirwithpath = getTempPath() + convertFilenameToImageDir(fullfilenamewithpath);
 
+            //MessageBox.Show("imgdirwithpath"+imgdirwithpath);
             saveImages(imgdirwithpath, url, user, pwd);
             string fullurl = url + "/" + filename;
             saveActivePresentation(fullfilenamewithpath, fullurl, user, pwd);
@@ -779,7 +785,9 @@ namespace MarkLogic_PowerPointAddin
 
             try
             {
+                //MessageBox.Show("imgdir with path before save"+imgdirwithpath);
                 ppt.SaveAs(imgdirwithpath, PPT.PpSaveAsFileType.ppSaveAsPNG, Office.MsoTriState.msoFalse);
+                //MessageBox.Show("imgdir with path after save" + imgdirwithpath);
             }
             catch (Exception e)
             {

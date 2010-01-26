@@ -1,5 +1,5 @@
 xquery version "1.0-ml";
-(: Copyright 2009 Mark Logic Corporation
+(: Copyright 2009-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ declare namespace zip="xdmp:zip";
 declare namespace p="http://schemas.openxmlformats.org/presentationml/2006/main";
 
 import module "http://marklogic.com/openxml/powerpoint" at "/MarkLogic/openxml/presentation-ml-support-content-types.xqy"; 
+
+(:version 1.0-3:)
 
 declare default element namespace "http://schemas.openxmlformats.org/package/2006/relationships";
 
@@ -600,7 +602,7 @@ declare function ppt:map-max-image-id(
                  return if(fn:matches($k, "image")) then 
                              xs:integer(fn:substring-before(fn:substring-after($k,"image"),"."))
                         else ()
-   	return fn:max($numbers)
+   	return if(fn:empty($numbers)) then 1 else fn:max($numbers)
 };
 
 (:

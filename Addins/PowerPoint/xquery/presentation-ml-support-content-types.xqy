@@ -1,5 +1,5 @@
 xquery version "1.0-ml";
-(: Copyright 2009 Mark Logic Corporation
+(: Copyright 2009-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ declare namespace zip="xdmp:zip";
 
 
 declare default element namespace "http://schemas.openxmlformats.org/package/2006/content-types";
+
+(:version 1.0-3:)
 
 declare function  ppt:ct-utils-update-types(
    $content-types as node(), 
