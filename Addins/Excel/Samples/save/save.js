@@ -34,7 +34,7 @@ function saveXlsxToML()
 
        var saveas = tmpPath+doctitle;
 
-       var msg = MLA.saveActiveWorkbook(tmpPath, doctitle, url, "zeke","zeke");
+       var msg = MLA.saveActiveWorkbook(tmpPath, doctitle, url, "user","pwd");
 
        if(msg=="")
 	       alert("workbook:" + doctitle + " saved.");

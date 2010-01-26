@@ -26,6 +26,6 @@ function openXlsx(docuri)
        var url = fullurl + "/search/download-support.xqy?uid="+docuri;
        //alert("URL: "+url);
 	//window.external.openXlsx(filename,docuri);
-     var msg = MLA.openXlsx(tmpPath, docuri, url, "zeke","zeke");
+     var msg = MLA.openXlsx(tmpPath, docuri, url, "user","pwd");
      // var msg = window.external.OpenXlsx(tmpPath, docuri, url, "zeke","zeke");
 }
