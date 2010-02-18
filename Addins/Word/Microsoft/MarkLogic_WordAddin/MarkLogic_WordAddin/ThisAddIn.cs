@@ -1,4 +1,4 @@
-﻿/*Copyright 2008 Mark Logic Corporation
+﻿/*Copyright 2008-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,9 +42,9 @@ namespace MarkLogic_WordAddin
         private Microsoft.Office.Tools.CustomTaskPane ctpML = null;
         private Microsoft.Office.Tools.CustomTaskPane ctp = null;
         public bool mlPaneDisplayed = false;
-        Document mdoc;
+        private Document mdoc;
+        private bool debug = false;
       
-
         public void AddAllTaskPanes()
         {
             
@@ -55,6 +55,7 @@ namespace MarkLogic_WordAddin
                     foreach (Document _doc in this.Application.Documents)
                     {
                         AddTaskPane(_doc);
+                        
                     }
                 }
                 else
@@ -73,12 +74,13 @@ namespace MarkLogic_WordAddin
             ctpML = this.CustomTaskPanes.Add(new UserControl1(), ac.getCTPTitleLabel(), doc.ActiveWindow);
             ctpML.Visible = true;
             ctpML.Width = 400;
-          
-          
         }
 
         public void RemoveAllTaskPanes()
         {
+            if(debug)
+                MessageBox.Show("RemoveAllTaskPanes()");
+
             if (Globals.ThisAddIn.Application.Documents.Count > 0)
             {
                 for (int i = this.CustomTaskPanes.Count; i > 0; i--)
@@ -95,6 +97,8 @@ namespace MarkLogic_WordAddin
 
         private void RemoveOrphanedTaskPanes()
         {
+            //MessageBox.Show("In this remove orphaned task panes");
+
             for (int i = this.CustomTaskPanes.Count; i > 0; i--)
             {
                 ctp = this.CustomTaskPanes[i - 1];
@@ -105,33 +109,29 @@ namespace MarkLogic_WordAddin
             }
         }
 
-        //public delegate void EventNameEventHandler(object sender, EventNameEventArgs e);
-
         private void Application_DocumentBeforeClose(Document doc, ref bool cancel)
         {
-           /* if (mdoc.Name == doc.Name)
-            {
-               // assumes you added all of the controls in the document
-               // foreach (Word.ContentControl control in doc.ContentControls)
-               // {
-               //      delete control - but do not delete contents
-               //   control.Delete(false);
-               // }
-               
-            }*/
+            if(debug)
+                MessageBox.Show("begin Application_DocumentBeforeClose");
+
+            mdoc = doc;
+            UserControl1 uc = (UserControl1)this.ctpML.Control;
+            mdoc.ContentControlOnEnter -=  new DocumentEvents2_ContentControlOnEnterEventHandler(uc.ThisDocument_ContentControlOnEnter);
+            mdoc.ContentControlOnExit -=  new DocumentEvents2_ContentControlOnExitEventHandler(uc.ThisDocument_ContentControlOnExit);
+            
+            if(debug)
+                MessageBox.Show("end Application_DocumentBeforeClose");
+
             cancel = false;
         }
 
         private void Application_DocumentOpen(Document Doc)
         {
-           //MessageBox.Show("IN OPEN");
-            RemoveOrphanedTaskPanes();
-           // mdoc = null;
-           // mdoc = Doc;
-           // mdoc.ContentControlOnEnter += new DocumentEvents2_ContentControlOnEnterEventHandler(this.ThisDocument_ContentControlOnEnter);
-           // mdoc.ContentControlOnExit += new DocumentEvents2_ContentControlOnExitEventHandler(this.ThisDocument_ContentControlOnExit);
+            if(debug)
+                MessageBox.Show("Application_DocumentOpen");
 
-           
+            RemoveOrphanedTaskPanes();
+
             if (mlPaneDisplayed && this.Application.ShowWindowsInTaskbar)
             {
                 AddTaskPane(Doc);
@@ -140,11 +140,8 @@ namespace MarkLogic_WordAddin
 
         private void Application_NewDocument(Document Doc)
         {
-           // MessageBox.Show("IN NEW");
-           // mdoc = null;
-           // mdoc = this.Application.ActiveDocument;
-           // mdoc.ContentControlOnEnter += new DocumentEvents2_ContentControlOnEnterEventHandler(this.ThisDocument_ContentControlOnEnter);
-           // mdoc.ContentControlOnExit += new DocumentEvents2_ContentControlOnExitEventHandler(this.ThisDocument_ContentControlOnExit);
+            if(debug)
+                MessageBox.Show("Application_NewDocument");
 
             if (mlPaneDisplayed && this.Application.ShowWindowsInTaskbar)
             {
@@ -154,19 +151,18 @@ namespace MarkLogic_WordAddin
 
         private void Application_DocumentChange()
         {
-            //MessageBox.Show("IN CHANGE");
+            if(debug)
+                MessageBox.Show("Application_DocumentChange");
 
             RemoveOrphanedTaskPanes();
-            mdoc = null;
-            mdoc = this.Application.ActiveDocument;
-            mdoc.ContentControlOnEnter += new DocumentEvents2_ContentControlOnEnterEventHandler(this.ThisDocument_ContentControlOnEnter);
-            mdoc.ContentControlOnExit += new DocumentEvents2_ContentControlOnExitEventHandler(this.ThisDocument_ContentControlOnExit);
 
-            //MessageBox.Show("Changing");
         }
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
+            if(debug)
+                 MessageBox.Show("ThisAddin_Startup");
+
             string ribbonBtnLabel = ac.getRibbonButtonLabel();
             string ribbonGroupLabel = ac.getRibbonGroupLabel();
             string ribbonTabLabel = ac.getRibbonTabLabel();
@@ -206,14 +202,13 @@ namespace MarkLogic_WordAddin
                 }
             }
 
-            
-          //  Globals.ThisAddIn.Application.ActiveDocument.ContentControlOnEnter += new DocumentEvents2_ContentControlOnEnterEventHandler(this.ThisDocument_ContentControlOnEnter);
-          //  Globals.ThisAddIn.Application.ActiveDocument.ContentControlOnExit += new DocumentEvents2_ContentControlOnExitEventHandler(this.ThisDocument_ContentControlOnExit);
-
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
+            if(debug)
+                 MessageBox.Show("ThisAddIn_Shutdown");
+
             RemoveAllTaskPanes();
         }
 
@@ -227,77 +222,7 @@ namespace MarkLogic_WordAddin
         {
             this.Startup += new System.EventHandler(ThisAddIn_Startup);
             this.Shutdown += new System.EventHandler(ThisAddIn_Shutdown);
-        
         }
-
-        
-    private void ThisDocument_ContentControlOnEnter(ContentControl contentControl)
-        {
-            UserControl1 uc = (UserControl1)this.ctpML.Control;
-            string parentTag="";
-            string parentID = "";
-
-            try
-            {
-                ContentControl parent = contentControl.ParentContentControl;
-                parentTag = parent.Tag;
-                parentID = parent.ID;
-
-            }
-            catch (Exception e)
-            {
-                //do nothing, not parent
-                string donothing_removewarning = e.Message;
-                //MessageBox.Show("No Parent");
-            }
-            uc.contentControlOnEnter( contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
-            //webBrowser1.Document.InvokeScript("testOnEnter",  new String[] { "called from client code" });
-            //MessageBox.Show(String.Format( "ContentControl of type {0} with ID {1} and Tag {2} entered.",contentControl.Type, contentControl.ID, contentControl.Tag));
-
-        }
-
-        private void ThisDocument_ContentControlOnExit(ContentControl contentControl, ref bool cancel)
-        {
-           // this.CustomTaskPanes.Add(new UserControl1(), ac.getCTPTitleLabel(), doc.ActiveWindow);
-            UserControl1 uc = (UserControl1)this.ctpML.Control;
-            string parentTag = "";
-            string parentID = "";
-
-            try
-            {
-                ContentControl parent = contentControl.ParentContentControl;
-                parentTag = parent.Tag;
-                parentID = parent.ID;
-
-            }
-            catch (Exception e)
-            {
-                //do nothing, not parent
-                string donothing_removewarning = e.Message;
-                //MessageBox.Show("No Parent");
-            }
-
-            uc.contentControlOnExit(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
-            //uc.webBrowser1.Document.InvokeScript("testOnExit", new String[] { "called from client code 2" });
-            //MessageBox.Show("Exiting");
-           // MessageBox.Show(String.Format(
-
-             // "ContentControl of type {0} with ID {1} exited.",
-
-              //contentControl.Type, contentControl.ID));
-
-        }
-    
-        //test
-        /*
-               public void OnConnection(object application,
-                                 Extensibility.ext_ConnectMode connectMode,
-                                 object addInInst, ref System.Array custom)
-                {
-                   // addInInst = this;
-                    Microsoft.VisualBasic.Interaction.CallByName(addInInst, "Object", Microsoft.VisualBasic.CallType.Let, this);
-                }
-         */
 
         #endregion
     }

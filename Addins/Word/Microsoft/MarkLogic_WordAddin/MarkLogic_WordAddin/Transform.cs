@@ -1,4 +1,4 @@
-﻿/*Copyright 2008 Mark Logic Corporation
+﻿/*Copyright 2008-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -326,6 +326,48 @@ namespace MarkLogic_WordAddin
             {
                 string errMsg = e.Message;
             }
+            return builder.ToString();
+        }
+
+        //used to set packagexml
+        internal static string setPackageXML(string documentXml)
+        {
+            StringBuilder builder = new StringBuilder();
+            XmlDocument document = new XmlDocument();
+
+            try
+            {
+                Globals.ThisAddIn.Application.ActiveDocument.Content.Select();
+
+
+                //write to file here:
+                /*  System.Windows.Forms.MessageBox.Show(docx);
+                  TextWriter tw = new StreamWriter(@"C:\origdocx.xml");
+                  tw.WriteLine(docx);
+                  tw.Close();
+
+                  System.Windows.Forms.MessageBox.Show(documentXml);
+                  TextWriter tw2 = new StreamWriter(@"C:\sdtxml.xml");
+                  tw2.WriteLine(documentXml);
+                  tw2.Close();
+                 * */
+
+                document.LoadXml(documentXml);
+
+               // XmlNode doc = document.SelectSingleNode(documentXPath, NamespaceManager);
+                //doc.InnerXml = documentXml;
+
+                using (StringWriter writer = new StringWriter(builder))
+                {
+                    document.Save(writer);
+                }
+
+            }
+            catch (Exception e)
+            {
+                string errMsg = e.Message;
+            }
+
             return builder.ToString();
         }
 

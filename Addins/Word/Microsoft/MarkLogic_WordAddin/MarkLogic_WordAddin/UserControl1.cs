@@ -1,4 +1,4 @@
-﻿/*Copyright 2008 Mark Logic Corporation
+﻿/*Copyright 2008-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,16 +47,14 @@ namespace MarkLogic_WordAddin
         private bool debug = false;
         private bool debugMsg = false;
         private string color = "";
-        private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";
+        private string addinVersion = "1.1-1";
         HtmlDocument htmlDoc;
+        public Word.Document udoc;
       
         public UserControl1()
         {
             InitializeComponent();
             webUrl = ac.getWebURL();
-         //experimenting with where to add controls when multiple docs opened
-         // Globals.ThisAddIn.Application.ActiveDocument.ContentControlOnEnter += new Word.DocumentEvents2_ContentControlOnEnterEventHandler(this.ThisDocument_ContentControlOnEnter);
-         // Globals.ThisAddIn.Application.ActiveDocument.ContentControlOnExit += new Word.DocumentEvents2_ContentControlOnExitEventHandler(this.ThisDocument_ContentControlOnExit);
 
             if (webUrl.Equals(""))
             {
@@ -76,11 +74,55 @@ namespace MarkLogic_WordAddin
                 webBrowser1.ScriptErrorsSuppressed = true;
 
                 this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
-           //   Globals.ThisAddIn.Application.ActiveDocument.ContentControlOnEnter += new Word.DocumentEvents2_ContentControlOnEnterEventHandler(this.ThisDocument_ContentControlOnEnter);
-           //   Globals.ThisAddIn.Application.ActiveDocument.ContentControlOnExit += new Word.DocumentEvents2_ContentControlOnExitEventHandler(this.ThisDocument_ContentControlOnExit);
+
+
+                udoc = Globals.ThisAddIn.Application.ActiveDocument;
+                udoc.ContentControlOnEnter += new Word.DocumentEvents2_ContentControlOnEnterEventHandler(this.ThisDocument_ContentControlOnEnter);
+                udoc.ContentControlOnExit += new Word.DocumentEvents2_ContentControlOnExitEventHandler(this.ThisDocument_ContentControlOnExit);
                 
             }   
 
+        }
+
+        public void ThisDocument_ContentControlOnEnter(Word.ContentControl contentControl)
+        {
+            string parentTag = "";
+            string parentID = "";
+
+            try
+            {
+                Word.ContentControl parent = contentControl.ParentContentControl;
+                parentTag = parent.Tag;
+                parentID = parent.ID;
+
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+            }
+             contentControlOnEnter(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
+      }
+
+        public void ThisDocument_ContentControlOnExit(Word.ContentControl contentControl, ref bool cancel)
+        {
+
+            string parentTag = "";
+            string parentID = "";
+
+            try
+            {
+                Word.ContentControl parent = contentControl.ParentContentControl;
+                parentTag = parent.Tag;
+                parentID = parent.ID;
+
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+            }
+
+            contentControlOnExit(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
+ 
         }
 
 
@@ -116,8 +158,8 @@ namespace MarkLogic_WordAddin
                 htmlDoc.Click += htmlDoc_Click;
               
                 //this.webBrowser1.DoDragDrop  MouseDown += new MouseEventHandler(this.MouseTest);
-              //revisit for cust and pastte             
-              // this.webBrowser1.Document.MouseDown += new HtmlElementEventHandler(this.ButtonDown);
+                //revisit for cust and pastte             
+                //this.webBrowser1.Document.MouseDown += new HtmlElementEventHandler(this.ButtonDown);
                 //htmlDoc.MouseMove += new MouseEventHandler(Element_MouseMove);
                 //htmlDoc.MouseDown  += new MouseButtonEventHandler(Element_MouseLeftButtonDown);
                 //htmlDoc.MouseUp += new MouseButtonEventHandler(Element_MouseLeftButtonUp);
@@ -139,35 +181,6 @@ namespace MarkLogic_WordAddin
                  
               }
         }
-
-
-      /*  private void ThisDocument_ContentControlOnEnter(Word.ContentControl contentControl)
-        {
-
-            MessageBox.Show(String.Format(
-
-              "ContentControl of type {0} with ID {1} and Tag {2} entered.",
-
-              contentControl.Type, contentControl.ID, contentControl.Tag));
-
-        }
-
-        private void ThisDocument_ContentControlOnExit( Word.ContentControl contentControl, ref bool cancel)
-        {
-
-            MessageBox.Show(String.Format(
-
-              "ContentControl of type {0} with ID {1} exited.",
-
-              contentControl.Type, contentControl.ID));
-
-        }
-       * */
-      //public Word.Document Document { get; set; }
-
-      //internal void Clear()
-      //{
-      //}
         
         //configuration info
         public enum ColorScheme : int
@@ -215,8 +228,6 @@ namespace MarkLogic_WordAddin
 
         public String getCustomXMLPartIds()
         {
-            
-            
             string ids = "";
 
             try
@@ -251,7 +262,6 @@ namespace MarkLogic_WordAddin
 
         public String getCustomXMLPart(string id)
         {
-
             string custompiecexml = "";
 
             try
@@ -333,6 +343,71 @@ namespace MarkLogic_WordAddin
 
             return message;
              
+        }
+
+        public String setDocumentWordOpenXML(string wpml)
+        {
+            string docxml = "";
+            object missing = System.Reflection.Missing.Value;
+
+            try
+            {
+                //consider close/open/insert or just open/insert for adding docs
+                //Globals.ThisAddIn.Application.Documents.Add(
+                //Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument.Close;
+                //could be useful for merges, etc.
+
+                //toreset current doc, unfortunately have to select all at this time
+    
+                Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
+                doc.Application.Selection.InsertXML(Transform.setPackageXML(wpml), ref missing);
+
+                object dir = Word.WdCollapseDirection.wdCollapseEnd;
+                Word.Range r = doc.Range(ref missing,ref missing);
+                r.Collapse(ref dir);
+                r.Select();
+
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                docxml = "error: " + errorMsg;
+            }
+
+            return docxml;
+        }
+
+        public String getDocumentWordOpenXML()
+        {
+            string wpml = "";
+            try
+            {
+               wpml = Globals.ThisAddIn.Application.ActiveDocument.WordOpenXML;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                wpml = "error: " + errorMsg;
+            }
+
+            return wpml;
+
+        }
+
+        public String getSelectionWordOpenXML()
+        {
+            string wpml = "";
+            try
+            {
+                wpml = Globals.ThisAddIn.Application.Selection.WordOpenXML;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                wpml = "error: " + errorMsg;
+            }
+
+            return wpml;
         }
 
         public String getSelection(int idx)
@@ -804,7 +879,6 @@ namespace MarkLogic_WordAddin
                 }
             }
 
-
             catch (Exception e)
             {
                 string errorMsg = e.Message;
@@ -854,7 +928,8 @@ namespace MarkLogic_WordAddin
             }
         }
 
-    /*    public String openDOCXDirect(string docurl, string username, string pwd)
+        /*    
+        public String openDOCXDirect(string docurl, string username, string pwd)
         {
             MessageBox.Show("trying this drama");
             //string path, string title, string url, string user, string pwd
@@ -896,6 +971,7 @@ namespace MarkLogic_WordAddin
             return message;
         }
         */
+
         public String openDOCX(string path, string title, string url, string user, string pwd)
         {
             string message = "";
@@ -978,7 +1054,6 @@ namespace MarkLogic_WordAddin
             return message;
         }
 
-
         public string saveActiveDocument(string filename, string url, string user, string pwd)
         {
             string message = "";
@@ -1033,8 +1108,8 @@ namespace MarkLogic_WordAddin
 
             return message;
         }
-    //---------------------------------------------------------------------------//
-        //undocumented - do we want to pursue bookmarks?
+       
+        //begin undocumented - do we want to pursue bookmarks?----------------------------------------//
         public string insertBookmarkText(string bookmark, string text)
         {
             string message = "";
@@ -1054,6 +1129,7 @@ namespace MarkLogic_WordAddin
 
             return message;
         }
+        //end undocumented ---------------------------------------------------------------------------//
 
         public string getContentControlIds()
         {   //id always present, system generated; consistent (unlike customxmlparts); check in XML
@@ -1121,7 +1197,6 @@ namespace MarkLogic_WordAddin
 
             return message;
         }
-
 
         public string insertContentControlImage(string ccid, string imageuri, string username, string pwd)
         {
@@ -1279,13 +1354,10 @@ namespace MarkLogic_WordAddin
 
                     foreach (Word.ContentControl cc in ccs)
                     {
-                        //if (cc.Tag.Equals(parent))
                         if(cc.ID.Equals(parent))
                         {
-                           
                             try
                             {
-
                                 cc.Range.Select();
 
                                 if (breakflag)
@@ -1315,10 +1387,8 @@ namespace MarkLogic_WordAddin
                                 string errorMsg = e.Message;
                                 message = "error: " + errorMsg;
                             }
-
                         }
                     }
-
                 }
                 else
                 {
@@ -1335,7 +1405,6 @@ namespace MarkLogic_WordAddin
             }
 
             return message;
-
         }
 
         public string removeContentControl(string ccid, string deletecontents)
@@ -1365,8 +1434,6 @@ namespace MarkLogic_WordAddin
             }
 
             return message;
-
-
         }
 
         //could add other functions to handle ContentControlDate* options , ComboBox, etc.
@@ -1398,7 +1465,6 @@ namespace MarkLogic_WordAddin
 
             return message;
         }
-
 
         //could return bool ("true" or "false"), if we passed id instead of tag
         //or do we want a property on SimpleContentControl, or a function to check lockStatus?
@@ -1490,8 +1556,8 @@ namespace MarkLogic_WordAddin
                 {
                     //if (cc.Tag.Equals(tag/*"pttesttag"*/))
                     if(cc.ID.Equals(ccid))
-                    {
-                         mapped = cc.XMLMapping.SetMapping(xpath, prefix, mypart);
+                    { 
+                        mapped = cc.XMLMapping.SetMapping(xpath, prefix, mypart);
                     }
                 }
             }
@@ -1875,28 +1941,31 @@ namespace MarkLogic_WordAddin
 
             return message;
         }
-/*
+         
+        /*
+        //a bizzare experiment that actually works, still serializes as 2007 xml on save
         public string insert2003XML()
         {
             string message = "";
 
-            string xml = "<w:document xmlns:w='http://schemas.microsoft.com/office/word/2003/wordml'>" +  // xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'>" +
-     "<w:body>" +
-       "<w:p>" +
-         "<w:pPr>" +
-           "<w:rPr>" +
-             "<w:u w:val='single'/>" +
-           "</w:rPr>" +
-         "</w:pPr>" + 
-         "<w:r>" +
-                  "<w:rPr>" +
-             "<w:u w:val='single'/>" +
-           "</w:rPr>" +
-           "<w:t>TEST UNDERLINE.</w:t>" +
-         "</w:r>" +
-       "</w:p>"+
-         "</w:body>" +
-       "</w:document>" ;
+            string xml = 
+              "<w:document xmlns:w='http://schemas.microsoft.com/office/word/2003/wordml'>" +  // xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'>" +
+                "<w:body>" +
+                  "<w:p>" +
+                    "<w:pPr>" +
+                    "<w:rPr>" +
+                      "<w:u w:val='single'/>" +
+                    "</w:rPr>" +
+                    "</w:pPr>" + 
+                    "<w:r>" +
+                      "<w:rPr>" +
+                           "<w:u w:val='single'/>" +
+                      "</w:rPr>" +
+                      "<w:t>TEST UNDERLINE.</w:t>" +
+                    "</w:r>" +
+                  "</w:p>"+
+                "</w:body>" +
+              "</w:document>" ;
 
             try
             {
@@ -1911,6 +1980,7 @@ namespace MarkLogic_WordAddin
             return message;
         }
 
+        //this again - another experiment
         public string testDragDrop()
         {
             string message = "";
@@ -1923,7 +1993,7 @@ namespace MarkLogic_WordAddin
                 text = (String)bak.GetData(DataFormats.Text);
             }
             object fo = "t";
-          //  DataObject dragData = new DataObject(typeof(string), PetesMethodOfDoom(mqr));
+            //DataObject dragData = new DataObject(typeof(string), PetesMethodOfDoom(mqr));
             //DataObject dragData = new DataObject(typeof(string), PetesMethodOfDoom(mqr));
 
             //DragDrop.DoDragDrop(TestBox, dragData, DragDropEffects.All);
@@ -1932,7 +2002,6 @@ namespace MarkLogic_WordAddin
             //webBrowser1.DoDragDrop("test", DragDropEffects.All);
             return message;
         }
-
         
         */
 
