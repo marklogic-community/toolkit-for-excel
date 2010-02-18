@@ -77,19 +77,26 @@ namespace MarkLogic_WordAddin
 
 
                 udoc = the_doc; // Globals.ThisAddIn.Application.ActiveDocument;
-                udoc.ContentControlOnEnter += new Word.DocumentEvents2_ContentControlOnEnterEventHandler(this.ThisDocument_ContentControlOnEnter);
-                udoc.ContentControlOnExit += new Word.DocumentEvents2_ContentControlOnExitEventHandler(this.ThisDocument_ContentControlOnExit);
-                udoc.ContentControlAfterAdd += new Word.DocumentEvents2_ContentControlAfterAddEventHandler(this.ThisDocument_ContentControlAfterAdd);
-                udoc.ContentControlBeforeDelete += new Word.DocumentEvents2_ContentControlBeforeDeleteEventHandler(this.ThisDocument_ContentControlBeforeDelete);
-                
-                //following only fired when control bound to custom xml part
-                udoc.ContentControlBeforeContentUpdate += new Word.DocumentEvents2_ContentControlBeforeContentUpdateEventHandler(this.ThisDocument_ContentControlBeforeContentUpdate);
-                udoc.ContentControlBeforeStoreUpdate += new Word.DocumentEvents2_ContentControlBeforeStoreUpdateEventHandler(this.ThisDocument_ContentControlBeforeStoreUpdate);
+                try
+                {
+                    udoc.ContentControlOnEnter += new Word.DocumentEvents2_ContentControlOnEnterEventHandler(this.ThisDocument_ContentControlOnEnter);
+                    udoc.ContentControlOnExit += new Word.DocumentEvents2_ContentControlOnExitEventHandler(this.ThisDocument_ContentControlOnExit);
+                    udoc.ContentControlAfterAdd += new Word.DocumentEvents2_ContentControlAfterAddEventHandler(this.ThisDocument_ContentControlAfterAdd);
+                    udoc.ContentControlBeforeDelete += new Word.DocumentEvents2_ContentControlBeforeDeleteEventHandler(this.ThisDocument_ContentControlBeforeDelete);
 
-                //following fires for building block insert, opp for trackin re-use?
-                //different from above, need to think how we'll return
+                    //following only fired when control bound to custom xml part
+                    udoc.ContentControlBeforeContentUpdate += new Word.DocumentEvents2_ContentControlBeforeContentUpdateEventHandler(this.ThisDocument_ContentControlBeforeContentUpdate);
+                    udoc.ContentControlBeforeStoreUpdate += new Word.DocumentEvents2_ContentControlBeforeStoreUpdateEventHandler(this.ThisDocument_ContentControlBeforeStoreUpdate);
 
-                //udoc.BuildingBlockInsert += new Word.DocumentEvents2_BuildingBlockInsertEventHandler
+                    //following fires for building block insert, opp for trackin re-use?
+                    //different from above, need to think how we'll return
+
+                    //udoc.BuildingBlockInsert += new Word.DocumentEvents2_BuildingBlockInsertEventHandler
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("error: unable to add Content Control Event handlers to Document. " + e.Message);
+                }
                 
             }   
 
@@ -112,6 +119,7 @@ namespace MarkLogic_WordAddin
             {
                 string donothing_removewarning = e.Message;
             }
+
              contentControlOnEnter(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
         }
 
@@ -219,32 +227,116 @@ namespace MarkLogic_WordAddin
 
         public void contentControlOnEnter(string ccID, string ccTag, string ccTitle, string ccType,string ccParentTag, string ccParentID)
         {
-            webBrowser1.Document.InvokeScript("contentControlOnEnter", new String[] { ccID, ccTag, ccTitle, ccType , ccParentTag, ccParentID});
+            try
+            { 
+               object result = this.webBrowser1.Document.InvokeScript("contentControlOnEnter", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+               string res = result.ToString();
+
+               if (res.StartsWith("error"))
+               {
+                   MessageBox.Show(res);
+               }
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show("Error: " + e.Message);
+            }
         }
 
         public void contentControlOnExit(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
         {
-            webBrowser1.Document.InvokeScript("contentControlOnExit", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID});
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("contentControlOnExit", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show(res);
+                }
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show("Error: " + e.Message);
+            }
         }
 
         public void contentControlAfterAdd(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
         {
-            webBrowser1.Document.InvokeScript("contentControlAfterAdd", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("contentControlAfterAdd", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show(res);
+                }
+            }
+            catch(Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show("Error: " + e.Message);
+            }
         }
 
         public void contentControlBeforeDelete(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
         {
-            webBrowser1.Document.InvokeScript("contentControlBeforeDelete", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("contentControlBeforeDelete", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show(res);
+                }
+            }
+            catch(Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show("Error: " + e.Message);
+            }
         }
 
         public void contentControlBeforeContentUpdate(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
         {
-            webBrowser1.Document.InvokeScript("contentControlBeforeContentUpdate", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("contentControlBeforeContentUpdate", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show(res);
+                }
+            }
+            catch(Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show("Error: " + e.Message);
+            }
         }
 
         public void contentControlBeforeStoreUpdate(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
         {
-            webBrowser1.Document.InvokeScript("contentControlBeforeStoreUpdate", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("contentControlBeforeStoreUpdate", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show(res);
+                }
+            }
+            catch(Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show("Error: " + e.Message);
+            }
         }
 
         //=================== END CONTENT CONTROL EVENT HANDLERS ====================================
