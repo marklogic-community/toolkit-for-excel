@@ -31,9 +31,6 @@ using System.Drawing;
 using System.Windows.Forms;
 
 
-
-
-
 namespace MarkLogic_WordAddin
 {
     public partial class ThisAddIn
@@ -71,7 +68,7 @@ namespace MarkLogic_WordAddin
 
         public void AddTaskPane(Document doc)
         {
-            ctpML = this.CustomTaskPanes.Add(new UserControl1(), ac.getCTPTitleLabel(), doc.ActiveWindow);
+            ctpML = this.CustomTaskPanes.Add(new UserControl1(doc), ac.getCTPTitleLabel(), doc.ActiveWindow);
             ctpML.Visible = true;
             ctpML.Width = 400;
         }
@@ -116,9 +113,14 @@ namespace MarkLogic_WordAddin
 
             mdoc = doc;
             UserControl1 uc = (UserControl1)this.ctpML.Control;
+
             mdoc.ContentControlOnEnter -=  new DocumentEvents2_ContentControlOnEnterEventHandler(uc.ThisDocument_ContentControlOnEnter);
             mdoc.ContentControlOnExit -=  new DocumentEvents2_ContentControlOnExitEventHandler(uc.ThisDocument_ContentControlOnExit);
-            
+            mdoc.ContentControlAfterAdd -=  new DocumentEvents2_ContentControlAfterAddEventHandler(uc.ThisDocument_ContentControlAfterAdd);
+            mdoc.ContentControlBeforeDelete -= new DocumentEvents2_ContentControlBeforeDeleteEventHandler(uc.ThisDocument_ContentControlBeforeDelete);
+            mdoc.ContentControlBeforeContentUpdate -= new DocumentEvents2_ContentControlBeforeContentUpdateEventHandler(uc.ThisDocument_ContentControlBeforeContentUpdate);
+            mdoc.ContentControlBeforeStoreUpdate -= new DocumentEvents2_ContentControlBeforeStoreUpdateEventHandler(uc.ThisDocument_ContentControlBeforeStoreUpdate);
+
             if(debug)
                 MessageBox.Show("end Application_DocumentBeforeClose");
 

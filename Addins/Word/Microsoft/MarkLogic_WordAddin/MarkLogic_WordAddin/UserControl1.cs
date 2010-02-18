@@ -51,7 +51,7 @@ namespace MarkLogic_WordAddin
         HtmlDocument htmlDoc;
         public Word.Document udoc;
       
-        public UserControl1()
+        public UserControl1(Word.Document the_doc)
         {
             InitializeComponent();
             webUrl = ac.getWebURL();
@@ -76,14 +76,26 @@ namespace MarkLogic_WordAddin
                 this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
 
 
-                udoc = Globals.ThisAddIn.Application.ActiveDocument;
+                udoc = the_doc; // Globals.ThisAddIn.Application.ActiveDocument;
                 udoc.ContentControlOnEnter += new Word.DocumentEvents2_ContentControlOnEnterEventHandler(this.ThisDocument_ContentControlOnEnter);
                 udoc.ContentControlOnExit += new Word.DocumentEvents2_ContentControlOnExitEventHandler(this.ThisDocument_ContentControlOnExit);
+                udoc.ContentControlAfterAdd += new Word.DocumentEvents2_ContentControlAfterAddEventHandler(this.ThisDocument_ContentControlAfterAdd);
+                udoc.ContentControlBeforeDelete += new Word.DocumentEvents2_ContentControlBeforeDeleteEventHandler(this.ThisDocument_ContentControlBeforeDelete);
+                
+                //following only fired when control bound to custom xml part
+                udoc.ContentControlBeforeContentUpdate += new Word.DocumentEvents2_ContentControlBeforeContentUpdateEventHandler(this.ThisDocument_ContentControlBeforeContentUpdate);
+                udoc.ContentControlBeforeStoreUpdate += new Word.DocumentEvents2_ContentControlBeforeStoreUpdateEventHandler(this.ThisDocument_ContentControlBeforeStoreUpdate);
+
+                //following fires for building block insert, opp for trackin re-use?
+                //different from above, need to think how we'll return
+
+                //udoc.BuildingBlockInsert += new Word.DocumentEvents2_BuildingBlockInsertEventHandler
                 
             }   
 
         }
 
+        //================= BEGIN CONTENT CONTROL EVENT HANDLERS ====================================
         public void ThisDocument_ContentControlOnEnter(Word.ContentControl contentControl)
         {
             string parentTag = "";
@@ -101,7 +113,7 @@ namespace MarkLogic_WordAddin
                 string donothing_removewarning = e.Message;
             }
              contentControlOnEnter(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
-      }
+        }
 
         public void ThisDocument_ContentControlOnExit(Word.ContentControl contentControl, ref bool cancel)
         {
@@ -125,6 +137,85 @@ namespace MarkLogic_WordAddin
  
         }
 
+        public void ThisDocument_ContentControlAfterAdd(Word.ContentControl contentControl, bool InUndoRedo)
+        {
+            string parentTag = "";
+            string parentID = "";
+
+            try
+            {
+                Word.ContentControl parent = contentControl.ParentContentControl;
+                parentTag = parent.Tag;
+                parentID = parent.ID;
+
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+            }
+
+            contentControlAfterAdd(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
+        }
+
+        public void ThisDocument_ContentControlBeforeDelete(Word.ContentControl contentControl, bool InUndoRedo)
+        {
+            string parentTag = "";
+            string parentID = "";
+
+            try
+            {
+                Word.ContentControl parent = contentControl.ParentContentControl;
+                parentTag = parent.Tag;
+                parentID = parent.ID;
+
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+            }
+
+            contentControlBeforeDelete(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
+        }
+
+        public void ThisDocument_ContentControlBeforeContentUpdate(Word.ContentControl contentControl, ref string content)
+        {
+            string parentTag = "";
+            string parentID = "";
+
+            try
+            {
+                Word.ContentControl parent = contentControl.ParentContentControl;
+                parentTag = parent.Tag;
+                parentID = parent.ID;
+
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+            }
+
+            contentControlBeforeContentUpdate(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
+        }
+
+        public void ThisDocument_ContentControlBeforeStoreUpdate(Word.ContentControl contentControl, ref string content)
+        {
+            string parentTag = "";
+            string parentID = "";
+
+            try
+            {
+                Word.ContentControl parent = contentControl.ParentContentControl;
+                parentTag = parent.Tag;
+                parentID = parent.ID;
+
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+            }
+
+            contentControlBeforeStoreUpdate(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
+        }
 
         public void contentControlOnEnter(string ccID, string ccTag, string ccTitle, string ccType,string ccParentTag, string ccParentID)
         {
@@ -135,6 +226,28 @@ namespace MarkLogic_WordAddin
         {
             webBrowser1.Document.InvokeScript("contentControlOnExit", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID});
         }
+
+        public void contentControlAfterAdd(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
+        {
+            webBrowser1.Document.InvokeScript("contentControlAfterAdd", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+        }
+
+        public void contentControlBeforeDelete(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
+        {
+            webBrowser1.Document.InvokeScript("contentControlBeforeDelete", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+        }
+
+        public void contentControlBeforeContentUpdate(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
+        {
+            webBrowser1.Document.InvokeScript("contentControlBeforeContentUpdate", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+        }
+
+        public void contentControlBeforeStoreUpdate(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
+        {
+            webBrowser1.Document.InvokeScript("contentControlBeforeStoreUpdate", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+        }
+
+        //=================== END CONTENT CONTROL EVENT HANDLERS ====================================
 
   /*    trying different things for drag/drop
    *    private void ButtonDown(object sender, HtmlElementEventArgs mea)  //MouseEventArgs mea)
