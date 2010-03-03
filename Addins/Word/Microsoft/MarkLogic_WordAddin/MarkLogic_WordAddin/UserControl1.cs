@@ -120,7 +120,7 @@ namespace MarkLogic_WordAddin
                 string donothing_removewarning = e.Message;
             }
 
-             contentControlOnEnter(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
+             contentControlOnEnter(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), contentControl.LockContentControl.ToString(), contentControl.LockContents.ToString(), parentTag, parentID);
         }
 
         public void ThisDocument_ContentControlOnExit(Word.ContentControl contentControl, ref bool cancel)
@@ -141,7 +141,7 @@ namespace MarkLogic_WordAddin
                 string donothing_removewarning = e.Message;
             }
 
-            contentControlOnExit(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
+            contentControlOnExit(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), contentControl.LockContentControl.ToString(), contentControl.LockContents.ToString(), parentTag, parentID);
  
         }
 
@@ -162,7 +162,7 @@ namespace MarkLogic_WordAddin
                 string donothing_removewarning = e.Message;
             }
 
-            contentControlAfterAdd(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
+            contentControlAfterAdd(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), contentControl.LockContentControl.ToString(), contentControl.LockContents.ToString(), parentTag, parentID);
         }
 
         public void ThisDocument_ContentControlBeforeDelete(Word.ContentControl contentControl, bool InUndoRedo)
@@ -182,7 +182,7 @@ namespace MarkLogic_WordAddin
                 string donothing_removewarning = e.Message;
             }
 
-            contentControlBeforeDelete(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
+            contentControlBeforeDelete(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), contentControl.LockContentControl.ToString(), contentControl.LockContents.ToString(), parentTag, parentID);
         }
 
         public void ThisDocument_ContentControlBeforeContentUpdate(Word.ContentControl contentControl, ref string content)
@@ -202,7 +202,7 @@ namespace MarkLogic_WordAddin
                 string donothing_removewarning = e.Message;
             }
 
-            contentControlBeforeContentUpdate(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
+            contentControlBeforeContentUpdate(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(),contentControl.LockContentControl.ToString(), contentControl.LockContents.ToString(), parentTag, parentID);
         }
 
         public void ThisDocument_ContentControlBeforeStoreUpdate(Word.ContentControl contentControl, ref string content)
@@ -222,14 +222,14 @@ namespace MarkLogic_WordAddin
                 string donothing_removewarning = e.Message;
             }
 
-            contentControlBeforeStoreUpdate(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), parentTag, parentID);
+            contentControlBeforeStoreUpdate(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), contentControl.LockContentControl.ToString(), contentControl.LockContents.ToString(), parentTag, parentID);
         }
 
-        public void contentControlOnEnter(string ccID, string ccTag, string ccTitle, string ccType,string ccParentTag, string ccParentID)
+        public void contentControlOnEnter(string ccID, string ccTag, string ccTitle, string ccType,string ccLockCtrl, string ccLockContents, string ccParentTag, string ccParentID)
         {
             try
             { 
-               object result = this.webBrowser1.Document.InvokeScript("contentControlOnEnter", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+               object result = this.webBrowser1.Document.InvokeScript("contentControlOnEnter", new String[] { ccID, ccTag, ccTitle, ccType, ccLockCtrl, ccLockContents, ccParentTag, ccParentID });
                string res = result.ToString();
 
                if (res.StartsWith("error"))
@@ -244,11 +244,11 @@ namespace MarkLogic_WordAddin
             }
         }
 
-        public void contentControlOnExit(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
+        public void contentControlOnExit(string ccID, string ccTag, string ccTitle, string ccType, string ccLockCtrl, string ccLockContents, string ccParentTag, string ccParentID)
         {
             try
             {
-                object result = webBrowser1.Document.InvokeScript("contentControlOnExit", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+                object result = webBrowser1.Document.InvokeScript("contentControlOnExit", new String[] { ccID, ccTag, ccTitle, ccType,ccLockCtrl,ccLockContents, ccParentTag, ccParentID });
                 string res = result.ToString();
 
                 if (res.StartsWith("error"))
@@ -263,11 +263,11 @@ namespace MarkLogic_WordAddin
             }
         }
 
-        public void contentControlAfterAdd(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
+        public void contentControlAfterAdd(string ccID, string ccTag, string ccTitle, string ccType,string ccLockCtrl, string ccLockContents, string ccParentTag, string ccParentID)
         {
             try
             {
-                object result = webBrowser1.Document.InvokeScript("contentControlAfterAdd", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+                object result = webBrowser1.Document.InvokeScript("contentControlAfterAdd", new String[] { ccID, ccTag, ccTitle, ccType, ccLockCtrl, ccLockContents, ccParentTag, ccParentID });
                 string res = result.ToString();
 
                 if (res.StartsWith("error"))
@@ -282,11 +282,11 @@ namespace MarkLogic_WordAddin
             }
         }
 
-        public void contentControlBeforeDelete(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
+        public void contentControlBeforeDelete(string ccID, string ccTag, string ccTitle, string ccType, string ccLockCtrl, string ccLockContents, string ccParentTag, string ccParentID)
         {
             try
             {
-                object result = webBrowser1.Document.InvokeScript("contentControlBeforeDelete", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+                object result = webBrowser1.Document.InvokeScript("contentControlBeforeDelete", new String[] { ccID, ccTag, ccTitle, ccType, ccLockCtrl, ccLockContents, ccParentTag, ccParentID });
                 string res = result.ToString();
 
                 if (res.StartsWith("error"))
@@ -301,11 +301,11 @@ namespace MarkLogic_WordAddin
             }
         }
 
-        public void contentControlBeforeContentUpdate(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
+        public void contentControlBeforeContentUpdate(string ccID, string ccTag, string ccTitle, string ccType, string ccLockCtrl, string ccLockContents, string ccParentTag, string ccParentID)
         {
             try
             {
-                object result = webBrowser1.Document.InvokeScript("contentControlBeforeContentUpdate", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+                object result = webBrowser1.Document.InvokeScript("contentControlBeforeContentUpdate", new String[] { ccID, ccTag, ccTitle, ccType, ccLockCtrl, ccLockContents, ccParentTag, ccParentID });
                 string res = result.ToString();
 
                 if (res.StartsWith("error"))
@@ -320,11 +320,11 @@ namespace MarkLogic_WordAddin
             }
         }
 
-        public void contentControlBeforeStoreUpdate(string ccID, string ccTag, string ccTitle, string ccType, string ccParentTag, string ccParentID)
+        public void contentControlBeforeStoreUpdate(string ccID, string ccTag, string ccTitle, string ccType, string ccLockCtrl, string ccLockContents, string ccParentTag, string ccParentID)
         {
             try
             {
-                object result = webBrowser1.Document.InvokeScript("contentControlBeforeStoreUpdate", new String[] { ccID, ccTag, ccTitle, ccType, ccParentTag, ccParentID });
+                object result = webBrowser1.Document.InvokeScript("contentControlBeforeStoreUpdate", new String[] { ccID, ccTag, ccTitle, ccType, ccLockCtrl, ccLockContents, ccParentTag, ccParentID });
                 string res = result.ToString();
 
                 if (res.StartsWith("error"))
@@ -1336,6 +1336,12 @@ namespace MarkLogic_WordAddin
         }
         //end undocumented ---------------------------------------------------------------------------//
 
+
+        //getContentControlIdsByTag
+        //getContentControlIdsByTitle
+        //use arrow keys to navigate (does doc need to be protected?)
+        //also, can map content control to custom part using quick parts
+
         public string getContentControlIds()
         {   //id always present, system generated; consistent (unlike customxmlparts); check in XML
             string message = "";
@@ -1361,6 +1367,57 @@ namespace MarkLogic_WordAddin
 
             return message;
         }
+
+        public string getContentControlIdsByTag(string tag)
+        {
+            string message = "";
+            string ids = "";
+
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.SelectContentControlsByTag(tag);
+                foreach (Word.ContentControl cc in ccs)
+                {
+                   ids = ids + cc.ID + "|";
+                }
+
+                ids = ids.Remove(ids.Length - 1);
+                message = ids;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string getContentControlIdsByTitle(string title)
+        {
+            string message = "";
+            string ids = "";
+
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.SelectContentControlsByTitle(title);
+                foreach (Word.ContentControl cc in ccs)
+                {
+                     ids = ids + cc.ID + "|";
+                }
+
+                ids = ids.Remove(ids.Length - 1);
+                message = ids;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
 
         public string getContentControlInfo(string ccid)
         {
@@ -1388,7 +1445,10 @@ namespace MarkLogic_WordAddin
                             string donothing_removewarning = e.Message;
                         }
 
-                        info = info + cc.Tag + "|" + cc.Title + "|" + cc.Type +"|" + parentTag +"|"+parentID;;
+                        //info = info + cc.Tag + "|" + cc.Title + "|" + cc.Type +"|" + parentTag +"|"+parentID;;
+                        info = info + cc.Tag + "|" + cc.Title + "|" + cc.Type + "|" 
+                                    + cc.LockContentControl.ToString() + "|" + cc.LockContents.ToString() + "|"
+                                    + parentTag + "|" + parentID; 
                     }
                 } 
 
@@ -1872,7 +1932,8 @@ namespace MarkLogic_WordAddin
             try
             {
                 Word.ContentControl cc = current.ParentContentControl;
-                info = info +cc.ID+"|"+ cc.Tag + "|" + cc.Title + "|" + cc.Type;
+                info = info +cc.ID+"|"+ cc.Tag + "|" + cc.Title + "|" + cc.Type + "|" 
+                            + cc.LockContentControl.ToString() + "|" + cc.LockContents.ToString();
 
                 try
                 {
