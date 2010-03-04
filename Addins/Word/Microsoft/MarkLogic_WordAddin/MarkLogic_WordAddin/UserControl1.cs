@@ -50,6 +50,8 @@ namespace MarkLogic_WordAddin
         private string addinVersion = "1.1-1";
         HtmlDocument htmlDoc;
         public Word.Document udoc;
+
+        private string lastAddedCtrlTitle;
       
         public UserControl1(Word.Document the_doc)
         {
@@ -161,7 +163,7 @@ namespace MarkLogic_WordAddin
             {
                 string donothing_removewarning = e.Message;
             }
-
+            //MessageBox.Show(contentControl.ID+ contentControl.Tag+ contentControl.Title+ contentControl.Type.ToString()+ contentControl.LockContentControl.ToString()+ contentControl.LockContents.ToString()+ parentTag+ parentID);
             contentControlAfterAdd(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), contentControl.LockContentControl.ToString(), contentControl.LockContents.ToString(), parentTag, parentID);
         }
 
@@ -1562,11 +1564,16 @@ namespace MarkLogic_WordAddin
 
         }
      * */
+        public string getLastAddedControlTitle()
+        {
+            return lastAddedCtrlTitle;
+        }
 
         public string addContentControl(string tag, string title, string type, string insertpara, string parent)
         {
             string message = "";
             bool breakflag = false;
+            lastAddedCtrlTitle = title;
           
             if (insertpara.ToUpper().Equals("TRUE"))
                   breakflag = true;
