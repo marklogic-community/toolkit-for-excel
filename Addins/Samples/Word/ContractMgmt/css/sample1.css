@@ -1,0 +1,223 @@
+#header_center {
+margin: 0px auto;
+width: 180px;
+min-height: 40px;
+}
+
+#header_image{
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:2px;
+	padding-bottom:2px;
+}
+
+#tabs_center
+{
+	margin: 0px auto;
+	width: 100px;
+}
+
+body {
+	background-color:#d3e0f0;
+	margin:0px;
+	padding:0px;
+	font-family:"Segoe UI";
+	font-size:11px;
+	color:#073c82;
+}
+
+h3 {
+	font-size:13px;
+	font-weight:normal;
+	margin:0px;
+	padding:0px;
+	margin-bottom:10px;
+	margin-top:24px;
+}
+
+.inspectorDetails {
+	padding-left:30px;
+	padding-right:30px;
+}
+
+a {
+	text-decoration:none;
+	color:#073c82;
+}
+
+
+#topnav {
+	border-bottom:solid 1px #a1c3f5;
+	height:48px;
+}
+	
+#topnav ul {
+	list-style-type: none ;
+	margin: 0px;
+	padding: 0px ;
+}
+ 
+#topnav li {
+	display: inline ;
+	padding: 0px;
+	margin:0px;
+	float:left;
+}
+
+#topnav a {
+	background-repeat: no-repeat;
+	background-position:0px 0px;
+	text-decoration:none;
+	width:62px;
+	height:48px;
+	display:block;
+}
+
+#icon-word {	background-image:url(../images/icon-word.png);}
+#icon-metadata{	background-image:url(../images/icon-metadata.png);}
+#icon-search{	background-image:url(../images/icon-search.png);}
+#icon-merge{	background-image:url(../images/icon-merge.png);}
+	
+#topnav a:hover {
+	background-position:0px -48px;
+}
+
+/*#topnav a:active {
+	background-position:0px -96px;
+}*/
+
+#topnav a.fronticon {
+	background-position:0px -96px;
+}
+
+.red  {
+		border:1px solid red;
+}
+
+#tabs {
+	border-top:1px solid #d3e0f0;
+	background-color:#b2d1ff;
+	height:24px;
+}
+
+#tabs ul {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px ;
+	padding-left:40px;
+}
+
+#tabs ul li {
+	display:inline;
+	background-image:url(../images/tab.png);
+	background-repeat: no-repeat;
+	background-position:0px 0px;
+	float:left;
+	height:24px;
+	width:100px;
+
+}
+
+#tabs li a {
+	/*color:#073c82;*/
+	text-decoration:none;
+	margin-left:5px;
+	padding-left:15px;
+	padding-right: 15px;
+	margin-top:5px;
+	float:left;
+}
+
+#tabs li.fronttab {
+	background-position:0px -24px;
+}
+
+#buttonbar {
+	margin-top:12px;
+	height:22px;
+	margin-bottom:20px;
+}
+
+#buttonbar ul {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px ;
+	padding-left:60px; /*was 40, check with JD, center? */
+}
+
+#buttonbar li {
+	display:inline;
+	background-image:url(../images/tab.png);
+	background-repeat: no-repeat;
+	background-position:0px 0px;
+	float:left;
+	
+}
+
+#buttonbar li a {
+	float:left;
+	height:21px;
+	width:29px;
+	/*border:1px solid red;*/
+}
+
+#buttonbar li a.last {
+	width:31px;
+}
+
+#icon-textctrl { background-image:url(../images/icon-textctrl.png); }
+#icon-imgctrl { background-image:url(../images/icon-imgctrl.png); }
+#icon-calctrl { background-image:url(../images/icon-calctrl.png); }
+#icon-dropctrl { background-image:url(../images/icon-dropctrl.png); }
+#icon-comboctrl { background-image:url(../images/icon-comboctrl.png); }
+
+#buttonbar a:hover {
+	background-position:0px -22px;
+}
+
+/*#buttonbar a:active {
+	background-position:0px -44px;
+}*/
+
+#buttonbar a.selectedctrl {
+        background-position:0px -44px;
+}
+
+
+ul.buttongroup {
+		list-style-type: none;
+		margin:0px;
+		padding:0px;
+		margin-bottom:30px;
+}
+
+ul.buttongroup li {
+	float:left;
+	display:inline;
+	text-align:center;
+
+}
+
+ul.buttongroup li a {
+	float:left;
+	width:104px;
+	height:22px;
+	background-image:url(../images/btn.png);
+	background-position:0px 0px;
+	background-repeat:no-repeat;
+	margin-right:10px;
+	margin-top:5px;
+}
+
+ul.buttongroup li a:hover {
+	background-position:0px -22px;
+}
+
+ul.buttongroup li a:active {
+	background-position:0px -44px;
+}
+/*
+ul.buttongroup li a.clicked {
+	background-position:0px -44px;
+}
+	*/
