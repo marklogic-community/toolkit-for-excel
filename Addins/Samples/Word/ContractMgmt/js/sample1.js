@@ -19,6 +19,7 @@ $(document).ready(function() {
        //display current doc tab
        $('a#icon-word').click(function() {
 
+	  //location.reload();
 	  //css
 	  $("#icon-metadata").removeClass("fronticon");
 	  $("#icon-search").removeClass("fronticon");
@@ -37,7 +38,7 @@ $(document).ready(function() {
 
        //display metadata icon tab
        $('a#icon-metadata').click(function() {
-  
+
 	  //css
 	  $("#icon-word").removeClass("fronticon");
 	  $("#icon-search").removeClass("fronticon");
@@ -49,7 +50,8 @@ $(document).ready(function() {
           $('#search').hide();
           $('#compare').hide();
           $('#metadata').show();
-   
+     
+	  refreshControlTree(); 
           return false;
   
        });
@@ -243,6 +245,8 @@ $(document).ready(function() {
  
 });
 
+//window.event.cancelBubble = true;
+
 function blurSelected(btn_element)
 {
 	btn_element.blur();
@@ -304,12 +308,140 @@ function lockControlContents()
 	}
 }
 
+function partsTest()
+{
+	alert("IN TEST");
+	var control = null;
+	var controls = MLA.getSimpleContentControls();
+
+        for (i = 0; i < controls.length; i++)
+	{
+		control=controls[i];
+		alert("ID: "+control.id);
+	}
+
+
+}
+
+
+function setControlFocus()
+{
+	window.event.cancelBubble=true;
+        
+        //alert(window.event.srcElement.id);
+	MLA.setContentControlFocus(window.event.srcElement.id);
+	//need to open metadata form in section below tree
+	//can we read element names? use these for labels?
+	//just open text fields for now.  add value, save to part on keyup
+}
+
+function refreshControlTree()
+{
+     //alert("REFRESHING TREE"+$('#treelist').children('li').length);
+     //<li>test</li>
+     //<ul><li>test2</li></ul>
+     if($('#treelist').children('li').length)
+     {   
+	 //alert("in the if REMOVING");
+	 $('#treelist').children('li').remove();
+
+     }
+
+     var controls = MLA.getSimpleContentControls();
+     var control = null;
+     var myList = $('#treelist');
+
+    // alert("CONTROLS LENGTH: "+controls.length);
+    
+     for (i = 0; i < controls.length; i++)
+     {
+         control=controls[i];
+	 var pId = control.parentID;
+         var regId = control.id;
+
+	 if(pId == null || pId.length < 1 )
+	 {
+	        myList.append("<li>"+
+				// "<a href='#' onclick='setControlFocus("+control.id+")'>"+
+				 "<a href='#' id='"+control.id+"'>"+
+				     control.title +
+				 "</a>"+
+			       "</li>");
+
+		var aref = $('#'+regId);
+		//alert(regId);
+	        aref.bind('click', function() {
+                        setControlFocus(); 
+			//alert("ID"+regId);
+                });
+
+	/*	var aref = $('#'+control.id).children('a');
+			 aref.bind('click', function() {
+                    alert('User clicked on id: '+control.id);
+                  });
+		  */
+                //element.attachEvent('onclick',doSomething)
+                //$('#foo').bind('click', function() {
+                 //alert('User clicked on "foo."');
+                //});
+		//
+
+	 }else
+	 {
+		//GET ELEMENT BY ID FOR PARENT, APPEND
+		//IF UL ALREADY EXISTS, APPEND LI
+		//ELSE APPEND UL, LI
+		if($('#'+pId).children('li').length)
+		{
+			$('#'+pId).append("<li>"+
+					      "<a href='#' id='"+control.id+"'>"+
+					          control.title+
+					      "</a>"+
+					  "</li>");
+
+			//alert(regId);
+		        var bref = $('#'+regId);
+	                  bref.bind('click', function() {
+			//alert("ID"+regId);
+                          setControlFocus(); 
+                        });
+		
+		}
+		else
+		{	
+	                $("#"+pId).append("<ul>"+
+					    "<li>"+
+					       "<a href='#' id='"+control.id+"'>"+
+  				                   control.title+
+					       "</a>"+
+					     "</li>"+
+					  "</ul>");
+			//alert(regId);
+		        var cref = $('#'+regId);
+	                  cref.bind('click', function() {
+		//	alert("ID"+regId);
+                         setControlFocus();
+                        });
+
+		}
+
+	 }
+    }
+}
+
+function clearControlProperties()
+{
+    $('#properties').hide();
+    $("#ctrltitle").text("Title: ");
+    $("#ctrltag").text("Tag: ");
+    $('#lockctrl').attr('checked', false);
+    $('#lockcntnt').attr('checked', false);
+}
 
 //BEGIN EVENT HANDLERS
 function onEnterHandler(ref)
 {
-    if( $('#current-doc').is(':visible') ) 
-    {
+       //just go ahead and set control properties, thought not necessarily visible
        $("#ctrltitle").text("Title: "+ref.title);
        $("#ctrltag").text("Tag: "+ref.tag);
        if(ref.lockcontrol=="True")
@@ -323,41 +455,30 @@ function onEnterHandler(ref)
        }
 
        $('#properties').show();
-      //set properties in Properties Section
-      //alert("VISIBLE");
-    }
-    else 
-    {
-      //alert("NOT VISIBLE");
-    }
 }
 
 function onExitHandler(ref)
 {
-    if( $('#current-doc').is(':visible') ) 
-    {
-       $('#properties').hide();
-       $("#ctrltitle").text("Title: ");
-       $("#ctrltag").text("Tag: ");
-       $('#lockctrl').attr('checked', false);
-       $('#lockcntnt').attr('checked', false);
-      //set properties in Properties Section
-     // alert("VISIBLE");
-    }
-    else 
-    {
-      //alert("NOT VISIBLE");
-    }
+	 clearControlProperties();
 }
 
 function afterAddHandler(ref)
 {
+	//alert("AFTER ADD: "+ref.id +"PARENT: "+ref.parentID);
         //here, get parent content control info
 	//use title to access map (generated from config.xqy) 
 	//and retrieve metadata form to use
 	//add part , setting id in custom part to associate
-	
-	var stringxml = MLA.unescapeXMLCharEntities(generateTemplate(map.get(MLA.getLastAddedControlTitle())));
+	//
+	//possible to move a control, this creates delete, then add event using same id
+	//if id same, need to add back original metadata values
+	//no title, so only refresh if pane is visible
+        //if( $('#metadata').is(':visible') )
+	//{	
+        //   refreshControlTree();
+        //}
+
+        var stringxml = MLA.unescapeXMLCharEntities(generateTemplate(map.get(MLA.getLastAddedControlTitle())));
         var domxml = MLA.createXMLDOM(stringxml);
 
 	//domxml.childNodes[0].childNodes[0];
@@ -365,7 +486,7 @@ function afterAddHandler(ref)
 
 	if(id.hasChildNodes())
 	{
-		alert("HAS CHILDREN");
+		//alert("HAS CHILDREN");
 		id.nodeValue="";
 		id.nodeValue=ref.id;
 	}
@@ -376,14 +497,22 @@ function afterAddHandler(ref)
 	}
 
 	MLA.addCustomXMLPart(domxml.xml);
-	alert(domxml.xml);
+	//alert("ADDING" + domxml.xml);
 
 }
 
 function beforeDeleteHandler(ref)
 {
-	//alert("BEFORE DELETE HANDLER");
+	//alert("BEFORE DELETE HANDLER: "+ref.id);
 	//loop thru custom parts and delete part where id = ref.id
+	//person can move controls, so need to save values if they exist, and use if new piece added with same id
+	
+	//remove node from TreeView
+	if( $('#metadata').is(':visible') )
+	{
+	    var node = $('#'+ref.id).remove();
+	}
+
 	var customPieceIds = MLA.getCustomXMLPartIds();
         var customPieceId = null;
 
@@ -405,11 +534,6 @@ function beforeDeleteHandler(ref)
 	       //alert(customPiece.xml);
 	    }
 	}
-}
-
-function partsTest()
-{
-	alert("IN TEST");
 }
 
 //END EVENT HANDLERS
