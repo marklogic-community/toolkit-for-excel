@@ -335,6 +335,30 @@ function setControlFocus()
 	//just open text fields for now.  add value, save to part on keyup
 }
 
+function getIconType(ctrlType)
+{
+	var type = "";
+	if(ctrlType=="wdContentControlRichText")
+	{
+           type="textIcon";
+	}else if(ctrlType=="wdContentControlPicture")
+	{
+           type="imgIcon";
+	}else if(ctrlType=="wdContentControlDate")
+	{
+	   type="calIcon";
+	}else if(ctrlType=="wdContentControlDropdownList")
+	{
+	   type="dropIcon";
+	}
+	else if(ctrlType=="wdContentControlComboBox")
+	{
+	   type="comboIcon";
+	}
+
+	return type;
+}
+
 function refreshControlTree()
 {
      //alert("REFRESHING TREE"+$('#treelist').children('li').length);
@@ -344,6 +368,8 @@ function refreshControlTree()
      {   
 	 //alert("in the if REMOVING");
 	 $('#treelist').children('li').remove();
+	 $('#treelist').children('ul').remove();
+
 
      }
 
@@ -358,13 +384,18 @@ function refreshControlTree()
          control=controls[i];
 	 var pId = control.parentID;
          var regId = control.id;
+	 var iconType = getIconType(control.type);
+	 //alert(iconType);
 
 	 if(pId == null || pId.length < 1 )
 	 {
 	        myList.append("<li>"+
 				// "<a href='#' onclick='setControlFocus("+control.id+")'>"+
-				 "<a href='#' id='"+control.id+"'>"+
+				 //"<a href='#' id='"+control.id+"'>"+
+				 "<a href='#' id='"+regId+"'>"+
+				  "<span class='"+iconType+"' id='"+regId+"'>"+
 				     control.title +
+                                  "</span>"+
 				 "</a>"+
 			       "</li>");
 
@@ -374,6 +405,9 @@ function refreshControlTree()
                         setControlFocus(); 
 			//alert("ID"+regId);
                 });
+
+	//	alert("IN THE FIRST IF PARENT UL LENGTH"+ $('#'+regId).parents('ul').length);
+	//	alert("IN THE FIRST IF PARENT LI LENGTH"+ $('#'+regId).parents('ul').length);
 
 	/*	var aref = $('#'+control.id).children('a');
 			 aref.bind('click', function() {
@@ -391,13 +425,26 @@ function refreshControlTree()
 		//GET ELEMENT BY ID FOR PARENT, APPEND
 		//IF UL ALREADY EXISTS, APPEND LI
 		//ELSE APPEND UL, LI
-		if($('#'+pId).children('li').length)
-		{
-			$('#'+pId).append("<li>"+
-					      "<a href='#' id='"+control.id+"'>"+
+
+
+			//alert("PARENT  UL LENGTH: "+ $('#'+pId).parent('ul').length);
+			//alert("PARENTS UL LENGTH: "+ $('#'+pId).parents('ul').length);
+
+			var ulLength =  $('#'+pId).parents('ul').length;
+			var padding =ulLength * 20;
+			//alert("PADDING"+padding);
+
+	    //    if($('#'+pId).parents('ul').length)
+	 //	{
+	//	alert("IN THE IF");	
+
+			$('#'+pId).parents('ul').eq(0).append("<ul><li>"+
+					      "<a href='#' style='padding-left:"+padding+"px' id='"+regId+"'>"+
+					      "<span class='"+iconType+"' id='"+regId+"'>"+
 					          control.title+
+					      "</span>"+
 					      "</a>"+
-					  "</li>");
+					  "</li></ul>");
 
 			//alert(regId);
 		        var bref = $('#'+regId);
@@ -406,13 +453,17 @@ function refreshControlTree()
                           setControlFocus(); 
                         });
 		
-		}
+	/*	}
 		else
 		{	
-	                $("#"+pId).append("<ul>"+
+			alert("IN THE ELSE: "+$('#'+pId).parents('ul').length);
+
+	                $("#"+pId).parents('li').eq(0).append("<ul>"+
 					    "<li>"+
-					       "<a href='#' id='"+control.id+"'>"+
+					       "<a href='#' style='padding-left:40px'id='"+regId+"'>"+
+					        "<span class='"+iconType+"' id='"+regId+"'>"+
   				                   control.title+
+						   "</span>"+
 					       "</a>"+
 					     "</li>"+
 					  "</ul>");
@@ -424,6 +475,8 @@ function refreshControlTree()
                         });
 
 		}
+		*/
+		
 
 	 }
     }

@@ -1,4 +1,4 @@
-#header_center {
+/*#header_center {
 margin: 0px auto;
 width: 180px;
 min-height: 40px;
@@ -16,18 +16,25 @@ min-height: 40px;
 	margin: 0px auto;
 	width: 100px;
 }
+*/
+ul, li, a, p, h2, h1, h3, h4, h5, div {
+margin:0;
+padding:0;
+}
 
 body {
-	background-color:#d3e0f0;
+	background-color:#DEE9F8;
+	/*background-color:#d3e0f0;*/
 	margin:0px;
 	padding:0px;
-	font-family:"Segoe UI";
+	font-family:"Segoe UI"; calibri;
 	font-size:11px;
 	color:#073c82;
 }
 
 h3 {
-	font-size:13px;
+	/*font-size:13px;*/
+	font-size:11px;
 	font-weight:normal;
 	margin:0px;
 	padding:0px;
@@ -49,6 +56,7 @@ a {
 #topnav {
 	border-bottom:solid 1px #a1c3f5;
 	height:48px;
+        background-color:#d0def0; /*NEW*/
 }
 	
 #topnav ul {
@@ -96,8 +104,9 @@ a {
 
 #tabs {
 	border-top:1px solid #d3e0f0;
-	background-color:#b2d1ff;
+	background-color:#B2D2FF;
 	height:24px;
+	border-bottom: 1px solid #7BA1DC; /*NEW*/
 }
 
 #tabs ul {
@@ -114,12 +123,13 @@ a {
 	background-position:0px 0px;
 	float:left;
 	height:24px;
-	width:100px;
+	width:90px;
+	/*width:100px;*/
 
 }
 
 #tabs li a {
-	/*color:#073c82;*/
+	/*color:#073c82; OLD*/
 	text-decoration:none;
 	margin-left:5px;
 	padding-left:15px;
@@ -130,6 +140,7 @@ a {
 
 #tabs li.fronttab {
 	background-position:0px -24px;
+	border-bottom:1px solid #DEE9F8; /*NEW*/
 }
 
 #buttonbar {
@@ -156,9 +167,15 @@ a {
 
 #buttonbar li a {
 	float:left;
-	height:21px;
-	width:29px;
+	height:22px;
+	width:30px;
+
+	/*height:21px;
+	width:29px;*/
 	/*border:1px solid red;*/
+}
+#buttonbar li a.first {
+	width:31px;
 }
 
 #buttonbar li a.last {
@@ -185,10 +202,10 @@ a {
 
 
 ul.buttongroup {
-		list-style-type: none;
-		margin:0px;
-		padding:0px;
-		margin-bottom:30px;
+	list-style-type: none;
+	margin:0px;
+	padding:0px;
+	margin-bottom:30px;
 }
 
 ul.buttongroup li {
@@ -216,8 +233,111 @@ ul.buttongroup li a:hover {
 ul.buttongroup li a:active {
 	background-position:0px -44px;
 }
+	/* NEW WITH TREE PANE STARTING BELOW*/
 /*
 ul.buttongroup li a.clicked {
 	background-position:0px -44px;
 }
 	*/
+.tooltip {
+	float:left;
+	max-width:200px;
+	border:1px solid #5F5F5F;
+	background-color:#D4E0F4;
+	color:#393939;
+	padding-top:10px;
+	padding-bottom:10px;	
+}
+
+.tooltip h3 {
+	margin-top:0px;
+	font-size:10px;
+	font-weight:bold;
+	padding-left:5px;
+	padding-right:5px;
+}
+
+.tooltip p {
+	padding-left:20px;
+	padding-right:15px;
+}
+
+#treeWindow {
+	background:#fff;
+	margin-left:0px;
+	padding-top:5px;
+	overflow:auto;
+	height:200px;
+	
+}
+
+#treeWindow h2 {
+	margin:0px;
+	padding:0px;
+	background-image:url(../images/icon-document.png);
+	background-repeat:no-repeat;
+	font-size:14px;
+	margin-bottom:5px;
+}
+
+#treeWindow h2 a {
+
+	display:block;
+	padding-left:30px;
+		}
+
+#treeWindow ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+#treeWindow li {
+	display:block;
+	border-top:1px solid #ccc;
+	margin: 0;
+	padding: 0;
+	
+}
+
+
+
+#treeWindow a {
+        display:block;
+	padding-left:10px;
+	padding-top:4px;
+	padding-bottom:4px;
+}
+
+#treeWindow li a:hover {
+	background:url(../images/bg-li-a.png) repeat-x;
+}
+
+#treeWindow li a:active {
+	background:url(../images/bg-li-a-selected.png) repeat-x;
+}
+
+#treeWindow .textIcon{
+	background: url(../images/icon-text.png) no-repeat left 50%; padding: 2px 0 2px 24px;
+}
+
+#treeWindow .imgIcon{
+	background: url(../images/icon-img.png) no-repeat left 50%; padding: 2px 0 2px 24px;
+}
+#treeWindow .calIcon{
+	background: url(../images/icon-cal.png) no-repeat left 50%; padding: 2px 0 2px 24px;
+}
+
+#treeWindow .dropIcon{
+	background: url(../images/icon-drop.png) no-repeat left 50%; padding: 2px 0 2px 24px;
+}
+
+#treeWindow .comboIcon{
+	background: url(../images/icon-combo.png) no-repeat left 50%; padding: 2px 0 2px 24px;
+}
+
+#metadataPanel {
+	margin-top:20px;
+	margin-left:10px;
+}
