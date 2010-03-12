@@ -323,16 +323,222 @@ function partsTest()
 
 }
 
-
-function setControlFocus()
+function getMetadataPartID(ctrlId)
 {
-	window.event.cancelBubble=true;
-        
-        //alert(window.event.srcElement.id);
-	MLA.setContentControlFocus(window.event.srcElement.id);
-	//need to open metadata form in section below tree
-	//can we read element names? use these for labels?
-	//just open text fields for now.  add value, save to part on keyup
+
+	var customPartIds = MLA.getCustomXMLPartIds();
+        var customPartId = null;
+	var metadataPartId = null;
+
+        if(customPartIds.length > 0 )
+	{
+	   for (i = 0; i < customPartIds.length; i++)
+	   {
+               customPartId = customPartIds[i];
+	       var customPart = MLA.getCustomXMLPart(customPartId);
+               var id = customPart.getElementsByTagName("dc:identifier")[0];
+	       //18649719 - from test doc
+	       if(id.childNodes[0].nodeValue==ctrlId)
+	       {
+		  metadataPartId = customPartId;
+	       }
+
+	    }
+	}
+
+	return metadataPartId;
+}
+
+function getMetadataPartForControl(customPartId)
+{
+        var metadataPart =  MLA.getCustomXMLPart(customPartId);
+	return metadataPart;
+
+	/*
+	var customPieceIds = MLA.getCustomXMLPartIds();
+        var customPieceId = null;
+
+	var metadataPart = null;
+
+	//alert(customPieceIds.length);
+        if(customPieceIds.length > 0 )
+	{
+	   for (i = 0; i < customPieceIds.length; i++)
+	   {
+               customPieceId = customPieceIds[i];
+	       var customPiece = MLA.getCustomXMLPart(customPieceId);
+               var id = customPiece.getElementsByTagName("dc:identifier")[0];
+	       //18649719 - from test doc
+	       if(id.childNodes[0].nodeValue==ctrlId)
+	       {
+			     
+			      metadataPart = customPiece;
+			      // MLA.deleteCustomXMLPart(customPieceId);
+	       }
+
+	       //alert(customPiece.xml);
+	    }
+	}
+
+	return metadataPart;
+	*/
+}
+
+//can i reuse based on enter event?
+//add id param, if null, then use window.event.cancelBubble, else id (?) - should work
+//
+function replaceCustomMetadataPart(partId, metadataPart)
+{
+        //alert("DELETING CUSTOM PIECE");
+	MLA.deleteCustomXMLPart(partId);
+	
+
+	//alert("ADDING CUSTOM PIECE");
+	MLA.addCustomXMLPart(metadataPart);
+
+}
+
+function setMetadataPartValues()
+{
+	//get id of currently selected control
+	var mlacontrolref=MLA.getParentContentControlInfo();
+        var controlID = mlacontrolref.id;	
+	//alert("settingMetadataValues(): "+controlID+" "+mlacontrolref.title);
+
+	//get Part ID of Custom XML Part associated with Control
+	var metadataPartID = getMetadataPartID(controlID);
+	//alert("PART ID: "+metadataPartID);
+
+	//get Custom XML Part associated with Control
+	var metadataPart = getMetadataPartForControl(metadataPartID); /*(controlID)*/
+	var meta = metadataPart.getElementsByTagName("dc:metadata")[0];
+
+	for(var i = 1;i < meta.childNodes.length; i++)
+	{
+	        var formID="form-"+i+"-"+controlID;
+                var value = $('#'+formID).val();
+		meta.childNodes[i].text = value;
+	}
+
+	//alert("FINAL XML" + meta.xml);
+
+	replaceCustomMetadataPart(metadataPartID, meta);
+
+
+}
+
+function setControlFocus(enteredId)
+{
+	//cancel event bubbling, IE is wacky
+	//window.event.cancelBubble=true;
+         
+        var controlID = null;
+
+	if(enteredId == null || enteredId == ""){
+	         window.event.cancelBubble=true;
+		 controlID = window.event.srcElement.id;
+		 MLA.setContentControlFocus(controlID);
+	}
+	else
+	{
+		controlID = enteredId;
+		var destination = $('#'+controlID).offset().top;
+                $("#treeWindow").animate({ scrollTop: destination-60}, 500 );
+	}
+
+        //set highlight of selected using class
+	$('#treelist').find('a').removeClass("selectedtreectrl");
+	$('#'+controlID).addClass("selectedtreectrl");
+
+   //var destination = $('#'+controlID).offset().top;
+   //$("#treeWindow").animate({ scrollTop: destination-20}, 500 );
+   //return false;
+	
+
+	//set focus in document on selected control
+	//MLA.setContentControlFocus(controlID);
+
+	//need to grab custom piece for metadata section
+	var metadataID = getMetadataPartID(controlID);
+	//alert("metadatatID" +metadataID);
+	var metadata = getMetadataPartForControl(metadataID);
+
+	var meta = metadata.getElementsByTagName("dc:metadata")[0];
+
+
+	//alert("META: "+meta.xml);
+	var idxml = metadata.getElementsByTagName("dc:identifier")[0];
+	
+        //alert("ID: "+idxml.xml + idxml.childNodes[0].nodeValue);
+
+
+	//addMetadata to pane here. set fields based on child elements?
+	//assumption id is childNodes[0]
+	//
+   /*<div>
+        <p><label>Author</label></p>
+        <input id="form1" type="text"/> 
+        <p>&nbsp; </p>
+     </div>
+     <div>
+        <p><label>Description</label></p>
+        <textarea id="form2"/>
+        <p>&nbsp; </p>
+     </div>
+    */
+        var metaform = $('#metadataForm');
+        if(metaform.children('div').length)
+	{
+		metaform.children('div').remove();
+	}
+
+	//construct metadata panel on page
+	for(var i = 1;i < meta.childNodes.length; i++)
+	{
+	        var localname = meta.childNodes[i].nodeName.split(":");
+		var formID = "form-"+i+"-"+controlID;
+		//var formID = "form-"+controlID;
+                var child = meta.childNodes[i];	        	
+		//alert("LOCALNAME: "+localname[1]+"  "+child.nodeName);
+	        var input="";
+		var formValue="";
+
+		if(child.childNodes[0] == null)
+		{
+			//alert("IN THE IF for FORMVALUE");
+		        formValue = "";
+		}else
+		{
+                       
+			formValue = child.childNodes[0].nodeValue;
+			//alert("FORM VALUE IN ELSE"+formValue);
+		}
+
+		if(localname[1]=="description")
+		{
+			input = "<textarea cols='40' rows='5' wrap='virtual' id='"+formID+"'>"+
+				 formValue +
+				"</textarea>";
+		}
+		else
+		{
+			input = "<input id='"+formID+"' type='text' value='"+formValue+"'/>";
+		}
+			
+		  metaform.append("<div>"+
+		  		     "<p><label>"+localname[1]+"</p></label>"+
+				        input+
+                                     "<p>&nbsp; </p>"+
+				  "</div>");
+
+		  $('#'+formID).change(function() {
+                     setMetadataPartValues(); 
+                   }); 
+		  //alert(formID);
+
+	}
+	
+
 }
 
 function getIconType(ctrlType)
@@ -361,123 +567,62 @@ function getIconType(ctrlType)
 
 function refreshControlTree()
 {
-     //alert("REFRESHING TREE"+$('#treelist').children('li').length);
-     //<li>test</li>
-     //<ul><li>test2</li></ul>
      if($('#treelist').children('li').length)
      {   
-	 //alert("in the if REMOVING");
 	 $('#treelist').children('li').remove();
 	 $('#treelist').children('ul').remove();
-
-
      }
 
      var controls = MLA.getSimpleContentControls();
      var control = null;
      var myList = $('#treelist');
 
-    // alert("CONTROLS LENGTH: "+controls.length);
-    
      for (i = 0; i < controls.length; i++)
      {
          control=controls[i];
 	 var pId = control.parentID;
          var regId = control.id;
 	 var iconType = getIconType(control.type);
-	 //alert(iconType);
+	 var title = "";
+         (control.title == "" || control.title == null) ?  title = "&nbsp;" : title = control.title;
 
 	 if(pId == null || pId.length < 1 )
 	 {
 	        myList.append("<li>"+
-				// "<a href='#' onclick='setControlFocus("+control.id+")'>"+
-				 //"<a href='#' id='"+control.id+"'>"+
 				 "<a href='#' id='"+regId+"'>"+
 				  "<span class='"+iconType+"' id='"+regId+"'>"+
-				     control.title +
+				     title +
                                   "</span>"+
 				 "</a>"+
 			       "</li>");
 
 		var aref = $('#'+regId);
-		//alert(regId);
+
 	        aref.bind('click', function() {
                         setControlFocus(); 
-			//alert("ID"+regId);
                 });
-
-	//	alert("IN THE FIRST IF PARENT UL LENGTH"+ $('#'+regId).parents('ul').length);
-	//	alert("IN THE FIRST IF PARENT LI LENGTH"+ $('#'+regId).parents('ul').length);
-
-	/*	var aref = $('#'+control.id).children('a');
-			 aref.bind('click', function() {
-                    alert('User clicked on id: '+control.id);
-                  });
-		  */
-                //element.attachEvent('onclick',doSomething)
-                //$('#foo').bind('click', function() {
-                 //alert('User clicked on "foo."');
-                //});
-		//
 
 	 }else
 	 {
 		//GET ELEMENT BY ID FOR PARENT, APPEND
 		//IF UL ALREADY EXISTS, APPEND LI
 		//ELSE APPEND UL, LI
-
-
-			//alert("PARENT  UL LENGTH: "+ $('#'+pId).parent('ul').length);
-			//alert("PARENTS UL LENGTH: "+ $('#'+pId).parents('ul').length);
-
-			var ulLength =  $('#'+pId).parents('ul').length;
-			var padding =ulLength * 20;
-			//alert("PADDING"+padding);
-
-	    //    if($('#'+pId).parents('ul').length)
-	 //	{
-	//	alert("IN THE IF");	
+		var ulLength =  $('#'+pId).parents('ul').length;
+		var padding =ulLength * 20;
 
 			$('#'+pId).parents('ul').eq(0).append("<ul><li>"+
 					      "<a href='#' style='padding-left:"+padding+"px' id='"+regId+"'>"+
 					      "<span class='"+iconType+"' id='"+regId+"'>"+
-					          control.title+
+					          title+
 					      "</span>"+
 					      "</a>"+
 					  "</li></ul>");
 
-			//alert(regId);
 		        var bref = $('#'+regId);
 	                  bref.bind('click', function() {
-			//alert("ID"+regId);
                           setControlFocus(); 
                         });
 		
-	/*	}
-		else
-		{	
-			alert("IN THE ELSE: "+$('#'+pId).parents('ul').length);
-
-	                $("#"+pId).parents('li').eq(0).append("<ul>"+
-					    "<li>"+
-					       "<a href='#' style='padding-left:40px'id='"+regId+"'>"+
-					        "<span class='"+iconType+"' id='"+regId+"'>"+
-  				                   control.title+
-						   "</span>"+
-					       "</a>"+
-					     "</li>"+
-					  "</ul>");
-			//alert(regId);
-		        var cref = $('#'+regId);
-	                  cref.bind('click', function() {
-		//	alert("ID"+regId);
-                         setControlFocus();
-                        });
-
-		}
-		*/
-		
-
 	 }
     }
 }
@@ -508,6 +653,13 @@ function onEnterHandler(ref)
        }
 
        $('#properties').show();
+
+       //alert("ID: "+ref.id);
+       //$('#treelist').find('a').removeClass("selectedtreectrl");
+       //$('#'+ref.id).addClass("selectedtreectrl");
+       setControlFocus(ref.id);
+
+
 }
 
 function onExitHandler(ref)
@@ -540,8 +692,8 @@ function afterAddHandler(ref)
 	if(id.hasChildNodes())
 	{
 		//alert("HAS CHILDREN");
-		id.nodeValue="";
-		id.nodeValue=ref.id;
+		id.childNodes[0].nodeValue="";
+		id.childNodes[0].nodeValue=ref.id;
 	}
 	else
 	{
