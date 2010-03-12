@@ -245,7 +245,6 @@ $(document).ready(function() {
  
 });
 
-//window.event.cancelBubble = true;
 
 function blurSelected(btn_element)
 {
@@ -262,15 +261,11 @@ function boilerplateinsert(bp)
 			"http://localhost:8023/KA/utils/fetchboilerplate.xqy",  /*should we place in config somewhere, maybe pass onclick*/
 			{uri: bp},
 			function(responseText){
-			      //alert("RESPONSE: "+responseText);
 			      MLA.insertWordOpenXML(responseText);
-				//$("#result").html(responseText);
-			      //validateControlsFunction here. Check all controls, add metadata where needed.
 			},
 			"text"
 		);
 
-               //alert("FINIS "+bp)
 	     
 }
 
@@ -298,13 +293,10 @@ function lockControlContents()
 	if(mlacontrolref.lockcontents=="False")
 	{
 		MLA.lockContentControlContents(mlacontrolref.id);
-		//alert("LOCKING CONTROL CONTENTS");
 
 	}else
 	{
 		MLA.unlockContentControlContents(mlacontrolref.id);
-		//alert("UNLOCKING CONTROL CONTENTS");
-
 	}
 }
 
@@ -354,44 +346,14 @@ function getMetadataPartForControl(customPartId)
         var metadataPart =  MLA.getCustomXMLPart(customPartId);
 	return metadataPart;
 
-	/*
-	var customPieceIds = MLA.getCustomXMLPartIds();
-        var customPieceId = null;
-
-	var metadataPart = null;
-
-	//alert(customPieceIds.length);
-        if(customPieceIds.length > 0 )
-	{
-	   for (i = 0; i < customPieceIds.length; i++)
-	   {
-               customPieceId = customPieceIds[i];
-	       var customPiece = MLA.getCustomXMLPart(customPieceId);
-               var id = customPiece.getElementsByTagName("dc:identifier")[0];
-	       //18649719 - from test doc
-	       if(id.childNodes[0].nodeValue==ctrlId)
-	       {
-			     
-			      metadataPart = customPiece;
-			      // MLA.deleteCustomXMLPart(customPieceId);
-	       }
-
-	       //alert(customPiece.xml);
-	    }
-	}
-
-	return metadataPart;
-	*/
 }
 
 //can i reuse based on enter event?
 //add id param, if null, then use window.event.cancelBubble, else id (?) - should work
-//
 function replaceCustomMetadataPart(partId, metadataPart)
 {
         //alert("DELETING CUSTOM PIECE");
 	MLA.deleteCustomXMLPart(partId);
-	
 
 	//alert("ADDING CUSTOM PIECE");
 	MLA.addCustomXMLPart(metadataPart);
@@ -412,7 +374,8 @@ function setMetadataPartValues()
 	//get Custom XML Part associated with Control
 	var metadataPart = getMetadataPartForControl(metadataPartID); /*(controlID)*/
 	var meta = metadataPart.getElementsByTagName("dc:metadata")[0];
-
+        
+	//set form values in Custom XML Part
 	for(var i = 1;i < meta.childNodes.length; i++)
 	{
 	        var formID="form-"+i+"-"+controlID;
@@ -421,11 +384,12 @@ function setMetadataPartValues()
 	}
 
 	//alert("FINAL XML" + meta.xml);
-
+        //save edited part
 	replaceCustomMetadataPart(metadataPartID, meta);
 
 
 }
+
 
 function setControlFocus(enteredId)
 {
@@ -450,68 +414,45 @@ function setControlFocus(enteredId)
 	$('#treelist').find('a').removeClass("selectedtreectrl");
 	$('#'+controlID).addClass("selectedtreectrl");
 
-   //var destination = $('#'+controlID).offset().top;
-   //$("#treeWindow").animate({ scrollTop: destination-20}, 500 );
-   //return false;
-	
-
-	//set focus in document on selected control
-	//MLA.setContentControlFocus(controlID);
-
 	//need to grab custom piece for metadata section
 	var metadataID = getMetadataPartID(controlID);
-	//alert("metadatatID" +metadataID);
 	var metadata = getMetadataPartForControl(metadataID);
-
 	var meta = metadata.getElementsByTagName("dc:metadata")[0];
-
-
-	//alert("META: "+meta.xml);
 	var idxml = metadata.getElementsByTagName("dc:identifier")[0];
 	
-        //alert("ID: "+idxml.xml + idxml.childNodes[0].nodeValue);
+        /*  <div>
+              <p><label>Author</label></p>
+              <input id="form1" type="text"/> 
+              <p>&nbsp; </p>
+            </div>
+            <div>
+              <p><label>Description</label></p>
+              <textarea id="form2"/>
+              <p>&nbsp; </p>
+            </div>
+        */
 
-
-	//addMetadata to pane here. set fields based on child elements?
-	//assumption id is childNodes[0]
-	//
-   /*<div>
-        <p><label>Author</label></p>
-        <input id="form1" type="text"/> 
-        <p>&nbsp; </p>
-     </div>
-     <div>
-        <p><label>Description</label></p>
-        <textarea id="form2"/>
-        <p>&nbsp; </p>
-     </div>
-    */
         var metaform = $('#metadataForm');
         if(metaform.children('div').length)
 	{
 		metaform.children('div').remove();
 	}
 
-	//construct metadata panel on page
+	//construct metadata panel on page from metadata part
 	for(var i = 1;i < meta.childNodes.length; i++)
 	{
 	        var localname = meta.childNodes[i].nodeName.split(":");
 		var formID = "form-"+i+"-"+controlID;
-		//var formID = "form-"+controlID;
                 var child = meta.childNodes[i];	        	
-		//alert("LOCALNAME: "+localname[1]+"  "+child.nodeName);
 	        var input="";
 		var formValue="";
 
 		if(child.childNodes[0] == null)
 		{
-			//alert("IN THE IF for FORMVALUE");
 		        formValue = "";
 		}else
 		{
-                       
 			formValue = child.childNodes[0].nodeValue;
-			//alert("FORM VALUE IN ELSE"+formValue);
 		}
 
 		if(localname[1]=="description")
@@ -654,12 +595,7 @@ function onEnterHandler(ref)
 
        $('#properties').show();
 
-       //alert("ID: "+ref.id);
-       //$('#treelist').find('a').removeClass("selectedtreectrl");
-       //$('#'+ref.id).addClass("selectedtreectrl");
        setControlFocus(ref.id);
-
-
 }
 
 function onExitHandler(ref)
@@ -674,35 +610,24 @@ function afterAddHandler(ref)
 	//use title to access map (generated from config.xqy) 
 	//and retrieve metadata form to use
 	//add part , setting id in custom part to associate
-	//
 	//possible to move a control, this creates delete, then add event using same id
-	//if id same, need to add back original metadata values
-	//no title, so only refresh if pane is visible
-        //if( $('#metadata').is(':visible') )
-	//{	
-        //   refreshControlTree();
-        //}
 
         var stringxml = MLA.unescapeXMLCharEntities(generateTemplate(map.get(MLA.getLastAddedControlTitle())));
         var domxml = MLA.createXMLDOM(stringxml);
 
-	//domxml.childNodes[0].childNodes[0];
 	var id = domxml.getElementsByTagName("dc:identifier")[0];
 
 	if(id.hasChildNodes())
 	{
-		//alert("HAS CHILDREN");
 		id.childNodes[0].nodeValue="";
 		id.childNodes[0].nodeValue=ref.id;
 	}
 	else
 	{
-	        //alert("NO CHILDREN");
 		var child = id.appendChild(domxml.createTextNode(ref.id));
 	}
 
 	MLA.addCustomXMLPart(domxml.xml);
-	//alert("ADDING" + domxml.xml);
 
 }
 
@@ -721,7 +646,6 @@ function beforeDeleteHandler(ref)
 	var customPieceIds = MLA.getCustomXMLPartIds();
         var customPieceId = null;
 
-	//alert(customPieceIds.length);
         if(customPieceIds.length > 0 )
 	{
 	   for (i = 0; i < customPieceIds.length; i++)
@@ -742,26 +666,7 @@ function beforeDeleteHandler(ref)
 }
 
 //END EVENT HANDLERS
-//
-//BEGIN METADATA MAPPING
-//var myparams;
-//var map = new MetadataMap();
 
-//this to be generated from config
-/*
-function MetadataMap()
-{
-   myparams = new Array();
-   myparams["Section"] = "2";
-   myparams["Annex"] = "2";
-
-}
-*/
-/*MetadataMap.prototype.get = function(key)
-{
-	return myparams[key];
-}
-*/
 //15 DC elements
 //title
 //creator
@@ -779,7 +684,7 @@ function MetadataMap()
 //coverage
 //rights
 
-//this to be generated from config 
+//example of what's generated from config 
 /*
 function generateTemplate(metaid) {
     if(metaid == "1")
@@ -823,10 +728,5 @@ function generateTemplate(metaid) {
    return v_template;
 }
 */
-/*
-function generateTemplate(metaid){if(metaid=='1'){ var v_template='<dc:metadata xmlns:config="http://marklogic.com/config" xmlns:dc="http://purl.org/dc/elements/1.1/"> <dc:identifier/> <dc:title/> <dc:subject/> <dc:publisher/> <dc:description/> </dc:metadata>';}else if(metaid=='2'){ var v_template='<dc:metadata xmlns:config="http://marklogic.com/config" xmlns:dc="http://purl.org/dc/elements/1.1/"> <dc:identifier/> <dc:contributor/> <dc:source/> </dc:metadata>';}else{var v_template='<dc:metadata xmlns:config="http://marklogic.com/config" xmlns:dc="http://purl.org/dc/elements/1.1/"> <dc:identifier/> <dc:contributor/> <dc:relation/> </dc:metadata>';}return v_template;}
-*/
-		
-
 //END METADATA MAPPING
 
