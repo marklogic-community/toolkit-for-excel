@@ -17,6 +17,12 @@ min-height: 40px;
 	width: 100px;
 }
 */
+html {
+	overflow:hidden;
+	/*overflow-y: hidden;
+	overflow-x:hidden;*/
+} 
+
 ul, li, a, p, h2, h1, h3, h4, h5, div {
 margin:0;
 padding:0;
@@ -30,6 +36,8 @@ body {
 	font-family:"Segoe UI"; calibri;
 	font-size:11px;
 	color:#073c82;
+	overflow-x:hidden;
+	
 }
 
 h3 {
@@ -40,6 +48,7 @@ h3 {
 	padding:0px;
 	margin-bottom:10px;
 	margin-top:24px;
+	border-bottom:1px solid #B4CBEC; /* horizontal rule */
 }
 
 .inspectorDetails {
@@ -128,6 +137,11 @@ a {
 
 }
 
+#tabs ul li:hover {
+background-position:0px -48px;
+
+}
+
 #tabs li a {
 	/*color:#073c82; OLD*/
 	text-decoration:none;
@@ -141,6 +155,11 @@ a {
 #tabs li.fronttab {
 	background-position:0px -24px;
 	border-bottom:1px solid #DEE9F8; /*NEW*/
+}
+
+#tabs li.fronttab:hover {
+	background-position:0px -72px;
+	border-bottom:1px solid #DEE9F8;
 }
 
 #buttonbar {
@@ -217,6 +236,7 @@ ul.buttongroup li {
 
 ul.buttongroup li a {
 	float:left;
+	position:relative; /*new*/
 	width:104px;
 	height:22px;
 	background-image:url(../images/btn.png);
@@ -224,6 +244,7 @@ ul.buttongroup li a {
 	background-repeat:no-repeat;
 	margin-right:10px;
 	margin-top:5px;
+	line-height:20px;
 }
 
 ul.buttongroup li a:hover {
@@ -314,9 +335,14 @@ ul.buttongroup li a.clicked {
 	background:url(../images/bg-li-a.png) repeat-x;
 }
 
-#treeWindow li a:active {
+/*#treeWindow li a:active {
+	background:url(../images/bg-li-a-selected.png) repeat-x;
+}*/
+
+#treeWindow a.selectedtreectrl {
 	background:url(../images/bg-li-a-selected.png) repeat-x;
 }
+
 
 #treeWindow .textIcon{
 	background: url(../images/icon-text.png) no-repeat left 50%; padding: 2px 0 2px 24px;
@@ -340,4 +366,16 @@ ul.buttongroup li a.clicked {
 #metadataPanel {
 	margin-top:20px;
 	margin-left:10px;
+}
+/*for metadata panel */
+input[type=text], textarea {
+	width: 95%;
+}
+textarea {
+	height: 6em;
+}
+
+/* added for search */
+#ML-Search {
+	width: 60%;
 }

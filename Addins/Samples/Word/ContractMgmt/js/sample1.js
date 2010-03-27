@@ -1,10 +1,27 @@
 $(document).ready(function() {
-   
-       //by default, current doc selected
+  
+   /* based on original search, which called default.xqy with params
+    * not good: wiped out state for other panels
+    * replaced with use of simpleAjaxSearch, jQuery to update div
+    if($('#searchresultsinner').length)
+   {
+       $('#current-doc').hide();
+       $('#metadata').hide();
+       $('#search').show();
+       $('#compare').hide();
+       $('#properties').hide();
+
+       $("#icon-search").addClass("fronticon");
+       $("#icon-word").removeClass("fronticon");   
+   }else{*/
+      //by default, current doc selected
        $('#metadata').hide();
        $('#search').hide();
        $('#compare').hide();
        $('#properties').hide();
+   
+    //} 
+
  
        //by default, controls tab selected	
        $('#snippets').hide();
@@ -14,11 +31,11 @@ $(document).ready(function() {
        $('#calcontrols').hide();
        $('#dropcontrols').hide();
        $('#combocontrols').hide();
-      
        //BEGIN top icon tab navigation selection	
        //display current doc tab
        $('a#icon-word').click(function() {
 
+          $('#main').css('overflow', 'hidden');
 	  //location.reload();
 	  //css
 	  $("#icon-metadata").removeClass("fronticon");
@@ -38,6 +55,8 @@ $(document).ready(function() {
 
        //display metadata icon tab
        $('a#icon-metadata').click(function() {
+         
+          $('#main').css('overflow', 'hidden');
 
 	  //css
 	  $("#icon-word").removeClass("fronticon");
@@ -59,6 +78,7 @@ $(document).ready(function() {
        //display search icon tab
        $('a#icon-search').click(function() {
 
+          $('#main').css('overflow', 'auto');
  	  //css
 	  $("#icon-word").removeClass("fronticon");
 	  $("#icon-metadata").removeClass("fronticon");
@@ -78,6 +98,7 @@ $(document).ready(function() {
        //display compare icon tab
        $('a#icon-merge').click(function() {
 
+          $('#main').css('overflow', 'hidden');
  	  //css
 	  $("#icon-word").removeClass("fronticon");
 	  $("#icon-search").removeClass("fronticon");
@@ -241,9 +262,115 @@ $(document).ready(function() {
 		      
           $("#buttongroup").li.a.blur();
           return false;
-        }) 
- 
+        })
+       
 });
+
+function SearchAction(startidx)
+{
+	if(startidx==null)
+	{
+	   //alert("startidx="+startidx);
+	   startidx = 0;
+	}
+
+	var qry = $('#ML-Search').val();
+	simpleAjaxSearch(qry,startidx);
+}
+
+function simpleAjaxSearch(searchval, startidx)
+{
+    var newurl = "";
+
+    if(startidx==0)
+	    newurl = "search/search.xqy";
+    else
+	    newurl = "search/search.xqy?start="+startidx;
+
+    $.ajax({
+          type: "GET",
+          url: newurl, //"search/search.xqy",
+          data: "qry=" + searchval,
+          success: function(msg){
+	                //put in top nav
+	                //$('#main').css('overflow', 'auto');
+			try{
+			//alert("MESSAGE IS"+msg);
+                        $('#searchresults').empty();
+                        $('#searchresults').append(msg);
+                        //$('#searchresults').html(msg);
+			}catch(e)
+			{
+			alert("ERROR"+e.description);
+			}
+	                //alert( "Data Saved: " + msg );
+                   }
+     });
+}
+
+function InsertAction(contenturl, contentpath)
+{
+	alert("URL: "+contenturl+" PATH: "+contentpath);
+	simpleAjaxInsert(contenturl,contentpath);
+}
+
+function simpleAjaxInsert(contenturl,contentpath)
+{
+    $.ajax({
+          type: "GET",
+          url: "search/insert.xqy",
+	  //data: "companyCode="+ slmckdcoy +"&branchCode="+ slmckdcab,
+          data: "uri=" + contenturl+"&path="+ contentpath,
+          success: function(msg){
+			try{
+			  //alert("MESSAGE IS"+msg);
+			  insertContent(msg);
+			}catch(e)
+			{
+			  alert("ERROR"+e.description);
+			}
+                   }
+    });
+}
+
+var metadataPartArray = new Array();
+
+function insertContent(content)
+{       
+	try{
+		var local = MLA.createXMLDOM(content);
+		var pkgxml =  local.getElementsByTagName("pkg:package")[0];
+		var metaxml = local.getElementsByTagName("meta")[0];  //NodeList- length, item(idx)
+		var metaparts = metaxml.getElementsByTagName("dc:metadata");
+	        //alert("PACKAGE XML IS "+pkgxml.xml);
+	        //alert("METAPARTS LENGTH IS "+metaparts.length);
+	        //alert("METAPART ARAY LENGTH IS "+metadataPartArray.length);
+
+                for (var i = 0; i < metaparts.length; i++) { 
+                  //alert("META ITEM: "+metaparts.item(i).xml); 
+		  metadataPartArray.push(metaparts.item(i));
+		  //alert("META PART IN ARRAY"+metadataPartArray[i].xml);
+                   
+        // grab the data 
+                }
+	        //alert("NOW METAPART ARAY LENGTH IS "+metadataPartArray.length);
+		
+		MLA.insertWordOpenXML(pkgxml.xml);
+
+		//set metadata parts in array, then update after add, it should check for array, and set metadata part
+
+	}catch(e)
+	{
+		//do something here to clear array
+		alert("error: "+e.description);
+	}
+        //var id = domxml.getElementsByTagName("dc:identifier")[0];
+
+	//if(id.hasChildNodes())
+	
+	//MLA.insertWordOpenXML(local.xml);  //was content
+	//alert("LOCAL CONTENT IS"+local.xml);
+}
 
 
 function blurSelected(btn_element)
@@ -390,6 +517,18 @@ function setMetadataPartValues()
 
 }
 
+function isScrolledIntoView(ctrlId)
+{
+    var docViewTop =  $("#treeWindow").scrollTop();
+    var docViewBottom = docViewTop +  $("#treeWindow").height();
+
+    var elemTop = $('#'+ctrlId).offset().top;
+    var elemBottom = elemTop + $('#'+ctrlId).height();
+
+    return ((elemBottom >= docViewTop) && (elemTop <= docViewBottom)
+      && (elemBottom <= docViewBottom) &&  (elemTop >= docViewTop) );
+}
+
 
 function setControlFocus(enteredId)
 {
@@ -399,15 +538,27 @@ function setControlFocus(enteredId)
         var controlID = null;
 
 	if(enteredId == null || enteredId == ""){
-	         window.event.cancelBubble=true;
-		 controlID = window.event.srcElement.id;
-		 MLA.setContentControlFocus(controlID);
+	        window.event.cancelBubble=true;
+		controlID = window.event.srcElement.id;
+
+		var destination = $('#'+controlID).offset().top;
+		if(!(isScrolledIntoView(controlID)))
+		{
+                   $("#treeWindow").animate({ scrollTop: destination-20}, 500 );
+		}
+	
+		MLA.setContentControlFocus(controlID);
+
 	}
 	else
 	{
 		controlID = enteredId;
+
 		var destination = $('#'+controlID).offset().top;
-                $("#treeWindow").animate({ scrollTop: destination-60}, 500 );
+		if(!(isScrolledIntoView(controlID)))
+		{
+                   $("#treeWindow").animate({ scrollTop: destination-50}, 500 );
+		}
 	}
 
         //set highlight of selected using class
@@ -571,8 +722,10 @@ function refreshControlTree()
 function clearControlProperties()
 {
     $('#properties').hide();
-    $("#ctrltitle").text("Title: ");
-    $("#ctrltag").text("Tag: ");
+    $('#noproperties').show();
+    $("#ctrltitle").text("");
+    $("#ctrltag").text("");
+    $("#ctrlparent").text("");
     $('#lockctrl').attr('checked', false);
     $('#lockcntnt').attr('checked', false);
 }
@@ -580,9 +733,18 @@ function clearControlProperties()
 //BEGIN EVENT HANDLERS
 function onEnterHandler(ref)
 {
+       
+       var ctrlParent = null;
+       if(!(ref.parentID==""))
+	      ctrlParent = MLA.getContentControlInfo(ref.parentID);
+
        //just go ahead and set control properties, thought not necessarily visible
        $("#ctrltitle").text("Title: "+ref.title);
        $("#ctrltag").text("Tag: "+ref.tag);
+
+       if(!(ctrlParent==null))
+           $("#ctrlparent").text("Parent: "+ctrlParent.title);
+
        if(ref.lockcontrol=="True")
        {
 	       $('#lockctrl').attr('checked', true);
@@ -594,6 +756,8 @@ function onEnterHandler(ref)
        }
 
        $('#properties').show();
+       $('#noproperties').hide();
+
 
        setControlFocus(ref.id);
 }
@@ -604,30 +768,95 @@ function onExitHandler(ref)
 }
 
 function afterAddHandler(ref)
-{
-	//alert("AFTER ADD: "+ref.id +"PARENT: "+ref.parentID);
-        //here, get parent content control info
+{ 
+        var proceed = true;	
+	//alert("AFTER ADD TITLE: "+ref.title+" ID: "+ ref.id +" TAG: "+ref.tag+" PARENT: "+ref.parentID);
+
+        //when inserting XML with Controls, id is overwritten, but tag remains
+	//check here and set tag = id
+	//(we set on add with MLA.addContentControl(), but that's not used here if dealing with XML reuse (insert from search))
+	var ctrlId = ref.id;
+	var ctrlTag = ref.tag;
+	try{
+		if(!(ctrlId==ctrlTag))
+                     MLA.setContentControlTag(ctrlId, ctrlId);	
+	}catch(err){
+		alert("error: "+e.description);
+	}
+
+	//adding metadata part for control
+	
+	//global array, metadataPartArray, set for metadata coming in for insertable part. see insertContent()
+	//if metadataPartArray.length > 0, 
+	//   take first item off of array and add as metadata part for this control
+	//   (assumes there is metadata for each part, 
+	//     in xqy,  we return <dc:metadata/> for no metadata
+	//     if dc:metadata.children().length = 0
+	//         follow regular metadata process
+	//     update array by removing first item (an inserted piece could have several embedded controls)
+	//else follow regular metadata process
+	
+	if(metadataPartArray.length > 0 )
+	{
+		//alert("IN NEW IF metadataPartArray.length: "+metadataPartArray.length);
+		metadataPartArray.reverse();
+		var meta = metadataPartArray.pop();
+		//alert("Meta XML: "+meta.xml);
+		metadataPartArray.reverse();
+
+	        //we use dc:identifier with id from ctrl.  
+	        //so metadata brought over should have this value updated with latest control id
+	        //unique ids for authors are left to other fields, we use this one to link metadata to the ctrl
+	        //(important for delete of ctrl, etc)
+
+	        var previd = meta.getElementsByTagName("dc:identifier")[0];
+		
+		if(previd == null)
+		{   //need to test this more    
+		    alert("ID IS NULL, No METADATA");
+		    proceed=true;
+		}
+		else 
+		{   if(previd.hasChildNodes())
+	            {
+		      previd.childNodes[0].nodeValue="";
+		      previd.childNodes[0].nodeValue=ref.id;
+	            }
+	            else
+	            {
+		      var child = previd.appendChild(meta.createTextNode(ref.id));
+	            }
+
+                    MLA.addCustomXMLPart(meta.xml);
+		    proceed = false;
+		}
+
+	}
+	
+	//assuming the control was added from the palette on the pane:
 	//use title to access map (generated from config.xqy) 
 	//and retrieve metadata form to use
 	//add part , setting id in custom part to associate
 	//possible to move a control, this creates delete, then add event using same id
-
-        var stringxml = MLA.unescapeXMLCharEntities(generateTemplate(map.get(MLA.getLastAddedControlTitle())));
-        var domxml = MLA.createXMLDOM(stringxml);
-
-	var id = domxml.getElementsByTagName("dc:identifier")[0];
-
-	if(id.hasChildNodes())
+        if(proceed)
 	{
+           var stringxml = MLA.unescapeXMLCharEntities(generateTemplate(map.get(MLA.getLastAddedControlTitle())));
+           var domxml = MLA.createXMLDOM(stringxml);
+
+	   var id = domxml.getElementsByTagName("dc:identifier")[0];
+
+	   if(id.hasChildNodes())
+	   {
 		id.childNodes[0].nodeValue="";
 		id.childNodes[0].nodeValue=ref.id;
-	}
-	else
-	{
-		var child = id.appendChild(domxml.createTextNode(ref.id));
-	}
+	   } 
+	   else
+	   {
+	        var child = id.appendChild(domxml.createTextNode(ref.id));
+	   }
 
-	MLA.addCustomXMLPart(domxml.xml);
+	   MLA.addCustomXMLPart(domxml.xml);
+	}
 
 }
 

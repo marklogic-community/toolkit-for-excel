@@ -1,10 +1,11 @@
 xquery version "1.0-ml";
 import module namespace config = "http://marklogic.com/config"  at "./config/config.xqy";
+declare namespace search="http://marklogic.com/openxml/search";
 xdmp:set-response-content-type('text/html'),
 "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>",
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" id="main">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> <!--harset=iso-8859-1" />-->
 <link rel="stylesheet" href="css/sample1.css" />
 <script type="text/javascript" src="jquery-1.3.2.min.js"></script>
 <script type="text/javascript" src="sample1.js"></script>
@@ -94,15 +95,21 @@ xdmp:set-response-content-type('text/html'),
        <br clear="all" />
    </div>
    
-   <div id="properties"> 
+   <div id="properties-panel"> 
        <h3><span>Properties</span></h3>
+       <div id="noproperties">
+        No Content Controls are currently selected.
+       </div>
+       <div id="properties">
        <form action="#">
          <label id="ctrltitle"> </label><br/>
          <label id="ctrltag"> </label><br/>
+         <label id="ctrlparent"> </label><br/><br/>
          <input type="checkbox" id="lockctrl" onclick="lockControl()"/><label for="lockctrl">Lock Control</label>
          <input type="checkbox" id="lockcntnt" onclick="lockControlContents()"/><label for="lockcntnt">Lock Content</label>
        </form>
        <br clear="all" />
+       </div>
    </div>
    
   </div><!--end inspector details-->
@@ -117,16 +124,85 @@ xdmp:set-response-content-type('text/html'),
 </div><!-- end current-doc-->
 
 <div id="metadata">
-  <div id="tabs"></div>
-    info
+   <!--going to remove tabs in the future, used here for styling-->
+   <!-- info <button onclick="partsTest()">CONTROL TEST</button> -->
+   <div id="treeWindow">
+      <h2><a href="#">My Document</a></h2>
+      <ul id="treelist">
+   <!--    <li>test</li>
+        <ul><li>test2</li></ul> -->
+      </ul>
+   </div><!--end treeWindow-->
+
+   <div id="metadataPanel">
+    <h3>Metadata</h3>
+    <div id="metadataForm">
+     <!--<div>
+        <p><label>Author</label></p>
+        <input id="form1" type="text"/> 
+        <p>&nbsp; </p>
+     </div>
+     <div>
+        <p><label>Description</label></p>
+        <textarea id="form2"/>
+        <p>&nbsp; </p>
+     </div>-->
+    <!--<p><label>Author</label></p>
+    <form id="form1" name="form1" method="post" action="">
+      <select name="select" id="select">
+        <option>James T. Kirk</option>
+      </select>
+    </form>
+    <p>
+      <label>Notes</label>
+    </p>
+    <form id="form2" name="form2" method="post" action="">
+      <textarea name="textarea" cols="40" rows="5" wrap="virtual" id="textarea"></textarea>
+    </form> -->
+    </div>
+   </div><!--end metadataPanel-->
+
 </div>
 
 <div id="search">
-  <div id="tabs"></div>
-    search 
+   <!--going to remove tabs in the future, used here for styling-->
+{ 
+    let $searchparam := if(fn:empty(xdmp:get-request-field("search:bsv"))) then "" else (xdmp:get-request-field("search:bsv"))
+    let $start := xdmp:get-request-field("search:start")
+    let $div :=
+      <div id="searchpanel">
+	<div>
+<br/>
+               {
+                    xdmp:invoke("./search/searchform.xqy",  (xs:QName("search:bsv"),$searchparam ))
+               }
+               <br/><br/>
+           
+         
+               {
+                let $res := 
+                 if(fn:not(fn:empty($searchparam) or $searchparam eq "" )) then
+
+                    xdmp:invoke("./search/searchresults.xqy",(xs:QName("search:bsv"), $searchparam )) 
+                
+                 else ()
+                 return $res
+               }<br/>
+               <div id="searchresults">
+               </div>
+               
+
+	</div>
+        { (:if($searchparam eq "" or fn:empty($searchparam)) then $intro else () :)}
+
+ </div>
+return $div
+}
+    {(:xdmp:invoke("searchtest.xqy"):) }
 </div>
 
 <div id="compare">
+   <!--going to remove tabs in the future, used here for styling-->
   <div id="tabs"></div>
     compare
 </div>
