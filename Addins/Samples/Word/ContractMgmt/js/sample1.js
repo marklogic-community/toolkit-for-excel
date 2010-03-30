@@ -841,7 +841,7 @@ function afterAddHandler(ref)
 		
 		if(previd == null)
 		{   //need to test this more    
-		    alert("ID IS NULL, No METADATA");
+		    //alert("ID IS NULL, No METADATA");
 		    proceed=true;
 		}
 		else 

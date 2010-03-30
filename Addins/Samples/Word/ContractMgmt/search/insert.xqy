@@ -83,7 +83,11 @@ let $body := <w:body>{$content}</w:body>
 
 
 (: let $body := <w:body>{fn:doc($uri)/xdmp:unpath($path)}</w:body> :)
-let $pkg:= ooxml:get-directory-package(fn:substring-before($uri,"word/document.xml"))
+
+(:check to see if this came from extracted .docx, or Word saved as XML :)
+let $pkg:= if(fn:contains($uri,"_docx_parts")) then
+                   ooxml:get-directory-package(fn:substring-before($uri,"word/document.xml"))
+            else $doc
 let $upd-pkg :=  ins:dispatch-body-replace($pkg, $body)   (: the pkg:package for insert :)
 
 let $metadata-ids := ($body//w:id/@w:val) (: returned in order :)
