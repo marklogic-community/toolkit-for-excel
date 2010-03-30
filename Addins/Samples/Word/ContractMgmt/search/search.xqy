@@ -155,34 +155,46 @@ return	xdmp:quote(
 		         else
                                (   
                                 <div id="searchpagination">
-                                <span>Results:</span> 
-                                <span class="resultscounter">{$new-start} to {$new-end} of 
+                                <span>Results:</span>
                                 {
-                                  if(fn:data($hits/@remainder) gt $new-end) then 
-                                    fn:data($hits/@remainder)
-                                  else $new-end
-                                }
-                                </span>                                 
-                                {
-                                  if($remainder gt 10) then 
+ 
+                                    if($remainder gt 10) then 
                                     let $page := $new-start
                                     let $new-page := $new-start + 10
+                                    let $span :=    <span class="resultscounter">{$new-start} to {$new-end} of 
+                                                      {
+                                                         if(fn:data($hits/@remainder) gt $new-end) then 
+                                                            fn:data($hits/@remainder)
+                                                         else $new-end
+                                                      }
+                                                    </span>  
                                     return if($page gt 10) then
-                                             (<a href="#" class="leftpagination" OnClick="SearchAction({$page - 10})">BACK</a>,
-                                              <a href="#" class="rightpagination" OnClick="SearchAction({$new-page})">FORWARD</a>)
+                                             (<a href="#" class="leftpagination" OnClick="SearchAction({$page - 10})">&lt;</a>,
+                                                 $span,
+                                              <a href="#" class="rightpagination" OnClick="SearchAction({$new-page})">&gt;</a>)
                                            else 
-                                              <a href="#" class="rightpagination" OnClick="SearchAction({$new-page})">FORWARD</a>
+                                              ("&nbsp;&nbsp;",$span,<a href="#" class="rightpagination" OnClick="SearchAction({$new-page})">&gt;</a>)
                                                                    
-                                           else if($new-start gt 10) then
-                                             <a href="#" class="leftpagination" OnClick="SearchAction({$new-start - 10})">BACK</a>
-                                           else ()
-                                }</div>,
+                                     else if($new-start gt 10) then
+                                             (<a href="#" class="leftpagination" OnClick="SearchAction({$new-start - 10})">&lt;</a>,
+                                               <span class="resultscounter">{$new-start} to {$new-end} of 
+                                                      {
+                                                         if(fn:data($hits/@remainder) gt $new-end) then 
+                                                            fn:data($hits/@remainder)
+                                                         else $new-end
+                                                      }
+                                                    </span>  
+                                             )
+                                     else ()
+                                } 
+                                                        
+                                </div>,
                                 
                                 
                                 for $hit in $hits/ps:result 
 				let $uri := fn:data($hit/@uri)
                                 let $path := fn:data($hit/@path)
-(: ctrltype , modby, moddate :)
+(: title,ctrltype , modby, moddate :)
                                 let $ctrl := $hit/w:sdt 
 				let $snippet := if(string-length(fn:data($ctrl)) > 120) then 
                                                    fn:concat(substring(fn:data($ctrl), 1, 120), "...") 
