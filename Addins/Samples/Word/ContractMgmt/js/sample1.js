@@ -266,6 +266,19 @@ $(document).ready(function() {
        
 });
 
+function checkForEnter()
+{
+     if (window.event && window.event.keyCode == 13)
+     {
+         //alert('Enter key pressed');
+	 return SearchAction();
+         //return false;
+     }
+
+     return true;
+	
+}
+
 function SearchAction(startidx)
 {
 	if(startidx==null)
@@ -274,7 +287,7 @@ function SearchAction(startidx)
 	   startidx = 0;
 	}
 
-	var qry = $('#ML-Search').val();
+	var qry = $('#searchbox').val();
 	simpleAjaxSearch(qry,startidx);
 }
 
@@ -516,19 +529,21 @@ function setMetadataPartValues()
 
 
 }
-
 function isScrolledIntoView(ctrlId)
 {
     var docViewTop =  $("#treeWindow").scrollTop();
     var docViewBottom = docViewTop +  $("#treeWindow").height();
 
-    var elemTop = $('#'+ctrlId).offset().top;
+    var elemTop = $('#'+ctrlId).offset().top + docViewTop;
     var elemBottom = elemTop + $('#'+ctrlId).height();
 
-    return ((elemBottom >= docViewTop) && (elemTop <= docViewBottom)
-      && (elemBottom <= docViewBottom) &&  (elemTop >= docViewTop) );
-}
+    //   alert("tree top: "+docViewTop+"\ntreebottom: "+docViewBottom+"\n controlltop: "+elemTop+"\n+controlbottom: "+elemBottom);
 
+    var vis = ((elemBottom >= docViewTop) && (elemTop <= docViewBottom)
+      && (elemBottom <= docViewBottom) &&  (elemTop >= docViewTop) );
+
+    return vis;
+}
 
 function setControlFocus(enteredId)
 {
@@ -541,10 +556,11 @@ function setControlFocus(enteredId)
 	        window.event.cancelBubble=true;
 		controlID = window.event.srcElement.id;
 
-		var destination = $('#'+controlID).offset().top;
+		var destination = $('#'+controlID).offset().top + $("#treeWindow").scrollTop();
 		if(!(isScrolledIntoView(controlID)))
 		{
-                   $("#treeWindow").animate({ scrollTop: destination-20}, 500 );
+		   //at start treeWindow.scrollTop() = 0; treeWindow.height = 200; ctrlId.offset().top = 85;
+                   $("#treeWindow").animate({ scrollTop: destination - 85}, 500 );
 		}
 	
 		MLA.setContentControlFocus(controlID);
@@ -554,10 +570,11 @@ function setControlFocus(enteredId)
 	{
 		controlID = enteredId;
 
-		var destination = $('#'+controlID).offset().top;
+		//var destination = $('#'+controlID).offset().top + $("#treeWindow").scrollTop();
+		var destination = $('#'+controlID).offset().top + $("#treeWindow").scrollTop();
 		if(!(isScrolledIntoView(controlID)))
 		{
-                   $("#treeWindow").animate({ scrollTop: destination-50}, 500 );
+                   $("#treeWindow").animate({ scrollTop: destination - 85}, 500 );
 		}
 	}
 
@@ -565,11 +582,21 @@ function setControlFocus(enteredId)
 	$('#treelist').find('a').removeClass("selectedtreectrl");
 	$('#'+controlID).addClass("selectedtreectrl");
 
+	//clear metaform in panel
+	var metaform = $('#metadataForm');
+        if(metaform.children('div').length)
+	{
+		metaform.children('div').remove();
+	}
+
 	//need to grab custom piece for metadata section
 	var metadataID = getMetadataPartID(controlID);
-	var metadata = getMetadataPartForControl(metadataID);
-	var meta = metadata.getElementsByTagName("dc:metadata")[0];
-	var idxml = metadata.getElementsByTagName("dc:identifier")[0];
+	if(!(metadataID == null))
+
+	{	
+	   var metadata = getMetadataPartForControl(metadataID);
+	   var meta = metadata.getElementsByTagName("dc:metadata")[0];
+	   var idxml = metadata.getElementsByTagName("dc:identifier")[0];
 	
         /*  <div>
               <p><label>Author</label></p>
@@ -583,15 +610,15 @@ function setControlFocus(enteredId)
             </div>
         */
 
-        var metaform = $('#metadataForm');
-        if(metaform.children('div').length)
-	{
-		metaform.children('div').remove();
-	}
+       // var metaform = $('#metadataForm');
+        //if(metaform.children('div').length)
+//	{
+//		metaform.children('div').remove();
+//	}
 
 	//construct metadata panel on page from metadata part
-	for(var i = 1;i < meta.childNodes.length; i++)
-	{
+	   for(var i = 1;i < meta.childNodes.length; i++)
+	   {
 	        var localname = meta.childNodes[i].nodeName.split(":");
 		var formID = "form-"+i+"-"+controlID;
                 var child = meta.childNodes[i];	        	
@@ -627,8 +654,9 @@ function setControlFocus(enteredId)
                      setMetadataPartValues(); 
                    }); 
 		  //alert(formID);
+	   }//end of for
 
-	}
+	}//end of if
 	
 
 }

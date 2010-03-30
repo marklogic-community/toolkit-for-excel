@@ -176,8 +176,6 @@ xdmp:set-response-content-type('text/html'),
                {
                     xdmp:invoke("./search/searchform.xqy",  (xs:QName("search:bsv"),$searchparam ))
                }
-               <br/><br/>
-           
          
                {
                 let $res := 

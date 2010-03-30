@@ -19,22 +19,34 @@ declare namespace search = "http://marklogic.com/openxml/search";
 declare variable $search:bsv as xs:string external;
 
 (: define variable $searchparam as xs:string external :)
-let $searchval := if(fn:empty($search:bsv) or $search:bsv eq "") then () else $search:bsv
+let $searchval := if(fn:empty($search:bsv) or $search:bsv eq "") then "Search..." else $search:bsv
 let $header:=((: xdmp:set-response-content-type('text/html'), :)
-              <div id="searchheader">
+              <div id="searchhead"><!-- adds line -->
                  <!--<form id="basicsearch" action="default.xqy" method="get">-->
-                   <div>
-                      <input id="ML-Search" name="search:bsv" autocomplete="off" type="text" value="{$searchval}" method="get"/>
+                   <div id="searchform">
+                      <input id="searchbox" name="search:bsv" autocomplete="off" type="text" value="{$searchval}" method="get" onkeypress="checkForEnter();"/>
                       
 		      <!--<input id="ML-Submit" type="submit" value="search"/>-->
                      
-                      <a href="#" OnClick="SearchAction();" > Search </a> &nbsp;|&nbsp;
+                      <a href="#"  class="searchBtn" OnClick="SearchAction();" > Search </a> &nbsp;|&nbsp;
                       <a href="#"> Filter </a>
+                      <!-- in mockup, but not available yet
+                     <a href="#" class="filterBtn">&nbsp;</a>
+                     <a href="#" class="dropdownBtn">&nbsp;</a>
+                        -->
 		      
                       <!--<input type="text" name="search:bsv" autocomplete="off" value={$searchval} id="bsearchval"  method="post"/>
                       <input type="submit" value="search"/> -->
                        
-                   </div> 
+                   </div>
+
+<!-- this needs to be a configurable query, and we probably won't do counts in v1 -->
+                   <div id="searchfilter">
+                        <div class="filterrow"><input type="checkbox" id="sectioncbx" /><a href="#"> Section (20)</a></div>
+                        <div class="filterrow"><input type="checkbox" id="policycbx" /><a href="#"> Policy (2)</a></div>
+                        <div class="filterrow"><input type="checkbox" id="processcbx" /><a href="#"> Process (20)</a></div>
+                   </div>
+ 
                  <!-- </form>    -->
              </div>)
 

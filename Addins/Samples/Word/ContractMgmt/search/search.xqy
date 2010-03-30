@@ -105,33 +105,37 @@ return	xdmp:quote(
             let $hits := ps:page-results($and-query, $new-start)
             let $remainder := fn:data($hits/@remainder)
             let $new-end := if($remainder gt $new-start+9) then $new-start + 9 else $new-start + $remainder - 1
-  	    let $res := <ul>
+  	    let $res := <div>
                         {
                          if(fn:not($hits) or fn:empty($hits//w:sdt)) then
 	                       (<div id="searchresultsinner"><p>Your search for "{$q}" did not match anything.</p>{$intro}</div>)
 		         else
                                (   
-                                <div id="searchresultsinner">Results: {$new-start} to {$new-end} of 
+                                <div id="searchpagination">
+                                <span>Results:</span> 
+                                <span class="resultscounter">{$new-start} to {$new-end} of 
                                 {
                                   if(fn:data($hits/@remainder) gt $new-end) then 
                                     fn:data($hits/@remainder)
                                   else $new-end
                                 }
+                                </span>                                 
                                 {
                                   if($remainder gt 10) then 
                                     let $page := $new-start
                                     let $new-page := $new-start + 10
                                     return if($page gt 10) then
-                                             (<a href="#" OnClick="SearchAction({$page - 10})">BACK</a>,
-                                              <a href="#" OnClick="SearchAction({$new-page})">FORWARD</a>)
+                                             (<a href="#" class="leftpagination" OnClick="SearchAction({$page - 10})">BACK</a>,
+                                              <a href="#" class="rightpagination" OnClick="SearchAction({$new-page})">FORWARD</a>)
                                            else 
-                                              <a href="#" OnClick="SearchAction({$new-page})">FORWARD</a>
+                                              <a href="#" class="rightpagination" OnClick="SearchAction({$new-page})">FORWARD</a>
                                                                    
                                            else if($new-start gt 10) then
-                                             <a href="#" OnClick="SearchAction({$new-start - 10})">BACK</a>
+                                             <a href="#" class="leftpagination" OnClick="SearchAction({$new-start - 10})">BACK</a>
                                            else ()
-                                }</div>,<br/>,
-                                             
+                                }</div>,
+                                
+                                
                                 for $hit in $hits/ps:result 
 				let $uri := fn:data($hit/@uri)
                                 let $path := fn:data($hit/@path)
@@ -139,18 +143,24 @@ return	xdmp:quote(
 				let $snippet := if(string-length(data($ctrl)) > 120) then 
                                                    fn:concat(substring(data($ctrl), 1, 120), "...") 
                                                 else data($ctrl)
-				return <li xlink:href="{concat($uri,'#', 'xmlns(w=http://schemas.openxmlformats.org/wordprocessingml/2006/main) xpath(',xdmp:path($ctrl),')')}">
-				        {cts:highlight(<p title="{data($ctrl)}">{$snippet}</p>, $or-query, <strong class="ML-highlight">{$cts:text}</strong>)}
-					<ul class="ML-hit-metadata">
-					  <li>
+				return 
+                                 <div class="searchreturnresult">
+                                 <h4>Geo Faceting in advanced search more long</h4>
+                                 <p class="byline">Modified: 12/Feb/2010 11:23 a.m. 
+                                          <span>Pete Aven</span>
+                                 </p>
+                                 <p class="controltitle">
+                                     <span class="textIcon">Requirement</span>
+                                     <span class="pagenum">p. 63</span>
+                                 </p> 
+				     {cts:highlight(<p class="searchreturnsnippet" title="{data($ctrl)}">{$snippet}</p>, $or-query, <strong class="ML-highlight">{$cts:text}</strong>)}
+					 <div id="searchresultactions">
 					    <!--<a href="./utils/content.xqy?uri={xdmp:url-encode($uri)}" target="_blank">INSERT</a>&nbsp;-->
-					    <a href="#" OnClick="InsertAction('{xdmp:url-encode($uri)}', '{$path}')">INSERT</a>&nbsp;
-					    <a href="./utils/openpkg.xqy?uri={xdmp:url-encode($uri)}">OPEN</a>
-					  </li>
-                                          <br/><br/>
-					</ul>
-				       </li>)  
-                        }</ul>
+					    <a href="#" class="insertbtn" OnClick="InsertAction('{xdmp:url-encode($uri)}', '{$path}')">INSERT</a>&nbsp;
+					    <a href="./utils/openpkg.xqy?uri={xdmp:url-encode($uri)}" class="openbtn">OPEN</a>
+                                         </div>
+                                 </div>
+                               ) } </div>
            return ($res)
                                                                    
          else ()
