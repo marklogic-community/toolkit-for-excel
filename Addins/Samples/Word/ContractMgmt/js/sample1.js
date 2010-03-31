@@ -287,23 +287,50 @@ function SearchAction(startidx)
 	   startidx = 0;
 	}
 
+
+        var cbsx = []; //will contain all checkboxes checked status
+        var cbsid = []; //will contain all checkboxes ids
+
+        $('#searchfilter input:checkbox').each(function(){
+	  if(this.checked){
+            cbsid.push(this.id);
+            cbsx.push(this.checked);
+	    }
+        });
+	
+        //for(var j=0;j<cbsx.length;j++)
+        //{	  
+	// alert("ID: "+cbsid[j]+" STATUS: "+cbsx[j]);
+        //}	
+ 
+
+
+	$('#searchfilter')
+
 	var qry = $('#searchbox').val();
-	simpleAjaxSearch(qry,startidx);
+	simpleAjaxSearch(qry,startidx, cbsid);
 }
 
-function simpleAjaxSearch(searchval, startidx)
+function simpleAjaxSearch(searchval, startidx, cbsid)
 {
     var newurl = "";
+
+    //alert("filter id length: "+cbsid.length);
 
     if(startidx==0)
 	    newurl = "search/search.xqy";
     else
 	    newurl = "search/search.xqy?start="+startidx;
 
+//$.post("test.php", { name: "John", time: "2pm" } );
+//data: ({id : this.getAttribute('id')}),
+//data: "name=John&location=Boston",
+
     $.ajax({
-          type: "GET",
+          type: "POST",
           url: newurl, //"search/search.xqy",
-          data: "qry=" + searchval,
+          //data: "qry=" + searchval,
+          data: { qry : searchval, params : cbsid },
           success: function(msg){
 	                //put in top nav
 	                //$('#main').css('overflow', 'auto');

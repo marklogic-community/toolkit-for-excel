@@ -40,11 +40,11 @@ let $header:=((: xdmp:set-response-content-type('text/html'), :)
                        
                    </div>
 
-<!-- this needs to be a configurable query, and we probably won't do counts in v1 -->
+<!-- this needs to be a configurable query, and we probably won't do counts in v1, what does facet/link mean, since its a filter? -->
                    <div id="searchfilter">
-                        <div class="filterrow"><input type="checkbox" id="sectioncbx" /><a href="#"> Section (20)</a></div>
-                        <div class="filterrow"><input type="checkbox" id="policycbx" /><a href="#"> Policy (2)</a></div>
-                        <div class="filterrow"><input type="checkbox" id="processcbx" /><a href="#"> Process (20)</a></div>
+                        <div class="filterrow"><input type="checkbox" id="Section" /><a href="#"> Section</a></div>
+                        <div class="filterrow"><input type="checkbox" id="Policy" /><a href="#"> Policy</a></div>
+                        <div class="filterrow"><input type="checkbox" id="Process" /><a href="#"> Process </a></div>
                    </div>
  
                  <!-- </form>    -->
