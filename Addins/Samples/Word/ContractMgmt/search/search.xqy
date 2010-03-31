@@ -148,6 +148,13 @@ return	xdmp:quote(
             let $hits := ps:page-results($and-query, $new-start)
             let $remainder := fn:data($hits/@remainder)
             let $new-end := if($remainder gt $new-start+9) then $new-start + 9 else $new-start + $remainder - 1
+            let $span := <span class="resultscounter">{$new-start} to {$new-end} of 
+                          {
+                            if(fn:data($hits/@remainder) gt $new-end) then 
+                                fn:data($hits/@remainder)
+                            else $new-end
+                          }
+                          </span> 
   	    let $res := <div>
                         {
                          if(fn:not($hits) or fn:empty($hits//w:sdt)) then
@@ -161,13 +168,6 @@ return	xdmp:quote(
                                     if($remainder gt 10) then 
                                     let $page := $new-start
                                     let $new-page := $new-start + 10
-                                    let $span :=    <span class="resultscounter">{$new-start} to {$new-end} of 
-                                                      {
-                                                         if(fn:data($hits/@remainder) gt $new-end) then 
-                                                            fn:data($hits/@remainder)
-                                                         else $new-end
-                                                      }
-                                                    </span>  
                                     return if($page gt 10) then
                                              (<a href="#" class="leftpagination" OnClick="SearchAction({$page - 10})">&lt;</a>,
                                                  $span,
@@ -177,15 +177,9 @@ return	xdmp:quote(
                                                                    
                                      else if($new-start gt 10) then
                                              (<a href="#" class="leftpagination" OnClick="SearchAction({$new-start - 10})">&lt;</a>,
-                                               <span class="resultscounter">{$new-start} to {$new-end} of 
-                                                      {
-                                                         if(fn:data($hits/@remainder) gt $new-end) then 
-                                                            fn:data($hits/@remainder)
-                                                         else $new-end
-                                                      }
-                                                    </span>  
+                                              $span
                                              )
-                                     else ()
+                                     else  $span
                                 } 
                                                         
                                 </div>,
