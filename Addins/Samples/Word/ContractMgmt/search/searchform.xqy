@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 :)
-
+import module namespace config = "http://marklogic.com/config"  at "../config/config.xqy";
 declare namespace search = "http://marklogic.com/openxml/search";
 declare variable $search:bsv as xs:string external;
 
@@ -41,11 +41,12 @@ let $header:=((: xdmp:set-response-content-type('text/html'), :)
                    </div>
 
 <!-- this needs to be a configurable query, and we probably won't do counts in v1, what does facet/link mean, since its a filter? -->
-                   <div id="searchfilter">
+                      {config:search-filters()}
+                    <!--<div id="searchfilter">
                         <div class="filterrow"><input type="checkbox" id="Section" /><a href="#"> Section</a></div>
                         <div class="filterrow"><input type="checkbox" id="Policy" /><a href="#"> Policy</a></div>
                         <div class="filterrow"><input type="checkbox" id="Process" /><a href="#"> Process </a></div>
-                   </div>
+                   </div>-->
  
                  <!-- </form>    -->
              </div>)

@@ -135,9 +135,9 @@ let $new-start := if(fn:empty(xdmp:get-request-field("start"))) then
                       xs:integer(xdmp:get-request-field("start"))
 let $intro := 
        <div id="ML-Intro">
-	<h1>Search and Reuse for {$q}</h1>
-	<p>Use the above search box to find content in Word 2007 documents stored on MarkLogic Server. Keywords narrow the results. Each search result represents a paragraph (or list item) that matches your criteria.</p>
-	<p>To insert that entire paragraph into the active document at the current cursrrror location, double-click the result snippet.</p>
+	<h1>Search and Reuse</h1>
+	<p>Use the above search box to find content in Word 2007 documents stored on MarkLogic Server. Keywords narrow the results. Each search result represents a content control that matches your criteria.</p><br/>
+	<p>To insert the results into the active document at the current cursor location, click the insert button.  To open the source document for the search result, click the open button.  Mouseover the snippet to see more detail about the search result.</p>
        </div>
 (:return xdmp:quote($intro) :)
 return	xdmp:quote(
