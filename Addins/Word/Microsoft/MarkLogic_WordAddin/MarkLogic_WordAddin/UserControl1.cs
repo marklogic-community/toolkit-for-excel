@@ -68,12 +68,12 @@ namespace MarkLogic_WordAddin
             {
 
                 color = TryGetColorScheme().ToString();
-                webBrowser1.AllowWebBrowserDrop = false;
-                webBrowser1.IsWebBrowserContextMenuEnabled = false;
+                webBrowser1.AllowWebBrowserDrop = false; //false
+                webBrowser1.IsWebBrowserContextMenuEnabled = false; //false
                 webBrowser1.WebBrowserShortcutsEnabled = true;
                 webBrowser1.ObjectForScripting = this;
                 webBrowser1.Navigate(webUrl);
-                webBrowser1.ScriptErrorsSuppressed = true;
+                webBrowser1.ScriptErrorsSuppressed = true; 
 
                 this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
 
@@ -2214,6 +2214,62 @@ namespace MarkLogic_WordAddin
 
             return message;
         }
+
+        /**
+         * Starts compare with the current document and the document retrieved from
+         * the specified uri using the specified credentials. The file is assumed to 
+         * be .xml format.
+         */
+        //maybe pass filename
+        public void mergeWithActiveDocument(string opc_xml)
+        {
+            //MessageBox.Show("OPC XML" + opc_xml);
+           // string name = GetTemporaryFile(".xml");
+            //downloadFile(uri, name, user, pass);
+            object oname = "TEMP";
+            object f = false;
+            object t = true;
+            object missing = Type.Missing;
+            Word.Document doc=null;
+
+            try
+            {
+                doc = Globals.ThisAddIn.Application.Documents.Add(ref missing, ref missing, ref missing, ref f);
+                doc.Application.Selection.InsertXML(opc_xml, ref missing);
+                /*Word.Document doc = Globals.ThisAddIn.Application.Documents.Open(ref oname,
+                                                                             ref missing, ref missing, ref missing,
+                                                                             ref missing, ref missing, ref missing,
+                                                                             ref missing, ref missing, ref missing,
+                                                                             ref missing, ref f, ref missing,
+                                                                             ref missing, ref missing, ref missing);
+                */
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("error inserting XML: " + e.Message);
+            }
+
+            try
+            {
+
+                Word.WdCompareDestination dest = Word.WdCompareDestination.wdCompareDestinationNew;
+                Word.WdGranularity level = Word.WdGranularity.wdGranularityWordLevel;
+                Word.Document doc1 = Globals.ThisAddIn.Application.ActiveDocument;
+                Word.Document doc2 = doc;
+                Globals.ThisAddIn.Application.MergeDocuments(doc1, doc2, dest,
+                                                             level, true, true, true, true, true,
+                                                             true,
+                                                             true, true, true, true, "", "",
+                                                             Word.WdMergeFormatFrom.wdMergeFormatFromOriginal);
+
+                doc.Close(ref f, ref missing, ref missing);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("error in MERGE: " + e.Message);
+            }
+        }
+
          
         /*
         //a bizzare experiment that actually works, still serializes as 2007 xml on save
