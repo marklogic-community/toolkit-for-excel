@@ -205,8 +205,8 @@ return	xdmp:quote(
                                  </p> 
 				     {cts:highlight(<p class="searchreturnsnippet" title="{fn:data($ctrl)}">{$snippet}</p>, $or-query, <strong class="ML-highlight">{$cts:text}</strong>)}
 					 <div id="searchresultactions">
-					    <!--<a href="./utils/content.xqy?uri={xdmp:url-encode($uri)}" target="_blank">INSERT</a>&nbsp;-->
-					    <a href="#" class="insertbtn" OnClick="InsertAction('{xdmp:url-encode($uri)}', '{$path}')">INSERT</a>&nbsp;
+					    <!--<a href="#" class="insertbtn" OnClick="InsertAction('{xdmp:url-encode($uri)}', '{$path}');">INSERT</a>&nbsp;-->
+					    <a href="javascript:InsertAction('{xdmp:url-encode($uri)}', '{$path}');" class="insertbtn">INSERT</a>&nbsp;
 					    <a href="./utils/openpkg.xqy?uri={xdmp:url-encode($uri)}" class="openbtn">OPEN</a>
                                          </div>
                                  </div>

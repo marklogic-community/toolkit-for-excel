@@ -6,6 +6,7 @@ declare variable $config:CONTROLS := xdmp:document-get("Docs/KA/config/controls.
 declare variable $config:BOILERPLATE := xdmp:document-get("Docs/KA/config/boilerplate.xml");
 declare variable $config:METADATA := xdmp:document-get("Docs/KA/config/metadata.xml");
 declare variable $config:SEARCH := xdmp:document-get("Docs/KA/config/search.xml");
+declare variable $config:COMPARE := xdmp:document-get("Docs/KA/config/compare.xml");
 
 (:BEGIN Current-Document - Controls Tab Display:)
 declare function config:textctrl-sections()
@@ -331,19 +332,46 @@ declare function config:snippets()
 (:BEGIN Search Tab - Filter :)
 declare function config:search-filters()
 {
-let $filters := $config:SEARCH/config:searchfilters/config:searchfilter
+     let $filters := $config:SEARCH/config:searchfilters/config:searchfilter
 
-return <div id="searchfilter">
-          {for $filter in $filters
-           return 
-             <div class="filterrow">
+     return <div id="searchfilter">
+             {for $filter in $filters
+              return 
+               <div class="filterrow">
                    <input type="checkbox" id="{$filter/config:controlalias/text()}" />
                    <a href="#"> {$filter/config:displaylabel/text()}</a>
-             </div>
-          }
-       </div>
+               </div>
+             }
+            </div>
 
 };
 
 (:END Search Tab - Filter :)
 
+
+(:BEGIN Compare Tab - Filter :)
+
+declare function config:compare-filters()
+{
+     let $filters := $config:COMPARE/config:comparefilters/config:comparefilter
+     return <options>
+              {for $f in $filters
+               return <option value="{$f/config:value/text()}">{$f/config:displaylabel/text()}</option>
+              }
+            </options>
+
+};
+(:END Compare Tab - Filter :)
+(:
+declare function thiz:get-sites-select($id) {
+    (
+    <select size="5" class="vselect" onchange={fn:concat("siteChanged('", $id, "');")}
+        id={fn:concat($id, "site")}><options>{(
+        <option >(Select location)</option>,
+        <option value={$bplib:GROUP}>{$bplib:GROUP}</option>,
+        for $i in $bplib:SITES
+        return <option value={$i}>{$i}</option>
+    )}</options></select>
+    )
+};
+:)

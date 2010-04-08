@@ -315,7 +315,7 @@ function simpleAjaxSearch(searchval, startidx, cbsid)
 {
     var newurl = "";
 
-    //alert("filter id length: "+cbsid.length);
+    alert("in Simple Ajax Search");
 
     if(startidx==0)
 	    newurl = "search/search.xqy";
@@ -338,7 +338,7 @@ function simpleAjaxSearch(searchval, startidx, cbsid)
 			//alert("MESSAGE IS"+msg);
                         $('#searchresults').empty();
                         $('#searchresults').append(msg);
-                        //$('#searchresults').html(msg);
+                        $('#searchresults').html(msg);
 			}catch(e)
 			{
 			alert("ERROR"+e.description);
@@ -348,10 +348,16 @@ function simpleAjaxSearch(searchval, startidx, cbsid)
      });
 }
 
-function InsertAction(contenturl, contentpath)
-{
-	alert("URL: "+contenturl+" PATH: "+contentpath);
+function InsertAction(contenturl, contentpath, other)
+{ 
+	try{
+	//alert("IN InsertAction()");
+	//alert("URL: "+contenturl+" PATH: "+contentpath);
 	simpleAjaxInsert(contenturl,contentpath);
+	}catch(err)
+	{
+		alert("ERROR in InsertAction(): "+err.description);
+	}
 }
 
 function simpleAjaxInsert(contenturl,contentpath)
@@ -367,7 +373,7 @@ function simpleAjaxInsert(contenturl,contentpath)
 			  insertContent(msg);
 			}catch(e)
 			{
-			  alert("ERROR"+e.description);
+			  alert("ERROR in SimpleAjaxInsert(): "+e.description);
 			}
                    }
     });
@@ -576,7 +582,11 @@ function setControlFocus(enteredId)
 {
 	//cancel event bubbling, IE is wacky
 	//window.event.cancelBubble=true;
-         
+      //alert("In setControLFocus()");
+
+      if( $('#metadata').is(':visible'))  //ONLY DO WHEN TREE EXPOSED, MOVE TO EVENT 
+      {	      
+        //alert("In IF FOR setControLFocus()") 
         var controlID = null;
 
 	if(enteredId == null || enteredId == ""){
@@ -595,6 +605,7 @@ function setControlFocus(enteredId)
 	}
 	else
 	{
+	  //      window.event.cancelBubble=true; //NEW
 		controlID = enteredId;
 
 		//var destination = $('#'+controlID).offset().top + $("#treeWindow").scrollTop();
@@ -684,7 +695,9 @@ function setControlFocus(enteredId)
 	   }//end of for
 
 	}//end of if
-	
+      }
+
+        return false;	
 
 }
 
@@ -815,6 +828,7 @@ function onEnterHandler(ref)
 
 
        setControlFocus(ref.id);
+       return false;
 }
 
 function onExitHandler(ref)
@@ -913,6 +927,8 @@ function afterAddHandler(ref)
 	   MLA.addCustomXMLPart(domxml.xml);
 	}
 
+	return false;
+
 }
 
 function beforeDeleteHandler(ref)
@@ -922,6 +938,7 @@ function beforeDeleteHandler(ref)
 	//person can move controls, so need to save values if they exist, and use if new piece added with same id
 	
 	//remove node from TreeView
+	//check, may need to remove parent
 	if( $('#metadata').is(':visible') )
 	{
 	    var node = $('#'+ref.id).remove();
@@ -948,6 +965,110 @@ function beforeDeleteHandler(ref)
 	    }
 	}
 }
+
+function siteChanged()
+{
+	var selectedOption = $('#sites').val();
+	simpleAjaxMetadataSearch(selectedOption);
+	//alert("HERE: "+selectedOption);
+
+}
+
+function simpleAjaxMetadataSearch(searchval)
+{
+    var newurl = "search/metadata-search.xqy";
+
+    /*if(startidx==0)
+	    newurl = "search/compare.xqy";
+    else
+	    newurl = "search/compare.xqy?start="+startidx;
+	    */
+
+    $.ajax({
+          type: "POST",
+          url: newurl, 
+          //data: { qry : searchval, params : cbsid },
+          data: { qry : searchval },
+          success: function(msg){
+	                //put in top nav
+	                //$('#main').css('overflow', 'auto');
+			try{
+			alert("MESSAGE IS: "+msg+ "  "+msg.length);
+                        $('#docnames').empty();
+                        $('#docnames').append(msg);
+                        $('#docnames').html(msg);
+			}catch(e)
+			{
+			alert("ERROR"+e.description);
+			}
+	                //alert( "Data Saved: " + msg );
+                   }
+     });
+}
+
+function nameChanged()
+{
+	var selectedOption = $('#docnames').val();
+	//simpleAjaxDocRetrieve(selectedOption);
+	alert("HERE: "+selectedOption);
+
+}
+
+function mergeDocuments()
+{
+	alert("IN MERGE");
+	var selectedOption = $('#docnames').val();
+	if(selectedOption == null)
+	{
+          //do nothing
+	  alert("You must first select a document to merge.");
+	}else
+	{
+	//simpleAjaxDocRetrieve(selectedOption);
+	  alert("VALUE: "+selectedOption);
+	  simpleAjaxDocRetrieve(selectedOption);
+	  //get the package xml and pass to MLA.mergeWithActiveDocument(opc_xml) (add to api)
+	  
+	  
+	}
+}
+
+function simpleAjaxDocRetrieve(doclocation)
+{
+    var newurl = "search/document-retrieve.xqy";
+    alert("IN DOC RETRIEVE!");
+
+
+    /*if(startidx==0)
+	    newurl = "search/compare.xqy";
+    else
+	    newurl = "search/compare.xqy?start="+startidx;
+	    */
+
+    $.ajax({
+          type: "POST",
+          url: newurl, 
+          //data: { qry : searchval, params : cbsid },
+          data: { qry : doclocation },
+          success: function(opc_xml){
+	                //put in top nav
+	                //$('#main').css('overflow', 'auto');
+			try{
+			alert("MESSAGE IS: "+opc_xml+ "  "+opc_xml.length);
+                        //$('#docnames').empty();
+                        //$('#docnames').append(msg);
+                        //$('#docnames').html(msg);
+			//CALL MERGE HERE! AND MOVE TO MLA.*
+			window.external.mergeWithActiveDocument(opc_xml);
+			}catch(e)
+			{
+			alert("ERROR"+e.description);
+			}
+	                //alert( "Data Saved: " + msg );
+                   }
+     });
+}
+
 
 //END EVENT HANDLERS
 

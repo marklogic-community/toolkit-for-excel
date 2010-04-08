@@ -202,7 +202,30 @@ return $div
 <div id="compare">
    <!--going to remove tabs in the future, used here for styling-->
   <div id="tabs"></div>
-    compare
+  <div>
+      <div class="doc">Merge current document with:
+         <table class="ccontrols">
+           <tr>
+            <td>Location:<br/>
+             <select size="5" class="vselect" onchange="siteChanged();" id="sites">
+             {config:compare-filters()}
+             </select>
+            </td>
+
+            <td>Name:<br/>
+             <select size="5" class="vselect" onchange="nameChanged();" id="docnames">
+              <options id="docnames">
+               <option>(select a location)</option>
+              </options>
+             </select>
+            </td>
+           </tr>
+         </table>
+         <div class="prettymerge">
+               <button onclick="mergeDocuments();">Merge</button>
+         </div>
+       </div>
+   </div> 
 </div>
 </body>
 </html>
