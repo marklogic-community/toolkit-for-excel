@@ -7,8 +7,28 @@
 		  <config:title>Section</config:title>
 		  <config:placeholdertext>Please enter a Section</config:placeholdertext>
 		  <config:metatemplate>1</config:metatemplate>
-	        </config:section>
-		<config:section>
+	  </config:section>
+	  <config:section>
+		  <config:title>Policy</config:title>
+		  <config:placeholdertext>Please enter a Process</config:placeholdertext>
+		  <config:metatemplate>1</config:metatemplate>
+		  <config:children>
+		        <config:richtext> 
+			    <config:title>Process</config:title>
+			    <config:placeholdertext>Please enter a Process</config:placeholdertext>
+			    <config:newline>false</config:newline>
+			    <config:metatemplate>1</config:metatemplate>
+		        </config:richtext>
+			<config:richtext> 
+			    <config:title>Recommendation</config:title>
+			    <config:placeholdertext>Please enter a Recommendation</config:placeholdertext>
+			    <config:newline>false</config:newline>
+			    <config:metatemplate>1</config:metatemplate>
+		        </config:richtext>
+	           </config:children>
+          </config:section>
+
+		<!--<config:section>
 		  <config:title>Annex</config:title>
 		  <config:placeholdertext>Please enter an Annex</config:placeholdertext>
 		  <config:metatemplate>1</config:metatemplate>
@@ -42,15 +62,15 @@
 		            <config:metatemplate>2</config:metatemplate>
 	                </config:richtext> 
 		  </config:children>
-	        </config:section>
+	  </config:section>-->
 	        <config:section>
 		  <config:title>Requirement</config:title>
 		  <config:placeholdertext>Please enter a Requirement</config:placeholdertext>
 		  <config:metatemplate>1</config:metatemplate>
 	        </config:section>
 	  	<config:section>
-		  <config:title>Commentary</config:title>
-		  <config:placeholdertext>Please enter Commentary</config:placeholdertext>
+		  <config:title>Process</config:title>
+		  <config:placeholdertext>Please enter Process</config:placeholdertext>
 		  <config:metatemplate>1</config:metatemplate>
 	        </config:section>
 	  	<config:section>
