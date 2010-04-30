@@ -1,5 +1,15 @@
 <config:boilerplates xmlns:config="http://marklogic.com/config">
 	<config:boilerplate>
+		<config:document-label>disclaimer</config:document-label>
+		<config:document-uri>/disclaimer.xml</config:document-uri>
+		<config:icon>word</config:icon>
+	</config:boilerplate>
+        <config:boilerplate>
+		<config:document-label>copyright</config:document-label>
+		<config:document-uri>/copyright.xml</config:document-uri>
+		<config:icon>word</config:icon>
+	</config:boilerplate>
+	<config:boilerplate>
 		<config:document-label>legal</config:document-label>
 		<config:document-uri>/legal.xml</config:document-uri>
 		<config:icon>word</config:icon>

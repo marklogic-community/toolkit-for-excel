@@ -21,10 +21,10 @@ xdmp:set-response-content-type('text/html'),
 <body> 
 <div id="topnav">
 	<ul>
-    	<li><a href="#" class ="fronticon" id="icon-word">&nbsp;</a></li>
-        <li><a href="#" id="icon-metadata">&nbsp;</a></li>
-        <li><a href="#" id="icon-search">&nbsp;</a></li>
-        <li><a href="#" id="icon-merge">&nbsp;</a></li>
+    	<li><a href="#" class ="fronticon" id="icon-word" title="enrich">&nbsp;</a></li>
+        <li><a href="#" id="icon-metadata" title="metadata">&nbsp;</a></li>
+        <li><a href="#" id="icon-search" title="search">&nbsp;</a></li>
+        <li><a href="#" id="icon-merge" title="compare">&nbsp;</a></li>
      </ul>
     <br clear="all" />
 </div>
@@ -32,18 +32,22 @@ xdmp:set-response-content-type('text/html'),
 <div id="current-doc">
   <div id="tabs">
    <ul>
-     <li class="fronttab" id="controltab"><a href="#" id="controls-show">Controls</a></li>
-     <li id="snippettab"><a href="#" id="snippets-show">Boilerplate</a></li>
+     <li class="fronttab" id="controltab" title="control palette">
+            <a href="#" id="controls-show">Controls</a>
+     </li>
+     <li id="snippettab">
+            <a href="#" id="snippets-show" title="insert boilerplate">Boilerplate</a>
+     </li>
    </ul>
   </div>
   <div id="controls">
      <div id="buttonbar">
 	<ul>
-    	  <li><a href="#" class="selectedctrl" id="icon-textctrl">&nbsp;</a></li>
-          <li><a href="#" id="icon-imgctrl">&nbsp;</a></li>
-          <li><a href="#" id="icon-calctrl">&nbsp;</a></li>
-          <li><a href="#" id="icon-dropctrl">&nbsp;</a></li>
-          <li><a href="#" id="icon-comboctrl">&nbsp;</a></li>
+    	  <li><a href="#" class="selectedctrl" id="icon-textctrl" title="rich text">&nbsp;</a></li>
+          <li><a href="#" id="icon-imgctrl" title="image">&nbsp;</a></li>
+          <li><a href="#" id="icon-calctrl" title="calendar">&nbsp;</a></li>
+          <li><a href="#" id="icon-dropctrl" title="dropdown">&nbsp;</a></li>
+          <li><a href="#" id="icon-comboctrl" title="combobox">&nbsp;</a></li>
         </ul>
       </div>
 
@@ -102,14 +106,9 @@ xdmp:set-response-content-type('text/html'),
        </div>
        <div id="properties">
        <form action="#">
-           <!-- <img src="images/icon-text.png" />
-            <span class="textIcon">test</span>
-            <span class="imgIcon">test2</span>
-            <span class="calIcon">test3</span>
-            <span class="dropIcon">test4</span> -->
-            <strong><label id="ctrltitle"></label></strong><!--<br/>-->
+            <strong><label id="ctrltitle"></label></strong>
             <span style="color:#458CBB"> | </span>
-            <label id="ctrltag"> </label><!--<br/>-->
+            <label id="ctrltag"> </label>
             <span style="color:#458CBB"> | </span>
          <label id="ctrlparent"> </label>
          <br/><br/>
