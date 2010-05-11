@@ -77,7 +77,6 @@ declare function config:dropctrl-inline()
            </li>
 };
 
-
 declare function config:comboctrl-inline()
 {
     let $combo-inline := $config:CONTROLS/node()/config:combo/config:inline
@@ -87,12 +86,9 @@ declare function config:comboctrl-inline()
              <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:title/text()}</a>
            </li>
 };
-
-
 (:END Current-Document - Controls Tab Display:)
 
 (:BEGIN Current-Document - Controls Tab - Generate Javascript Functions  :)
-
 declare function config:control-type($node as node()) as xs:string?
 {
   if(fn:node-name($node) eq fn:QName("http://marklogic.com/config", "richtext")) then
@@ -130,7 +126,6 @@ declare function config:generate-js-for-child-ctrl($children as node()*, $idx as
                
                 ) , "")
   
-  (: fn:concat("CHILDCOUNT",fn:count($children)) :)
 };
 
 declare function config:generate-js-section-text()
@@ -248,7 +243,6 @@ declare function config:generate-js-inline-combo()
 };
 
 (:BEGIN GENERATE METADATA MAP AND TEMPLATES FROM CONFIG:)
-
 declare function config:get-map-subs($node as node()*) as xs:string*
 {
     for $n in $node 
@@ -265,7 +259,6 @@ declare function config:get-js-map(){
            else (fn:concat($ctrl/config:title/text(),"|", $ctrl/config:metatemplate/text()),
                  config:get-map-subs( $ctrl/config:children/child::* ))
 };
-
 
 declare function config:generate-js-metadata-map-support()
 {
@@ -306,8 +299,6 @@ declare function config:generate-js-metadata-template-func()
                                     fn:normalize-space(xdmp:quote($temp/dc:metadata)),"';")
                              ,""),"}return v_template;}")
 };
-
-
 (:END GENERATE METADATA MAP AND TEMPLATES FROM CONFIG:)
 
 declare function config:generate-js-for-controls()
@@ -322,57 +313,36 @@ declare function config:generate-js-for-controls()
     config:generate-js-inline-combo()
    )
 };
-
 (:END Current-Document - Controls Tab - Generate Javascript Functions :)
 
 (:BEGIN Current-Document - Snippets Tab :)
 declare function config:snippets()
 {
-
-(:	<ul class="buttongroup">
-   	<li><a href="#" class="lrgbtn lrgbtnword">Legal</a></li><br clear="all" />
-    <li><a href="#" class="lrgbtn lrgbtnword">Default Controls</a></li><br clear="all" />
-    <li><a href="#" class="lrgbtn lrgbtnimage">Company Logo</a></li><br clear="all" />
-    <li><a href="#" class="lrgbtn lrgbtnchart">Chart</a></li>
-   </ul>:)
      let $doc := $config:BOILERPLATE 
      let $bps := $doc/config:boilerplates/config:boilerplate
      return
-     <ul xmlns="http://www.w3.org/1999/xhtml" class="buttongroup">{
-     for $bp in $bps
-     let $uri := $bp/config:document-uri/text()
-     let $icon := $bp/config:icon/text()
-     let $display-image := if($icon eq "word") then
-                              "lrgbtn lrgbtnword"
-                           else if($icon eq "image") then
-                              "lrgbtn lrgbtnimage"
-                           else 
-                              "lrgbtn lrgbtnchart"
+     <ul xmlns="http://www.w3.org/1999/xhtml" class="buttongroup">
+     {
+       for $bp in $bps
+       let $uri := $bp/config:document-uri/text()
+       let $icon := $bp/config:icon/text()
+       let $display-image := if($icon eq "word") then
+                               "lrgbtn lrgbtnword"
+                             else if($icon eq "image") then
+                               "lrgbtn lrgbtnimage"
+                             else 
+                               "lrgbtn lrgbtnchart"
                               
-     return   
+       return   
          (<li>
            <a href="#" class="{$display-image}" onmouseup="blurSelected(this)" onclick="boilerplateinsert('{$uri}')" alt="{$uri}" title="{$uri}">
              {$bp/config:document-label/text()}
            </a>
          </li>, 
-         <br clear="all"/>)  
-          }</ul>
-     (: ORIG 
-     let $doc := $config:BOILERPLATE 
-     let $bps := $doc/config:boilerplates/config:boilerplate
-     return
-     for $bp in $bps
-     let $uri := $bp/config:document-uri/text() 
-     return   
-         <p xmlns="http://www.w3.org/1999/xhtml">
-           <img src="{$bp/config:icon/text()}" 
-                onclick="boilerplateinsert('{$uri}')" 
-                alt="{$uri}" 
-                title="{$uri}"/>  
-           {$bp/config:document-label/text()}
-         </p>   
-:)
-  
+         <br clear="all"/>
+         )  
+      }
+      </ul>
 };
 (:END Current-Document - Snippets Tab :)
 
@@ -390,35 +360,22 @@ declare function config:search-filters()
                </div>
              }
             </div>
-
 };
 
 (:END Search Tab - Filter :)
 
-
 (:BEGIN Compare Tab - Filter :)
-
 declare function config:compare-filters()
 {
      let $filters := $config:COMPARE/config:comparefilters/config:comparefilter
-     return <options>
-              {for $f in $filters
-               return <option value="{$f/config:value/text()}">{$f/config:displaylabel/text()}</option>
-              }
-            </options>
+     return  <ul id="ulmenu" onClick="displayLayer('ulmenu')">
+             {
+              for $f at $d in $filters
+              return <li onClick="setSelected({$d})">
+                         <a href="#" class="menu" id="{fn:concat('select',$d)}" name="{$f/config:value/text()}">{$f/config:displaylabel/text()}</a>
+                     </li>
+             }</ul>
+
 
 };
 (:END Compare Tab - Filter :)
-(:
-declare function thiz:get-sites-select($id) {
-    (
-    <select size="5" class="vselect" onchange={fn:concat("siteChanged('", $id, "');")}
-        id={fn:concat($id, "site")}><options>{(
-        <option >(Select location)</option>,
-        <option value={$bplib:GROUP}>{$bplib:GROUP}</option>,
-        for $i in $bplib:SITES
-        return <option value={$i}>{$i}</option>
-    )}</options></select>
-    )
-};
-:)

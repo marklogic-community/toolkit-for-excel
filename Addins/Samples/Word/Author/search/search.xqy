@@ -135,11 +135,10 @@ let $new-start := if(fn:empty(xdmp:get-request-field("start"))) then
                       xs:integer(xdmp:get-request-field("start"))
 let $intro := 
        <div id="ML-Intro">
-	<h1>Search and Reuse</h1>
+	<h2>Search and Reuse</h2>
 	<p>Use the above search box to find content in Word 2007 documents stored on MarkLogic Server. Keywords narrow the results. Each search result represents a content control that matches your criteria.</p><br/>
 	<p>To insert the results into the active document at the current cursor location, click the insert button.  To open the source document for the search result, click the open button.  Mouseover the snippet to see more detail about the search result.</p>
        </div>
-(:return xdmp:quote($intro) :)
 return	xdmp:quote(
           if($q) then
             let $and-query := ps:get-and-query($q,$params)
@@ -188,7 +187,6 @@ return	xdmp:quote(
                                 for $hit in $hits/ps:result 
 				let $uri := fn:data($hit/@uri)
                                 let $path := fn:data($hit/@path)
-(: title,ctrltype , modby, moddate :)
                                 let $ctrl := $hit/w:sdt 
 				let $snippet := if(string-length(fn:data($ctrl)) > 120) then 
                                                    fn:concat(substring(fn:data($ctrl), 1, 120), "...") 

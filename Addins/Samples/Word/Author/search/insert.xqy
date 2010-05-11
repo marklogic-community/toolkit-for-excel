@@ -25,8 +25,6 @@ declare namespace dc="http://purl.org/dc/elements/1.1/";
 import module namespace ooxml= "http://marklogic.com/openxml" at 
                                "/MarkLogic/openxml/word-processing-ml-support.xqy";
 
-
-
 declare function ins:passthru-pkg-doc(
   $pkg as node(), 
   $body-xml as element(w:body)
@@ -74,15 +72,11 @@ let $uri := xdmp:get-request-field("uri")
 let $path := xdmp:get-request-field("path")
 let $doc := fn:doc($uri)
 let $sdt := $doc/xdmp:unpath($path)
-(:if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "hdr"):)
 let $content := if (fn:node-name($sdt/w:sdtContent/node()[1]) eq fn:QName($ooxml:WORDPROCESSINGML,"r")) then 
                        ins:dispatch-sdtContent-replace($sdt) 
                 else 
                        $sdt
 let $body := <w:body>{$content}</w:body>
-
-
-(: let $body := <w:body>{fn:doc($uri)/xdmp:unpath($path)}</w:body> :)
 
 (:check to see if this came from extracted .docx, or Word saved as XML :)
 let $pkg:= if(fn:contains($uri,"_docx_parts")) then
@@ -101,12 +95,3 @@ return xdmp:quote(<insertable>
                      <meta>{$metadata}</meta>
                   </insertable>)
 
-
-(:need to create the pkg:package and return for insert, also need to return metadata part:)
-(:
-return xdmp:quote(
-       <inserts><uri>{$uri}</uri>
-             <path>{$path}</path>
-             <sdt>{$sdt}</sdt>
-       </inserts>)
- :)
