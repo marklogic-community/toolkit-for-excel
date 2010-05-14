@@ -1,31 +1,31 @@
-<config:boilerplates xmlns:config="http://marklogic.com/config">
+<config:boilerplates xmlns:config="http://marklogic.com/toolkit/word/author/config">
 	<config:boilerplate>
-		<config:document-label>disclaimer</config:document-label>
+		<config:display-label>disclaimer</config:display-label>
 		<config:document-uri>/disclaimer.xml</config:document-uri>
 		<config:icon>word</config:icon>
 	</config:boilerplate>
         <config:boilerplate>
-		<config:document-label>copyright</config:document-label>
+		<config:display-label>copyright</config:display-label>
 		<config:document-uri>/copyright.xml</config:document-uri>
 		<config:icon>word</config:icon>
 	</config:boilerplate>
 	<config:boilerplate>
-		<config:document-label>legal</config:document-label>
+		<config:display-label>legal</config:display-label>
 		<config:document-uri>/legal.xml</config:document-uri>
 		<config:icon>word</config:icon>
 	</config:boilerplate>
 	<config:boilerplate>
-		<config:document-label>default controls</config:document-label>
+		<config:display-label>default controls</config:display-label>
 		<config:document-uri>/controls.xml</config:document-uri>
 		<config:icon>word</config:icon>
 	</config:boilerplate>
 	<config:boilerplate>
-		<config:document-label>company logo</config:document-label>
+		<config:display-label>company logo</config:display-label>
 		<config:document-uri>/companylogo.xml</config:document-uri>
 		<config:icon>image</config:icon>
 	</config:boilerplate>
 	<config:boilerplate>
-		<config:document-label>chart</config:document-label>
+		<config:display-label>chart</config:display-label>
 		<config:document-uri>/chart.xml</config:document-uri>
 		<config:icon>chart</config:icon>
 	</config:boilerplate>

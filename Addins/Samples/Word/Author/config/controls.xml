@@ -1,9 +1,9 @@
-<config:controls xmlns:config="http://marklogic.com/config">
+<config:controls xmlns:config="http://marklogic.com/toolkit/word/author/config">
 	<config:richtext>
 		<!--String addContentControl(tag, title, type, insertPara, parentID)-->
 		<!--we use tag for random id-->
 		<!--type determined by parent -->
-		<config:section>
+	  <config:section>
 		  <config:title>Section</config:title>
 		  <config:placeholdertext>Please enter a Section</config:placeholdertext>
 		  <config:metatemplate>1</config:metatemplate>
@@ -12,7 +12,7 @@
 		  <config:title>Policy</config:title>
 		  <config:placeholdertext>Please enter a Process</config:placeholdertext>
 		  <config:metatemplate>1</config:metatemplate>
-		  <config:children>
+		  <config:section>
 		        <config:richtext> 
 			    <config:title>Process</config:title>
 			    <config:placeholdertext>Please enter a Process</config:placeholdertext>
@@ -25,35 +25,35 @@
 			    <config:newline>false</config:newline>
 			    <config:metatemplate>1</config:metatemplate>
 		        </config:richtext>
-	           </config:children>
-          </config:section>
+	           </config:section>
+	   </config:section><!--generate off of schema?  cool idea-->
 
-		<!--<config:section>
+	   <!--<config:section>
 		  <config:title>Annex</config:title>
 		  <config:placeholdertext>Please enter an Annex</config:placeholdertext>
 		  <config:metatemplate>1</config:metatemplate>
-		  <config:children>
+		  <config:section>
 			<config:richtext> 
 			    <config:title>Policy</config:title>
 			    <config:placeholdertext>Please enter a Policy</config:placeholdertext>
 			    <config:newline>true</config:newline>
 			    <config:metatemplate>2</config:metatemplate>
-			    <config:children>
+			    <config:section>
 			  	<config:richtext>    
                                  <config:title>PolicyAbstract</config:title>
 			         <config:placeholdertext>Please enter Abstract</config:placeholdertext>
 			         <config:newline>true</config:newline>
 				 <config:metatemplate>2</config:metatemplate>
-                                 <config:children>
+                                 <config:section>
 			  	   <config:richtext>    
                                     <config:title>PolicyAbstractTWO</config:title>
 			            <config:placeholdertext>Please enter Abstract</config:placeholdertext>
 			            <config:newline>true</config:newline>
 				    <config:metatemplate>2</config:metatemplate>
 				   </config:richtext>
-			         </config:children>
+			         </config:section>
 				</config:richtext>
-			    </config:children>
+			    </config:section>
 		        </config:richtext>
 			<config:richtext> 
 			    <config:title>Process</config:title>
@@ -61,7 +61,7 @@
 			    <config:newline>true</config:newline>
 		            <config:metatemplate>2</config:metatemplate>
 	                </config:richtext> 
-		  </config:children>
+		  </config:section>
 	  </config:section>-->
 	        <config:section>
 		  <config:title>Requirement</config:title>
@@ -159,7 +159,7 @@
 		<config:inline>
 			<config:title>CountryCodes</config:title>
 		        <config:placeholdertext>Select Country Code</config:placeholdertext>
-			<config:metatemplate>2</config:metatemplate>
+			<config:metatemplate>2</config:metatemplate><!--admin configs always have list ; not needed here; talk to norm about vocabularies-->
 			<config:entry>
 			        <config:text>ABW</config:text>
 		                <config:value>Aruba</config:value>

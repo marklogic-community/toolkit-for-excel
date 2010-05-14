@@ -1,12 +1,12 @@
-<config:comparefilters xmlns:config="http://marklogic.com/config">
+<config:comparefilters xmlns:config="http://marklogic.com/toolkit/word/author/config">
 	<config:comparefilter>
-		<config:element>dc:publisher</config:element>
+		<config:element namespace="http://purl.org/dc/elements/1.1/" qname="dc:publisher"/>
 		<config:value>SITE1</config:value>
-		<config:displaylabel>SITE1</config:displaylabel>
+		<config:display-label>SITE1</config:display-label>
 	</config:comparefilter>
 	<config:comparefilter>
-		<config:element>dc:publisher</config:element>
+		<config:element namespace="http://purl.org/dc/elements/1.1/" qname="dc:publisher"/>
 		<config:value>SITE2</config:value>
-		<config:displaylabel>SITE2</config:displaylabel>
+		<config:display-label>SITE2</config:display-label>
 	</config:comparefilter>
 </config:comparefilters>

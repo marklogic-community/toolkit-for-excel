@@ -15,14 +15,33 @@ See the License for the specific language governing permissions and
 limitations under the License.
 :)
 
-module namespace config="http://marklogic.com/config";
+module namespace config="http://marklogic.com/toolkit/word/author/config";
 declare namespace dc="http://purl.org/dc/elements/1.1/";
 
-declare variable $config:CONTROLS := xdmp:document-get("Docs/Author/config/controls.xml");
-declare variable $config:BOILERPLATE := xdmp:document-get("Docs/Author/config/boilerplate.xml");
-declare variable $config:METADATA := xdmp:document-get("Docs/Author/config/metadata.xml");
-declare variable $config:SEARCH := xdmp:document-get("Docs/Author/config/search.xml");
-declare variable $config:COMPARE := xdmp:document-get("Docs/Author/config/compare.xml");
+
+declare variable $config:CONFIG-PATH := "http://localhost:8023/Author/config/";
+declare variable $config:USER := "oslo";
+declare variable $config:PWD  := "oslo";
+
+(: security discussion in notes, run it by denise ?? :)
+declare variable $config:CONTROLS :=     config:get-config-document("controls.xml");
+declare variable $config:BOILERPLATE :=  config:get-config-document("boilerplate.xml");
+declare variable $config:METADATA :=     config:get-config-document("metadata.xml");
+declare variable $config:SEARCH :=       config:get-config-document("search.xml");
+declare variable $config:COMPARE :=      config:get-config-document("compare.xml");
+
+declare function config:get-config-document($type as xs:string)
+{
+ xdmp:document-get(fn:concat($config:CONFIG-PATH, $type),
+                              <options xmlns="xdmp:document-get"
+                                       xmlns:http="xdmp:http">
+                                <format>xml</format>
+                                <http:authentication>
+	                           <http:username>{$config:USER}</http:username>
+	                           <http:password>{$config:PWD}</http:password>
+	                        </http:authentication>
+                              </options>)
+};
 
 (:BEGIN Current-Document - Controls Tab Display:)
 declare function config:textctrl-sections()
@@ -113,7 +132,7 @@ declare function config:generate-js-for-child-ctrl($children as node()*, $idx as
   let $ph-text := if(fn:empty($child/config:placeholdertext/text())) then ()
                     else 
                           $child/config:placeholdertext/text()
-  let $subchildren := $child/config:children
+  let $subchildren := $child/config:section
   let $newline := $child/config:newline/text()
   let $newidx := fn:concat("",$idx,$d)
   let $parent-id := if(fn:empty($idx)) then "ccid" else fn:concat("childId",$newidx)
@@ -136,7 +155,7 @@ declare function config:generate-js-section-text()
     let $ph-text := if(fn:empty($tc/config:placeholdertext/text())) then ()
                     else 
                           $tc/config:placeholdertext/text()    
-    let $children := $tc/config:children
+    let $children := $tc/config:section
     let $newline := "true"
     let $type := "wdContentControlRichText"
     return fn:concat("function txtSectionFunc",$d,"(){ 
@@ -248,7 +267,7 @@ declare function config:get-map-subs($node as node()*) as xs:string*
     for $n in $node 
     return  if(fn:empty($n)) then () 
             else (fn:concat($n/config:title/text(),"|", $n/config:metatemplate/text()),
-                  config:get-map-subs($n/child::*//config:children/child::*))       
+                  config:get-map-subs($n/child::*/config:section/child::*))       
 };
 
 declare function config:get-js-map(){
@@ -257,7 +276,7 @@ declare function config:get-js-map(){
     return for $ctrl in $parent-controls
            return if(fn:empty($ctrl)) then () 
            else (fn:concat($ctrl/config:title/text(),"|", $ctrl/config:metatemplate/text()),
-                 config:get-map-subs( $ctrl/config:children/child::* ))
+                 config:get-map-subs( $ctrl/config:section/child::* ))
 };
 
 declare function config:generate-js-metadata-map-support()
@@ -336,7 +355,7 @@ declare function config:snippets()
        return   
          (<li>
            <a href="#" class="{$display-image}" onmouseup="blurSelected(this)" onclick="boilerplateinsert('{$uri}')" alt="{$uri}" title="{$uri}">
-             {$bp/config:document-label/text()}
+             {$bp/config:display-label/text()}
            </a>
          </li>, 
          <br clear="all"/>
@@ -355,8 +374,8 @@ declare function config:search-filters()
              {for $filter in $filters
               return 
                <div class="filterrow">
-                   <input type="checkbox" id="{$filter/config:controlalias/text()}" />
-                   <a href="#"> {$filter/config:displaylabel/text()}</a>
+                   <input type="checkbox" id="{$filter/config:control-alias/text()}" />
+                   <a href="#"> {$filter/config:display-label/text()}</a>
                </div>
              }
             </div>
@@ -372,7 +391,12 @@ declare function config:compare-filters()
              {
               for $f at $d in $filters
               return <li onClick="setSelected({$d})">
-                         <a href="#" class="menu" id="{fn:concat('select',$d)}" name="{$f/config:value/text()}">{$f/config:displaylabel/text()}</a>
+                         <a href="#"
+                            class="menu" 
+                            id="{fn:concat('select',$d)}" 
+                            name="{fn:concat($f/config:element/@namespace,'|', $f/config:element/@qname,'|',$f/config:value/text())}">
+                             {$f/config:display-label/text()}
+                         </a>
                      </li>
              }</ul>
 
