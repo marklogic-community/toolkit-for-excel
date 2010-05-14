@@ -46,7 +46,7 @@ declare function config:get-config-document($type as xs:string)
 (:BEGIN Current-Document - Controls Tab Display:)
 declare function config:textctrl-sections()
 {
-    let $text-sections := $config:CONTROLS/node()/config:richtext/config:section
+    let $text-sections := $config:CONTROLS/node()/config:section/config:richtext
     for $t at $d in $text-sections
     let $func := fn:concat("txtSectionFunc",$d,"()")
     return <li>
@@ -57,7 +57,7 @@ declare function config:textctrl-sections()
 
 declare function config:textctrl-inline()
 {
-    let $text-inline := $config:CONTROLS/node()/config:richtext/config:inline
+    let $text-inline := $config:CONTROLS/node()/config:inline/config:richtext
     for $t at $d in $text-inline
     let $func := fn:concat("txtInlineFunc",$d,"()")
     return <li>
@@ -68,7 +68,7 @@ declare function config:textctrl-inline()
 
 declare function config:picctrl-inline()
 {
-    let $img-inline := $config:CONTROLS/node()/config:image/config:inline
+    let $img-inline := $config:CONTROLS/node()/config:inline/config:image
     for $t at $d in $img-inline
     let $func := fn:concat("picInlineFunc",$d,"()")
     return <li>
@@ -78,7 +78,7 @@ declare function config:picctrl-inline()
 
 declare function config:calctrl-inline()
 {
-    let $cal-inline := $config:CONTROLS/node()/config:calendar/config:inline
+    let $cal-inline := $config:CONTROLS/node()/config:inline/config:calendar
     for $t at $d in $cal-inline
     let $func := fn:concat("calInlineFunc",$d,"()")
     return <li>
@@ -88,7 +88,7 @@ declare function config:calctrl-inline()
 
 declare function config:dropctrl-inline()
 {
-    let $drop-inline := $config:CONTROLS/node()/config:dropdown/config:inline
+    let $drop-inline := $config:CONTROLS/node()/config:inline/config:dropdown
     for $t at $d in $drop-inline
     let $func := fn:concat("dropInlineFunc",$d,"()")
     return <li>
@@ -98,7 +98,7 @@ declare function config:dropctrl-inline()
 
 declare function config:comboctrl-inline()
 {
-    let $combo-inline := $config:CONTROLS/node()/config:combo/config:inline
+    let $combo-inline := $config:CONTROLS/node()/config:inline/config:combo
     for $t at $d in $combo-inline
     let $func := fn:concat("comboInlineFunc",$d,"()")
     return <li>
@@ -149,7 +149,7 @@ declare function config:generate-js-for-child-ctrl($children as node()*, $idx as
 
 declare function config:generate-js-section-text()
 {
-    let $text-section-ctrls := $config:CONTROLS/node()/config:richtext/config:section
+    let $text-section-ctrls := $config:CONTROLS/node()/config:section/config:richtext
     for $tc at $d in $text-section-ctrls
     let $title := $tc/config:title/text()
     let $ph-text := if(fn:empty($tc/config:placeholdertext/text())) then ()
@@ -171,7 +171,7 @@ declare function config:generate-js-section-text()
 declare function config:generate-js-inline-text()
 {
 
-    let $text-inline-ctrls :=$config:CONTROLS/node()/config:richtext/config:inline
+    let $text-inline-ctrls :=$config:CONTROLS/node()/config:inline/config:richtext
     for $tc at $d in $text-inline-ctrls
     let $title := $tc/config:title/text()
     let $ph-text := if(fn:empty($tc/config:placeholdertext/text())) then ()
@@ -190,7 +190,7 @@ declare function config:generate-js-inline-text()
 
 declare function config:generate-js-inline-pic()
 {
-    let $pic-inline-ctrls := $config:CONTROLS/node()/config:image/config:inline
+    let $pic-inline-ctrls := $config:CONTROLS/node()/config:inline/config:image
     for $pc at $d in $pic-inline-ctrls
     let $title := $pc/config:title/text()
     let $newline := "false"
@@ -203,7 +203,7 @@ declare function config:generate-js-inline-pic()
 
 declare function config:generate-js-inline-cal()
 {
-    let $cal-inline-ctrls := $config:CONTROLS/node()/config:calendar/config:inline
+    let $cal-inline-ctrls := $config:CONTROLS/node()/config:inline/config:calendar
     for $cc at $d in $cal-inline-ctrls
     let $title := $cc/config:title/text()
     let $ph-text := if(fn:empty($cc/config:placeholdertext/text())) then ()
@@ -221,7 +221,7 @@ declare function config:generate-js-inline-cal()
 
 declare function config:generate-js-inline-drop()
 {
-    let $drop-inline-ctrls := $config:CONTROLS/node()/config:dropdown/config:inline
+    let $drop-inline-ctrls := $config:CONTROLS/node()/config:inline/config:dropdown
     for $dc at $d in $drop-inline-ctrls
     let $title := $dc/config:title/text()
     let $ph-text := if(fn:empty($dc/config:placeholdertext/text())) then ()
@@ -242,7 +242,7 @@ declare function config:generate-js-inline-drop()
 
 declare function config:generate-js-inline-combo()
 {
-    let $combo-inline-ctrls := $config:CONTROLS/node()/config:combo/config:inline
+    let $combo-inline-ctrls := $config:CONTROLS/node()/config:inline/config:combo
     for $dc at $d in $combo-inline-ctrls
     let $title := $dc/config:title/text()
     let $ph-text := if(fn:empty($dc/config:placeholdertext/text())) then ()
@@ -272,7 +272,7 @@ declare function config:get-map-subs($node as node()*) as xs:string*
 
 declare function config:get-js-map(){
     let $all-controls := $config:CONTROLS
-    let $parent-controls := ($all-controls/child::*/child::*/config:section, $all-controls//config:inline)
+    let $parent-controls := ($all-controls/child::*/config:section/child::*, $all-controls/child::*/config:inline/child::*)
     return for $ctrl in $parent-controls
            return if(fn:empty($ctrl)) then () 
            else (fn:concat($ctrl/config:title/text(),"|", $ctrl/config:metatemplate/text()),
