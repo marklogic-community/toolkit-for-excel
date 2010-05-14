@@ -1,3 +1,18 @@
+<!--
+Copyright 2008-2010 Mark Logic Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
 <xs:schema 
 	xmlns:xs='http://www.w3.org/2001/XMLSchema' 
 	xmlns='http://marklogic.com/toolkit/word/author/config' 
@@ -19,8 +34,96 @@
 
         <xs:element name="control-alias" type="xs:string"/>
 	
-        <xs:element name="value" type="xs:string"/>
+	<xs:element name="value" type="xs:string"/> 
+
+	<xs:element name="title" type="xs:string"/>
+        <xs:element name="placeholdertext" type="xs:string"/>
+	<xs:element name="metatemplate" type="xs:string"/>
+	<xs:element name="newline" type="xs:string"/>
+	<xs:element name="text" type="xs:string"/>
+
 	<!-- definition of complex elements -->
+  	<xs:element name="entry">
+	  <xs:complexType>
+	    <xs:all>
+              <xs:element ref="text"/>
+              <xs:element ref="value"/>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+
+  	<xs:element name="richtext">
+	  <xs:complexType>
+	    <xs:all>
+               <xs:element ref="title"/>
+               <xs:element ref="metatemplate"/>
+               <xs:element ref="newline" minOccurs="0" />
+               <xs:element ref="placeholdertext" minOccurs="0"/>
+               <xs:element ref="section" minOccurs="0"/>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+
+      	<xs:element name="image">
+	  <xs:complexType>
+	    <xs:all>
+              <xs:element ref="title"/>
+              <xs:element ref="metatemplate"/>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+
+    	<xs:element name="calendar">
+	  <xs:complexType>
+	    <xs:all>
+              <xs:element ref="title"/>
+              <xs:element ref="placeholdertext" minOccurs="0"/>
+              <xs:element ref="metatemplate"/>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+
+    	<xs:element name="combo">
+	  <xs:complexType>
+	    <xs:all>
+              <xs:element ref="title"/>
+              <xs:element ref="placeholdertext" minOccurs="0"/>
+	      <xs:element ref="metatemplate"/>
+	      <xs:element ref="entry" maxOccurs="unbounded"/>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+
+    	<xs:element name="dropdown">
+	  <xs:complexType>
+	    <xs:all>
+              <xs:element ref="title"/>
+              <xs:element ref="placeholdertext" minOccurs="0"/>
+	      <xs:element ref="metatemplate"/>
+	      <xs:element ref="entry" maxOccurs="unbounded"/>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+
+  	<xs:element name="section">
+	  <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="richtext" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+  	<xs:element name="inline">
+	  <xs:complexType>
+	    <xs:sequence>
+              <xs:element ref="richtext" minOccurs="0" maxOccurs="unbounded" />
+              <xs:element ref="image" minOccurs="0" maxOccurs="unbounded"/>
+              <xs:element ref="calendar" minOccurs="0" maxOccurs="unbounded" />
+              <xs:element ref="dropdown" minOccurs="0" maxOccurs="unbounded" />
+              <xs:element ref="combo" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
 
 	<xs:element name="boilerplate">
 	  <xs:complexType>
@@ -117,7 +220,7 @@
                <xs:element ref="searchfilter" maxOccurs="unbounded">
 	     </xs:sequence>
           </xs:complexType>
-       </xs:element>
+        </xs:element>
 
   	<xs:element name="comparefilters">
           <xs:annotation>
@@ -133,6 +236,23 @@
           <xs:complexType>
 	     <xs:sequence>
                <xs:element ref="comparefilter" maxOccurs="unbounded">
+	     </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+    	<xs:element name="controls">
+          <xs:annotation>
+            <xs:documentation>
+		    The Content Controls to be displayed in the application.  
+		    Required javascript for interaction with Active Document also generated.
+            </xs:documentation>
+            <xs:appinfo>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+	     <xs:sequence>
+               <xs:element ref="section">
+               <xs:element ref="inline">
 	     </xs:sequence>
           </xs:complexType>
         </xs:element>
