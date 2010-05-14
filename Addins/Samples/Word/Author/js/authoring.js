@@ -18,9 +18,12 @@ var SERVER = "http://localhost:8023/Author";
 var BOILERPLATE_URL =  SERVER + "/utils/fetchboilerplate.xqy";
 
 $(document).ready(function() {
-      //by default, current doc selected
 
-//pro tip: separate with commas , performance?
+       //SET DEFAULTS		
+       //by default, current doc selected
+
+       //pro tip: separate with commas , performance?
+       //not sure it matters for this app, leaving as is for readability
        $('#metadata').hide();
        $('#search').hide();
        $('#compare').hide();
@@ -43,7 +46,6 @@ $(document).ready(function() {
        $('a#icon-word').click(function() {
 
           $('#main').css('overflow', 'hidden');
-	  //location.reload();
 	  //css
 	  $("#icon-metadata").removeClass("fronticon");
 	  $("#icon-search").removeClass("fronticon");
@@ -55,6 +57,8 @@ $(document).ready(function() {
           $('#search').hide();
           $('#compare').hide();
           $('#current-doc').show();
+
+	  $('#docnames').empty();
    
           return false;
   
@@ -77,7 +81,10 @@ $(document).ready(function() {
           $('#compare').hide();
           $('#metadata').show();
      
-	  refreshControlTree(); 
+	  $('#docnames').empty();
+           
+	  refreshControlTree();
+
           return false;
   
        });
@@ -97,6 +104,8 @@ $(document).ready(function() {
           $('#metadata').hide();
           $('#compare').hide();
           $('#search').show();
+
+	  $('#docnames').empty();
    
           return false;
   
@@ -144,6 +153,7 @@ $(document).ready(function() {
           return false;
   
        });
+
        //image control palette
        $('a#icon-imgctrl').click(function() {
 
@@ -227,13 +237,11 @@ $(document).ready(function() {
           return false;
   
        });
-
-
        //END control type selection 
 
        //BEGIN current doc controls/snippets selection
-       // shows the snippets on clicking the noted link  
-       // hides the controls on clicking the noted link
+       //shows the snippets on clicking the noted link  
+       //hides the controls on clicking the noted link
    
         $('a#snippets-show').click(function() {
   
@@ -259,10 +267,8 @@ $(document).ready(function() {
           return false;
 
         });
-
        //END current doc controls/snippets selection
-       
-//why blur??
+      
        //Blur ctrlbuttons 
        $('#textcontrols').click(function() {
 		      
@@ -290,15 +296,13 @@ $(document).ready(function() {
 	  else
             $('#fbtn').addClass("fbtnactive");
        });
-
        
 });
 
 
-//listen for onsubmit event and cancel it
-//instead of onkeypress
-//numberpad vs. paste, etc.
-
+//for v2:
+//listen for onsubmit event and cancel it instead of onkeypress
+//avoids issue of numberpad vs. paste, etc.
 function checkForEnter()
 {
      if (window.event && window.event.keyCode == 13)
@@ -308,7 +312,6 @@ function checkForEnter()
      }
 
      return true;
-	
 }
 
 //why some caps, some not
@@ -807,6 +810,11 @@ function clearControlProperties()
     $('#lockcntnt').attr('checked', false);
 }
 
+function myTestFunction()
+{
+    var myRef = "test";
+}
+
 //BEGIN EVENT HANDLERS
 function onEnterHandler(ref)
 {
@@ -981,17 +989,31 @@ function beforeDeleteHandler(ref)
 	}
 }
 
-function siteChanged()
+function siteChanged(selectedOption, startidx)
 {
-	var selectedOption = $('#sites').val();
-	simpleAjaxMetadataSearch(selectedOption);
-	//alert("HERE: "+selectedOption);
+	if(startidx==null)
+	{
+	   //alert("startidx="+startidx);
+	   startidx = 0;
+	}
+
+	//var selectedOption = $('#sites').val();
+	simpleAjaxMetadataSearch(selectedOption, startidx);
+//alert("HERE: "+selectedOption + " VAL: "+document.getElementById('select0').innerHTML);
 
 }
 
-function simpleAjaxMetadataSearch(searchval)
+function simpleAjaxMetadataSearch(searchval, startidx)
 {
-    var newurl = "search/metadata-search.xqy";
+    var newurl = "";
+
+
+    if(startidx==0)
+	    newurl = "search/metadata-search.xqy";
+    else
+	    newurl = "search/metadata-search.xqy?start="+startidx;
+
+    //var newurl = "search/metadata-search.xqy";
 
     $.ajax({
           type: "POST",
@@ -1003,6 +1025,7 @@ function simpleAjaxMetadataSearch(searchval)
                              $('#docnames').empty();
                              $('#docnames').append(msg);
                              $('#docnames').html(msg);
+//alert("MESSAGE"+msg);
 			}catch(e)
 			{
 			alert("ERROR"+e.description);
@@ -1012,17 +1035,31 @@ function simpleAjaxMetadataSearch(searchval)
      });
 }
 
-function nameChanged()
+function compareSearchAction(startidx)
+{
+	if(startidx==null)
+	{
+	   //alert("startidx="+startidx);
+	   startidx = 0;
+	}
+
+	var qry = document.getElementById('select0').innerHTML;
+	alert(qry, startidx);
+	//simpleAjaxMetadataSearch(qry,startidx);
+}
+
+/*function nameChanged()
 {
 	var selectedOption = $('#docnames').val();
 	//alert("HERE: "+selectedOption);
 
-}
+}*/
 
-function mergeDocuments()
+function mergeDocuments(docuri)
 {
 	//alert("IN MERGE");
-	var selectedOption = $('#docnames').val();
+	var selectedOption = docuri;
+	//alert("DOCURI: "+docuri);
 	if(selectedOption == null)
 	{
           //do nothing
@@ -1072,6 +1109,28 @@ function simpleAjaxDocRetrieve(doclocation)
 	                //alert( "Data Saved: " + msg );
                    }
      });
+}
+
+//menu functions
+function setSelected(index)
+{
+	var v_id="select"+index;
+	var elem = document.getElementById(v_id);
+        var searchparam = elem.name;	
+	var orig = document.getElementById('select0');
+	orig.innerHTML=elem.innerHTML;
+	siteChanged(searchparam);
+	//alert(orig.outerHTML);
+}
+
+function displayLayer(layer)
+{
+	var myLayer = document.getElementById(layer);
+	if(myLayer.style.display=="none" || myLayer.style.display==""){
+		myLayer.style.display="block";
+	} else {
+		myLayer.style.display="none";
+	}
 }
 
 

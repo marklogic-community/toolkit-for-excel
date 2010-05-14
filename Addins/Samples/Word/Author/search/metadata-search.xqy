@@ -104,7 +104,17 @@ declare function ps:get-query($raw as xs:string)
   return cts:and-query($words)
 };
 
-let $q := xdmp:get-request-field("qry")
+let $querystring := xdmp:get-request-field("qry")
+let $queryparts := fn:tokenize($querystring,"\|")
+
+let $namespace := $queryparts[1]
+let $paramQname := $queryparts[2]
+let $qname := fn:QName($namespace, $paramQname)
+
+let $q := $queryparts[last()] 
+
+
+(:$ELEM := pass namespace , localname, construct qname, pass to element-word-query :)
 let $new-start := if(fn:empty(xdmp:get-request-field("start"))) then 
                     1 
                   else 
@@ -112,7 +122,7 @@ let $new-start := if(fn:empty(xdmp:get-request-field("start"))) then
 
 return	xdmp:quote(
           if($q) then
-            let $query := ps:get-query($q)
+            let $query :=  cts:element-value-query( $qname, $q) (: ps:get-query($qname, $q) :)
 
             let $hits := ps:page-results($query, $new-start)
             let $remainder := fn:data($hits/@remainder)

@@ -16,7 +16,7 @@ limitations under the License.
 MarkLogicContentControlSupport.js - javascript api captures Content Control events in Word and return SimpleContentControl objects.
 */
 
-function contentControlOnEnter(id,tag,title, type, lockcontrol, lockcontents, parenttag, parentid)
+contentControlOnEnter  = function(id,tag,title, type, lockcontrol, lockcontents, parenttag, parentid)
 {
 	try{
 	var msg = "";
@@ -182,3 +182,4 @@ function contentControlBeforeStoreUpdate(id, tag, title, type, lockcontrol, lock
 
 	return msg;
 }
+
