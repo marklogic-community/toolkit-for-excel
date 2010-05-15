@@ -1,5 +1,5 @@
 xquery version "1.0-ml";
-(: Copyright 2008 Mark Logic Corporation
+(: Copyright 2008-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ declare variable $ooxml:CORE-PROPERTIES := "http://schemas.openxmlformats.org/pa
 declare variable $ooxml:CUSTOM-PROPERTIES := "http://schemas.openxmlformats.org/officeDocument/2006/custom-properties";
 declare variable $ooxml:CUSTOM-XML-PROPS := "http://schemas.openxmlformats.org/officeDocument/2006/customXml";
 
-(:version 1.1-1:)
+(:version 1.2-1:)
 
 declare function ooxml:error($message as xs:string)
 {
@@ -532,6 +532,15 @@ declare function ooxml:get-part-content-type(
    :)
 };
 
+declare function get-base-uri(
+  $node as node()
+) as xs:string?
+{
+(: similar check to above, but return default directory-filename for part in .docx package :)
+ (: this is really just meant for document.xml, or advanced devs , mgmt of custom parts or files where number > 1 for same file become problemnatic
+  but we want to be able to construct server side document.xml 
+:)
+};
 
 declare function get-image-part-content-type(
   $uri as xs:string
@@ -556,6 +565,9 @@ declare function ooxml:get-part-attributes(
   $node as node()
 ) as node()*
 {
+
+(: assumes was extracted following our naming convention :)
+
     let $uri := fn:substring-after(fn:base-uri($node), "docx_parts")
     let $name := attribute pkg:name{$uri}
 
@@ -587,6 +599,26 @@ declare function ooxml:get-part-attributes(
     return ($name, $contenttype, $padding, $compression)
 };
 
+declare function ooxml:base64-string-to-binary(
+  $string as xs:string
+) as binary()
+{
+    binary{xs:hexBinary(xs:base64Binary($string))} 
+};
+
+declare function ooxml:binary-to-base64-string(
+ $node as binary()
+) as xs:string
+{
+      xs:base64Binary(xs:hexBinary($node)) cast as xs:string
+};
+
+declare function ooxml:base64-opc-format(
+$binstring as xs:string)
+{
+      fn:string-join(ooxml:format-binary($binstring),"&#xD;&#xA;") 
+};
+
 declare function ooxml:package(
   $nodes as node()*
 ) as element(pkg:package)
@@ -594,11 +626,13 @@ declare function ooxml:package(
     element pkg:package { 
       for $node in $nodes
 
+      (: check base-uri here, if not present, add it:)
+
       let $part := if(fn:empty($node) or 
                      (fn:node-name($node) eq fn:QName($ooxml:TYPES, "Types"))) then () 
                    else if(xdmp:node-kind($node) eq "binary") then 
-                         let $bin :=   xs:base64Binary(xs:hexBinary($node)) cast as xs:string  
-                         let $formattedbin := fn:string-join(ooxml:format-binary($bin),"&#x9;&#xA;") 
+                         let $bin := ooxml:binary-to-base64-string($node)  
+                         let $formattedbin := ooxml:base64-opc-format($bin) 
                          return element pkg:part { ooxml:get-part-attributes($node), element pkg:binaryData { $formattedbin  } } 
                    else 
                          element pkg:part { ooxml:get-part-attributes($node), element pkg:xmlData { $node }}
