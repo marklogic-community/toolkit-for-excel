@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+
 var SERVER = "http://localhost:8023/Author";
 var BOILERPLATE_URL =  SERVER + "/utils/fetchboilerplate.xqy";
 
@@ -432,6 +433,9 @@ function blurSelected(btn_element)
 //inserts boilerplate
 function boilerplateinsert(bp)
 {
+	//var config = MLA.getConfiguration();
+	//alert(config.url);
+
 		$.get(
 			BOILERPLATE_URL, 
 			{uri: bp},
