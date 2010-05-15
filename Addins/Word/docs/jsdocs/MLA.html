@@ -796,6 +796,23 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       <TD>
 	 <CODE>
 	    <B>
+	       <A HREF="#!s!mergeWithActiveDocument">mergeWithActiveDocument</A></B>(opc_xml)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Opens WordOpenXML alongside the active document in Word's compare functionality. 
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
 	       <A HREF="#!s!openDOCX">openDOCX</A></B>(tmpPath, docuri, url, user, pwd)
 	 </CODE>
 	 <BR>
@@ -2352,7 +2369,51 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
+
+
+
 <HR>
+
+   <A NAME="!s!mergeWithActiveDocument"><!-- --></A>
+   <H3>mergeWithActiveDocument</H3>
+   <PRE>&lt;static&gt; void <B>mergeWithActiveDocument</B>(opc_xml)</PRE>
+   
+   <UL>Opens WordOpenXML alongside the active document in Word's compare functionality.  WordOpenXML is the XML for a Word document in Flat OPC format (the Open Packaging Convention).  It is the same format as if you'd saved a .docx as .xml in Word.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>opc_xml</CODE> -  the XML to be compared with the active document. Parameter type can be either A) an XMLDOM object that is the WordOpenXML to be compared with the active Open XML package, or B)the string serialization of the WordOpenXML to be compared with the active Open XML package.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        void   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to insertWordOpenXML</UL>
+   </UL>
+
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+
+
+   <HR>
+
 
    <A NAME="!s!openDOCX"><!-- --></A>
    <H3>openDOCX</H3>
