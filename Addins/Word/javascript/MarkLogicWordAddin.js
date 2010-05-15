@@ -1,5 +1,5 @@
 /* 
-Copyright 2008-2009 Mark Logic Corporation
+Copyright 2008-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ function MLA(){
 }
 */
 /** @ignore */
-MLA.version = { "release" : "1.1-1" }; 
+MLA.version = { "release" : "1.2-1" }; 
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){
@@ -328,6 +328,10 @@ MLA.deleteCustomXMLPart = function(customXMLPartId)
 
 }
 
+MLA.getLastAddedControlTitle = function()
+{
+	return window.external.getLastAddedControlTitle();
+} 
 /** Returns the XML that represents what is currently selected (highlighted) by the user in the ActiveDocument as an XMLDOM object.  Whatever is highlighted by the user will be returned in this function as a block level element.  A user may highlight text that will be materialized as multiple sibling block elements in the XML.  For this reason, the function returns an array, where each element of the array is an XMLDOM object that contains the XML for the blocks highlighted by the user in the ActiveDocument.  The order of elements in the array represents the order of items that are highlighted in the ActiveDocument.
  * @return the blocks of XML currently selected by the user in the ActiveDocument as XMLDOM objects. If nothing is selected, an empty array is returned.
  * @type Array
@@ -1005,7 +1009,7 @@ MLA.getContentControlIds = function()
 }
 
 /** @ignore */
-MLA.getContentControlInfo = function(cid)
+MLA.getContentControlInfoUtil = function(cid)
 { 
 	var info = window.external.getContentControlInfo(cid);
 	var errMsg = MLA.errorCheck(info);
@@ -1015,6 +1019,29 @@ MLA.getContentControlInfo = function(cid)
 
 	//alert("info: "+info);
 	return info;
+
+}
+
+MLA.getContentControlInfo = function(cid)
+{
+	var info = window.external.getContentControlInfo(cid);
+	var errMsg = MLA.errorCheck(info);
+
+	if(errMsg!=null)
+	  throw("Error: Not able to getContentControlInfo(); "+errMsg);
+
+        var tokens = info.split("|");
+
+        var mlacontrolref = new MLA.SimpleContentControl(cid); 
+	    mlacontrolref.tag = tokens[0];
+            mlacontrolref.title = tokens[1];  
+	    mlacontrolref.type = tokens[2];
+	    mlacontrolref.lockcontrol = tokens[3];
+	    mlacontrolref.lockcontents = tokens[4];
+            mlacontrolref.parentTag = tokens[5];
+            mlacontrolref.parentID = tokens[6];
+
+	return mlacontrolref;
 
 }
 
@@ -1041,8 +1068,10 @@ MLA.getParentContentControlInfo = function()
 	    mlacontrolref.tag = tokens[1];
             mlacontrolref.title = tokens[2];  
 	    mlacontrolref.type = tokens[3];
-            mlacontrolref.parentTag = tokens[4];
-            mlacontrolref.parentID = tokens[5];
+	    mlacontrolref.lockcontrol = tokens[4];
+	    mlacontrolref.lockcontents = tokens[5];
+            mlacontrolref.parentTag = tokens[6];
+            mlacontrolref.parentID = tokens[7];
 
 	return mlacontrolref;
 }
@@ -1283,6 +1312,8 @@ MLA.setContentControlStyle = function(id, style)
 MLA.getSimpleContentControls = function()
 {
         var controlIds = window.external.getContentControlIds();
+	//alert("HAVE THE IDS"+controlIds.length);
+
 	var errMsg = MLA.errorCheck(controlIds);
 
 	if(errMsg!=null)
@@ -1290,6 +1321,7 @@ MLA.getSimpleContentControls = function()
 
 	var contentControlIds = controlIds.split("|");
         var controlArray = new Array();
+	//alert("SPLIT THE STRING AND CREATED NEW ARRAY");
       
 
 	if (contentControlIds[0] == null || contentControlIds[0] == "")
@@ -1302,19 +1334,24 @@ MLA.getSimpleContentControls = function()
 	       {
 	  	  var controlid = contentControlIds[i];
 	          var mlacontrolref = new MLA.SimpleContentControl(controlid);
-		  var contentControlInfo = MLA.getContentControlInfo(controlid);
+		  //could replace this with call to info, and remove redundacy below
+		  var contentControlInfo = MLA.getContentControlInfoUtil(controlid);
 
 		  var info = contentControlInfo.split("|");
 
 		  mlacontrolref.tag = info[0];
 		  mlacontrolref.title = info[1]; 
 		  mlacontrolref.type = info[2];
-		  mlacontrolref.parentTag = info[3]; 
-		  mlacontrolref.parentID = info[4]; 
+		  mlacontrolref.lockcontrol = info[3];  //HERE
+		  mlacontrolref.lockcontents = info[4]; //HERE
+		  mlacontrolref.parentTag = info[5]; 
+		  mlacontrolref.parentID = info[6]; 
 
 		  controlArray[i]=mlacontrolref;
 	       }
 	}
+
+	//alert("HAVE THE ARRAY");
 
 	return controlArray;
 }
@@ -1344,6 +1381,18 @@ MLA.insertWordOpenXML = function(opc_xml)
 
     if(errMsg!=null)
       throw("Error: Not able to insertWordOpenXML(); "+errMsg);
+
+    return msg;
+}
+
+/** @ignore */
+MLA.mergeWithActiveDocument = function(opc_xml)
+{
+    var msg = window.external.mergeWithActiveDocument(opc_xml);
+    var errMsg = MLA.errorCheck(msg);
+
+    if(errMsg!=null)
+      throw("Error: Not able to mergeWithActiveDocument(); "+errMsg);
 
     return msg;
 }
@@ -1382,6 +1431,8 @@ MLA.SimpleContentControl = function()
   var tag;
   var id;
   var type;
+  var lockcontrol;
+  var lockcontents;
   var parentTag;
   var parentID;
 

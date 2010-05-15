@@ -16,7 +16,7 @@ limitations under the License.
 MarkLogicContentControlSupport.js - javascript api captures Content Control events in Word and return SimpleContentControl objects.
 */
 
-function contentControlOnEnter(id,tag,title, type, parenttag, parentid)
+contentControlOnEnter  = function(id,tag,title, type, lockcontrol, lockcontents, parenttag, parentid)
 {
 	try{
 	var msg = "";
@@ -25,8 +25,12 @@ function contentControlOnEnter(id,tag,title, type, parenttag, parentid)
 	    mlacontrolref.tag = tag;
             mlacontrolref.title = title; 
             mlacontrolref.type = type;
+            mlacontrolref.lockcontrol = lockcontrol;
+            mlacontrolref.lockcontents = lockcontents;
             mlacontrolref.parentTag = parenttag;
 	    mlacontrolref.parentID = parentid;
+
+	    onEnterHandler(mlacontrolref);
 	}
 	catch(err)
  	{
@@ -34,13 +38,15 @@ function contentControlOnEnter(id,tag,title, type, parenttag, parentid)
                 //throw("Error: Not able to create SimpleContentControl from input. ");
 	}
 
-	alert("ENTER ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + " parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
-
+	//alert("ENTER ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
+	//
+	//
+        
 	return msg;
 
 }
 
-function contentControlOnExit(id, tag, title, type, parenttag, parentid)
+function contentControlOnExit(id, tag, title, type, lockcontrol, lockcontents, parenttag, parentid)
 {
 	try{
 	var msg = "";
@@ -49,8 +55,12 @@ function contentControlOnExit(id, tag, title, type, parenttag, parentid)
 	    mlacontrolref.tag = tag;
             mlacontrolref.title = title; 
             mlacontrolref.type = type;
+	    mlacontrolref.lockcontrol = lockcontrol;
+            mlacontrolref.lockcontents = lockcontents;
             mlacontrolref.parentTag = parenttag;
 	    mlacontrolref.parentID = parentid;
+
+	    onExitHandler(mlacontrolref);
 	}
 	catch(err)
  	{
@@ -58,13 +68,16 @@ function contentControlOnExit(id, tag, title, type, parenttag, parentid)
                // throw("Error: Not able to create SimpleContentControl from input. ");
 	}
 	
-	alert("EXIT ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + " parentTag "+mlacontrolref.parentTag+" parentID: "+mlacontrolref.parentID);
+	//alert("EXIT ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
 
 	return msg;
 }
 
-function contentControlAfterAdd(id, tag, title, type, parenttag, parentid)
+function contentControlAfterAdd(id, tag, title, type, lockcontrol, lockcontents, parenttag, parentid)
 {
+
+	//HERE'S WHERE WE'LL ADD METADATA!!
+	//How to get metadata type? from tag?
 	try{
 	var msg = "";
 
@@ -72,8 +85,12 @@ function contentControlAfterAdd(id, tag, title, type, parenttag, parentid)
 	    mlacontrolref.tag = tag;
             mlacontrolref.title = title; 
             mlacontrolref.type = type;
+	    mlacontrolref.lockcontrol = lockcontrol;
+            mlacontrolref.lockcontents = lockcontents;
             mlacontrolref.parentTag = parenttag;
-	    mlacontrolref.parentID = parentid;
+	    mlacontrolref.parentID = parentid
+	
+	    afterAddHandler(mlacontrolref);
 	}
 	catch(err)
  	{
@@ -81,13 +98,14 @@ function contentControlAfterAdd(id, tag, title, type, parenttag, parentid)
                 //throw("Error: Not able to create SimpleContentControl from input. ");
 	}
 
-	alert("AFTERADD ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + " parentTag "+mlacontrolref.parentTag+" parentID: "+mlacontrolref.parentID);
+        //alert("AFTER ADD ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
 
 	return msg;
 }
 
-function contentControlBeforeDelete(id, tag, title, type, parenttag, parentid)
+function contentControlBeforeDelete(id, tag, title, type, lockcontrol, lockcontents, parenttag, parentid)
 {
+	//HERE'S WHERE WE'LL DELETE METADATA!!
 	try{
 	var msg = "";
 
@@ -95,8 +113,12 @@ function contentControlBeforeDelete(id, tag, title, type, parenttag, parentid)
 	    mlacontrolref.tag = tag;
             mlacontrolref.title = title; 
             mlacontrolref.type = type;
+	    mlacontrolref.lockcontrol = lockcontrol;
+            mlacontrolref.lockcontents = lockcontents;
             mlacontrolref.parentTag = parenttag;
 	    mlacontrolref.parentID = parentid;
+
+	    beforeDeleteHandler(mlacontrolref);
 	}
 	catch(err)
  	{
@@ -104,12 +126,12 @@ function contentControlBeforeDelete(id, tag, title, type, parenttag, parentid)
                 //throw("Error: Not able to create SimpleContentControl from input. ");
 	}
 
-	alert("BEFORE DELETE ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + " parentTag "+mlacontrolref.parentTag+" parentID: "+mlacontrolref.parentID);
+        //alert("BEFORE DELETE ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
 
 	return msg;
 }
 
-function contentControlBeforeContentUpdate(id, tag, title, type, parenttag, parentid)
+function contentControlBeforeContentUpdate(id, tag, title, type, lockcontrol, lockcontents, parenttag, parentid)
 {
 	try{
 	var msg = "";
@@ -118,6 +140,8 @@ function contentControlBeforeContentUpdate(id, tag, title, type, parenttag, pare
 	    mlacontrolref.tag = tag;
             mlacontrolref.title = title; 
             mlacontrolref.type = type;
+            mlacontrolref.lockcontrol = lockcontrol;
+            mlacontrolref.lockcontents = lockcontents;
             mlacontrolref.parentTag = parenttag;
 	    mlacontrolref.parentID = parentid;
 	}
@@ -127,12 +151,12 @@ function contentControlBeforeContentUpdate(id, tag, title, type, parenttag, pare
                 //throw("Error: Not able to create SimpleContentControl from input. ");
 	}
 
-	alert("BEFORE CONTENT UPDATE ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + " parentTag "+mlacontrolref.parentTag+" parentID: "+mlacontrolref.parentID);
+        //alert("BEFORE CONTENT UPDATE ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
 
 	return msg;
 }
 
-function contentControlBeforeStoreUpdate(id, tag, title, type, parenttag, parentid)
+function contentControlBeforeStoreUpdate(id, tag, title, type, lockcontrol, lockcontents, parenttag, parentid)
 {
 	try{
 	var msg = "";
@@ -141,8 +165,12 @@ function contentControlBeforeStoreUpdate(id, tag, title, type, parenttag, parent
 	    mlacontrolref.tag = tag;
             mlacontrolref.title = title; 
             mlacontrolref.type = type;
+            mlacontrolref.lockcontrol = lockcontrol;
+            mlacontrolref.lockcontents = lockcontents;
             mlacontrolref.parentTag = parenttag;
 	    mlacontrolref.parentID = parentid;
+
+
 	}
 	catch(err)
  	{
@@ -150,7 +178,7 @@ function contentControlBeforeStoreUpdate(id, tag, title, type, parenttag, parent
                 //throw("Error: Not able to create SimpleContentControl from input. ");
 	}
 
-	//alert("BEFORE STORE UPDATE ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + " parentTag "+mlacontrolref.parentTag+" parentID: "+mlacontrolref.parentID);
+        //alert("BEFORE STORE UPDATE ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
 
 	return msg;
 }
