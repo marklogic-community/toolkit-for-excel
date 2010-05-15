@@ -41,6 +41,7 @@ namespace MarkLogic_WordAddin
         public bool mlPaneDisplayed = false;
         private Document mdoc;
         private bool debug = false;
+        public bool MERGEFLAG = true;
       
         public void AddAllTaskPanes()
         {
@@ -110,28 +111,42 @@ namespace MarkLogic_WordAddin
         {
             if(debug)
                 MessageBox.Show("begin Application_DocumentBeforeClose");
-
+            
             mdoc = doc;
             UserControl1 uc = (UserControl1)this.ctpML.Control;
-
+          
             try
+            {    
+                if (MERGEFLAG != false)
+                {
+                    mdoc.ContentControlOnEnter -= new DocumentEvents2_ContentControlOnEnterEventHandler(uc.ThisDocument_ContentControlOnEnter);
+                    mdoc.ContentControlOnExit -= new DocumentEvents2_ContentControlOnExitEventHandler(uc.ThisDocument_ContentControlOnExit);
+                    mdoc.ContentControlAfterAdd -= new DocumentEvents2_ContentControlAfterAddEventHandler(uc.ThisDocument_ContentControlAfterAdd);
+                    mdoc.ContentControlBeforeDelete -= new DocumentEvents2_ContentControlBeforeDeleteEventHandler(uc.ThisDocument_ContentControlBeforeDelete);
+                    mdoc.ContentControlBeforeContentUpdate -= new DocumentEvents2_ContentControlBeforeContentUpdateEventHandler(uc.ThisDocument_ContentControlBeforeContentUpdate);
+                    mdoc.ContentControlBeforeStoreUpdate -= new DocumentEvents2_ContentControlBeforeStoreUpdateEventHandler(uc.ThisDocument_ContentControlBeforeStoreUpdate);
+                    cancel = false;
+                    
+                }
+
+            }
+            catch (COMException e)
             {
-                mdoc.ContentControlOnEnter -= new DocumentEvents2_ContentControlOnEnterEventHandler(uc.ThisDocument_ContentControlOnEnter);
-                mdoc.ContentControlOnExit -= new DocumentEvents2_ContentControlOnExitEventHandler(uc.ThisDocument_ContentControlOnExit);
-                mdoc.ContentControlAfterAdd -= new DocumentEvents2_ContentControlAfterAddEventHandler(uc.ThisDocument_ContentControlAfterAdd);
-                mdoc.ContentControlBeforeDelete -= new DocumentEvents2_ContentControlBeforeDeleteEventHandler(uc.ThisDocument_ContentControlBeforeDelete);
-                mdoc.ContentControlBeforeContentUpdate -= new DocumentEvents2_ContentControlBeforeContentUpdateEventHandler(uc.ThisDocument_ContentControlBeforeContentUpdate);
-                mdoc.ContentControlBeforeStoreUpdate -= new DocumentEvents2_ContentControlBeforeStoreUpdateEventHandler(uc.ThisDocument_ContentControlBeforeStoreUpdate);
+                cancel = false;
+                MERGEFLAG = true;
+                MessageBox.Show("error: COMEXCEPTION unable to remove Content Control Event handlers from Document." + e.Message);
             }
             catch (Exception e)
             {
-                MessageBox.Show("error: unable to remove Content Control Event handlers from Document." + e.Message);
+                cancel = false;
+                MERGEFLAG = true;
+                MessageBox.Show("error: EXCEPTION unable to remove Content Control Event handlers from Document." + e.Message);
             }
 
             if(debug)
                 MessageBox.Show("end Application_DocumentBeforeClose");
 
-            cancel = false;
+            //cancel = false;
         }
 
         private void Application_DocumentOpen(Document Doc)

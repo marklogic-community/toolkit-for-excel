@@ -67,7 +67,7 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 					else
 					for $hit in $hits[$start to $end]
 						let $uri := base-uri($hit)
-						let $snippet := if(string-length(data($hit)) > 120) then concat(substring(data($hit), 1, 250), "…") else data($hit)
+						let $snippet := if(string-length(data($hit)) > 120) then concat(substring(data($hit), 1, 250), "...") else data($hit)
 						return <li title="{data($hit)}" xlink:href="{concat($uri,'#', 'xmlns(w=http://schemas.openxmlformats.org/wordprocessingml/2006/main) xpath(',xdmp:path($hit),')')}">
 							{cts:highlight(<p>{$snippet}</p>, $or-query, <strong class="ML-highlight">{$cts:text}</strong>)}
 							<ul class="ML-hit-metadata">

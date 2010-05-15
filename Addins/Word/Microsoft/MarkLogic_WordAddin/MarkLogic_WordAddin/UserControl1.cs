@@ -47,9 +47,11 @@ namespace MarkLogic_WordAddin
         private bool debug = false;
         private bool debugMsg = false;
         private string color = "";
-        private string addinVersion = "1.1-1";
+        private string addinVersion = "1.2-1";
         HtmlDocument htmlDoc;
         public Word.Document udoc;
+      
+
 
         private string lastAddedCtrlTitle;
       
@@ -92,7 +94,6 @@ namespace MarkLogic_WordAddin
 
                     //following fires for building block insert, opp for trackin re-use?
                     //different from above, need to think how we'll return
-
                     //udoc.BuildingBlockInsert += new Word.DocumentEvents2_BuildingBlockInsertEventHandler
                 }
                 catch (Exception e)
@@ -226,6 +227,11 @@ namespace MarkLogic_WordAddin
 
             contentControlBeforeStoreUpdate(contentControl.ID, contentControl.Tag, contentControl.Title, contentControl.Type.ToString(), contentControl.LockContentControl.ToString(), contentControl.LockContents.ToString(), parentTag, parentID);
         }
+
+        //ERROR HANDLING
+        //catch errors where you can recover
+        //otherwise always throw
+        //(more relevant to JS, keep in mind wrt UserControl)
 
         public void contentControlOnEnter(string ccID, string ccTag, string ccTitle, string ccType,string ccLockCtrl, string ccLockContents, string ccParentTag, string ccParentID)
         {
@@ -1344,9 +1350,37 @@ namespace MarkLogic_WordAddin
         //use arrow keys to navigate (does doc need to be protected?)
         //also, can map content control to custom part using quick parts
 
+        public string getAllContentControlInfo()
+        {
+            string message = "";
+            string[] ids;
+            int i = 0;
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+                ids = new string[ccs.Count];
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    ids[i] = cc.ID;
+                    i++;
+
+
+                    //MessageBox.Show("Control Tag:" + cc.Tag + " title: " + cc.Title + " id: "+cc.ID);
+                   
+                }
+            }
+            catch (Exception e)
+            {
+                message = "error: " + e.Message;
+            }
+
+            return message;
+        }
+
         public string getContentControlIds()
         {   //id always present, system generated; consistent (unlike customxmlparts); check in XML
             string message = "";
+           
             string ids = "";
 
             try
@@ -2223,9 +2257,6 @@ namespace MarkLogic_WordAddin
         //maybe pass filename
         public void mergeWithActiveDocument(string opc_xml)
         {
-            //MessageBox.Show("OPC XML" + opc_xml);
-           // string name = GetTemporaryFile(".xml");
-            //downloadFile(uri, name, user, pass);
             object oname = "TEMP";
             object f = false;
             object t = true;
@@ -2251,21 +2282,26 @@ namespace MarkLogic_WordAddin
 
             try
             {
-
                 Word.WdCompareDestination dest = Word.WdCompareDestination.wdCompareDestinationNew;
                 Word.WdGranularity level = Word.WdGranularity.wdGranularityWordLevel;
                 Word.Document doc1 = Globals.ThisAddIn.Application.ActiveDocument;
-                Word.Document doc2 = doc;
-                Globals.ThisAddIn.Application.MergeDocuments(doc1, doc2, dest,
+                Globals.ThisAddIn.Application.MergeDocuments(doc1, doc, dest,
                                                              level, true, true, true, true, true,
                                                              true,
                                                              true, true, true, true, "", "",
                                                              Word.WdMergeFormatFrom.wdMergeFormatFromOriginal);
 
+
+                Globals.ThisAddIn.MERGEFLAG = false;  
                 doc.Close(ref f, ref missing, ref missing);
+
+                Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked = false;
+                Globals.ThisAddIn.RemoveAllTaskPanes();
+               
             }
             catch (Exception e)
             {
+               
                 MessageBox.Show("error in MERGE: " + e.Message);
             }
         }
