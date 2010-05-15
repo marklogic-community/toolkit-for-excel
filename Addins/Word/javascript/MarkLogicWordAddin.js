@@ -1385,9 +1385,9 @@ MLA.insertWordOpenXML = function(opc_xml)
     return msg;
 }
 
-/** Opens the word document passed in as a paramter in Word's native merge functionality, compared to the Active Document.  opc_xml is the XML for a Word document in Flat OPC format (the Open Packaging Convention).  It is the same format as if you'd saved a .docx as .xml in Word.  
+/** Opens WordOpenXML alongside the active document in Word's compare functionality.  WordOpenXML is the XML for a Word document in Flat OPC format (the Open Packaging Convention).  It is the same format as if you'd saved a .docx as .xml in Word. 
  *
- * @param opc_xml the XML to be compared with the Active Document. Parameter type can be either A) an XMLDOM object that is the WordOpenXML to be inserted into the active Open XML package, or B)the string serialization of the WordOpenXML to be inserted into the active Open XML package.
+ * @param opc_xml the XML to be compared with the Active Document. Parameter type can be either A) an XMLDOM object that is the WordOpenXML to be compared with the active Open XML package, or B)the string serialization of the WordOpenXML to be compared with the active Open XML package.
  * @return void
  * @type void
  * @throws Exception if unable to mergeWithActiveDocument
