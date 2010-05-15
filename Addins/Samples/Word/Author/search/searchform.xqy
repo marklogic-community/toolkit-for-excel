@@ -26,7 +26,7 @@ let $header:=
                       
 		      <!--<input id="ML-Submit" type="submit" value="search"/>-->
                      
-                      <a href="#"  id="sbtn" class="searchbtn" onmouseup="blurSelected(this);" onclick="SearchAction();" >Search</a>
+                      <a href="#"  id="sbtn" class="searchbtn" onmouseup="blurSelected(this);" onclick="searchAction();" >Search</a>
                       <a href="#" id="fbtn" class="filterbtn"> Filter </a>
                       <a href="#" id="ddbtn" class="dropdownbtn"> &nbsp; </a>
 		      
