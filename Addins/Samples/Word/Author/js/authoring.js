@@ -308,16 +308,14 @@ function checkForEnter()
      if (window.event && window.event.keyCode == 13)
      {
          //alert('Enter key pressed');
-	 return SearchAction();
+	 return searchAction();
      }
 
      return true;
 }
 
-//why some caps, some not
-//singleton or class, upper camel
 
-function SearchAction(startidx)
+function searchAction(startidx)
 {
 	if(startidx==null)
 	{
@@ -340,7 +338,6 @@ function SearchAction(startidx)
 	}
 
 	//$('#searchfilter')
-
 	var qry = $('#searchbox').val();
 	simpleAjaxSearch(qry,startidx, cbsid);
 }
@@ -349,25 +346,16 @@ function simpleAjaxSearch(searchval, startidx, cbsid)
 {
     var newurl = "";
 
-
     if(startidx==0)
 	    newurl = "search/search.xqy";
     else
 	    newurl = "search/search.xqy?start="+startidx;
 
-//$.post("test.php", { name: "John", time: "2pm" } );
-//data: ({id : this.getAttribute('id')}),
-//data: "name=John&location=Boston",
-//GETS can be bookmared, cached, POST should be last resort, if i want to change something on the server
-//make this GET  
-
     $.ajax({
-          type: "POST",
+          type: "GET",
           url: newurl, //"search/search.xqy",
           data: { qry : searchval, params : cbsid },
           success: function(msg){
-//remove try/catch, can be expensive, also want it to bubble
-//registering onclicks inline vs. binding them out here	  
 			try{
                             $('#searchresults').empty();
                             $('#searchresults').append(msg);
@@ -380,13 +368,13 @@ function simpleAjaxSearch(searchval, startidx, cbsid)
      });
 }
 
-function InsertAction(contenturl, contentpath, other)
+function insertAction(contenturl, contentpath, other)
 { 
 	try{
 	     simpleAjaxInsert(contenturl,contentpath);
 	}catch(err)
 	{
-	     alert("ERROR in InsertAction(): "+err.description);
+	     alert("ERROR in insertAction(): "+err.description);
 	}
 }
 
@@ -395,7 +383,6 @@ function simpleAjaxInsert(contenturl,contentpath)
     $.ajax({
           type: "GET",
           url: "search/insert.xqy",
-	  //data: "companyCode="+ slmckdcoy +"&branchCode="+ slmckdcab,
           data: "uri=" + contenturl+"&path="+ contentpath,
           success: function(msg){
 			try{
@@ -422,13 +409,12 @@ function insertContent(content)
 	        //alert("METAPART ARAY LENGTH IS "+metadataPartArray.length);
 
                 for (var i = 0; i < metaparts.length; i++) { 
-			//moving reverse here
+		  //moving reverse here
 		  metadataPartArray.push(metaparts.item(i));
                    
                 }
 		
 		MLA.insertWordOpenXML(pkgxml.xml);
-
 
 	}catch(e)
 	{
@@ -443,8 +429,7 @@ function blurSelected(btn_element)
 	btn_element.blur();
 }
 
-/*maybe change sig to (url, bp) */
-//potentially need another function call in the case of controls, a trigger to insure all controls have a custom part associated
+//inserts boilerplate
 function boilerplateinsert(bp)
 {
 		$.get(
@@ -456,7 +441,6 @@ function boilerplateinsert(bp)
 			"text"
 		);
 
-	     
 }
 
 function lockControl()
@@ -485,23 +469,6 @@ function lockControlContents()
 		MLA.unlockContentControlContents(mlacontrolref.id);
 	}
 }
-/*
-function partsTest()
-{
-	alert("IN TEST");
-	var control = null;
-	var controls = MLA.getSimpleContentControls();
-
-        for (i = 0; i < controls.length; i++)
-	{
-		control=controls[i];
-		alert("ID: "+control.id);
-	}
-
-
-}
-*/
-
 
 function getMetadataPartID(ctrlId)
 {
@@ -529,18 +496,6 @@ function getMetadataPartID(ctrlId)
 	return metadataPartId;
 }
 
-//just use existing function, why wrapped here
-function getMetadataPartForControl(customPartId)
-{
-        var metadataPart =  MLA.getCustomXMLPart(customPartId);
-	return metadataPart;
-
-}
-
-//can i reuse based on enter event?
-//add id param, if null, then use window.event.cancelBubble, else id (?) - should work
-//candidate for MLA.WordAddin.js?
-
 function replaceCustomMetadataPart(partId, metadataPart)
 {
         //alert("DELETING CUSTOM PIECE");
@@ -548,7 +503,6 @@ function replaceCustomMetadataPart(partId, metadataPart)
 
 	//alert("ADDING CUSTOM PIECE");
 	MLA.addCustomXMLPart(metadataPart);
-
 }
 
 function setMetadataPartValues()
@@ -563,7 +517,7 @@ function setMetadataPartValues()
 	//alert("PART ID: "+metadataPartID);
 
 	//get Custom XML Part associated with Control
-	var metadataPart = getMetadataPartForControl(metadataPartID); /*(controlID)*/
+	var metadataPart = MLA.getCustomXMLPart(metadataPartID); /*(controlID)*/
 	var meta = metadataPart.getElementsByTagName("dc:metadata")[0];
         
 	//set form values in Custom XML Part
@@ -578,7 +532,6 @@ function setMetadataPartValues()
         //save edited part
 	replaceCustomMetadataPart(metadataPartID, meta);
 
-
 }
 function isScrolledIntoView(ctrlId)
 {
@@ -588,7 +541,7 @@ function isScrolledIntoView(ctrlId)
     var elemTop = $('#'+ctrlId).offset().top + docViewTop;
     var elemBottom = elemTop + $('#'+ctrlId).height();
 
-    //   alert("tree top: "+docViewTop+"\ntreebottom: "+docViewBottom+"\n controlltop: "+elemTop+"\n+controlbottom: "+elemBottom);
+    //alert("tree top: "+docViewTop+"\ntreebottom: "+docViewBottom+"\n controlltop: "+elemTop+"\n+controlbottom: "+elemBottom);
 
     var vis = ((elemBottom >= docViewTop) && (elemTop <= docViewBottom)
       && (elemBottom <= docViewBottom) &&  (elemTop >= docViewTop) );
@@ -598,8 +551,8 @@ function isScrolledIntoView(ctrlId)
 
 function setControlFocus(enteredId)
 {
-	//cancel event bubbling, IE is wacky
-	//window.event.cancelBubble=true;
+      //cancel event bubbling, IE is wacky
+      //window.event.cancelBubble=true;
 
       if( $('#metadata').is(':visible'))  //ONLY DO WHEN TREE EXPOSED, MOVE TO EVENT 
       {	      
@@ -608,7 +561,7 @@ function setControlFocus(enteredId)
 	if(enteredId == null || enteredId == ""){
 	        window.event.cancelBubble=true;
 		controlID = window.event.srcElement.id;
-//check this, do i need, if you click it, its in view
+                //check this, do i need, if you click it, its in view
 		var destination = $('#'+controlID).offset().top + $("#treeWindow").scrollTop();
 		if(!(isScrolledIntoView(controlID)))
 		{
@@ -646,7 +599,7 @@ function setControlFocus(enteredId)
 	if(!(metadataID == null))
 
 	{	
-	   var metadata = getMetadataPartForControl(metadataID);
+	   var metadata = MLA.getCustomXMLPart(metadataID);
 	   var meta = metadata.getElementsByTagName("dc:metadata")[0];
 	   //check this
 	   var idxml = metadata.getElementsByTagName("dc:identifier")[0];
@@ -666,7 +619,7 @@ function setControlFocus(enteredId)
 	   //construct metadata panel on page from metadata part
 	   for(var i = 1;i < meta.childNodes.length; i++)
 	   {
-		//check this
+		//assumes XML has QName prefix
 	        var localname = meta.childNodes[i].nodeName.split(":");
 		var formID = "form-"+i+"-"+controlID;
                 var child = meta.childNodes[i];	        	
@@ -860,7 +813,7 @@ function afterAddHandler(ref)
         var proceed = true;	
 	//alert("AFTER ADD TITLE: "+ref.title+" ID: "+ ref.id +" TAG: "+ref.tag+" PARENT: "+ref.parentID);
 
-        //when inserting XML with Controls, id is overwritten, but tag remains
+        //when inserting XML with Controls, id is overwritten in Document, but tag remains
 	//check here and set tag = id
 	//(we set on add with MLA.addContentControl(), but that's not used here if dealing with XML reuse (insert from search))
 	var ctrlId = ref.id;
@@ -886,11 +839,8 @@ function afterAddHandler(ref)
 	
 	if(metadataPartArray.length > 0 )
 	{
-		//alert("IN NEW IF metadataPartArray.length: "+metadataPartArray.length);
-		//move reverse to where we create array
 		metadataPartArray.reverse();
 		var meta = metadataPartArray.pop();
-		//alert("Meta XML: "+meta.xml);
 		metadataPartArray.reverse();
 
 	        //we use dc:identifier with id from ctrl.  
@@ -901,7 +851,7 @@ function afterAddHandler(ref)
 	        var previd = meta.getElementsByTagName("dc:identifier")[0];
 		
 		if(previd == null)
-		{   //need to test this more    
+		{   
 		    //alert("ID IS NULL, No METADATA");
 		    proceed=true;
 		}
@@ -929,8 +879,9 @@ function afterAddHandler(ref)
 	//possible to move a control, this creates delete, then add event using same id
         if(proceed)
 	{
+	   
 	   //have the server be the broker for the metadata templates
-	   //ajax call
+	   //logged RFE 
 	   
            var stringxml = MLA.unescapeXMLCharEntities(generateTemplate(map.get(MLA.getLastAddedControlTitle())));
            var domxml = MLA.createXMLDOM(stringxml);
@@ -983,7 +934,6 @@ function beforeDeleteHandler(ref)
 			     //alert("===EQUAL"+id.xml);
 			     MLA.deleteCustomXMLPart(customPieceId);
 	       }
-
 	       //alert(customPiece.xml);
 	    }
 	}
@@ -999,8 +949,7 @@ function siteChanged(selectedOption, startidx)
 
 	//var selectedOption = $('#sites').val();
 	simpleAjaxMetadataSearch(selectedOption, startidx);
-//alert("HERE: "+selectedOption + " VAL: "+document.getElementById('select0').innerHTML);
-
+        //alert("HERE: "+selectedOption + " VAL: "+document.getElementById('select0').innerHTML);
 }
 
 function simpleAjaxMetadataSearch(searchval, startidx)
@@ -1013,10 +962,9 @@ function simpleAjaxMetadataSearch(searchval, startidx)
     else
 	    newurl = "search/metadata-search.xqy?start="+startidx;
 
-    //var newurl = "search/metadata-search.xqy";
 
     $.ajax({
-          type: "POST",
+          type: "GET",
           url: newurl, 
           data: { qry : searchval },
           success: function(msg){
@@ -1025,7 +973,6 @@ function simpleAjaxMetadataSearch(searchval, startidx)
                              $('#docnames').empty();
                              $('#docnames').append(msg);
                              $('#docnames').html(msg);
-//alert("MESSAGE"+msg);
 			}catch(e)
 			{
 			alert("ERROR"+e.description);
@@ -1048,29 +995,16 @@ function compareSearchAction(startidx)
 	//simpleAjaxMetadataSearch(qry,startidx);
 }
 
-/*function nameChanged()
-{
-	var selectedOption = $('#docnames').val();
-	//alert("HERE: "+selectedOption);
-
-}*/
-
 function mergeDocuments(docuri)
 {
-	//alert("IN MERGE");
 	var selectedOption = docuri;
-	//alert("DOCURI: "+docuri);
 	if(selectedOption == null)
 	{
           //do nothing
 	  alert("You must first select a document to merge.");
 	}else
 	{
-	//simpleAjaxDocRetrieve(selectedOption);
-	  //alert("VALUE: "+selectedOption);
 	  simpleAjaxDocRetrieve(selectedOption);
-	  //get the package xml and pass to MLA.mergeWithActiveDocument(opc_xml) (add to api)
-	  
 	  
 	}
 }
@@ -1078,35 +1012,19 @@ function mergeDocuments(docuri)
 function simpleAjaxDocRetrieve(doclocation)
 {
     var newurl = "search/document-retrieve.xqy";
-    //alert("IN DOC RETRIEVE!");
-
-
-    /*if(startidx==0)
-	    newurl = "search/compare.xqy";
-    else
-	    newurl = "search/compare.xqy?start="+startidx;
-	    */
 
     $.ajax({
-          type: "POST",
+          type: "GET",
           url: newurl, 
           //data: { qry : searchval, params : cbsid },
           data: { qry : doclocation },
           success: function(opc_xml){
-	                //put in top nav
-	                //$('#main').css('overflow', 'auto');
 			try{
-		//	alert("MESSAGE IS: "+opc_xml+ "  "+opc_xml.length);
-                        //$('#docnames').empty();
-                        //$('#docnames').append(msg);
-                        //$('#docnames').html(msg);
-			//CALL MERGE HERE! AND MOVE TO MLA.*
-			window.external.mergeWithActiveDocument(opc_xml);
+			     MLA.mergeWithActiveDocument(opc_xml);
 			}catch(e)
 			{
 			alert("ERROR"+e.description);
 			}
-	                //alert( "Data Saved: " + msg );
                    }
      });
 }

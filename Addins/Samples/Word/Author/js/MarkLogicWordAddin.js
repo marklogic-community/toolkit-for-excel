@@ -1386,6 +1386,18 @@ MLA.insertWordOpenXML = function(opc_xml)
 }
 
 /** @ignore */
+MLA.mergeWithActiveDocument = function(opc_xml)
+{
+    var msg = window.external.mergeWithActiveDocument(opc_xml);
+    var errMsg = MLA.errorCheck(msg);
+
+    if(errMsg!=null)
+      throw("Error: Not able to mergeWithActiveDocument(); "+errMsg);
+
+    return msg;
+}
+
+/** @ignore */
 MLA.hideContentControlRange = function(id)
 {
     var msg = window.external.hideContentControlRange(id);

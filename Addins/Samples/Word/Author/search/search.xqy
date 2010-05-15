@@ -168,14 +168,14 @@ return	xdmp:quote(
                                     let $page := $new-start
                                     let $new-page := $new-start + 10
                                     return if($page gt 10) then
-                                             (<a href="javascript:SearchAction({$page - 10});" class="leftpagination"> <img src="images/arrow-small-left.png"  border="0"/></a>,
+                                             (<a href="javascript:searchAction({$page - 10});" class="leftpagination"> <img src="images/arrow-small-left.png"  border="0"/></a>,
                                                  $span,
-                                              <a href="javascript:SearchAction({$new-page});" class="rightpagination"> <img src="images/arrow-small-right.png"  border="0"/></a>)
+                                              <a href="javascript:searchAction({$new-page});" class="rightpagination"> <img src="images/arrow-small-right.png"  border="0"/></a>)
                                            else 
-                                              ("&nbsp;&nbsp;",$span,<a href="javascript:SearchAction({$new-page});" class="rightpagination"> <img src="images/arrow-small-right.png"  border="0"/></a>)
+                                              ("&nbsp;&nbsp;",$span,<a href="javascript:searchAction({$new-page});" class="rightpagination"> <img src="images/arrow-small-right.png"  border="0"/></a>)
                                                                    
                                      else if($new-start gt 10) then
-                                             (<a href="javascript:SearchAction({$new-start - 10});" class="leftpagination"> <img src="images/arrow-small-left.png"  border="0"/></a>,
+                                             (<a href="javascript:searchAction({$new-start - 10});" class="leftpagination"> <img src="images/arrow-small-left.png"  border="0"/></a>,
                                               $span
                                              )
                                      else  ("&nbsp;","&nbsp;",$span)
@@ -204,7 +204,7 @@ return	xdmp:quote(
 				     {cts:highlight(<p class="searchreturnsnippet" title="{fn:data($ctrl)}">{$snippet}</p>, $or-query, <strong class="ML-highlight">{$cts:text}</strong>)}
 					 <div id="searchresultactions">
 					    <!--<a href="#" class="insertbtn" OnClick="InsertAction('{xdmp:url-encode($uri)}', '{$path}');">INSERT</a>&nbsp;-->
-					    <a href="javascript:InsertAction('{xdmp:url-encode($uri)}', '{$path}');" class="smallbtn searchinsertbtn"><span>Insert</span></a>&nbsp;
+					    <a href="javascript:insertAction('{xdmp:url-encode($uri)}', '{$path}');" class="smallbtn searchinsertbtn"><span>Insert</span></a>&nbsp;
 					    <a href="./utils/openpkg.xqy?uri={xdmp:url-encode($uri)}" class="smallbtn">Open</a>
                                          </div>
                                  </div>

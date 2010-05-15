@@ -98,7 +98,7 @@ function contentControlAfterAdd(id, tag, title, type, lockcontrol, lockcontents,
                 //throw("Error: Not able to create SimpleContentControl from input. ");
 	}
 
-//alert("AFTER ADD ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
+        //alert("AFTER ADD ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
 
 	return msg;
 }
@@ -126,7 +126,7 @@ function contentControlBeforeDelete(id, tag, title, type, lockcontrol, lockconte
                 //throw("Error: Not able to create SimpleContentControl from input. ");
 	}
 
-//	alert("BEFORE DELETE ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
+        //alert("BEFORE DELETE ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
 
 	return msg;
 }
@@ -151,7 +151,7 @@ function contentControlBeforeContentUpdate(id, tag, title, type, lockcontrol, lo
                 //throw("Error: Not able to create SimpleContentControl from input. ");
 	}
 
-//	alert("BEFORE CONTENT UPDATE ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
+        //alert("BEFORE CONTENT UPDATE ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
 
 	return msg;
 }
@@ -178,7 +178,7 @@ function contentControlBeforeStoreUpdate(id, tag, title, type, lockcontrol, lock
                 //throw("Error: Not able to create SimpleContentControl from input. ");
 	}
 
-//	alert("BEFORE STORE UPDATE ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
+        //alert("BEFORE STORE UPDATE ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
 
 	return msg;
 }
