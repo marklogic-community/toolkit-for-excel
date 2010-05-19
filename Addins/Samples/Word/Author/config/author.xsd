@@ -27,6 +27,7 @@ limitations under the License.
            </xs:restriction>
         </xs:simpleType>
 
+	<!-- base type and derived types, can't derive all, have to use sequence, order matters-->
 	<!-- definition of simple elements -->
 	<xs:element name="display-label" type="xs:string"/>
         <xs:element name="document-uri" type="xs:string"/>
@@ -34,11 +35,11 @@ limitations under the License.
 
         <xs:element name="control-alias" type="xs:string"/>
 	
-	<xs:element name="value" type="xs:string"/> 
+	<xs:element name="value" type="xs:string"/>
 
 	<xs:element name="title" type="xs:string"/>
         <xs:element name="placeholdertext" type="xs:string"/>
-	<xs:element name="metatemplate" type="xs:string"/>
+	<xs:element name="metatemplate" type="xs:token"/>
 	<xs:element name="newline" type="xs:string"/>
 	<xs:element name="text" type="xs:string"/>
 
@@ -59,7 +60,7 @@ limitations under the License.
                <xs:element ref="metatemplate"/>
                <xs:element ref="newline" minOccurs="0" />
                <xs:element ref="placeholdertext" minOccurs="0"/>
-               <xs:element ref="section" minOccurs="0"/>
+               <xs:element ref="component" minOccurs="0"/>
             </xs:all>
           </xs:complexType>
         </xs:element>
@@ -105,23 +106,39 @@ limitations under the License.
           </xs:complexType>
         </xs:element>
 
+        <xs:element name="component">
+	  <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+		    <xs:element ref="richtext"/>
+		    <xs:element ref="image"/>
+                    <xs:element ref="calendar"/>
+                    <xs:element ref="dropdown"/>
+		    <xs:element ref="combo"/>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+
   	<xs:element name="section">
 	  <xs:complexType>
             <xs:sequence>
-              <xs:element ref="richtext" maxOccurs="unbounded"/>
+              <xs:element ref="richtext" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
 
   	<xs:element name="inline">
 	  <xs:complexType>
-	    <xs:sequence>
-              <xs:element ref="richtext" minOccurs="0" maxOccurs="unbounded" />
-              <xs:element ref="image" minOccurs="0" maxOccurs="unbounded"/>
-              <xs:element ref="calendar" minOccurs="0" maxOccurs="unbounded" />
-              <xs:element ref="dropdown" minOccurs="0" maxOccurs="unbounded" />
-              <xs:element ref="combo" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
+	    <xs:choice minOccurs="0" maxOccurs="unbounded">
+	      <xs:element ref="richtext"/>
+	      <!-- element name="richtext" 
+	      type ="richtextA",
+	      make sure you have elementFormDefault='qualified' richtext type A, richtext type B
+	      -->
+              <xs:element ref="image"/>
+              <xs:element ref="calendar"/>
+              <xs:element ref="dropdown"/>
+              <xs:element ref="combo"/>
+            </xs:all>
           </xs:complexType>
         </xs:element>
 
@@ -139,8 +156,8 @@ limitations under the License.
 	  <xs:complexType>
 	    <xs:sequence>
 	      <xs:any namespace="##other" processContents="skip"/>
-              <xs:attribute name="id" type="xs:string" use="required"/>
 	    </xs:sequence>
+	    <xs:attribute name="id" type="xs:token" use="required"/>
 	  </xs:complexType>
         </xs:element>
 
@@ -155,8 +172,9 @@ limitations under the License.
 
       	<xs:element name="element">
 	  <xs:complexType>
-              <xs:attribute name="namespace" type="xs:string" use="required"/>
-              <xs:attribute name="qname" type="xs:string" use="required"/>
+              <xs:attribute name="namespace" type="xs:anyURI" use="required"/>
+	      <xs:attribute name="qname" type="xs:string" use="required"/>
+	      <!--simple type myqname ; string with pattern facet , xmlschema.xsd -->
 	  </xs:complexType>
         </xs:element>
 

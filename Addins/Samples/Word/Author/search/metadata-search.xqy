@@ -121,7 +121,7 @@ let $new-start := if(fn:empty(xdmp:get-request-field("start"))) then
                       xs:integer(xdmp:get-request-field("start"))
 
 return	xdmp:quote(
-          if($q) then
+          if($q) then  
             let $query :=  cts:element-value-query( $qname, $q) (: ps:get-query($qname, $q) :)
 
             let $hits := ps:page-results($query, $new-start)

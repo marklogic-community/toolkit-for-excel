@@ -13,7 +13,7 @@
 		  <config:title>Policy</config:title>
 		  <config:placeholdertext>Please enter a Process</config:placeholdertext>
 		  <config:metatemplate>1</config:metatemplate>
-		  <config:section>
+		  <config:component>
 		        <config:richtext> 
 			    <config:title>Process</config:title>
 			    <config:placeholdertext>Please enter a Process</config:placeholdertext>
@@ -26,35 +26,35 @@
 			    <config:newline>false</config:newline>
 			    <config:metatemplate>1</config:metatemplate>
 		        </config:richtext>
-	           </config:section>
-	  </config:richtext><!--generate off of schema?  cool idea-->
+	           </config:component>
+	  </config:richtext>
 
 	  <!--<config:richtext>
 		  <config:title>Annex</config:title>
 		  <config:placeholdertext>Please enter an Annex</config:placeholdertext>
 		  <config:metatemplate>1</config:metatemplate>
-		  <config:section>
+		  <config:component>
 			<config:richtext> 
 			    <config:title>Policy</config:title>
 			    <config:placeholdertext>Please enter a Policy</config:placeholdertext>
 			    <config:newline>true</config:newline>
 			    <config:metatemplate>2</config:metatemplate>
-			    <config:section>
+			    <config:component>
 			  	<config:richtext>    
-                                 <config:title>PolicyAbstract</config:title>
+                                 <config:title>PolicyAbstractONE</config:title>
 			         <config:placeholdertext>Please enter Abstract</config:placeholdertext>
 			         <config:newline>true</config:newline>
 				 <config:metatemplate>2</config:metatemplate>
-                                 <config:section>
+                                 <config:component>
 			  	   <config:richtext>    
                                     <config:title>PolicyAbstractTWO</config:title>
 			            <config:placeholdertext>Please enter Abstract</config:placeholdertext>
 			            <config:newline>true</config:newline>
 				    <config:metatemplate>2</config:metatemplate>
 				   </config:richtext>
-			         </config:section>
+			         </config:component>
 				</config:richtext>
-			    </config:section>
+			    </config:component>
 		        </config:richtext>
 			<config:richtext> 
 			    <config:title>Process</config:title>
@@ -62,13 +62,14 @@
 			    <config:newline>true</config:newline>
 		            <config:metatemplate>2</config:metatemplate>
 	                </config:richtext> 
-		  </config:section>
+		  </config:component>
 	  </config:richtext>-->
 	  <config:richtext>
 	         <config:title>Requirement</config:title>
                  <config:placeholdertext>Please enter a Requirement</config:placeholdertext>
 	         <config:metatemplate>1</config:metatemplate>
-	  </config:richtext>
+	 </config:richtext>
+
 
 	  <config:richtext>
 		  <config:title>Process</config:title>

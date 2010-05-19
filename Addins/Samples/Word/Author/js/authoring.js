@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 
-var SERVER = "http://localhost:8023/Author";
+var SERVER = "http://localhost:8023/Author2";
 var BOILERPLATE_URL =  SERVER + "/utils/fetchboilerplate.xqy";
 
 $(document).ready(function() {

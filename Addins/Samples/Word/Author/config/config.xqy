@@ -19,7 +19,7 @@ module namespace config="http://marklogic.com/toolkit/word/author/config";
 declare namespace dc="http://purl.org/dc/elements/1.1/";
 
 
-declare variable $config:CONFIG-PATH := "http://localhost:8023/Author/config/";
+declare variable $config:CONFIG-PATH := "http://localhost:8023/Author2/config/";
 declare variable $config:USER := "oslo";
 declare variable $config:PWD  := "oslo";
 
@@ -132,7 +132,7 @@ declare function config:generate-js-for-child-ctrl($children as node()*, $idx as
   let $ph-text := if(fn:empty($child/config:placeholdertext/text())) then ()
                     else 
                           $child/config:placeholdertext/text()
-  let $subchildren := $child/config:section
+  let $subchildren := $child/config:component
   let $newline := $child/config:newline/text()
   let $newidx := fn:concat("",$idx,$d)
   let $parent-id := if(fn:empty($idx)) then "ccid" else fn:concat("childId",$newidx)
@@ -155,7 +155,7 @@ declare function config:generate-js-section-text()
     let $ph-text := if(fn:empty($tc/config:placeholdertext/text())) then ()
                     else 
                           $tc/config:placeholdertext/text()    
-    let $children := $tc/config:section
+    let $children := $tc/config:component
     let $newline := "true"
     let $type := "wdContentControlRichText"
     return fn:concat("function txtSectionFunc",$d,"(){ 
@@ -276,7 +276,7 @@ declare function config:get-js-map(){
     return for $ctrl in $parent-controls
            return if(fn:empty($ctrl)) then () 
            else (fn:concat($ctrl/config:title/text(),"|", $ctrl/config:metatemplate/text()),
-                 config:get-map-subs( $ctrl/config:section/child::* ))
+                 config:get-map-subs( $ctrl/config:component/child::* ))
 };
 
 declare function config:generate-js-metadata-map-support()
