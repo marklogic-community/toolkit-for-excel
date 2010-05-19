@@ -733,3 +733,16 @@ a.menu:hover {
 	
 	
 }
+
+#ML-Message {
+	padding-left:5px;
+	padding-right:5px;
+	margin-left:5px;
+	background-color: #FDF1B1;
+}
+
+#ML-Intro {
+	margin: 1em;
+	font-size: 110%;
+	line-height: 1.45;
+}

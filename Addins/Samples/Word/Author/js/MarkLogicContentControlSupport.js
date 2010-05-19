@@ -39,8 +39,6 @@ contentControlOnEnter  = function(id,tag,title, type, lockcontrol, lockcontents,
 	}
 
 	//alert("ENTER ---> message "+mlacontrolref.id+" tag "+mlacontrolref.tag+" title"+mlacontrolref.title+" type "+mlacontrolref.type + "lockcontrol"+ mlacontrolref.lockcontrol + " lockcontents"+ mlacontrolref.lockcontents +" parentTag "+mlacontrolref.parentTag + " parentID: "+ mlacontrolref.parentID);
-	//
-	//
         
 	return msg;
 

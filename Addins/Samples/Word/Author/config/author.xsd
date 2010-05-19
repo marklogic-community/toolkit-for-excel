@@ -27,7 +27,6 @@ limitations under the License.
            </xs:restriction>
         </xs:simpleType>
 
-	<!-- base type and derived types, can't derive all, have to use sequence, order matters-->
 	<!-- definition of simple elements -->
 	<xs:element name="display-label" type="xs:string"/>
         <xs:element name="document-uri" type="xs:string"/>
@@ -130,10 +129,6 @@ limitations under the License.
 	  <xs:complexType>
 	    <xs:choice minOccurs="0" maxOccurs="unbounded">
 	      <xs:element ref="richtext"/>
-	      <!-- element name="richtext" 
-	      type ="richtextA",
-	      make sure you have elementFormDefault='qualified' richtext type A, richtext type B
-	      -->
               <xs:element ref="image"/>
               <xs:element ref="calendar"/>
               <xs:element ref="dropdown"/>
@@ -174,7 +169,6 @@ limitations under the License.
 	  <xs:complexType>
               <xs:attribute name="namespace" type="xs:anyURI" use="required"/>
 	      <xs:attribute name="qname" type="xs:string" use="required"/>
-	      <!--simple type myqname ; string with pattern facet , xmlschema.xsd -->
 	  </xs:complexType>
         </xs:element>
 

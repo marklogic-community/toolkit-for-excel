@@ -150,7 +150,7 @@ xdmp:set-response-content-type('text/html'),
     </div><!--end treeWindow-->
 
     <div id="metadataPanel">
-      <h3>Metadata</h3>
+      <h3>Metadata<span id="ML-Message">Saved</span></h3> 
       <div id="metadataForm">
       </div>
     </div><!--end metadataPanel-->

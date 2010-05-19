@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 
-var SERVER = "http://localhost:8023/Author2";
+var SERVER = "http://localhost:8023/Author";
 var BOILERPLATE_URL =  SERVER + "/utils/fetchboilerplate.xqy";
 
 $(document).ready(function() {
@@ -60,6 +60,8 @@ $(document).ready(function() {
           $('#current-doc').show();
 
 	  $('#docnames').empty();
+
+	  $('#metadataForm').children('div').remove();
    
           return false;
   
@@ -107,6 +109,8 @@ $(document).ready(function() {
           $('#search').show();
 
 	  $('#docnames').empty();
+
+	  $('#metadataForm').children('div').remove();
    
           return false;
   
@@ -128,6 +132,8 @@ $(document).ready(function() {
           $('#search').hide();
           $('#compare').show();
    
+	  $('#metadataForm').children('div').remove();
+
           return false;
   
        });
@@ -297,6 +303,8 @@ $(document).ready(function() {
 	  else
             $('#fbtn').addClass("fbtnactive");
        });
+
+       $('#ML-Message').hide();
        
 });
 
@@ -536,6 +544,8 @@ function setMetadataPartValues()
         //save edited part
 	replaceCustomMetadataPart(metadataPartID, meta);
 
+	$('#ML-Message').show().fadeOut(1500);
+
 }
 function isScrolledIntoView(ctrlId)
 {
@@ -606,7 +616,7 @@ function setControlFocus(enteredId)
 	   var metadata = MLA.getCustomXMLPart(metadataID);
 	   var meta = metadata.getElementsByTagName("dc:metadata")[0];
 	   //check this
-	   var idxml = metadata.getElementsByTagName("dc:identifier")[0];
+	   //var idxml = metadata.getElementsByTagName("dc:identifier")[0];
 	
         /*  <div>
               <p><label>Author</label></p>
@@ -1057,67 +1067,4 @@ function displayLayer(layer)
 
 
 //END EVENT HANDLERS
-
-//15 DC elements
-//title
-//creator
-//subject
-//description
-//publisher
-//contributor
-//date
-//type
-//format
-//identifier
-//source
-//language
-//relation
-//coverage
-//rights
-
-//example of what's generated from config 
-/*
-function generateTemplate(metaid) {
-    if(metaid == "1")
-    {
-    var v_template = "<dc:metadata "
-		   + "xmlns:dc='http://purl.org/dc/elements/1.1/'>"
-		     + "<dc:identifier>" 
-		     + "</dc:identifier>" 
-		     + "<dc:title>" 
-		     +  "</dc:title>"
-		     + "<dc:subject>"  
-		     + "</dc:subject>" 
-		     + "<dc:publisher>"  
-		     + "</dc:publisher>"
-		     + "<dc:identifier>"  
-		     + "</dc:identifier>"
-		   + "</dc:metadata>";	
-    }else if(metaid == "2"){
-             var v_template = "<dc:metadata "
-		   + "xmlns:dc='http://purl.org/dc/elements/1.1/'>"
-		     + "<dc:identifier>" 
-		     + "</dc:identifier>" 
-		     + "<dc:contributor>" 
-		     + "</dc:contributor>"
-		     + "<dc:description>"  
-		     + "</dc:description>" 
-		   + "</dc:metadata>";	
-    }else
-    {
-        var v_template = "<dc:metadata "
-		   + "xmlns:dc='http://purl.org/dc/elements/1.1/'>"
-		     + "<dc:identifier>" 
-		     + "</dc:identifier>" 
-		     + "<dc:contributor>" 
-		     + "</dc:contributor>"
-		     + "<dc:relation>"  
-		     + "</dc:relation>" 
-		   + "</dc:metadata>";
-    }
-
-   return v_template;
-}
-*/
-//END METADATA MAPPING
 

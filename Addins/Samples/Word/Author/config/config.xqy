@@ -19,7 +19,7 @@ module namespace config="http://marklogic.com/toolkit/word/author/config";
 declare namespace dc="http://purl.org/dc/elements/1.1/";
 
 
-declare variable $config:CONFIG-PATH := "http://localhost:8023/Author2/config/";
+declare variable $config:CONFIG-PATH := "http://localhost:8023/Author/config/";
 declare variable $config:USER := "oslo";
 declare variable $config:PWD  := "oslo";
 
