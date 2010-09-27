@@ -285,8 +285,16 @@ return	xdmp:quote(
                                                return $img                                          
                                              else 
                                                  ""
+
+                                let $img-meta-title := if($pic eq "") then () else
+                                                         let $cust-uri := xdmp:document-properties($uri)//ppt:shapetags/ppt:shape/ppt:tag[@ppt:rid=$tag-rid]/ppt:custompart
+                                                         return fn:data(fn:doc($cust-uri)//dc:title)
+
+
                                              (: this is a mess, so take just start of text :)
-				let $snippet := if(fn:string-length(fn:data($ctrl)) > 120) then 
+				let $snippet := if(fn:not(fn:empty($img-meta-title))) then
+                                                    $img-meta-title
+                                                else if(fn:string-length(fn:data($ctrl)) > 120) then 
                                                    fn:concat(fn:substring(fn:data($ctrl), 1, 120), "...") 
                                                 else fn:data($ctrl)
 
@@ -318,7 +326,7 @@ return	xdmp:quote(
                                                      
                                                     else
                                                       let $highlight := cts:highlight(<p class="searchreturnsnippet" title="{fn:data($ctrl)}">
-                                                                                      <span class="{$icon-type}">&nbsp; </span>
+                                                                                      <span class="{$icon-type}">&nbsp;</span>
                                                                                        {$snippet} </p>, 
                                                                                        $or-query, 
                                                                                       <strong class="ML-highlight">{$cts:text}</strong>)  
