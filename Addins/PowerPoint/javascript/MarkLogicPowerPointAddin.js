@@ -13,7 +13,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+//import json2.js
+/** @ignore */
+if (typeof(ml_scripts) == 'undefined') var ml_scripts = new Object();
+/** @ignore */
+ml_js_import('js/json2.js');
 
+/** @ignore */
+function ml_js_import(jsFile) {
+         if (ml_scripts[jsFile] != null) return;
+         var scriptElt = document.createElement('script');
+             scriptElt.type = 'text/javascript';
+             scriptElt.src = jsFile;
+         document.getElementsByTagName('head')[0].appendChild(scriptElt);
+         ml_scripts[jsFile] = jsFile; 
+}
 /** 
  * @fileoverview  API documentation for MarkLogicPowerPointAddin.js
  *
@@ -22,9 +36,8 @@ limitations under the License.
  * {@link http://www.marklogic.com} 
  *
  * @author Pete Aven pete.aven@marklogic.com
- * @version 1.0-3
+ * @version 1.1-1
  */
-
 
 /**
  * The MLA namespace is used for global attribution. The methods within this namespace provide ways of interacting with an active Open XML document through a WebBrowser control. The control must be deployed within an Addin in Office 2007.
@@ -41,7 +54,7 @@ function MLA(){
 }
 */
 /** @ignore */
-MLA.version = { "release" : "1.0-3" };
+MLA.version = { "release" : "1.1-1" };
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){
@@ -537,4 +550,651 @@ MLA.insertJSONTable = function(table)
 	return msg;
 }
 
+
+/* ================== BEGIN Added for PPT TK UPDATE  ==================================== */
+
+/** Returns slide name of active slide.
+ * @return slideName
+ * @type string
+ * @throws Exception if unable to retrieve the slide name
+ */
+MLA.getSlideName = function()
+{
+	var msg = window.external.getSlideName();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getSlideName(); "+errMsg);
+
+	return msg;
+}
+
+/** Returns index of active slide.
+ * @return slideIndex 
+ * @type string
+ * @throws Exception if unable to retrieve the slide index
+ */
+MLA.getSlideIndex = function()
+{
+	var msg = window.external.getSlideIndex();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getSlideIndex(); "+errMsg);
+
+	return msg;
+}
+
+/** Returns count of slides for active presentation.
+ * @return slideCount 
+ * @type string
+ * @throws Exception if unable to retrieve the slide count
+ */
+MLA.getPresentationSlideCount = function()
+{
+	var msg = window.external.getPresentationSlideCount();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getPresentationSlideCount(); "+errMsg);
+
+	return msg;
+}
+
+/** Adds tag to active presentation
+ * @param tagName the name of the tag
+ * @param tagValue the value of the tag
+ * @type string
+ * @throws Exception if unable to add tag to presentation
+*/
+MLA.addPresentationTag = function(tagName, tagValue)
+{ 
+	var msg = window.external.addPresentationTag(tagName,tagValue);
+
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to addPresentationTag(); "+errMsg);
+
+	return msg;
+}
+
+/** Deletes tag from active presentation.
+ * @param tagName the name of the tag to be deleted
+ * @type string
+ * @throws Exception if unable to delete the tag from the presentation
+ */
+MLA.deletePresentationTag = function(tagName)
+{
+        var msg = window.external.deletePresentationTag(tagName);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to deletePresentationTag(); "+errMsg);
+
+	return msg;
+
+}
+
+/** Adds tag to slide.
+ * @param slideIndex the index of the slide to be tagged
+ * @param tagName the name of the tag
+ * @param tagValue the value of the tag
+ * @type string
+ * @throws Exception if unable to add tag to slide 
+ */
+MLA.addSlideTag = function(slideIndex, tagName, tagValue)
+{
+	var msg = window.external.addSlideTag(slideIndex, tagName, tagValue);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to addSlideTag(); "+errMsg);
+
+	return msg;
+}
+
+/** Deletes tag from slide.
+ * @param slideIndex the index of the slide
+ * @param tagName the name of the tag to be deleted
+ * @type string
+ * @throws Exception if unable to delete slide tag 
+ */
+MLA.deleteSlideTag = function(slideIndex, tagName)
+{
+	var msg = window.external.deleteSlideTag(slideIndex, tagName);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to deleteSlideTag(); "+errMsg);
+
+	return msg;
+}
+
+/** Adds tag to shape.
+ * @param slideIndex the index of the slide containing the shape 
+ * @param shapeName the name of the shape to be tagged 
+ * @param tagName the name of the tag
+ * @param tagValue the value of the tag
+ * @type string
+ * @throws Exception if unable to add shape tag
+ */
+MLA.addShapeTag = function(slideIndex, shapeName, tagName, tagValue)
+{
+	var msg = window.external.addShapeTag(slideIndex, shapeName, tagName, tagValue);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to addShapeTag(); "+errMsg);
+
+	return msg;
+
+}
+
+/** Deletes tag from shape.
+ * @param slideIndex the index of the slide containing the shape 
+ * @param shapeName the name of the tagged shape 
+ * @param tagName the name of the tag to be deleted
+ * @type string
+ * @throws Exception if unable to delete shape tag
+ */
+MLA.deleteShapeTag = function(slideIndex, shapeName, tagName)
+{
+	var msg = window.external.deleteShapeTag(slideIndex, shapeName, tagName);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to deleteShapeTag(); "+errMsg);
+
+	return msg;
+}
+
+/** Adds tags (tag names and associated values) to shape from jsonSerialization of tags.  You can get the json serialization of tags by using MLA.jsonStringify(shapeRangeView.tags)
+ * @param slideIndex the index of the slide containing the shape 
+ * @param shapeName the name of the shape to be tagged 
+ * @param jsonTags the tags (name, value) to be added to the shape
+ * @type string
+ * @throws Exception if unable to add shape tags 
+ */
+MLA.addShapeTags = function(slideIndex, shapeName, jsonTags)
+{
+ 	var msg = window.external.addShapeTags(slideIndex, shapeName, jsonTags);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to addShapeTags(); "+errMsg);
+
+	return msg;
+}
+
+/** Adds tags (tag names and associated values) to slide from jsonSerialization of tags.  You can get the json serialization of tags by using MLA.jsonStringify(shapeRangeView.tags) or MLA.jsonStringify(MLA.getSlideTags()). Most likely, you'd save the serialization in a custom part and apply to new presentations when reusing slide.
+ * @param slideIndex the index of the slide containing the shape 
+ * @param jsonTags the tags (name, value) to be added to the slide
+ * @type string
+ * @throws Exception if unable to add slide tags 
+ */
+MLA.addSlideTags = function(slideIndex, jsonTags)
+{
+ 	var msg = window.external.addSlideTags(slideIndex, jsonTags);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to addSlideTags(); "+errMsg);
+
+	return msg;
+}
+
+/** Adds tags (tag names and associated values) to active presentation from jsonSerialization of tags.  You can get the json serialization of tags by using MLA.jsonStringify(MLA.getPresentationTags()).  Most likely, you'd save the serialization in a custom XML part and apply to new presentations based on some business logic.
+ * @param jsonTags the tags (name, value) to be added to the presentation 
+ * @type string
+ * @throws Exception if unable to add presentation tags 
+ */
+MLA.addPresentationTags = function(jsonTags)
+{
+ 	var msg = window.external.addPresentationTags(jsonTags);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to addPresentationTags(); "+errMsg);
+
+	return msg;
+}
+
+//adds tag to selected range where addShapeTag adds tag to single shape, that may or may not be currently selected
+/** Adds tag to all selected shapes in the active slide
+ * @param tagName the name of the tag
+ * @param tagValue the value of the tag 
+ * @type string
+ * @throws Exception if unable to add shape range tags
+ */
+MLA.addShapeRangeTag = function(tagName, tagValue)
+{
+	var msg = window.external.addShapeRangeTag(tagName, tagValue);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to addShapeRangeTag(); "+errMsg);
+
+	return msg;	
+}
+
+/**
+ * Returns the count of how many shapes are currently selected in the active slide.
+ * @return shapeCount the number of currently selected shapes
+ * @type string
+ * @throws Exception if unable to get shape range count
+ */
+MLA.getShapeRangeCount = function()
+{
+	var msg = window.external.getShapeRangeCount();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getShapeRangeCount(); "+errMsg);
+
+	return msg;	
+}
+
+/**
+ * Returns the name of the currently selected shape.
+ * @return shapeName the name of the shape
+ * @type string
+ * @throws Exception if unable to retrieve the shape range name
+ */
+MLA.getShapeRangeName = function()
+{
+	var msg = window.external.getShapeRangeName();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getShapeRangeName(); "+errMsg);
+
+	return msg;
+}
+/**
+ * Sets the name being used for the active Presentation on the client system.
+ * @param slideIndex the index of the slide containing the shape
+ * @param origName the original name of the shape
+ * @param newName the name to set for the shape
+ * @type string
+ * @throws Exception if unable to set shape range name
+ */
+MLA.setShapeRangeName = function(slideIndex, origName,newName)
+{
+	var msg = window.external.setShapeRangeName(slideIndex, origName, newName);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to setShapeRangeName(); "+errMsg);
+
+	return msg;
+}
+
+//no different than getShapeRangeName, just returns all selected instead of one
+/**
+ * Gets the names of all currently selected shapes in the active slide.
+ * @return then names of all currently selected shapes
+ * @type Array 
+ * @throws Exception if unable to get shape range name
+ */
+MLA.getShapeRangeShapeNames = function()
+{
+	var msg = window.external.getShapeRangeShapeNames();
+	var errMsg = MLA.errorCheck(msg);
+
+	var tokens = msg.split("|");
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getShapeRangeShapeNames(); "+errMsg);
+
+	return tokens;
+}
+
+/**
+ * Gets the names of all shapes for the slide specified by slideIndex.
+ * @param slideIndex the index of the slide
+ * @return then names of all shapes on the slide
+ * @type Array 
+ * @throws Exception if unable to get slide shape names
+ */
+MLA.getSlideShapeNames = function(slideIndex)
+{
+	var msg = window.external.getSlideShapeNames(slideIndex);
+	var errMsg = MLA.errorCheck(msg);
+
+	var tokens = msg.split("|");
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getShapeRangeShapeNames(); "+errMsg);
+
+	return tokens;
+
+}
+
+/** @ignore */
+MLA.getShapeRangeInfoORIG = function(shapeName)
+{
+	var msg = window.external.getShapeRangeInfo(shapeName);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getShapeRangeInfo(); "+errMsg);
+
+	var shape =  eval('('+msg+')');
+	
+	return shape;
+}
+
+/**
+ * Gets  a shapeRangeView object
+ * @param slideIndex the index of the slide containing the shape
+ * @param shapeName the name of the shape
+ * @return ShapeRangeVIew
+ * @type ShapeRangeView
+ * @throws Exception if unable to get shape range view
+ */
+MLA.getShapeRangeView = function(slideIndex, shapeName)
+{
+	var msg = window.external.getShapeRangeView(slideIndex, shapeName);
+	var errMsg = MLA.errorCheck(msg);
+
+	//alert("msg");
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getShapeRangeView(); "+errMsg);
+
+	try{ 
+		//alert("JSON: "+msg);
+         	var tmpshape =  eval('('+msg+')');
+		//alert(tmpshape.paragraphs.length);
+	}catch(err)
+	{ 
+		alert("ERROR: " +err.description);
+	}
+
+
+	var shapeTags = tmpshape.tags;
+	var shapeParas = tmpshape.paragraphs;
+	var picFormat = tmpshape.pictureFormat;
+
+	delete tmpshape.tags;
+	delete tmpshape.paragraphs;
+	delete tmpshape.pictureFormat;
+
+	var shapeRangeView = new MLA.ShapeRangeView();
+	shapeRangeView.shape = tmpshape;
+	shapeRangeView.tags = shapeTags;
+	shapeRangeView.paragraphs = shapeParas;
+	shapeRangeView.pictureFormat = picFormat;
+	
+	return shapeRangeView;
+}
+
+/**
+ * Gets the json serialization of tags for the active presentation.  
+ * @return the json serialization of tags for the active presentation. 
+ * @type string
+ * @throws Exception if unable to get presentation tags
+ */
+MLA.getPresentationTags = function()
+{
+	var msg = window.external.getPresentationTags();
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getPresentationTags(); "+errMsg);
+
+	var tags = eval('('+msg+')');
+
+	return tags;
+
+}
+
+/**
+ * Gets the json serialization of tags for a slide in the active presentation.  
+ * @param slideIndex the index of the slide
+ * @return json serialization of tags for a slide
+ * @type string
+ * @throws Exception if unable to get slide tags
+ */
+MLA.getSlideTags = function(slideIndex)
+{
+	var msg = window.external.getSlideTags(slideIndex);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to getSlideTags(); "+errMsg);
+
+	var tags = eval('('+msg+')');
+
+	return tags;
+}
+
+/**
+ * Add a shape to the active presentation
+ * @param slideIndex the index of the slide to add the shape to
+ * @param shapeRangeView the json serialization of a ShapeRangeView object.
+ * @return shapeName the name of the new shape 
+ * @type string
+ * @throws Exception if unable to add shape
+ */
+MLA.addShape = function(slideIndex, shapeRangeView)
+{
+	var msg="";
+	try
+	{
+	  var shape = MLA.jsonStringify(shapeRangeView.shape);
+	  var tags = MLA.jsonStringify(shapeRangeView.tags);
+	  var paragraphs = MLA.jsonGetParagraphs(shapeRangeView.paragraphs);
+
+          msg=window.external.addShape(slideIndex,shape, tags, paragraphs);
+
+	  var errMsg = MLA.errorCheck(msg);
+
+          if(errMsg!=null) 
+        	throw("Error: Not able to addShape(); "+errMsg);
+
+	}catch(err)
+	{
+		throw("Error: Not able to addShape() JS; "+ err.description);
+	}
+
+	return msg;
+
+
+}
+
+/**
+ * Adds a slide to the active presentation.  
+ * @param slideIndex the index of where to add the slide
+ * @param customLayout the layout to use for the added slide
+ * @type string
+ * @throws Exception if unable to add slide 
+ */
+MLA.addSlide = function(slideIndex, customLayout)
+{
+  	var msg = window.external.addSlide(slideIndex, customLayout);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to addSlide(); "+errMsg);
+
+	return msg; //should return slide Index or Name
+}
+
+/**
+ * Deletes a slide from the active presentation.  
+ * @param slideIndex the index of slide to delete
+ * @type string
+ * @throws Exception if unable to delete slide 
+ */
+MLA.deleteSlide = function(slideIndex)
+{
+  	var msg = window.external.deleteSlide(slideIndex);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to deleteSlide(); "+errMsg);
+
+	return msg;
+}
+
+/**
+ * Deletes a shape from the active slide in the active presentation.  
+ * @param slideIndex the index of slide containing shape to be deleted
+ * @param shapeName the name of the shape to be deleted
+ * @type string
+ * @throws Exception if unable to delete shape 
+ */
+MLA.deleteShape = function(slideIndex, shapeName)
+{
+	var msg = window.external.deleteShape(slideIndex, shapeName);
+	var errMsg = MLA.errorCheck(msg);
+
+        if(errMsg!=null) 
+        	throw("Error: Not able to deleteShape(); "+errMsg);
+
+	return msg;
+}
+
+/** @ignore */
+MLA.jsonGetParagraphs =  function(paragraphs)
+{
+        var jsonPara = "{";
+	jsonPara += "\"paragraphAlignment\": [";
+
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphAlignment+"\",";
+        }
+
+	if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+	jsonPara += "],";
+
+	//
+	jsonPara +=  "\"paragraphBulletType\": [";
+
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphBulletType+"\",";
+        }
+
+	if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+	jsonPara += "],";
+	//
+
+	jsonPara += "\"runs\": [";
+
+	var runLength;
+	for(var k=0; k<paragraphs.length;k++)
+	{
+		var para = paragraphs[k];
+                
+		runLength=para.runs.length;
+		for(var l =0;l<para.runs.length;l++)
+	        {
+			var run = para.runs[l];
+		        jsonPara+="["+"\""+k+"\",\""+run.fontName+"\",\""+
+				                     run.fontSize+"\",\""+
+						     run.fontRGB+"\",\""+
+						     run.fontItalic +"\",\""+
+						     run.fontUnderline +"\",\""+
+						     run.fontBold +"\",\""+
+						     run.text+"\"],";
+		}
+	
+	}
+	if(runLength>=1)
+            jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+	jsonPara +="]}";
+
+	return jsonPara;
+
+}
+
+/**
+ * Serializes an object as JSON.  
+ * @param jsObject the object to be serialized as JSON
+ * @param replacer optional replacer parameter
+ * @type string
+ * @throws Exception if unable to stringify
+ */
+MLA.jsonStringify = function(jsObject, replacer)
+{
+	var jsonString;
+
+	try
+	{
+            jsonString = JSON.stringify(jsObject)
+	}
+	catch(err)
+	{
+		throw("Error: Not able to stringify(); "+err.description);
+	}
+
+	return jsonString;
+
+}
+
+/**
+ * Deserializes a JSON string into an object.
+ * @param jsString the JSON string to convert to object.
+ * @param reviver optional reviver parameter
+ * @type string
+ * @throws Exception if unable to parse
+ */
+MLA.jsonParse = function(jsonString, reviver)
+{
+	var jsonObj;
+
+	try
+	{
+            jsonObj = JSON.parse(jsonString)
+	}
+	catch(err)
+	{
+		throw("Error: Not able to parse(); "+err.description);
+	}
+
+	return jsonObj;
+}
+
+/**
+ * Sets the picture attributes for an inserted msoPicture shape.
+ * @param slideIndex the index of the slide containing the picture
+ * @param shapeName the name of the picture shape
+ * @param jsonPicFormat the JSON serialization of picture format, available by using MLA.jsonStringify(shapeRangeView.pictureFormat)
+ * @type string
+ * @throws Exception if unable to set picture format 
+ */
+MLA.setPictureFormat = function(slideIndex, shapeName, jsonPicFormat)
+{
+         
+     msg=window.external.setPictureFormat(slideIndex, shapeName, jsonPicFormat);
+     var errMsg = MLA.errorCheck(msg);
+
+     if(errMsg!=null) 
+         throw("Error: Not able to addShape(); "+errMsg);
+
+     return msg;
+}
+
+/**
+ * Create a new ShapeRangeView instance. 
+ * @class A basic ShapeRangeView class.
+ */
+MLA.ShapeRangeView = function()
+{
+	var shape;
+	var paragraphs;
+	var tags;
+	var pictureFormat;
+}
 
