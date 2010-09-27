@@ -33,6 +33,7 @@ declare namespace pr="http://schemas.openxmlformats.org/package/2006/relationshi
 declare namespace types="http://schemas.openxmlformats.org/package/2006/content-types";
 declare namespace zip="xdmp:zip";
 declare namespace p="http://schemas.openxmlformats.org/presentationml/2006/main";
+declare namespace dc = "http://purl.org/dc/elements/1.1/";
 
 import module "http://marklogic.com/openxml/powerpoint" at "/MarkLogic/openxml/presentation-ml-support-content-types.xqy"; 
 
@@ -144,6 +145,9 @@ declare function ppt:get-part-content-type(
    else if(fn:ends-with(fn:upper-case($uri),"WMF")) 
    then
       "image/x-wmf"
+   else if(fn:ends-with(fn:upper-case($uri),"TIFF"))
+   then
+      "image/tiff" 
    else if(fn:ends-with(fn:upper-case($uri),"PNG")) 
    then
       "image/png"
@@ -1068,7 +1072,8 @@ declare function ppt:slide-rel-image-types(
                      return if($doc instance of xs:string) then () else $doc
 
 	let $imgTypes := for $r in $rels
-                         let $targs := $r/rel:Relationships/rel:Relationship[fn:ends-with(@Type,"image")]/@Target
+                         let $targs := $r/rel:Relationships/rel:Relationship[fn:ends-with(@Type,"image")]/@Target 
+                         (:let $targs := $r/rel:Relationship[fn:ends-with(@Type,"image")]/@Target :)
                          let $type := for $t in $targs
                                       return fn:substring-after(fn:substring-after($t,"image"),".")
                          return fn:distinct-values($type)
@@ -1208,5 +1213,59 @@ declare function ppt:package-map(
         let $upd := for $t in $t-uris
                     return map:put($doc-map,fn:substring-after($t,$src-dir), $t)
         return $doc-map 
+};
+
+declare function ppt:create-tag-properties(
+  $docname as xs:string, 
+  $tag  as element(p:tags),
+  $reldoc as element(rel:Relationships))
+as element() 
+{
+(: or munge the relationship here, so dev only provides $docname, $tagId, automagically gets tags :)
+   let $prestags :=  if ($tag/ancestor::p:presentation) then fn:true() else fn:false()
+   let $shptags :=  if ($tag/ancestor::p:sp or $tag/ancestor::p:pic) then fn:true() else fn:false()
+   let $slidetags := if(fn:not($prestags) and fn:not($shptags)) then fn:true() else fn:false()
+
+   let $tagId := fn:data($tag/@r:id)
+
+   let $dir := if ($prestags) then 
+                    fn:substring-before($docname,"presentation.xml")
+               else 
+                    fn:substring-before($docname,"/slides")
+ 
+   let $base-dir := if ($prestags) then 
+                    fn:substring-before($docname,"ppt/presentation.xml")
+               else 
+                    fn:substring-before($docname,"ppt/slides")
+
+   let $customXml-dir:= fn:concat($base-dir,"customXml/")
+
+
+   let $taguri :=    fn:concat($dir,fn:replace(fn:data($reldoc/rel:Relationship[@Id = $tagId]/@Target) ,"\.\.","")) 
+   
+
+   let $tags := for $t in fn:doc($taguri)/p:tagLst/p:tag
+                let $tag-value := fn:data($t/@val)
+                let $custom-xml-doc := cts:search(//dc:identifier , cts:and-query(($tag-value, 
+                                                       cts:directory-query(($customXml-dir), "1"))))
+                return  <ppt:tag ppt:rid='{$tagId}'>
+                          <ppt:tagname>{fn:data($t/@name)}</ppt:tagname> 
+                          <ppt:tagval>{$tag-value}</ppt:tagval> 
+                          <ppt:tagfile>{$taguri}</ppt:tagfile>
+                          {
+                           for $cust in $custom-xml-doc
+                           return
+                                <ppt:custompart>{xdmp:node-uri($cust)}</ppt:custompart>
+                          }
+                        </ppt:tag>
+
+   return  if($prestags) then 
+              <ppt:presentationtags>{$tags}</ppt:presentationtags>
+          else if($shptags) then
+              <ppt:shapetags>{$tags}</ppt:shapetags>
+          else
+              <ppt:slidetags>{$tags}</ppt:slidetags>
+           
+
 };
 
