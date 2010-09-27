@@ -5,8 +5,8 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://marklogic.com/cpf/pipelines pipelines.xsd"
 >
-<pipeline-name>PresentationML Process</pipeline-name>
-     <pipeline-description>Update slide.xml part properties ( extracted from .pptx pkg ) and associated image
+<pipeline-name>PresentationML Process Tags</pipeline-name>
+     <pipeline-description>Update presentation.xml and slideN.xml document properties with any associated tags for presentations, slides, and shapes.
      </pipeline-description>
      <success-action>
        <module>/MarkLogic/cpf/actions/success-action.xqy</module>
@@ -16,10 +16,10 @@ xsi:schemaLocation="http://marklogic.com/cpf/pipelines pipelines.xsd"
      </failure-action>
      <state-transition>
        <annotation>
-   	  Update properties for slide.xml and associated image of PowerPoint package only
+   	  Update properties for slide.xml and presentation.xml of PowerPoint package only
        </annotation>
-       <state>http://marklogic.com/states/tagged</state>
-       <on-success>http://marklogic.com/states/slidemapped</on-success>
+       <state>http://marklogic.com/states/initial</state>
+       <on-success>http://marklogic.com/states/tagged</on-success>
        <on-failure>http://marklogic.com/states/error</on-failure>
        <priority>9300</priority>
        <execute>
@@ -31,23 +31,24 @@ xsi:schemaLocation="http://marklogic.com/cpf/pipelines pipelines.xsd"
             </options>
        </condition>
        <action>
-	    <module>/MarkLogic/conversion/actions/map-slide-action.xqy</module>
-            <options xmlns="/MarkLogic/conversion/actions/map-slide-action.xqy">
-	       <map-type>slide</map-type>	 
+	    <module>/MarkLogic/conversion/actions/pptx-set-tags-action.xqy</module>
+            <options xmlns="/MarkLogic/conversion/actions/pptx-set-tags-action.xqy">
+	       <tag-type>slide</tag-type>	 
             </options>
        </action>
      </execute>
      <execute>
        <condition>
-            <module>/MarkLogic/cpf/actions/mimetype-condition.xqy</module>
-            <options xmlns="/MarkLogic/cpf/actions/mimetype-condition.xqy">
-	       <mime-type>image/png</mime-type>
+            <module>/MarkLogic/cpf/actions/namespace-condition.xqy</module>
+            <options xmlns="/MarkLogic/cpf/actions/namespace-condition.xqy">
+               <namespace>http://schemas.openxmlformats.org/presentationml/2006/main</namespace>
+	       <root-element>presentation</root-element>
             </options>
        </condition>
        <action>
-	    <module>/MarkLogic/conversion/actions/map-slide-action.xqy</module>
-            <options xmlns="/MarkLogic/conversion/actions/map-slide-action.xqy">
-	       <map-type>image</map-type>	 
+	    <module>/MarkLogic/conversion/actions/pptx-set-tags-action.xqy</module>
+            <options xmlns="/MarkLogic/conversion/actions/pptx-set-tags-action.xqy">
+	       <tag-type>presentation</tag-type>	 
             </options>
        </action>
      </execute>
