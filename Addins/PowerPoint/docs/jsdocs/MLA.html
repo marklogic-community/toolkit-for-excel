@@ -44,7 +44,7 @@ parent.document.title="MLA";
 &nbsp;<B>PREV CLASS</B><!-- 
    NEXT CLASS 
 -->
-&nbsp;<B>NEXT CLASS</B></FONT></TD>
+&nbsp;<A HREF="MLA/ShapeRangeView.html"><B>NEXT CLASS</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
   <A HREF="index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
 &nbsp;<A HREF="" TARGET="_top"><B>NO FRAMES</B></A>  &nbsp;
@@ -95,6 +95,22 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <HR>
 
 <!-- ======== NESTED CLASS SUMMARY ======== -->
+
+<A NAME="inner_classes"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Nested Class Summary</B></FONT></TD>
+</TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&nbsp;class&gt;</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="MLA/ShapeRangeView.html">MLA.ShapeRangeView</A></B></CODE></TD>
+   </TR>
+
+</TABLE>
+&nbsp;
 
 <!-- ======== END NESTED CLASS SUMMARY ======== -->
 
@@ -168,6 +184,159 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       <TD>
 	 <CODE>
 	    <B>
+	       <A HREF="#!s!addPresentationTag">addPresentationTag</A></B>(tagName, tagValue)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Adds tag to active presentation
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!addPresentationTags">addPresentationTags</A></B>(jsonTags)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Adds tags (tag names and associated values) to active presentation from jsonSerialization of tags.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!addShape">addShape</A></B>(slideIndex, shapeRangeView)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Add a shape to the active presentation
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!addShapeRangeTag">addShapeRangeTag</A></B>(tagName, tagValue)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Adds tag to all selected shapes in the active slide
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!addShapeTag">addShapeTag</A></B>(slideIndex, shapeName, tagName, tagValue)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Adds tag to shape.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!addShapeTags">addShapeTags</A></B>(slideIndex, shapeName, jsonTags)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Adds tags (tag names and associated values) to shape from jsonSerialization of tags.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!addSlide">addSlide</A></B>(slideIndex, customLayout)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Adds a slide to the active presentation.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!addSlideTag">addSlideTag</A></B>(slideIndex, tagName, tagValue)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Adds tag to slide.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!addSlideTags">addSlideTags</A></B>(slideIndex, jsonTags)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Adds tags (tag names and associated values) to slide from jsonSerialization of tags.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
 	       <A HREF="#!s!convertFilenameToImageDir">convertFilenameToImageDir</A></B>(filename)
 	 </CODE>
 	 <BR>
@@ -207,6 +376,91 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	 Deletes custom part from Active Open XML package identified by id.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!deletePresentationTag">deletePresentationTag</A></B>(tagName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Deletes tag from active presentation.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!deleteShape">deleteShape</A></B>(slideIndex, shapeName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Deletes a shape from the active slide in the active presentation.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!deleteShapeTag">deleteShapeTag</A></B>(slideIndex, shapeName, tagName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Deletes tag from shape.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!deleteSlide">deleteSlide</A></B>(slideIndex)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Deletes a slide from the active presentation.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!deleteSlideTag">deleteSlideTag</A></B>(slideIndex, tagName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Deletes tag from slide.
       </TD>
    </TR>
 
@@ -321,6 +575,176 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       <TD>
 	 <CODE>
 	    <B>
+	       <A HREF="#!s!getPresentationSlideCount">getPresentationSlideCount</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns count of slides for active presentation.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getPresentationTags">getPresentationTags</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Gets the json serialization of tags for the active presentation.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getShapeRangeCount">getShapeRangeCount</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns the count of how many shapes are currently selected in the active slide.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getShapeRangeName">getShapeRangeName</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns the name of the currently selected shape.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;Array</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getShapeRangeShapeNames">getShapeRangeShapeNames</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Gets the names of all currently selected shapes in the active slide.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;ShapeRangeView</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getShapeRangeView">getShapeRangeView</A></B>(slideIndex, shapeName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Gets  a shapeRangeView object
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getSlideIndex">getSlideIndex</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns index of active slide.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getSlideName">getSlideName</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns slide name of active slide.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;Array</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getSlideShapeNames">getSlideShapeNames</A></B>(slideIndex)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Gets the names of all shapes for the slide specified by slideIndex.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getSlideTags">getSlideTags</A></B>(slideIndex)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Gets the json serialization of tags for a slide in the active presentation.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
 	       <A HREF="#!s!getTempPath">getTempPath</A></B>()
 	 </CODE>
 	 <BR>
@@ -423,6 +847,40 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       <TD>
 	 <CODE>
 	    <B>
+	       <A HREF="#!s!jsonParse">jsonParse</A></B>(jsonString, reviver)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Deserializes a JSON string into an object.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!jsonStringify">jsonStringify</A></B>(jsObject, replacer)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Serializes an object as JSON.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
 	       <A HREF="#!s!openPPTX">openPPTX</A></B>(tmpPath, docuri, url, user, pwd)
 	 </CODE>
 	 <BR>
@@ -496,6 +954,40 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	 Saves .pptx for active Presentation on the client system.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!setPictureFormat">setPictureFormat</A></B>(slideIndex, shapeName, jsonPicFormat)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Sets the picture attributes for an inserted msoPicture shape.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;string</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!setShapeRangeName">setShapeRangeName</A></B>(slideIndex, origName,newName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Sets the name being used for the active Presentation on the client system.
       </TD>
    </TR>
 
@@ -619,6 +1111,319 @@ MLA</H3>
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="!s!addPresentationTag"><!-- --></A>
+   <H3>addPresentationTag</H3>
+   <PRE>&lt;static&gt; string <B>addPresentationTag</B>(tagName, tagValue)</PRE>
+   
+      <UL>Adds tag to active presentation</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>tagName</CODE> -  the name of the tag  
+      </UL> 
+   
+     <UL><CODE>tagValue</CODE> -  the value of the tag  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add tag to presentation</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!addPresentationTags"><!-- --></A>
+   <H3>addPresentationTags</H3>
+   <PRE>&lt;static&gt; string <B>addPresentationTags</B>(jsonTags)</PRE>
+   
+      <UL>Adds tags (tag names and associated values) to active presentation from jsonSerialization of tags.  You can get the json serialization of tags by using MLA.jsonStringify(MLA.getPresentationTags()).  Most likely, you'd save the serialization in a custom XML part and apply to new presentations based on some business logic.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>jsonTags</CODE> -  the tags (name, value) to be added to the presentation   
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add presentation tags</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!addShape"><!-- --></A>
+   <H3>addShape</H3>
+   <PRE>&lt;static&gt; string <B>addShape</B>(slideIndex, shapeRangeView)</PRE>
+   
+      <UL>Add a shape to the active presentation</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of the slide to add the shape to  
+      </UL> 
+   
+     <UL><CODE>shapeRangeView</CODE> -  the json serialization of a ShapeRangeView object.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        shapeName the name of the new shape    
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add shape</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!addShapeRangeTag"><!-- --></A>
+   <H3>addShapeRangeTag</H3>
+   <PRE>&lt;static&gt; string <B>addShapeRangeTag</B>(tagName, tagValue)</PRE>
+   
+      <UL>Adds tag to all selected shapes in the active slide</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>tagName</CODE> -  the name of the tag  
+      </UL> 
+   
+     <UL><CODE>tagValue</CODE> -  the value of the tag   
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add shape range tags</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!addShapeTag"><!-- --></A>
+   <H3>addShapeTag</H3>
+   <PRE>&lt;static&gt; string <B>addShapeTag</B>(slideIndex, shapeName, tagName, tagValue)</PRE>
+   
+      <UL>Adds tag to shape.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of the slide containing the shape   
+      </UL> 
+   
+     <UL><CODE>shapeName</CODE> -  the name of the shape to be tagged   
+      </UL> 
+   
+     <UL><CODE>tagName</CODE> -  the name of the tag  
+      </UL> 
+   
+     <UL><CODE>tagValue</CODE> -  the value of the tag  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add shape tag</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!addShapeTags"><!-- --></A>
+   <H3>addShapeTags</H3>
+   <PRE>&lt;static&gt; string <B>addShapeTags</B>(slideIndex, shapeName, jsonTags)</PRE>
+   
+      <UL>Adds tags (tag names and associated values) to shape from jsonSerialization of tags.  You can get the json serialization of tags by using MLA.jsonStringify(shapeRangeView.tags)</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of the slide containing the shape   
+      </UL> 
+   
+     <UL><CODE>shapeName</CODE> -  the name of the shape to be tagged   
+      </UL> 
+   
+     <UL><CODE>jsonTags</CODE> -  the tags (name, value) to be added to the shape  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add shape tags</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!addSlide"><!-- --></A>
+   <H3>addSlide</H3>
+   <PRE>&lt;static&gt; string <B>addSlide</B>(slideIndex, customLayout)</PRE>
+   
+      <UL>Adds a slide to the active presentation.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of where to add the slide  
+      </UL> 
+   
+     <UL><CODE>customLayout</CODE> -  the layout to use for the added slide  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add slide</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!addSlideTag"><!-- --></A>
+   <H3>addSlideTag</H3>
+   <PRE>&lt;static&gt; string <B>addSlideTag</B>(slideIndex, tagName, tagValue)</PRE>
+   
+      <UL>Adds tag to slide.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of the slide to be tagged  
+      </UL> 
+   
+     <UL><CODE>tagName</CODE> -  the name of the tag  
+      </UL> 
+   
+     <UL><CODE>tagValue</CODE> -  the value of the tag  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add tag to slide</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!addSlideTags"><!-- --></A>
+   <H3>addSlideTags</H3>
+   <PRE>&lt;static&gt; string <B>addSlideTags</B>(slideIndex, jsonTags)</PRE>
+   
+      <UL>Adds tags (tag names and associated values) to slide from jsonSerialization of tags.  You can get the json serialization of tags by using MLA.jsonStringify(shapeRangeView.tags) or MLA.jsonStringify(MLA.getSlideTags()). Most likely, you'd save the serialization in a custom part and apply to new presentations when reusing slide.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of the slide containing the shape   
+      </UL> 
+   
+     <UL><CODE>jsonTags</CODE> -  the tags (name, value) to be added to the slide  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add slide tags</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!convertFilenameToImageDir"><!-- --></A>
    <H3>convertFilenameToImageDir</H3>
    <PRE>&lt;static&gt; string <B>convertFilenameToImageDir</B>(filename)</PRE>
@@ -718,6 +1523,168 @@ MLA</H3>
    
    <UL>   
    <B>Throws:</B><UL>- Exception if unable to delete custom part    </UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!deletePresentationTag"><!-- --></A>
+   <H3>deletePresentationTag</H3>
+   <PRE>&lt;static&gt; string <B>deletePresentationTag</B>(tagName)</PRE>
+   
+      <UL>Deletes tag from active presentation.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>tagName</CODE> -  the name of the tag to be deleted  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to delete the tag from the presentation</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!deleteShape"><!-- --></A>
+   <H3>deleteShape</H3>
+   <PRE>&lt;static&gt; string <B>deleteShape</B>(slideIndex, shapeName)</PRE>
+   
+      <UL>Deletes a shape from the active slide in the active presentation.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of slide containing shape to be deleted  
+      </UL> 
+   
+     <UL><CODE>shapeName</CODE> -  the name of the shape to be deleted  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to delete shape</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!deleteShapeTag"><!-- --></A>
+   <H3>deleteShapeTag</H3>
+   <PRE>&lt;static&gt; string <B>deleteShapeTag</B>(slideIndex, shapeName, tagName)</PRE>
+   
+      <UL>Deletes tag from shape.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of the slide containing the shape   
+      </UL> 
+   
+     <UL><CODE>shapeName</CODE> -  the name of the tagged shape   
+      </UL> 
+   
+     <UL><CODE>tagName</CODE> -  the name of the tag to be deleted  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to delete shape tag</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!deleteSlide"><!-- --></A>
+   <H3>deleteSlide</H3>
+   <PRE>&lt;static&gt; string <B>deleteSlide</B>(slideIndex)</PRE>
+   
+      <UL>Deletes a slide from the active presentation.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of slide to delete  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to delete slide</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!deleteSlideTag"><!-- --></A>
+   <H3>deleteSlideTag</H3>
+   <PRE>&lt;static&gt; string <B>deleteSlideTag</B>(slideIndex, tagName)</PRE>
+   
+      <UL>Deletes tag from slide.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of the slide  
+      </UL> 
+   
+     <UL><CODE>tagName</CODE> -  the name of the tag to be deleted  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to delete slide tag</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -903,6 +1870,323 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    
    <UL>   
    <B>Throws:</B><UL>- Exception if unable to retrieve the presentation path</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getPresentationSlideCount"><!-- --></A>
+   <H3>getPresentationSlideCount</H3>
+   <PRE>&lt;static&gt; string <B>getPresentationSlideCount</B>()</PRE>
+   
+      <UL>Returns count of slides for active presentation.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        slideCount    
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to retrieve the slide count</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getPresentationTags"><!-- --></A>
+   <H3>getPresentationTags</H3>
+   <PRE>&lt;static&gt; string <B>getPresentationTags</B>()</PRE>
+   
+      <UL>Gets the json serialization of tags for the active presentation.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        the json serialization of tags for the active presentation.    
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get presentation tags</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getShapeRangeCount"><!-- --></A>
+   <H3>getShapeRangeCount</H3>
+   <PRE>&lt;static&gt; string <B>getShapeRangeCount</B>()</PRE>
+   
+      <UL>Returns the count of how many shapes are currently selected in the active slide.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        shapeCount the number of currently selected shapes   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get shape range count</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getShapeRangeName"><!-- --></A>
+   <H3>getShapeRangeName</H3>
+   <PRE>&lt;static&gt; string <B>getShapeRangeName</B>()</PRE>
+   
+      <UL>Returns the name of the currently selected shape.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        shapeName the name of the shape   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to retrieve the shape range name</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getShapeRangeShapeNames"><!-- --></A>
+   <H3>getShapeRangeShapeNames</H3>
+   <PRE>&lt;static&gt; Array <B>getShapeRangeShapeNames</B>()</PRE>
+   
+      <UL>Gets the names of all currently selected shapes in the active slide.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        then names of all currently selected shapes   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get shape range name</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getShapeRangeView"><!-- --></A>
+   <H3>getShapeRangeView</H3>
+   <PRE>&lt;static&gt; ShapeRangeView <B>getShapeRangeView</B>(slideIndex, shapeName)</PRE>
+   
+      <UL>Gets  a shapeRangeView object</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of the slide containing the shape  
+      </UL> 
+   
+     <UL><CODE>shapeName</CODE> -  the name of the shape  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        ShapeRangeVIew   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get shape range view</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getSlideIndex"><!-- --></A>
+   <H3>getSlideIndex</H3>
+   <PRE>&lt;static&gt; string <B>getSlideIndex</B>()</PRE>
+   
+      <UL>Returns index of active slide.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        slideIndex    
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to retrieve the slide index</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getSlideName"><!-- --></A>
+   <H3>getSlideName</H3>
+   <PRE>&lt;static&gt; string <B>getSlideName</B>()</PRE>
+   
+      <UL>Returns slide name of active slide.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        slideName   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to retrieve the slide name</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getSlideShapeNames"><!-- --></A>
+   <H3>getSlideShapeNames</H3>
+   <PRE>&lt;static&gt; Array <B>getSlideShapeNames</B>(slideIndex)</PRE>
+   
+      <UL>Gets the names of all shapes for the slide specified by slideIndex.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of the slide  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        then names of all shapes on the slide   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get slide shape names</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getSlideTags"><!-- --></A>
+   <H3>getSlideTags</H3>
+   <PRE>&lt;static&gt; string <B>getSlideTags</B>(slideIndex)</PRE>
+   
+      <UL>Gets the json serialization of tags for a slide in the active presentation.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of the slide  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        json serialization of tags for a slide   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get slide tags</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -1107,6 +2391,72 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="!s!jsonParse"><!-- --></A>
+   <H3>jsonParse</H3>
+   <PRE>&lt;static&gt; string <B>jsonParse</B>(jsonString, reviver)</PRE>
+   
+      <UL>Deserializes a JSON string into an object.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>reviver</CODE> -  optional reviver parameter  
+      </UL> 
+   
+     <UL><CODE>jsString</CODE> -  the JSON string to convert to object.  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to parse</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!jsonStringify"><!-- --></A>
+   <H3>jsonStringify</H3>
+   <PRE>&lt;static&gt; string <B>jsonStringify</B>(jsObject, replacer)</PRE>
+   
+      <UL>Serializes an object as JSON.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>jsObject</CODE> -  the object to be serialized as JSON  
+      </UL> 
+   
+     <UL><CODE>replacer</CODE> -  optional replacer parameter  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to stringify</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!openPPTX"><!-- --></A>
    <H3>openPPTX</H3>
    <PRE>&lt;static&gt; string <B>openPPTX</B>(tmpPath, docuri, url, user, pwd)</PRE>
@@ -1299,6 +2649,78 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="!s!setPictureFormat"><!-- --></A>
+   <H3>setPictureFormat</H3>
+   <PRE>&lt;static&gt; string <B>setPictureFormat</B>(slideIndex, shapeName, jsonPicFormat)</PRE>
+   
+      <UL>Sets the picture attributes for an inserted msoPicture shape.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of the slide containing the picture  
+      </UL> 
+   
+     <UL><CODE>shapeName</CODE> -  the name of the picture shape  
+      </UL> 
+   
+     <UL><CODE>jsonPicFormat</CODE> -  the JSON serialization of picture format, available by using MLA.jsonStringify(shapeRangeView.pictureFormat)  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to set picture format</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!setShapeRangeName"><!-- --></A>
+   <H3>setShapeRangeName</H3>
+   <PRE>&lt;static&gt; string <B>setShapeRangeName</B>(slideIndex, origName,newName)</PRE>
+   
+      <UL>Sets the name being used for the active Presentation on the client system.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>slideIndex</CODE> -  the index of the slide containing the shape  
+      </UL> 
+   
+     <UL><CODE>origName</CODE> -  the original name of the shape  
+      </UL> 
+   
+     <UL><CODE>newName</CODE> -  the name to set for the shape  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to set shape range name</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!useSaveFileDialog"><!-- --></A>
    <H3>useSaveFileDialog</H3>
    <PRE>&lt;static&gt; string <B>useSaveFileDialog</B>()</PRE>
@@ -1363,7 +2785,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
 &nbsp;<B>PREV CLASS</B><!-- 
    NEXT CLASS 
 -->
-&nbsp;<B>NEXT CLASS</B></FONT></TD>
+&nbsp;<A HREF="MLA/ShapeRangeView.html"><B>NEXT CLASS</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
   <A HREF="index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
 &nbsp;<A HREF="" TARGET="_top"><B>NO FRAMES</B></A>  &nbsp;
@@ -1394,6 +2816,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 <FONT SIZE="-1">
 
 </FONT>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Sep 16 10:20:21 2009</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Thu Sep 23 16:38:15 2010</div>
 </BODY>
 </HTML>
