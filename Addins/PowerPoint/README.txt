@@ -26,3 +26,69 @@ Change Notes:
       update of presentation-ml-support.html
       fixed documentation to remove comments and replaced calls ppt:package-map-create() to ppt:package-map()
 
+1.1-1 update of MarkLogicPowerPointAddin.js - 27 new functions 
+       
+      New Functions
+      =============
+      getSlideName()			get name of active slide    
+      getSlideIndex()			get index of active slide
+      getPresentationSlideCount()	count for all slides in presentation
+      addSlideTag()			add tag to slide by index     
+      deleteSlideTag()		        delete tag from slide by index, slidetag
+      getSlideTags()			get all tags for slide by index
+      addShapeTag()			add tag to shape by shapename
+      deleteShapeTag()		        delete tag from shape by shapename, tagname
+      getShapeRangeName()	   	get shapename of selected shape
+      getShapeRangeShapeNames() 	return all selected shape names
+      addShapeRangeTag()        	add tags to all selected shapes
+      addPresentationTag()		add tags to active presentation
+      deletePresentationTag()	        delete tags from active presentation
+      getPresentationTags() 		get tags for active presentation
+      getShapeRangeCount()      	count of selected shapes in current slide
+      setShapeRangeName()		set name of shape to override MS default
+      getShapeRangeView() 		returns shape info as MLA.ShapeRangeView object 
+      jsonStringify()			serializes JS object as JSON string
+      jsonParse()			takes JSON serialization and constructs JS object
+      addShape()			takes slide index and MLA.ShapeRangeView object as 
+      setPictureFormat()	//takes picture format (as JSON) and applies to picture shape identified by name
+      addPresentationTags()	//takes JSON string of tags and sets to active presentation
+      addSlideTags()		//takes JSON string of tags and sets to slide identified by index
+      addShapeTags()    	//takes JSON string of tags and sets to shape identified by name
+      addSlide()
+      deleteSlide()
+      deleteShape()
+
+      added MarkLogicPowerPointEventSupport.js - 19 events captured
+
+      Events
+      =======
+      windowSelectionChange()
+      windowBeforeRightClick()
+      windowBeforeDoubleClick()
+      presentationClose()
+      presentationSave()
+      presentationOpen()
+      newPresentation()
+      presentationNewSlide()
+      windowActivate()
+      windowDeactivate()
+      slideShowBegin()
+      slideShowNextBuild()
+      slideShowNextSlide()
+      slideShowEnd()
+      presentationPrint()
+      slideSelectionChanged()
+      colorSchemeChanged()
+      presentationBeforeSave()
+      slideShowNextClick()
+
+
+      New CPF Pipeline PresentationML Tags Process
+      Pipeline sets tags for presentations, slides, and slide components 
+       on document properties of presentation.xml and slideN.xml
+
+      added presentationml-tags-pipeline.xml - pipeline definition
+      added pptx-set-tags-action.xqy         - pipeline action
+      updated presentationml-pipeline.xml    - now initial state is tagged, instead of initial
+      update of presentation-ml-support.xqy (unpublished function to assist dereferencing of tags)
+   

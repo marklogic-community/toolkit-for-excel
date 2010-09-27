@@ -4,7 +4,7 @@
 =========================================================================
 
 MarkLogic Toolkit for PowerPoint®
-Copyright 2008–2009 Mark Logic Corporation
+Copyright 2008–2010 Mark Logic Corporation
 
 ==== Microsoft VSTO ====
 The installer code is based on the VSTO 3.0 MSI deployment code samples provided
