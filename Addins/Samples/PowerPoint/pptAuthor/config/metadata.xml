@@ -1,0 +1,30 @@
+<config:templates xmlns:config="http://marklogic.com/toolkit/word/author/config">
+ <config:template id="1">
+   <dc:metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+	   <dc:identifier/>
+           <dc:description/> 
+	   <dc:title/>
+	   <dc:subject/>
+	   <dc:publisher/>
+           <dc:description/> 
+    </dc:metadata>	
+ </config:template>
+ <config:template id="2"><!--id could be a name-->
+   <dc:metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+	   <dc:identifier/>
+           <dc:description/> 
+	   <dc:contributor/>
+	   <dc:source/>
+	   <dc:description/>
+   </dc:metadata>  
+ </config:template>
+ <config:template id="default">
+   <dc:metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+	   <dc:identifier/>
+	   <dc:description/>
+	   <dc:source/>
+	   <dc:relation/>
+	   <dc:description/>
+   </dc:metadata> 
+ </config:template>
+</config:templates>
