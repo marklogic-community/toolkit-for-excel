@@ -257,8 +257,7 @@ return	xdmp:quote(
                                 let $slideuri :=xdmp:document-properties($uri)/prop:properties/ppt:slideimg/text()
 
                                 let $src := fn:concat("search/download-support.xqy?uid=",$slideuri)
-                              
-                                
+
                                 let $path := fn:data($hit/@path)
                                 (:  do check here on type, could be p:sld or p:sp :)
 
@@ -312,7 +311,11 @@ return	xdmp:quote(
 <!-- if preso, list of presos only, make title link to open, if opened, it already has tags/metadata -->
 <!-- if slide, use existing sample way of inserting slide, though we need to return tags/metadata -->
 <!-- if component , then need to send json as well as metadata -->
-				     { let $page := if($search-type eq "presentation") then ()
+				     { let $page := if($search-type eq "presentation") then
+                                                     let $new-uri :=fn:concat(fn:substring-before($slideuri,"_PNG"),"_PNG/Slide1.PNG")
+                                                     let $new-src := fn:concat("search/download-support.xqy?uid=",$new-uri)
+                                                     return  (<img src="{$new-src}" class="resize"></img>,<br/>)
+                                                     
                                                     else
                                                       let $highlight := cts:highlight(<p class="searchreturnsnippet" title="{fn:data($ctrl)}">
                                                                                       <span class="{$icon-type}">&nbsp; </span>
