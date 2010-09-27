@@ -166,6 +166,15 @@
   -->
   <ItemGroup>
     <Compile Include="AddinConfiguration.cs" />
+    <Compile Include="JsonTable.cs" />
+    <Compile Include="PictureFormatView.cs" />
+    <Compile Include="TKEvents.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ParagraphView.cs" />
+    <Compile Include="ShapeRangeView.cs" />
+    <Compile Include="TagView.cs" />
+    <Compile Include="TKUtilities.cs" />
     <Compile Include="Prompt.cs">
       <SubType>Form</SubType>
     </Compile>

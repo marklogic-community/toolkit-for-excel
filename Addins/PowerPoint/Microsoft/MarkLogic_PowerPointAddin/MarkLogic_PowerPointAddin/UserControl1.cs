@@ -24,7 +24,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using PwrPt = Microsoft.Office.Interop.PowerPoint;
+//using PwrPt = Microsoft.Office.Interop.PowerPoint;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.IO;
@@ -42,16 +42,22 @@ namespace MarkLogic_PowerPointAddin
     [ComVisible(true)]
     public partial class UserControl1 : UserControl
     {
+        
+
         private AddinConfiguration ac = AddinConfiguration.GetInstance();
         private string webUrl = "";
         private bool debug = false;
         private string color = "";
         //private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";
-        private string addinVersion = "1.0-3";
+        private string addinVersion = "1.1-1";
         HtmlDocument htmlDoc;
+
+        public PPT.ApplicationClass  ppta;
+        public bool firePptCloseEvent = true;
 
         public UserControl1()
         {
+         
             InitializeComponent();
            // bool regEntryExists = checkUrlInRegistry();
             webUrl = ac.getWebURL();
@@ -74,10 +80,23 @@ namespace MarkLogic_PowerPointAddin
 
                 this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
 
+                //Event Handling in TKEvents.cs
+                ppta =  new Microsoft.Office.Interop.PowerPoint.ApplicationClass();
+                ppta.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
+                System.Runtime.InteropServices.ComTypes.IConnectionPoint mConnectionPoint;
+                System.Runtime.InteropServices.ComTypes.IConnectionPointContainer cpContainer;
+                int mCookie;
+
+                cpContainer =
+                (System.Runtime.InteropServices.ComTypes.IConnectionPointContainer)ppta;
+                Guid guid = typeof(Microsoft.Office.Interop.PowerPoint.EApplication).GUID;
+                cpContainer.FindConnectionPoint(ref guid, out mConnectionPoint);
+                mConnectionPoint.Advise(this, out mCookie);
+           
             }
 
         }
-
+ 
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             if (webBrowser1.Document != null)
@@ -93,12 +112,9 @@ namespace MarkLogic_PowerPointAddin
        {
             if (!(webBrowser1.Parent.Focused))
             {
-
                 webBrowser1.Parent.Focus();
                 webBrowser1.Document.Focus();
-               
             }
-
         }
 
         public enum ColorScheme : int
@@ -149,7 +165,7 @@ namespace MarkLogic_PowerPointAddin
 
             try
             {
-                PwrPt.Presentation pres = Globals.ThisAddIn.Application.ActivePresentation;
+                PPT.Presentation pres = Globals.ThisAddIn.Application.ActivePresentation;
                 int count = pres.CustomXMLParts.Count;
 
                 foreach (Office.CustomXMLPart c in pres.CustomXMLParts)
@@ -181,12 +197,11 @@ namespace MarkLogic_PowerPointAddin
 
         public String getCustomXMLPart(string id)
         {
-
             string custompiecexml = "";
 
             try
             {
-                PwrPt.Presentation pres = Globals.ThisAddIn.Application.ActivePresentation;
+                PPT.Presentation pres = Globals.ThisAddIn.Application.ActivePresentation;
                 Office.CustomXMLPart cx = pres.CustomXMLParts.SelectByID(id);
 
                 if (cx != null)
@@ -223,7 +238,7 @@ namespace MarkLogic_PowerPointAddin
             string newid = "";
             try
             {
-                PwrPt.Presentation pres = Globals.ThisAddIn.Application.ActivePresentation;
+                PPT.Presentation pres = Globals.ThisAddIn.Application.ActivePresentation;
                 Office.CustomXMLPart cx = pres.CustomXMLParts.Add(String.Empty, new Office.CustomXMLSchemaCollectionClass());
                 cx.LoadXML(custompiecexml);
                 newid = cx.Id;
@@ -246,7 +261,7 @@ namespace MarkLogic_PowerPointAddin
             string message = "";
             try
             {
-                PwrPt.Presentation pres = Globals.ThisAddIn.Application.ActivePresentation;
+                PPT.Presentation pres = Globals.ThisAddIn.Application.ActivePresentation;
                 foreach (Office.CustomXMLPart c in pres.CustomXMLParts)
                 {
                     if (c.BuiltIn.Equals(false) && c.Id.Equals(id))
@@ -270,34 +285,6 @@ namespace MarkLogic_PowerPointAddin
 
         }
 
-        public Image byteArrayToImage(byte[] byteArrayIn)
-        {
-            try
-            {
-                MemoryStream ms = new MemoryStream(byteArrayIn);
-                Image returnImage = Image.FromStream(ms);
-                return returnImage;
-            }
-            catch (Exception e)
-            {
-                throw (e);
-            }
-        }
-
-        public byte[] imageToByteArray(System.Drawing.Image imageIn)
-        {
-            try
-            {
-                MemoryStream ms = new MemoryStream();
-                imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
-                return ms.ToArray();
-            }
-            catch (Exception e)
-            {
-                throw (e);
-            }
-        }
-
         public String insertImage(string imageuri, string uname, string pwd)
         {
             object missing = Type.Missing;
@@ -305,13 +292,14 @@ namespace MarkLogic_PowerPointAddin
 
             try
             {
-                byte[] bytearray = downloadData(imageuri, uname, pwd);
-                Image img = byteArrayToImage(bytearray);
+                byte[] bytearray = TKUtilities.downloadData(imageuri, uname, pwd);
+                Image img = TKUtilities.byteArrayToImage(bytearray);
 
                 PPT.Slide slide = (PPT.Slide)Globals.ThisAddIn.Application.ActiveWindow.View.Slide;
 
                 Clipboard.SetImage(img);
-                slide.Shapes.Paste();
+                PPT.ShapeRange sr  = slide.Shapes.Paste();
+                sr.Select(Microsoft.Office.Core.MsoTriState.msoFalse);
                 Clipboard.Clear();
             }
             catch (Exception e)
@@ -370,29 +358,6 @@ namespace MarkLogic_PowerPointAddin
             return tmpPath;
         }
 
-        static bool FileInUse(string path)
-        {
-            string __message = "";
-            try
-            {
-                //Just opening the file as open/create
-                using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
-                {
-                    //If required we can check for read/write by using fs.CanRead or fs.CanWrite
-                }
-                return false;
-            }
-            catch (IOException ex)
-            {
-                //check if message is for a File IO
-                __message = ex.Message.ToString();
-                if (__message.Contains("The process cannot access the file"))
-                    return true;
-                else
-                    throw;
-            }
-        }
-
         //need a param here for class type? right now works from filename for Word, Excel; but we could specify classname
         public string embedOLE(string path, string title, string url, string user, string pwd)
         {
@@ -415,7 +380,7 @@ namespace MarkLogic_PowerPointAddin
                          try
                          {
                              tmpdoc = path + title;
-                             downloadFile(url, tmpdoc, user, pwd);
+                             TKUtilities.downloadFile(url, tmpdoc, user, pwd);
                              proceed = true;
 
                          }
@@ -446,7 +411,6 @@ namespace MarkLogic_PowerPointAddin
 
         public String openPPTX(string path, string title, string url, string user, string pwd)
         {
-            //MessageBox.Show("in the addin path:"+path+  "      title:"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
             string message = "";
             object missing = Type.Missing;
             string tmpdoc = "";
@@ -454,7 +418,7 @@ namespace MarkLogic_PowerPointAddin
             try
             {
                 tmpdoc = path + title;
-                downloadFile(url, tmpdoc, user, pwd);
+                TKUtilities.downloadFile(url, tmpdoc, user, pwd);
                 PPT.Presentation ppt = Globals.ThisAddIn.Application.Presentations.Open(tmpdoc, Office.MsoTriState.msoFalse, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue);
             }
             catch (Exception e)
@@ -475,7 +439,7 @@ namespace MarkLogic_PowerPointAddin
             string message = "";
             object missing = Type.Missing;
             string sourcefile = "";
-            string path = getTempPath();
+            string path = tmpPath; ///changed from getTempPath()
             bool retainformat = false;
             bool proceed = false;
 
@@ -487,7 +451,7 @@ namespace MarkLogic_PowerPointAddin
             try
             {
                 sourcefile = path + filename;
-                if (FileInUse(sourcefile))
+                if (TKUtilities.FileInUse(sourcefile))
                 {
                     string origmsg = "A presentation with the name '" + filename + "' is already open. You cannot open two documents with the same name, even if the documents are in different \nfolders. To open the second document, either close the document that's currently open, or rename one of the documents.";
                     MessageBox.Show(origmsg);
@@ -495,7 +459,7 @@ namespace MarkLogic_PowerPointAddin
                 }
                 else
                 {
-                    downloadFile(url, sourcefile, user, pwd);
+                    TKUtilities.downloadFile(url, sourcefile, user, pwd);
                     proceed = true;
                 }
             }
@@ -510,9 +474,11 @@ namespace MarkLogic_PowerPointAddin
             {
                 if (proceed)
                 {
+                   
                     PPT.Presentation sourcePres = Globals.ThisAddIn.Application.Presentations.Open(sourcefile, Office.MsoTriState.msoTrue, Office.MsoTriState.msoTrue, Office.MsoTriState.msoFalse);
-                    int num = Convert.ToInt32(slideidx);
+                    int num = TKUtilities.getInt32FromString(slideidx);
                     copyPasteSlideToActive(sourcePres, num, retainformat);
+                    firePptCloseEvent = false;
                     sourcePres.Close();
                     sourcePres = null;
                 }
@@ -561,7 +527,7 @@ namespace MarkLogic_PowerPointAddin
                     catch (Exception e)
                     {
                         string errorMsg = e.Message;
-                        message = "error: " + errorMsg; 
+                        message = "error: COPYPASTE" + errorMsg; 
                     }
                 }
 
@@ -569,25 +535,6 @@ namespace MarkLogic_PowerPointAddin
             }
 
             return message;
-        }
-
-        public string convertFilenameToImageDir(string filename)
-        {
-            //MessageBox.Show("filename: " + filename);
-            string imgDir = "";
-            string tmpDir = "";
-            string fname = "";
-
-            string[] split = filename.Split(new Char[] { '\\' });
-            fname = split.Last();
-            //MessageBox.Show("fname: " + fname);
-            tmpDir = filename.Replace(fname, "");
-           
-            fname = fname.Replace(".pptx", "_PNG");
-            //MessageBox.Show("imgdir: " + fname);
-            imgDir = fname; //getTempPath() + fname;
-            return imgDir;
-
         }
 
         public string useSaveFileDialog()
@@ -621,56 +568,6 @@ namespace MarkLogic_PowerPointAddin
             return message;
         }
 
-        private void downloadFile(string url, string sourcefile, string user, string pwd)
-        {
-            try
-            {
-                System.Net.WebClient Client = new System.Net.WebClient();
-                Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-                Client.DownloadFile(url, sourcefile);
-                Client.Dispose();
-            }
-            catch (Exception e)
-            {
-                throw (e);
-            }
-        }
-
-        private void uploadData(string url, byte[] content, string user, string pwd)
-        {
-            try
-            {
-                System.Net.WebClient Client = new System.Net.WebClient();
-                Client.Headers.Add("enctype", "multipart/form-data");
-                Client.Headers.Add("Content-Type", "application/octet-stream");
-                Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-
-                Client.UploadData(url, "POST", content);
-                Client.Dispose();
-            }
-            catch (Exception e)
-            {
-                throw (e);
-            }
-        }
-
-        private byte[] downloadData(string url, string user, string pwd)
-        {
-            byte[] bytearray;
-            try
-            {
-                System.Net.WebClient Client = new System.Net.WebClient();
-                Client.Credentials = new System.Net.NetworkCredential(user, pwd);
-                bytearray = Client.DownloadData(url);
-                Client.Dispose();
-            }
-            catch (Exception e)
-            {
-                throw (e);
-            }
-            return bytearray;
-        }
-
         public string saveActivePresentation(string filename, string url, string user , string pwd)
         {
             string message = "";
@@ -683,7 +580,7 @@ namespace MarkLogic_PowerPointAddin
 
                 try
                 {
-                    uploadData(url, content, user, pwd);
+                    TKUtilities.uploadData(url, content, user, pwd);
                 }
                 catch (Exception e)
                 {
@@ -739,7 +636,7 @@ namespace MarkLogic_PowerPointAddin
             filename = fullfilenamewithpath.Split(new Char[] { '\\' }).Last();
             //MessageBox.Show("filename" + fullfilenamewithpath);
             saveLocalCopy(fullfilenamewithpath);    
-            imgdirwithpath = getTempPath() + convertFilenameToImageDir(fullfilenamewithpath);
+            imgdirwithpath = getTempPath() + TKUtilities.convertFilenameToImageDir(fullfilenamewithpath);
 
             //MessageBox.Show("imgdirwithpath"+imgdirwithpath);
             saveImages(imgdirwithpath, url, user, pwd);
@@ -814,7 +711,7 @@ namespace MarkLogic_PowerPointAddin
 
                     try
                     {
-                        uploadData(fullurl, content,user,pwd);
+                        TKUtilities.uploadData(fullurl, content,user,pwd);
                     }
                     catch (Exception e)
                     {
@@ -859,12 +756,6 @@ namespace MarkLogic_PowerPointAddin
            
         }
 
-        class MYTABLE
-        {
-            public List<string> headers { get; set;}
-            public List<string[]> values { get; set; }
-        }
-
         //ppt, word, and excel (let alone html, etc.) "tables" are all different
         //ultimately might want a server side transform to create generalized table,
         //and send XML representation of tbl to function in Addin insertTable(string XML)
@@ -875,8 +766,8 @@ namespace MarkLogic_PowerPointAddin
             try
             {
                 object missing = System.Type.Missing;
-                MYTABLE mytable = new MYTABLE();
-                mytable = new JavaScriptSerializer().Deserialize<MYTABLE>(table);
+                JsonTable mytable = new JsonTable();
+                mytable = new JavaScriptSerializer().Deserialize<JsonTable>(table);
 
                 List<string> labels = mytable.headers;
                 List<string[]> vals = mytable.values;
@@ -929,6 +820,996 @@ namespace MarkLogic_PowerPointAddin
            
             return message;
         }
+//BEGIN TK 1.1
+        public string getSlideName()
+        {
+            string message = "";
+
+            try
+            {
+                PPT.Slide slide = (PPT.Slide)Globals.ThisAddIn.Application.ActiveWindow.View.Slide;
+                string slideName = slide.Name;
+                message = slideName.ToString();
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string getSlideIndex()
+        {
+            string message = "";
+
+            try
+            {
+                PPT.Slide slide = (PPT.Slide)Globals.ThisAddIn.Application.ActiveWindow.View.Slide;
+                int slideIndex = slide.SlideIndex;
+               
+                message = slideIndex.ToString();
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string getPresentationSlideCount()
+        {
+            string message = "";
+
+            try
+            {
+                int slideCount = Globals.ThisAddIn.Application.ActivePresentation.Slides.Count;
+                message = slideCount.ToString();
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+           
+            return message;
+        }
+
+        public string addSlideTag(string slideIndex, string tagName, string tagValue)
+        {
+
+            string message = "";
+            try
+            {
+                int index = TKUtilities.getInt32FromString(slideIndex);
+                Globals.ThisAddIn.Application.ActivePresentation.Slides[index].Tags.Add(tagName, tagValue);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string deleteSlideTag(string slideIndex, string tagName)
+        {
+            string message = "";
+            try
+            {
+                int index = TKUtilities.getInt32FromString(slideIndex);
+                Globals.ThisAddIn.Application.ActivePresentation.Slides[index].Tags.Delete(tagName);
+          
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string getSlideTags(string slideIndex)
+        {
+            string message = "";
+            int index = TKUtilities.getInt32FromString(slideIndex);
+            string jsonSlideTags = "{\"tags\":[";
+            PPT.Tags sTags = Globals.ThisAddIn.Application.ActivePresentation.Slides[index].Tags;
+
+            try
+            {
+                for (int j = 1; j <= sTags.Count; j++)
+                {
+                    jsonSlideTags += "{\"name\":\"" + sTags.Name(j) +
+                                  "\",\"value\":\"" + sTags.Value(j) +
+                                  "\"},";
+
+                }
+
+                if (jsonSlideTags.EndsWith(","))
+                    jsonSlideTags = jsonSlideTags.Substring(0, jsonSlideTags.Length - 1);
+
+                jsonSlideTags += "]}";
+                message = jsonSlideTags;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+
+        public string getShapesTest()
+        {
+            string message = "";
+
+            //float height = 115;
+            PPT.Shapes s = Globals.ThisAddIn.Application.ActiveWindow.Selection.SlideRange.Shapes;
+            MessageBox.Show("Shapes Count: " + s.Count);
+            foreach (PPT.Shape sp in s)
+            {
+                MessageBox.Show("FORMAT: " + sp.Type +
+                                "FONT NAME: "+ sp.TextFrame.TextRange.Font.Name+
+                                "FONT SIZE: "+sp.TextFrame.TextRange.Font.Size +
+                                "FONT COLOR: "+sp.TextFrame.TextRange.Font.Color.RGB +
+                                "CENTERED: "+sp.TextFrame.TextRange.ParagraphFormat.Alignment);
+            }
+
+          //s.AddShape(Microsoft.Office.Core.MsoShapeType.msoPlaceholder, 0, 0, 100, 100);
+          //  PPT.Shape me = s.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 0, 0, 612, height);
+          //  me.TextFrame.TextRange.Font.Name = "Calibri";
+          //  me.TextFrame.TextRange.Font.Size = 44;
+          //  me.TextFrame.TextRange.Text = "My Title";
+          //s.AddPlaceholder(PPT.PpPlaceholderType.ppPlaceholderSubtitle,1,1,100,100 );
+
+            return message;
+        }
+
+        public string addShapeTag(string slideIndex, string shapeName, string tagName, string tagValue)
+        {
+
+            string message = "";
+            try
+            {
+                int idx = Convert.ToInt32(slideIndex);
+                Globals.ThisAddIn.Application.ActivePresentation.Slides[idx].Shapes[shapeName].Tags.Add(tagName, tagValue) ;
+                //Globals.ThisAddIn.Application.ActivePresentation.Windows.Application.ActiveWindow.Selection.SlideRange.Shapes[shapeName].Tags.Add(tagName, tagValue);
+                
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string deleteShapeTag(string slideIndex, string shapeName, string tagName)
+        {
+            string message = "";
+            int idx = Convert.ToInt32(slideIndex);
+             
+            try
+            {
+                Globals.ThisAddIn.Application.ActivePresentation.Slides[idx].Shapes[shapeName].Tags.Delete(tagName);
+                //Globals.ThisAddIn.Application.ActivePresentation.Windows.Application.ActiveWindow.Selection.SlideRange.Shapes[shapeName].Tags.Delete(tagName);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        //do we want this for slide too? probably.
+        public string getShapeRangeName()
+        {
+            string message = "";
+            try
+            {
+                PPT.ShapeRange sr = Globals.ThisAddIn.Application.ActivePresentation.Windows.Application.ActiveWindow.Selection.ShapeRange;
+                message = sr.Name;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string setShapeRangeName(string slideIndex, string shapeName, string newShapeName)
+        {
+            string message = "";
+            int idx = Convert.ToInt32(slideIndex);
+            try{
+                //Though a ShapeRange can contain multiple shapes, 
+                //to set the Name property, A ShapeRange can only contain 1 Shape.
+                //developers should use getShapeRangeCount()and insure it = 1 to validate before calling this function
+               // PPT.ShapeRange sr = Globals.ThisAddIn.Application.ActivePresentation.Windows.Application.ActiveWindow.Selection.ShapeRange;
+               // sr.Name = newshapename;
+
+                //PPT.Selection sel = Globals.ThisAddIn.Application.ActivePresentation.Windows.Application.ActiveWindow.Selection;
+                //PPT.Shape s = sel.SlideRange.Shapes[shapeName];
+                PPT.Shape s = Globals.ThisAddIn.Application.ActivePresentation.Slides[idx].Shapes[shapeName];
+                s.Name = newShapeName;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+
+        }
+      
+        public string getSlideShapeNames(string slideIndex)
+        {
+            string message = "";
+            int index = TKUtilities.getInt32FromString(slideIndex);
+            try
+            {
+                PPT.Slide slide = Globals.ThisAddIn.Application.ActivePresentation.Slides[index];
+                PPT.Shapes slideShapes = slide.Shapes;
+                //PPT.Shapes slideShapes = Globals.ThisAddIn.Application.ActivePresentation.Windows.Application.ActiveWindow.Selection.SlideRange.Shapes;
+                foreach (PPT.Shape s in slideShapes)
+                {
+                    message = message + s.Name + "|";
+                }
+
+                message = message.Substring(0, message.Length - 1);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+        //gets currently selected shape range names
+        //remember, you can select multiple
+        //but when using the api, you can only operate on one shape at a time
+        public string getShapeRangeShapeNames()
+        {
+            string message = "";
+            try
+            {
+                PPT.ShapeRange sr = Globals.ThisAddIn.Application.ActivePresentation.Windows.Application.ActiveWindow.Selection.ShapeRange;
+
+                for (int i = 1; i <= sr.Count; i++)
+                {
+                    PPT.Shape s = sr[i];
+                    message = message + s.Name + "|";
+                }
+
+                message = message.Substring(0, message.Length - 1);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        //operates on currently selected
+        //can be more than one
+//Do we want similar function that adds tag by slideindex and shapename?
+        public string addShapeRangeTag(string tagName, string tagValue)
+        {
+
+            string message = "";
+            try
+            {   
+                //int idx = Convert.ToInt32(shapeid);
+                PPT.ShapeRange sr = Globals.ThisAddIn.Application.ActivePresentation.Windows.Application.ActiveWindow.Selection.ShapeRange;
+
+                for (int i = 1; i <= sr.Count; i++)
+                {
+                    PPT.Shape s = sr[i];
+                    s.Tags.Add(tagName, tagValue);
+                 }
+                
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string addPresentationTag(string tagName, string tagValue)
+        {
+            string message = "";
+            try
+            {   //BS PROOF
+                //You can't add a Tag with a name that already exists
+                //no indication, the function is truly void
+                //so check before adding using (getPresentationTags() in the .js)
+                Globals.ThisAddIn.Application.ActivePresentation.Tags.Add(tagName, tagValue);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string deletePresentationTag(string tagName)
+        {
+            string message = "";
+            try
+            {
+                Globals.ThisAddIn.Application.ActivePresentation.Tags.Delete(tagName);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string getPresentationTags()
+        {
+            string message = "";
+            string jsonPresTags = "{\"tags\":[";
+            PPT.Tags pTags = Globals.ThisAddIn.Application.ActivePresentation.Tags;
+
+            try
+            {
+                for (int j = 1; j <= pTags.Count; j++)
+                {
+                    jsonPresTags += "{\"name\":\"" + pTags.Name(j) +
+                                  "\",\"value\":\"" + pTags.Value(j) +
+                                  "\"},";
+
+                }
+
+                if (jsonPresTags.EndsWith(","))
+                    jsonPresTags = jsonPresTags.Substring(0, jsonPresTags.Length - 1);
+
+                jsonPresTags += "]}";
+                message=jsonPresTags;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+          
+            return message;
+        }
+
+        //need to find out about embedded shapes? is there such a thing?
+        public string getShapeRangeCount()
+        {
+            string message = "";
+            try
+            {
+                int count = Globals.ThisAddIn.Application.ActiveWindow.Selection.ShapeRange.Count;
+                message = count.ToString();
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string getShapeRangeView(string slideIndex, string shapeName)
+        {
+            string message = "";
+            int index = TKUtilities.getInt32FromString(slideIndex);
+
+            try
+            {
+                //PPT.Selection sel = Globals.ThisAddIn.Application.ActivePresentation.Windows.Application.ActiveWindow.Selection;
+                //PPT.Shape s = sel.SlideRange.Shapes[shapeName];
+
+                PPT.Shape s = Globals.ThisAddIn.Application.ActivePresentation.Slides[index].Shapes[shapeName];
+
+                PPT.Tags sTags = s.Tags;
+                string jsonRange = "";
+                object t = Office.MsoTriState.msoTrue;
+
+
+                //BASIC SHAPE
+                jsonRange = //"{\"shapeRange\":" +
+                            "{\"name\":\"" + s.Name + "\"," +
+                            "\"left\":\"" + s.Left + "\"," +
+                            "\"top\":\"" + s.Top + "\"," +
+                            "\"height\":\"" + s.Height + "\"," +
+                            "\"width\":\"" + s.Width + "\",";
+
+
+                //DO CHECK ON TYPES AND UPDATE ACCORDINGLY, CAN'T ROUNDTRIP PLACEHOLDERS
+                //PPT OBJECT MODEL ONLY ALLOWS DELETE/ADD OF EXISTING, CAN'T CREATE NEW PLACEHOLDER
+                //TEXTBOX SHAPE
+                //EXTRA COMMA
+                if (s.Type.Equals(Office.MsoShapeType.msoPlaceholder) && s.HasTextFrame.Equals(t))
+                {
+                    jsonRange += "\"type\":\"" + Office.MsoShapeType.msoTextBox + "\"";
+                }
+                else
+                {
+                    jsonRange += "\"type\":\"" + s.Type + "\"";
+                }
+
+          /*    FOLLOWING REPLACED WITH PARAGRAPH ARRAY BELOW 
+                if (s.HasTextFrame.Equals(t))
+                {   
+                    //CAN'T RETURN TEXT AS STRING IS JACKED UP WITH MULTIPLE PARAS/RUNS
+                    jsonRange += //"\"text\":\"" + s.TextFrame.TextRange.Text + "\"," +
+                                  "\"text\":\"" + "FUBAR" + "\"," +
+                                 "\"fontName\":\"" + s.TextFrame.TextRange.Font.Name + "\"," +
+                                 "\"fontSize\":\"" + s.TextFrame.TextRange.Font.Size + "\"," +
+                                 "\"fontRGB\":\"" + s.TextFrame.TextRange.Font.Color.RGB + "\"," +
+                                // "\"paragraphAlignment\":\"" + s.TextFrame.TextRange.ParagraphFormat.Alignment + "\"," +
+                                 "\"textOrientation\":\"" + s.TextFrame.Orientation + "\",";
+                }
+           */
+                //PARAGRAPHS WITHIN TEXTBOX
+                //PARAGRAPHS HAVE ALIGNMENT
+                //PARAGRAPHGS CONTAIN RUNS
+                //RUNS HAVE STYLES
+                if (s.HasTextFrame.Equals(t))
+                {
+                    //After round trip, may add these. 
+                    //This way, if you have no text (no paras, no runs), you know
+                    //the style of the object you are potentially inserting into
+                    //"\"pargraphFontName\":\"" + s.TextFrame.TextRange.Font.Name + "\"," +
+                    //"\"paragraphFontSize\":\"" + s.TextFrame.TextRange.Font.Size + "\"," +
+                    //"\"paragraphFontRGB\":\"" + s.TextFrame.TextRange.Font.Color.RGB + "\"," +
+                    jsonRange += ",\"textOrientation\":\"" + s.TextFrame.Orientation + "\",";
+                    jsonRange += "\"paragraphs\":[";
+                    try
+                    {
+                        //1000 as when length is greater than number of paras in range, 
+                        //returns all paras to range.paras.count 
+                        PPT.TextRange allParas = s.TextFrame.TextRange.Paragraphs(1, 1000);
+                  
+                        foreach (PPT.TextRange para in allParas)
+                        {
+                            jsonRange += "{\"paragraphAlignment\":\"" + para.ParagraphFormat.Alignment + "\",";
+                            jsonRange += "\"paragraphBulletType\":\"" + para.ParagraphFormat.Bullet.Type.ToString().Normalize().Trim() + "\",";
+
+                           
+                            //needs to be its own object, may require special massage for paragraphs
+                            //para.ParagraphFormat.Bullet.*
+                            jsonRange += "\"runs\":[";
+
+                            foreach (PPT.TextRange run in para.Runs(1, 1000))
+                            {
+                                //Bulleted Lists and Multiple Paras add end of lines and other cruft
+                                //IE will choke on with eval of JSON
+                                string text = run.Text.Normalize().Trim();
+
+                                jsonRange += "{\"fontName\":\"" + run.Font.Name + "\"," +
+                                              "\"fontSize\":\"" + run.Font.Size + "\"," +
+                                               "\"fontRGB\":\"" + run.Font.Color.RGB + "\"," +
+                                               "\"fontItalic\":\"" + run.Font.Italic + "\"," +
+                                               "\"fontUnderline\":\"" + run.Font.Underline + "\"," +
+                                              
+                                               "\"fontBold\":\"" + run.Font.Bold + "\"," +
+                                                "\"text\":\"" + text +
+                                                "\"},";
+                             
+
+                                /*
+                                MessageBox.Show("font: " + run.Font.Name +
+                                                " rgb: " + run.Font.Color.RGB +
+                                                " size: " + run.Font.Size +
+                                                " text: " + run.Text);
+                                */
+                            }
+
+                            if (jsonRange.EndsWith(","))
+                                jsonRange = jsonRange.Substring(0, jsonRange.Length - 1);
+
+                            jsonRange += "]";  //end of run array
+                            jsonRange += "},"; //next paragraph
+                        }
+
+                        if (jsonRange.EndsWith(","))
+                            jsonRange = jsonRange.Substring(0, jsonRange.Length - 1);
+
+                        jsonRange += "]"; //end of paragraph array
+
+                    }
+                    catch (Exception e)
+                    {
+                        //MessageBox.Show("PARAGRAPHS ERROR" + e.Message);
+                        string errorMsg = e.Message;
+                        message = "error: " + errorMsg;
+                    }
+                }
+
+                if (s.Type.Equals(Office.MsoShapeType.msoPicture))
+                {
+                    jsonRange+=",\"pictureFormat\":" +
+                                  "{\"brightness\":\"" + s.PictureFormat.Brightness + "\"," +
+                                   "\"colorType\":\"" + s.PictureFormat.ColorType + "\"," +
+                                   "\"contrast\":\"" + s.PictureFormat.Contrast + "\"," +
+                                   "\"cropBottom\":\"" + s.PictureFormat.CropBottom + "\"," +
+                                   "\"cropLeft\":\"" + s.PictureFormat.CropLeft + "\"," +
+                                   "\"cropRight\":\"" + s.PictureFormat.CropRight + "\"," +
+                                   "\"cropTop\":\"" + s.PictureFormat.CropTop + "\"," +
+                                   "\"transparencyColor\":\"" + s.PictureFormat.TransparencyColor + "\"," +
+                                   "\"transparentBackground\":\"" + s.PictureFormat.TransparentBackground + "\"}";
+                    //MessageBox.Show(s.PictureFormat.Brightness+"");
+                }
+
+
+            /*  PPT.TextRange paraTest = s.TextFrame.TextRange.Paragraphs(1,1000);
+                MessageBox.Show("# paragraphs: "+paraTest.Count);
+
+               
+                foreach (PPT.TextRange para in paraTest)
+                {
+                    MessageBox.Show("Alignment: " + para.ParagraphFormat.Alignment);
+                   
+                    foreach (PPT.TextRange run in para.Runs(1,1000))
+                    {
+                       
+                        MessageBox.Show("font: " + run.Font.Name +
+                                        " rgb: " + run.Font.Color.RGB +
+                                        " size: " + run.Font.Size +
+                                        " text: " + run.Text);
+                                       
+                    }
+
+                }
+                */
+                                 
+                jsonRange += ",\"tags\":[";
+
+                try
+                {
+                    for (int j = 1; j <= sTags.Count; j++)
+                    { 
+                       jsonRange += "{\"name\":\"" + s.Tags.Name(j) +
+                                     "\",\"value\":\"" + sTags.Value(j) +
+                                     "\"},";
+
+                    }
+
+                    if(jsonRange.EndsWith(","))
+                       jsonRange = jsonRange.Substring(0, jsonRange.Length - 1);
+
+                       jsonRange += "]";
+                }
+                catch (Exception e)
+                {
+                    //MessageBox.Show("TAGS ERROR" + e.Message);
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+
+                jsonRange += "}";
+                         //}"; end of ShapeRange
+
+                message = jsonRange; 
+
+            }
+            catch (Exception e)
+            {
+                //string donothing_removewarning = e.Message;
+                //MessageBox.Show("getShapeRangeInfoError: " + e.Message);
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            //MessageBox.Show(message);
+            return message;
+        }
+
+        public string addShapeTags(string slideIndex, string shapeName, string jsonTags)
+        {
+            string message = "";
+            try
+            {
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                List<TagView> shapeTags;
+                shapeTags = serializer.Deserialize<List<TagView>>(jsonTags);
+
+                int idx = TKUtilities.getInt32FromString(slideIndex);
+
+                PPT.Shape shapeToTag = Globals.ThisAddIn.Application.ActivePresentation.Slides[idx].Shapes[shapeName];
+
+
+                for (int i = 0; i < shapeTags.Count; i++)
+                {
+                    TagView t = new TagView();
+                    t = shapeTags[i];
+
+                    if (shapeToTag != null)
+                        shapeToTag.Tags.Add(t.name, t.value);
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+            return message;
+        }
+
+        public string addSlideTags(string slideIndex, string jsonTags)
+        {
+            string message = "";
+            try
+            {
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                List<TagView> shapeTags;
+                shapeTags = serializer.Deserialize<List<TagView>>(jsonTags);
+
+                int idx = TKUtilities.getInt32FromString(slideIndex);
+
+                PPT.Slide slideToTag = Globals.ThisAddIn.Application.ActivePresentation.Slides[idx];
+
+                for (int i = 0; i < shapeTags.Count; i++)
+                {
+                    TagView t = new TagView();
+                    t = shapeTags[i];
+
+                    if (slideToTag != null)
+                        slideToTag.Tags.Add(t.name, t.value);
+                }
+
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+            return message;
+        }
+
+        public string addPresentationTags(string jsonTags)
+        {
+            string message = "";
+            try
+            {
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                List<TagView> shapeTags;
+                shapeTags = serializer.Deserialize<List<TagView>>(jsonTags);
+
+                PPT.Presentation presToTag = Globals.ThisAddIn.Application.ActivePresentation;
+
+                for (int i = 0; i < shapeTags.Count; i++)
+                {
+                    TagView t = new TagView();
+                    t = shapeTags[i];
+
+                    if(presToTag!=null)
+                      presToTag.Tags.Add(t.name, t.value);
+                }
+
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+            return message;
+        }
+
+
+        public string addShape(string slideIndex, string jsonShape, string jsonTags, string jsonParas)
+        {
+            string message = "";
+            PPT.Shape newShape = null;
+
+            try
+            {
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+                //Deserialize
+                ShapeRangeView mysr = new ShapeRangeView();
+                List<TagView> shapeTags;
+                ParagraphView paragraphs = new ParagraphView();
+
+                mysr = serializer.Deserialize<ShapeRangeView>(jsonShape);
+                shapeTags = serializer.Deserialize<List<TagView>>(jsonTags);
+                paragraphs = new JavaScriptSerializer().Deserialize<ParagraphView>(jsonParas);
+
+                List<string> pAlignments = new List<string>();
+                pAlignments = paragraphs.paragraphAlignment;
+
+                List<string> pBullets = new List<string>();
+                pBullets = paragraphs.paragraphBulletType;
+
+                List<string[]> pRuns = new List<string[]>();
+                pRuns = paragraphs.runs;
+
+
+                int paragraphCount = pAlignments.Count;
+                int runsCount = pRuns.Count;
+                //MessageBox.Show("Para Count: " + paragraphCount);
+                //MessageBox.Show("Run Count:  " + runsCount);
+
+                /*
+                MessageBox.Show("Type: "+mysr.type+"\n"+
+                                " Name: " + mysr.name + "\n" +
+                                " Left: " + mysr.left + "\n" +
+                                " Top: " + mysr.top + "\n" +
+                                " Height: " + mysr.top + "\n" +
+                                " Width: " + mysr.top + "\n" +
+                                " Orientation: " + mysr.textOrientation + "\n" 
+                               // " Text: "+mysr.text 
+                                );
+                */
+
+                int idx = TKUtilities.getInt32FromString(slideIndex);
+                PPT.Shapes slideShapes = Globals.ThisAddIn.Application.ActivePresentation.Slides[idx].Shapes;
+
+                if(mysr.type.Equals("msoTextBox"))
+                {
+
+                 Office.MsoTextOrientation  addOrientation;
+                 addOrientation = TKUtilities.getTextOrientation(mysr.textOrientation);
+
+                 float addLeft;
+                 float addTop;
+                 float addWidth;
+                 float addHeight;
+ 
+                 addLeft = TKUtilities.getFloatFromString(mysr.left);
+                 addTop = TKUtilities.getFloatFromString(mysr.top);
+                 addWidth = TKUtilities.getFloatFromString(mysr.width);
+                 addHeight = TKUtilities.getFloatFromString(mysr.height);
+
+                 newShape = slideShapes.AddTextbox(addOrientation,addLeft,addTop,addWidth,addHeight);
+                 message = newShape.Name;
+                 
+                 //need to get Paras in, then loop through to add paras, runs, etc.
+                 //using insert after
+
+                 for (int i = 0; i < paragraphCount; i++)
+                 {
+                     //newShape.TextFrame.TextRange.ParagraphFormat.Alignment = TKUtilities.getParagraphAlignment(pAlignments[i]);
+                     //newShape.TextFrame.TextRange.ParagraphFormat.Bullet.Type = TKUtilities.getParagraphBulletType(pBullets[i]);
+                     newShape.TextFrame.TextRange.InsertAfter(" ");
+
+                     PPT.TextRange pRange = newShape.TextFrame.TextRange.Paragraphs(i + 1, i + 1);
+                     //Setting explicitly and defining in runs
+                     //it's possible to define it a run, and have it set to paragraph
+                     pRange.ParagraphFormat.Alignment = TKUtilities.getParagraphAlignment(pAlignments[i]);
+                     pRange.ParagraphFormat.Bullet.Type = TKUtilities.getParagraphBulletType(pBullets[i]);
+                     pRange.Font.Italic = Microsoft.Office.Core.MsoTriState.msoFalse;
+                     pRange.Font.Underline = Microsoft.Office.Core.MsoTriState.msoFalse;
+                     pRange.Font.Bold = Microsoft.Office.Core.MsoTriState.msoFalse;
+                    
+
+                     PPT.TextRange rRange;
+
+
+                     for (int j = 0; j < pRuns.Count; j++ )
+                     {
+                         string[] finalRun = pRuns[j];
+                         string runIdx = finalRun[0];
+                         if (TKUtilities.getInt32FromString(runIdx) == i)
+                         {
+                             rRange = pRange.Runs(j + 1, j + 1);
+
+                             string fontName = finalRun[1];
+                             string fontSize = finalRun[2];
+                             string fontRGB = finalRun[3];
+                             string fontItalic = finalRun[4];
+                             string fontUnderline = finalRun[5];
+                             string fontBold = finalRun[6];
+                             string text = finalRun[7];
+
+                             if (text.Equals("") || text == null)
+                                 text = " ";
+
+                            // if (fontItalic.Equals("msoTrue"))
+                             //    rRange.Font.Italic = Microsoft.Office.Core.MsoTriState.msoTrue;
+
+                             rRange.InsertAfter(text);
+
+                             //MessageBox.Show("TEXT"+text);
+                             rRange.Font.Name = fontName;
+                             rRange.Font.Size = TKUtilities.getFloatFromString(fontSize);
+                             rRange.Font.Color.RGB = TKUtilities.getInt32FromString(fontRGB);
+//serialize fontRGB for paragraph as well
+                             pRange.Font.Color.RGB = TKUtilities.getInt32FromString(fontRGB);
+
+                             if (fontItalic.Equals("msoTrue"))
+                             {
+                                 rRange.Font.Italic = Microsoft.Office.Core.MsoTriState.msoTrue;
+                             }
+
+                             if (fontUnderline.Equals("msoTrue")){
+                                 rRange.Font.Underline = Microsoft.Office.Core.MsoTriState.msoTrue;
+                             }
+
+                             if(fontBold.Equals("msoTrue")){
+                                 rRange.Font.Bold = Microsoft.Office.Core.MsoTriState.msoTrue;
+                             }
+
+                             
+      
+                             /*
+                             MessageBox.Show("MY RUN" + "\n" +
+                                             "index: " + runIdx + "\n" +
+                                             "fontName: " + fontName + "\n" +
+                                             "fontSize: " + fontSize + "\n" +
+                                             "fontRGB: " + fontRGB + "\n" +
+                                             "fontItalic: " + fontItalic + "\n" +
+                                             "fontUnderline: " + fontUnderline + "\n" +
+                                             "text: " + text + "\n"
+                                             );
+                             */
+                          
+                         }
+                         else
+                         {
+                             //do nothing
+                             //unfortunately, have to do it this way
+                             //until we can figure out the mysterious JavaScriptSerializer
+                         }
+
+                     }
+
+                     if (i + 1  < paragraphCount)
+                     {
+                         //this followed by insertAfter(" ") adds new paragraph
+                         newShape.TextFrame.TextRange.InsertAfter(Environment.NewLine);
+
+                     }
+                 }
+
+                }
+
+                for (int i = 0; i < shapeTags.Count; i++)
+                {
+                    TagView t = new TagView();
+                    t = shapeTags[i];
+                    if(newShape!=null)
+                    newShape.Tags.Add(t.name,t.value);
+                }
+
+            }
+            catch (Exception e)
+            {
+                //MessageBox.Show("addShapeError: " + e.Message +e.StackTrace);
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string setPictureFormat(string slideIndex, string shapeName, string jsonPictureFormat)
+        {
+            string message = "";
+            try{
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                PictureFormatView picFormat;
+                picFormat = serializer.Deserialize<PictureFormatView>(jsonPictureFormat);
+
+                int idx = TKUtilities.getInt32FromString(slideIndex);
+
+                PPT.Shape shapeToFormat = Globals.ThisAddIn.Application.ActivePresentation.Slides[idx].Shapes[shapeName];
+
+                if (shapeToFormat.Type.Equals(Office.MsoShapeType.msoPicture))
+                {
+
+                    shapeToFormat.PictureFormat.Brightness = TKUtilities.getFloatFromString(picFormat.brightness);
+                    shapeToFormat.PictureFormat.ColorType = TKUtilities.getColorType(picFormat.colorType);
+                    shapeToFormat.PictureFormat.Contrast = TKUtilities.getFloatFromString(picFormat.contrast);
+                    shapeToFormat.PictureFormat.CropBottom = TKUtilities.getFloatFromString(picFormat.cropBottom);
+                    shapeToFormat.PictureFormat.CropLeft = TKUtilities.getFloatFromString(picFormat.cropLeft);
+                    shapeToFormat.PictureFormat.CropRight = TKUtilities.getFloatFromString(picFormat.cropRight);
+                    shapeToFormat.PictureFormat.CropTop = TKUtilities.getFloatFromString(picFormat.cropTop);
+
+                    if (picFormat.transparencyBackground != null)
+                    {
+                        shapeToFormat.PictureFormat.TransparentBackground = TKUtilities.getTriState(picFormat.transparencyBackground);
+                        shapeToFormat.PictureFormat.TransparencyColor = TKUtilities.getInt32FromString(picFormat.transparencyColor);
+                    }
+               
+                }
+                else
+                {
+                    message = "error: Can not apply picture format to shape that is not an image.";
+                }
+               
+            }
+            catch (Exception e)
+            {
+                //MessageBox.Show("setPictureFormatError: " + e.Message +e.StackTrace);
+                string errorMsg = e.Message;
+                message = message + "error: " + errorMsg;
+            }
+            return message;
+        }
+
+        public string deleteSlide(string slideIndex)
+        {
+            string message = "";
+            int index = TKUtilities.getInt32FromString(slideIndex);
+            try
+            {
+                PPT.Slide slideToDelete = Globals.ThisAddIn.Application.ActivePresentation.Slides[index];
+                slideToDelete.Delete();
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
+        public string addSlide(string slideIndex, string customLayout)
+        {
+            string message = "";
+            int idx = TKUtilities.getInt32FromString(slideIndex);
+            PPT.PpSlideLayout layout = TKUtilities.getSlideLayout(customLayout);
+
+            try
+            {
+                PPT.Slide slideToAdd = Globals.ThisAddIn.Application.ActivePresentation.Slides.Add(idx,layout);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+        
+
+        public string deleteShape(string slideIndex, string shapeName)
+        {
+            string message = "";
+            int index = TKUtilities.getInt32FromString(slideIndex);
+
+            try
+            {
+                PPT.Shape shapeToDelete = Globals.ThisAddIn.Application.ActivePresentation.Slides[index].Shapes[shapeName];
+                shapeToDelete.Delete();
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+            }
+
+            return message;
+        }
+
 
     }
+
+
 }

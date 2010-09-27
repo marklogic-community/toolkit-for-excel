@@ -1,4 +1,4 @@
-﻿/*Copyright 2009 Mark Logic Corporation
+﻿/*Copyright 2009-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,11 +20,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using PowerPoint = Microsoft.Office.Interop.PowerPoint;
+using Microsoft.Office.Interop.PowerPoint;
 using Office = Microsoft.Office.Core;
 
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Tools.Applications.Runtime;
+using System.Runtime.InteropServices;
 
 namespace MarkLogic_PowerPointAddin
 {
@@ -32,8 +33,9 @@ namespace MarkLogic_PowerPointAddin
     {
         private AddinConfiguration ac = AddinConfiguration.GetInstance();
         public bool mlPaneDisplayed = false;
-        private UserControl1 uc;
+        //private UserControl1 uc;
         public Microsoft.Office.Tools.CustomTaskPane myPane;
+
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
@@ -52,13 +54,16 @@ namespace MarkLogic_PowerPointAddin
             UserControl1 uc = new UserControl1();
             myPane = this.CustomTaskPanes.Add(uc, ac.getCTPTitleLabel());
             myPane.Width = 450;
-            myPane.Visible =ac.getPaneEnabled();
+            myPane.Visible = ac.getPaneEnabled();
 
-           myPane.VisibleChanged += new EventHandler(taskPaneValue_VisibleChanged);
+            myPane.VisibleChanged += new EventHandler(taskPaneValue_VisibleChanged);
         }
+       
 
-        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
+        public void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
+            // MessageBox.Show("Quitting");
+
         }
 
         private void taskPaneValue_VisibleChanged(object sender, System.EventArgs e)
