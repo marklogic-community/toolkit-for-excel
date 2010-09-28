@@ -1601,6 +1601,8 @@ namespace MarkLogic_PowerPointAddin
                      //it's possible to define it a run, and have it set to paragraph
                      pRange.ParagraphFormat.Alignment = TKUtilities.getParagraphAlignment(pAlignments[i]);
                      pRange.ParagraphFormat.Bullet.Type = TKUtilities.getParagraphBulletType(pBullets[i]);
+
+                    
                      pRange.Font.Italic = Microsoft.Office.Core.MsoTriState.msoFalse;
                      pRange.Font.Underline = Microsoft.Office.Core.MsoTriState.msoFalse;
                      pRange.Font.Bold = Microsoft.Office.Core.MsoTriState.msoFalse;
@@ -1633,12 +1635,19 @@ namespace MarkLogic_PowerPointAddin
 
                              rRange.InsertAfter(text);
 
+                           
                              //MessageBox.Show("TEXT"+text);
                              rRange.Font.Name = fontName;
                              rRange.Font.Size = TKUtilities.getFloatFromString(fontSize);
                              rRange.Font.Color.RGB = TKUtilities.getInt32FromString(fontRGB);
+
+                             
 //serialize fontRGB for paragraph as well
-                             pRange.Font.Color.RGB = TKUtilities.getInt32FromString(fontRGB);
+                             if (!(pBullets[i].Equals("ppBulletNone")))
+                             {
+                                 pRange.Font.Color.RGB = TKUtilities.getInt32FromString(fontRGB);
+                             }
+                             //pRange.Font.Color.RGB = TKUtilities.getInt32FromString(fontRGB);
 
                              if (fontItalic.Equals("msoTrue"))
                              {
