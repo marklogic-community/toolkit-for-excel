@@ -117,40 +117,60 @@ namespace MarkLogic_PowerPointAddin
             finally
             {
 
-
                 int count = Globals.ThisAddIn.Application.Presentations.Count;
-
                 //set flag and do not execute in case of copy
                 //also check for presentation count, if gt than 1, N have been opened through the search app
-                if (firePptCloseEvent && count == 1)
+                if (count == 1)
                 {
                     //System.Windows.Forms.MessageBox.Show("PresentationClose");
                     try
                     {
-                        foreach (PPT.Presentation p in ppta.Presentations)
+                        
+                      //ppta.Quit()
+                        PPT.Presentations presentations= ppta.Presentations;
+                        foreach (PPT.Presentation p in presentations)
                         {
-                            foreach (PPT.Slide s in p.Slides)
+                            PPT.Slides slides = p.Slides;
+                            foreach (PPT.Slide s in slides)
                             {
+                               
                                 System.Runtime.InteropServices.Marshal.FinalReleaseComObject(s);
                             }
 
+                            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(slides);
                             System.Runtime.InteropServices.Marshal.FinalReleaseComObject(p);
+
+                            GC.Collect();
+                            GC.WaitForPendingFinalizers();
+                            GC.Collect();
+                            GC.WaitForPendingFinalizers();
+
                         }
-
+                       
+                        System.Runtime.InteropServices.Marshal.FinalReleaseComObject(presentations);
                         System.Runtime.InteropServices.Marshal.FinalReleaseComObject(ppta);
-
-                        ppta = null;
+                         
+                        //ppta = null;
+                    
                         GC.Collect();
                         GC.WaitForPendingFinalizers();
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
+
+                        ppta = null;
 
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show("ERROR" + e.Message);
+                        string donothing_removewarning = e.Message;
+                        System.Runtime.InteropServices.Marshal.FinalReleaseComObject(ppta);
                         ppta = null;
                     }
                     finally
                     {
+                        ppta = null;
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
                         GC.Collect();
                         GC.WaitForPendingFinalizers();
                     }
@@ -160,6 +180,7 @@ namespace MarkLogic_PowerPointAddin
                 {
                     firePptCloseEvent = true;
                 }
+
             }
 
         }
@@ -340,6 +361,8 @@ namespace MarkLogic_PowerPointAddin
                 string donothing_removewarning = e.Message;
             }
         }
+
+
 
         [DispId(2016)]
         public void

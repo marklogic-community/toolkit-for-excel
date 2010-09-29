@@ -52,7 +52,7 @@ namespace MarkLogic_PowerPointAddin
         private string addinVersion = "1.1-1";
         HtmlDocument htmlDoc;
 
-        public PPT.ApplicationClass  ppta;
+        public PPT.ApplicationClass  ppta = null;
         public bool firePptCloseEvent = true;
 
         public UserControl1()
@@ -80,18 +80,22 @@ namespace MarkLogic_PowerPointAddin
 
                 this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
 
-                //Event Handling in TKEvents.cs
-                ppta =  new Microsoft.Office.Interop.PowerPoint.ApplicationClass();
-                ppta.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
-                System.Runtime.InteropServices.ComTypes.IConnectionPoint mConnectionPoint;
-                System.Runtime.InteropServices.ComTypes.IConnectionPointContainer cpContainer;
-                int mCookie;
 
-                cpContainer =
-                (System.Runtime.InteropServices.ComTypes.IConnectionPointContainer)ppta;
-                Guid guid = typeof(Microsoft.Office.Interop.PowerPoint.EApplication).GUID;
-                cpContainer.FindConnectionPoint(ref guid, out mConnectionPoint);
-                mConnectionPoint.Advise(this, out mCookie);
+                if (ac.getEventsEnabled())
+                {
+                    //Event Handling in TKEvents.cs
+                    ppta = new Microsoft.Office.Interop.PowerPoint.ApplicationClass();
+                    ppta.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
+                    System.Runtime.InteropServices.ComTypes.IConnectionPoint mConnectionPoint;
+                    System.Runtime.InteropServices.ComTypes.IConnectionPointContainer cpContainer;
+                    int mCookie;
+
+                    cpContainer =
+                    (System.Runtime.InteropServices.ComTypes.IConnectionPointContainer)ppta;
+                    Guid guid = typeof(Microsoft.Office.Interop.PowerPoint.EApplication).GUID;
+                    cpContainer.FindConnectionPoint(ref guid, out mConnectionPoint);
+                    mConnectionPoint.Advise(this, out mCookie);
+                }
            
             }
 
@@ -1601,6 +1605,7 @@ namespace MarkLogic_PowerPointAddin
                      //it's possible to define it a run, and have it set to paragraph
                      pRange.ParagraphFormat.Alignment = TKUtilities.getParagraphAlignment(pAlignments[i]);
                      pRange.ParagraphFormat.Bullet.Type = TKUtilities.getParagraphBulletType(pBullets[i]);
+                    
 
                     
                      pRange.Font.Italic = Microsoft.Office.Core.MsoTriState.msoFalse;
@@ -1634,6 +1639,9 @@ namespace MarkLogic_PowerPointAddin
                              //    rRange.Font.Italic = Microsoft.Office.Core.MsoTriState.msoTrue;
 
                              rRange.InsertAfter(text);
+
+                             if (i != paragraphCount)
+                                 rRange.InsertAfter(" ");
 
                            
                              //MessageBox.Show("TEXT"+text);

@@ -874,35 +874,9 @@
             "Message" = "8:The Visual Studio Tools for Office 3.0 Runtime is not installed. Please run Setup.exe."
             "InstallUrl" = "8:"
             }
-            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_7B8583C0F5174FF0AEF783C1F238B32E"
-            {
-            "Name" = "8:Verify Office 2007 Shared PIA availability"
-            "Condition" = "8:HASSHAREDPIA"
-            "Message" = "8:A required component for interacting with Excel 2007 is not available. Please run setup.exe."
-            "InstallUrl" = "8:"
-            }
-            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_D43DA5482F384F8FA9675111DE4634DC"
-            {
-            "Name" = "8:Verify PowerPoint 2007 PIA availability"
-            "Condition" = "8:HASPPTPIA"
-            "Message" = "8:A required component for interacting with PowerPoint 2007 is not available. Please run setup.exe."
-            "InstallUrl" = "8:"
-            }
         }
         "Locator"
         {
-            "{B8A5E33E-1082-4FE2-AC2E-1197791E9409}:_3022333A72AB45289058FC282CBA58D6"
-            {
-            "Name" = "8:Search for Office PowerPoint 2007 PIA"
-            "ComponentId" = "8:{04E73476-518E-4B6A-8E10-021A00078847}"
-            "Property" = "8:HASPPTPIA"
-            }
-            "{B8A5E33E-1082-4FE2-AC2E-1197791E9409}:_5A81886512E741CFB824364364F54DFB"
-            {
-            "Name" = "8:Search for Office 2007 Shared PIA"
-            "ComponentId" = "8:{FAB10E66-B22C-4274-8647-7CA1BA5EF30F}"
-            "Property" = "8:HASSHAREDPIA"
-            }
             "{CF66B7F7-B7DA-4B08-A67A-233430638C9C}:_6EABA3BDBD7F4E218552941BB27427BE"
             {
             "Name" = "8:Search for VSTO 3.0 Runtime"
@@ -1165,6 +1139,14 @@
                                     "Transitive" = "11:FALSE"
                                     "ValueTypes" = "3:1"
                                     "Value" = "8:My Group"
+                                    }
+                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_DC2CDA404E714596A7DDE3239D731407"
+                                    {
+                                    "Name" = "8:EventsEnabled"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "ValueTypes" = "3:1"
+                                    "Value" = "8:true"
                                     }
                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_F1CEFAD383654A30A2BF42E3907F7108"
                                     {
@@ -1644,7 +1626,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_92D0C4C13B5B4DDB9724CC612201B669"
             {
-            "SourcePath" = "8:..\\InclusionListCustomActions\\obj\\Debug\\InclusionListCustomActions.dll"
+            "SourcePath" = "8:..\\InclusionListCustomActions\\obj\\Release\\InclusionListCustomActions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_680D66B1B0584076971B0BA1F628C2B7"
