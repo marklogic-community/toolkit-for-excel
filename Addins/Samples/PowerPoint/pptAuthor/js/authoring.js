@@ -24,8 +24,6 @@ $(document).ready(function() {
        //SET DEFAULTS		
        //by default, current doc selected
 
-       //pro tip: separate with commas , performance?
-       //not sure it matters for this app, leaving as is for readability
        $('#metadata').hide();
        $('#search').hide();
        $('#properties').hide();
@@ -256,7 +254,7 @@ $(document).ready(function() {
 
        $('#ML-Message').hide();
 
-//ADD commenting out for testing in IE, uncomment for release
+//REMOVE COMMENT commenting out for testing in IE, uncomment for release
 //refreshPropertiesPanel();
        
 });
@@ -280,7 +278,6 @@ function searchAction(startidx)
 {
 	if(startidx==null)
 	{
-	   //alert("startidx="+startidx);
 	   startidx = 0;
 	}
 
@@ -292,7 +289,6 @@ function searchAction(startidx)
 	{
         $('#searchfilter input:checkbox').each(function(){
 	  if(this.checked){
-	    //alert(this.id);
             cbsid.push(this.id);
             cbsx.push(this.checked);
 	    }
@@ -301,7 +297,6 @@ function searchAction(startidx)
 
 	var qry = $('#searchbox').val();
 	var searchType =$("#searchtype input[@name='search:bst']:checked").val();
-	//alert("SEARCHTYPE: "+searchType);
 
 	simpleAjaxSearch(qry , startidx, cbsid, searchType);
 }
@@ -326,7 +321,9 @@ function simpleAjaxSearch(searchval, startidx, cbsid,searchType)
                             $('#searchresults').html(msg);
 			}catch(e)
 			{
-			    alert("ERROR"+e.description);
+			    //v2
+ 			    //improve error handling error message | display nicely
+			    alert("ERROR in simpleAjaxSearch: "+e.description);
 			}
                    }
      });
@@ -334,7 +331,6 @@ function simpleAjaxSearch(searchval, startidx, cbsid,searchType)
 
 function insertComponentAction(contenturl, rId, other, buttonIndex)
 {
-        //alert("COMPONENT=====> contenturl: "+contenturl+" rId: "+rId+" other: "+other);
 	try{
              if(rId == null) 
 		  rId = "";
@@ -349,7 +345,6 @@ function insertComponentAction(contenturl, rId, other, buttonIndex)
 
 function insertSlideAction(contenturl, rId, docuri, slideIdx, buttonIndex)
 {
-        //alert("SLIDE =======> contenturl: "+contenturl+" rId: "+rId+" docuri: "+docuri+" slideIndex: "+slideIdx);
 	try{
               var retain="true";
               var tmpPath = MLA.getTempPath();
@@ -377,7 +372,6 @@ function insertSlideAction(contenturl, rId, docuri, slideIdx, buttonIndex)
 	}
 }
 
-
 function simpleAjaxComponentInsert(contenturl,rId, other, buttonIndex)
 { 
     $.ajax({
@@ -386,7 +380,6 @@ function simpleAjaxComponentInsert(contenturl,rId, other, buttonIndex)
           data: "uri=" + contenturl+"&rid="+ rId,
           success: function(msg){
 			try{
-			 //alert("HERE"+msg);
 			 insertComponentContent(msg, other, buttonIndex);
 			}catch(e)
 			{
@@ -404,7 +397,6 @@ function simpleAjaxSlideInsert(contenturl,rId, buttonIndex)
           data: "uri=" + contenturl+"&rid="+ rId,
           success: function(msg){
 			try{
-			 //alert("HERE"+msg);
 			 insertSlideContent(msg,buttonIndex);
 			}catch(e)
 			{
@@ -434,7 +426,6 @@ function setPictureFormat(pictureFormat)
 
 function setUndoButton(buttonIndex,newShapeName)
 {
-	//alert("buttonIndex"+buttonIndex +"newShapeName "+newShapeName);
 	try
 	{
 	     var searchType =$("#searchtype input[@name='search:bst']:checked").val();
@@ -482,10 +473,8 @@ function insertComponentContent(content, other, buttonIndex)
 		}
 		else
 		{
-			//alert("jsonString: "+jsonString);
 			shapeRange = MLA.jsonParse(jsonString);
 			var newShapeName = "";
-
 
 			if(shapeRange.shape.type=="msoPicture")
 			{
@@ -538,7 +527,6 @@ function insertSlideContent(content,buttonIndex)
     setUndoButton(buttonIndex);		
 	
 }
-
 
 function blurSelected(btn_element)
 {
@@ -792,7 +780,6 @@ function refreshTagTree()
 	    if(value=="" || value==null)
 	    {
 		    //do nothing
-		    //alert("NULL"+value);
 	    }else
 	    {
 	
@@ -1033,7 +1020,7 @@ function setPresentationProperties()
     {
         var tag = pres_tags.tags[i];
 	tagHtml += "<a href=\"javascript:deletePresentationTag('"+tag.name+"','"+tag.value+"')\" id='"+tag.value+"'>"+
-		      "<span class='deleteIcon'><strong><label>"+tag.name+"</label></strong></span>"+
+		      "<span class='deleteIcon' title='delete tag'><strong><label>"+tag.name+"</label></strong></span>"+
 	           "</a>"+
 	           "<br/>";
 
@@ -1067,7 +1054,7 @@ function setSlideProperties()
     {
 	var tag = slide_tags.tags[i];
 	tagHtml += "<a href=\"javascript:deleteSlideTag('"+slide_index+"','"+tag.name+"','"+tag.value+"')\" id='"+tag.value+"'>"+
- 		      "<span class='deleteIcon'><strong><label>"+tag.name+"</label></strong></span>"+
+ 		      "<span class='deleteIcon' title='delete tag'><strong><label>"+tag.name+"</label></strong></span>"+
 		   "</a>"+
 		   "<br/>";
 		//delete icon will use tag.value for customxml part,tag.name for tag
@@ -1223,10 +1210,10 @@ function setShapeProperties()
 	  {
               var tag = shape_tags[i];
 	      tagHtml += "<a href=\"javascript:deleteShapeTag('"+slideIndex+"','"+shape_name+"','"+tag.name+"','"+tag.value+"')\" id='"+tag.value+"'>"+
-			    "<span class='deleteIcon'>&nbsp;</span>"+
+			    "<span class='deleteIcon' title='delete tag'>&nbsp;</span>"+
 			 "</a>"+
 			 "<a href=\"javascript:updateComponentJSON('"+slideIndex+"','"+shape_name+"')\">"+
-			    "<span class='saveAllIcon'><strong><label>"+tag.name+"</label></strong></span>"+
+			    "<span class='saveAllIcon' title='save component info'><strong><label>"+tag.name+"</label></strong></span>"+
 			 "</a>"+
 			 "<br/>";
 	  }
@@ -1274,14 +1261,12 @@ function getJsonString(shapeRange)
     return shapeString;
 }
 
-//BEGIN EVENT HANDLERS
 var globalShapeName = "";
 var globalSlideIndex = "";
 
 function updateComponentJSON(slideIndex, shapeName)
 {
 
-	alert("updateComponentJSON"+ slideIndex+" "+shapeName);
 	try{
 		   var shapeRangeView = MLA.getShapeRangeView(slideIndex, shapeName);
                   
@@ -1289,23 +1274,19 @@ function updateComponentJSON(slideIndex, shapeName)
    
                    for(var i =0;i<shape_tags.length;i++)
                    {
-		       //alert("in the for");
 	               var tag = shape_tags[i];
 		       var tagId = tag.value;
 		       var metadataID = getMetadataPartID(tagId);
 
-		       alert("metadataID"+metadataID);
                        if(!(metadataID == null))
 		       {
 	                   var metadata = MLA.getCustomXMLPart(metadataID);
 
 			   var jsonStore = metadata.getElementsByTagName("dc:description")[0];
 
-			    //alert("JSON STORE BEFORE"+jsonStore.xml);
 
 			   var myShapeString =getJsonString(shapeRangeView);
 
-			    //alert("AFTER STRINGIFY");
 			   if(jsonStore.hasChildNodes())
 			   {
 		                 jsonStore.childNodes[0].nodeValue='';
@@ -1313,16 +1294,22 @@ function updateComponentJSON(slideIndex, shapeName)
 				 replaceCustomMetadataPart(metadataID, metadata)
 			   }
 
-			   alert(jsonStore.xml);
+			  // alert(jsonStore.xml);
 
 		       }
 		   }
+                   alert("Component Information Saved.");
+
 	}catch(err)
 	{
 		alert("ERROR: "+err.description);
 	}
 }
 
+
+//BEGIN EVENT HANDLERS
+//v2 could define all handlers in application code
+//then have application authors tweak, as opposed to editing MarkLogicPowerPointEventSupport.js
 function windowSelectionHandler(shapename)
 {
     if(!(globalShapeName==shapename))
@@ -1334,29 +1321,11 @@ function windowSelectionHandler(shapename)
 	if($('#icon-shapectrl').is('.selectedctrl'))
 	{
 	   setShapeProperties();
-
-	   /*
-	   //potentially put in own function and check on slideChange as Well
-	   var slideIndex = MLA.getSlideIndex();
-
-	   //alert("slide index:"+slideIndex+" origSHapeName: "+origShapeName);
-	   if(!(origShapeName==""))
-	   {
-	      var tagged = checkForComponentTags(slideIndex, origShapeName);
-	      if(tagged)
-	      {
-		updateComponentJSON(slideIndex, origShapeName);
-	      }
-           //end added
-	   }
-	   */
-	
 	}
 
         if($('#metadata').is(':visible'))
 	{  
             clearMetadataForm();
-            // $('#icon-meta-slidectrl').is('.selectedctrl')
 	    if($('#icon-meta-shapectrl').is('.selectedctrl'))
 	    {
 	       refreshTagTree();
@@ -1389,30 +1358,6 @@ function slideSelectionHandler(slideIndex)
     {
 	refreshPropertiesPanel();
     }
-
-    /*
-    if(!(globalSlideIndex==slideIndex))
-    {
-        var origShapeName = globalShapeName;
-	var origSlideIndex = globalSlideIndex;
-
-	//alert("origShapeName : "+origShapeName);
-	//alert("origSlideIndex :"+origSlideIndex);
-
-	globalSlideIndex = slideIndex;
-	globalShapeName = "";
-
-	if(!(origShapeName==""))
-	{
-          var tagged = checkForComponentTags(origSlideIndex, origShapeName);
-	  if(tagged)
-	  {
-	    updateComponentJSON(origSlideIndex, origShapeName);
-	  }
-	}
-    }
-    */
-
 
 }
 //END EVENT HANDLERS
