@@ -1,4 +1,4 @@
-<config:tags xmlns:config="http://marklogic.com/toolkit/word/author/config">
+<config:tags xmlns:config="http://marklogic.com/toolkit/powerpoint/author/config">
 	<config:presentation>
 	  <config:tag>
 		  <config:name>Lesson</config:name>

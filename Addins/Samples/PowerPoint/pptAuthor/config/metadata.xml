@@ -1,4 +1,4 @@
-<config:templates xmlns:config="http://marklogic.com/toolkit/word/author/config">
+<config:templates xmlns:config="http://marklogic.com/toolkit/powerpoint/author/config">
  <config:template id="1">
    <dc:metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
 	   <dc:identifier/>

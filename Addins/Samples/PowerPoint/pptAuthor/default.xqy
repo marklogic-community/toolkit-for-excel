@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 :)
-import module namespace config = "http://marklogic.com/toolkit/word/author/config"  at "./config/config.xqy";
+import module namespace config = "http://marklogic.com/toolkit/powerpoint/author/config"  at "./config/config.xqy";
 declare namespace search="http://marklogic.com/openxml/search";
 xdmp:set-response-content-type('text/html'),
 "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>",

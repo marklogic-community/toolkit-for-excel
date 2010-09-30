@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 :)
 
-module namespace config="http://marklogic.com/toolkit/word/author/config";
+module namespace config="http://marklogic.com/toolkit/powerpoint/author/config";
 declare namespace dc="http://purl.org/dc/elements/1.1/";
 
 

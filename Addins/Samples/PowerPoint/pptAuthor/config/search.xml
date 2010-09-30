@@ -1,4 +1,4 @@
-<config:searchfilters xmlns:config="http://marklogic.com/toolkit/word/author/config">
+<config:searchfilters xmlns:config="http://marklogic.com/toolkit/powerpoint/author/config">
 	<config:searchfilter>
 		<config:control-alias>LESSON</config:control-alias>
 		<config:display-label>Lesson</config:display-label>
