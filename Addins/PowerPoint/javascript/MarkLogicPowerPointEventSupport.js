@@ -22,7 +22,6 @@ var debug = false;
 
 windowSelectionChange  = function(shapename)
 {
-	//alert("windowSelectionChange: shapename "+shapename);
 	try{
 
 	var msg = shapename;
@@ -233,46 +232,9 @@ presentationPrint  = function(presoName)
 
 	return msg;
 }
-/*
- windowBeforeRightClick()
-windowBeforeDoubleClick()
-presentationClose()
-presentationSave()
-presentationOpen()
-newPresentation()
-presentationNewSlide()
-windowActivate()
-windowDeactivate()
-slideShowBegin()
-slideShowNextBuild()
-slideShowNextSlide()
-slideShowEnd()
-presentationPrint()
-*/
-
 
 slideSelectionChange = function(slideIndex)
 {
-	/*try
-	{
-	   var msg = slideIndex;
-           alert("slideSelectionChange: "+msg);
-	   var slide_tags = MLA.getSlideTags(msg);
-
-	   for(var i =0;i<slide_tags.tags.length;i++)
-	   {
-		var tag = slide_tags.tags[i];
-		alert("TagName: "+tag.name+" TagValue: "+tag.value);
-	   }
-        }
-	catch(err)
- 	{
-		msg="error in slideSelectionChange: "+err.description;
-		//alert(msg);
-	}
-
-	return msg;*/
-
 	try
 	{
 	   slideSelectionHandler(slideIndex);
@@ -281,19 +243,7 @@ slideSelectionChange = function(slideIndex)
  	{
 	    msg="error in slideSelectionChange: "+err.description;
 	}
-
 }
-
-
-/*
-windowSelectionChange()
-
-slideSelectionChanged()
-colorSchemeChanged()
-presentationBeforeSave()
-slideShowNextClick()
-
-   */
 
 colorSchemeChange  = function(shapeRangeName)
 {
@@ -336,5 +286,3 @@ slideShowNextClick  = function(presoName)
 
 	return msg;
 }
-
-

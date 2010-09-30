@@ -1304,11 +1304,12 @@ namespace MarkLogic_PowerPointAddin
                             //needs to be its own object, may require special massage for paragraphs
                             //para.ParagraphFormat.Bullet.*
                             jsonRange += "\"runs\":[";
-
+                            
                             foreach (PPT.TextRange run in para.Runs(1, 1000))
                             {
                                 //Bulleted Lists and Multiple Paras add end of lines and other cruft
                                 //IE will choke on with eval of JSON
+                                //Still needs work
                                 string text = run.Text.Normalize().Trim();
 
                                 jsonRange += "{\"fontName\":\"" + run.Font.Name + "\"," +
@@ -1640,6 +1641,9 @@ namespace MarkLogic_PowerPointAddin
 
                              rRange.InsertAfter(text);
 
+
+                             //need to pass a continue on serialization then check here
+                             //currently a space will be added for every run
                              if (i != paragraphCount)
                                  rRange.InsertAfter(" ");
 

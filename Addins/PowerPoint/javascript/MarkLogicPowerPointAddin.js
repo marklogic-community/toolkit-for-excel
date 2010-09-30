@@ -45,6 +45,8 @@ function ml_js_import(jsFile) {
  * The functions here provide ways for interacting with the active presentation in PowerPoint ; however, the functions getCustomXMLPart(), getCustomXMLPartIds(), addCustomXMLPart(), and deleteCustomXMLPart() will work for any Open XML package, provided they are used within the context of an Addin for the appropriate Office application.
  */
 var MLA = {};
+/*  following left here for using jsdocs
+ *  comment above and use so jsdocs generate */
 /*
 function MLA(){
       this.getClassName = function(){
@@ -380,7 +382,7 @@ MLA.embedOLE = function(tmpPath, title, url, usr, pwd)
 {
 	var msg = window.external.embedOLE(tmpPath, title, url, usr, pwd);
 	var errMsg = MLA.errorCheck(msg);
-        //alert("errMsg"+errMsg);
+
         if(errMsg!=null) 
         	throw("Error: Not able to embedOLE; "+errMsg);
 
@@ -550,8 +552,7 @@ MLA.insertJSONTable = function(table)
 	return msg;
 }
 
-
-/* ================== BEGIN Added for PPT TK UPDATE  ==================================== */
+/* ================== BEGIN Additions for PPT TK UPDATE 1.1-1  ==================================== */
 
 /** Returns slide name of active slide.
  * @return slideName
@@ -880,7 +881,8 @@ MLA.getShapeRangeInfoORIG = function(shapeName)
         if(errMsg!=null) 
         	throw("Error: Not able to getShapeRangeInfo(); "+errMsg);
 
-	var shape =  eval('('+msg+')');
+	//var shape =  eval('('+msg+')');
+	var shape =  MLA.jsonParse(msg);
 	
 	return shape;
 }
@@ -905,7 +907,8 @@ MLA.getShapeRangeView = function(slideIndex, shapeName)
 
 	try{ 
 		//alert("JSON: "+msg);
-         	var tmpshape =  eval('('+msg+')');
+         	//var tmpshape =  eval('('+msg+')');
+         	var tmpshape = MLA.jsonParse(msg);
 		//alert(tmpshape.paragraphs.length);
 	}catch(err)
 	{ 
@@ -944,7 +947,8 @@ MLA.getPresentationTags = function()
         if(errMsg!=null) 
         	throw("Error: Not able to getPresentationTags(); "+errMsg);
 
-	var tags = eval('('+msg+')');
+	//var tags = eval('('+msg+')');
+	var tags = MLA.jsonParse(msg);
 
 	return tags;
 
@@ -965,7 +969,8 @@ MLA.getSlideTags = function(slideIndex)
         if(errMsg!=null) 
         	throw("Error: Not able to getSlideTags(); "+errMsg);
 
-	var tags = eval('('+msg+')');
+	//var tags = eval('('+msg+')');
+	var tags = MLA.jsonParse(msg);
 
 	return tags;
 }
