@@ -31,7 +31,7 @@ using System.IO;
 using Office = Microsoft.Office.Core;
 using Microsoft.Win32;
 using System.Windows.Forms.Integration;
-using DocumentFormat.OpenXml.Packaging;
+//using DocumentFormat.OpenXml.Packaging;
 using System.Web;
 
 
@@ -1716,6 +1716,7 @@ namespace MarkLogic_WordAddin
         public string removeContentControl(string ccid, string deletecontents)
         {
             string message = "";
+            object missing = Type.Missing;
 
             bool delete = false;
             try
@@ -1729,7 +1730,13 @@ namespace MarkLogic_WordAddin
                 {
                     if (cc.ID.Equals(ccid))
                     {
+                       
+
+                        //foreach (Word.Table t in cc.Range.Tables)
+                          //  t.Delete();
+
                         cc.Delete(delete);
+                        
                     }
                 }
             }
@@ -2000,7 +2007,8 @@ namespace MarkLogic_WordAddin
             return message;
         }
 
-        public string setContentControlFocus(string ccid)
+
+        public string setCursorAfterContentControl(string ccid)
         {          
             string message = "";
             try
@@ -2012,12 +2020,19 @@ namespace MarkLogic_WordAddin
                     //if (cc.Tag.Equals(tag))
                     if(cc.ID.Equals(ccid))
                     {
-                        object dir = Word.WdCollapseDirection.wdCollapseStart;
-
+                        //object dir = Word.WdCollapseDirection.wdCollapseEnd;
+                        
                         Word.Range r = cc.Range;
-                        r.Collapse(ref dir);
-
+                        //r.Collapse(ref dir);
+                        int idx = r.End;
+                        int charstartrange = idx +1;
+                        object unit = Word.WdUnits.wdCharacter;
+                        object count = charstartrange;
+                        r.MoveStart(ref unit, ref count);
+                        r.End = charstartrange;
                         r.Select();
+
+                     
                     }
                 }
             }catch(Exception e)
@@ -2031,6 +2046,96 @@ namespace MarkLogic_WordAddin
                     
         }
 
+        public string deleteSelection()
+        {
+            string message = "";
+
+            try
+            {
+                object missing = Type.Missing;
+                Globals.ThisAddIn.Application.Selection.Range.Delete(ref missing, ref missing);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+                //MessageBox.Show(message);
+            }
+
+            return message;
+        }
+
+        public string setCursorBeforeContentControl(string ccid)
+        {
+            string message = "";
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    //if (cc.Tag.Equals(tag))
+                    if (cc.ID.Equals(ccid))
+                    {
+                        //object dir = Word.WdCollapseDirection.wdCollapseEnd;
+
+                        Word.Range r = cc.Range;
+                        //r.Collapse(ref dir);
+                        int idx = r.Start;
+                        int charstartrange = idx - 1;
+                        object unit = Word.WdUnits.wdCharacter;
+                        object count = charstartrange;
+                        r.MoveStart(ref unit, ref count);
+                        r.End = charstartrange;
+                        r.Select();
+
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+                //MessageBox.Show(message);
+            }
+
+            return message;
+
+        }
+
+        public string setContentControlFocus(string ccid)
+        {
+            string message = "";
+            try
+            {
+                Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+
+                foreach (Word.ContentControl cc in ccs)
+                {
+                    //if (cc.Tag.Equals(tag))
+                    if (cc.ID.Equals(ccid))
+                    {
+                        object dir = Word.WdCollapseDirection.wdCollapseStart;
+
+                        Word.Range r = cc.Range;
+                        r.Collapse(ref dir);
+
+                        r.Select();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+                //MessageBox.Show(message);
+            }
+
+            return message;
+
+        }
+    
         public string setContentControlPlaceholderText(string ccid, string pltext,string cleartext)
         {
              string message = "";
@@ -2053,6 +2158,7 @@ namespace MarkLogic_WordAddin
 
                          if (clear)
                          {
+                             //cc.Range.Delete(ref missing, ref missing);
                              cc.Range.Text = "";
                          }
 
@@ -2255,41 +2361,45 @@ namespace MarkLogic_WordAddin
          * be .xml format.
          */
         //maybe pass filename
-        public void mergeWithActiveDocument(string opc_xml)
+        public string mergeWithActiveDocument(string opc_xml)
         {
-            object oname = "TEMP";
+            string message = "";
+           // object oname = "TEMP";
             object f = false;
             object t = true;
             object missing = Type.Missing;
-            Word.Document doc=null;
+            //object format = Word.WdSaveFormat.wdFormatDocumentDefault;
+            //object fname = getTempPath() + "TEMP.docx";
+            Microsoft.Office.Interop.Word.Document doc1 = Globals.ThisAddIn.Application.ActiveDocument;
+            Microsoft.Office.Interop.Word.Document doc = null;
 
             try
             {
+                
                 doc = Globals.ThisAddIn.Application.Documents.Add(ref missing, ref missing, ref missing, ref f);
+                doc.Content.Select();
                 doc.Application.Selection.InsertXML(opc_xml, ref missing);
-                /*Word.Document doc = Globals.ThisAddIn.Application.Documents.Open(ref oname,
-                                                                             ref missing, ref missing, ref missing,
-                                                                             ref missing, ref missing, ref missing,
-                                                                             ref missing, ref missing, ref missing,
-                                                                             ref missing, ref f, ref missing,
-                                                                             ref missing, ref missing, ref missing);
-                */
+
             }
             catch (Exception e)
             {
-                MessageBox.Show("error inserting XML: " + e.Message);
+                string errorMsg = e.Message;
+                message = "error: " + errorMsg;
+               // MessageBox.Show("error inserting XML: " + e.Message);
             }
 
             try
             {
-                Word.WdCompareDestination dest = Word.WdCompareDestination.wdCompareDestinationNew;
+                Word.WdCompareDestination dest = Word.WdCompareDestination.wdCompareDestinationNew;// wdCompareDestinationNew; // .wdCompareDestinationNew;   //.wdCompareDestinationNew;
                 Word.WdGranularity level = Word.WdGranularity.wdGranularityWordLevel;
-                Word.Document doc1 = Globals.ThisAddIn.Application.ActiveDocument;
+                //Word.Document doc1 = Globals.ThisAddIn.Application.ActiveDocument;
                 Globals.ThisAddIn.Application.MergeDocuments(doc1, doc, dest,
                                                              level, true, true, true, true, true,
                                                              true,
                                                              true, true, true, true, "", "",
                                                              Word.WdMergeFormatFrom.wdMergeFormatFromOriginal);
+                
+                //Globals.ThisAddIn.Application.CompareDocuments(doc1, doc, dest, level, true, true, true, true, true, true, true, true, true, true, "", true);
 
 
                 Globals.ThisAddIn.MERGEFLAG = false;  
@@ -2301,74 +2411,82 @@ namespace MarkLogic_WordAddin
             }
             catch (Exception e)
             {
-               
-                MessageBox.Show("error in MERGE: " + e.Message);
+                string errorMsg = e.Message;
+                message += "error: " + errorMsg;
+                //MessageBox.Show("error in MERGE: " + e.Message);
             }
-        }
 
-         
-        /*
-        //a bizzare experiment that actually works, still serializes as 2007 xml on save
-        public string insert2003XML()
-        {
-            string message = "";
-
-            string xml = 
-              "<w:document xmlns:w='http://schemas.microsoft.com/office/word/2003/wordml'>" +  // xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'>" +
-                "<w:body>" +
-                  "<w:p>" +
-                    "<w:pPr>" +
-                    "<w:rPr>" +
-                      "<w:u w:val='single'/>" +
-                    "</w:rPr>" +
-                    "</w:pPr>" + 
-                    "<w:r>" +
-                      "<w:rPr>" +
-                           "<w:u w:val='single'/>" +
-                      "</w:rPr>" +
-                      "<w:t>TEST UNDERLINE.</w:t>" +
-                    "</w:r>" +
-                  "</w:p>"+
-                "</w:body>" +
-              "</w:document>" ;
-
-            try
-            {
-                object missing = Type.Missing;
-                Word.Range r = Globals.ThisAddIn.Application.Selection.Range;
-                r.InsertXML(xml, ref missing);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("ERROR: " + e.Message);
-            }
             return message;
         }
 
-        //this again - another experiment
-        public string testDragDrop()
-        {
-            string message = "";
-            //this.MouseDown += new MouseEventHandler(this.webBrowser1);
-
-            IDataObject bak = Clipboard.GetDataObject();
-            string text = "";
-            if (bak.GetDataPresent(DataFormats.Text))
-            {
-                text = (String)bak.GetData(DataFormats.Text);
-            }
-            object fo = "t";
-            //DataObject dragData = new DataObject(typeof(string), PetesMethodOfDoom(mqr));
-            //DataObject dragData = new DataObject(typeof(string), PetesMethodOfDoom(mqr));
-
-            //DragDrop.DoDragDrop(TestBox, dragData, DragDropEffects.All);
-           
-            //System.Windows.DragDrop.DoDragDrop(fo, "test", System.Windows.DragDropEffects.Copy);
-            //webBrowser1.DoDragDrop("test", DragDropEffects.All);
-            return message;
-        }
-        
+        /* Review, added these 3 for Jay.
+         1)	MLA.setCursorBeforeContentControl(controlID); 
+         2)	MLA.setCursorAfterContentControl(controlID);
+         3)	MLA.deleteSelection();
         */
+
+       /*
+       //a bizzare experiment that actually works, still serializes as 2007 xml on save
+       public string insert2003XML()
+       {
+           string message = "";
+
+           string xml = 
+             "<w:document xmlns:w='http://schemas.microsoft.com/office/word/2003/wordml'>" +  // xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'>" +
+               "<w:body>" +
+                 "<w:p>" +
+                   "<w:pPr>" +
+                   "<w:rPr>" +
+                     "<w:u w:val='single'/>" +
+                   "</w:rPr>" +
+                   "</w:pPr>" + 
+                   "<w:r>" +
+                     "<w:rPr>" +
+                          "<w:u w:val='single'/>" +
+                     "</w:rPr>" +
+                     "<w:t>TEST UNDERLINE.</w:t>" +
+                   "</w:r>" +
+                 "</w:p>"+
+               "</w:body>" +
+             "</w:document>" ;
+
+           try
+           {
+               object missing = Type.Missing;
+               Word.Range r = Globals.ThisAddIn.Application.Selection.Range;
+               r.InsertXML(xml, ref missing);
+           }
+           catch (Exception e)
+           {
+               MessageBox.Show("ERROR: " + e.Message);
+           }
+           return message;
+       }
+
+       //this again - another experiment
+       public string testDragDrop()
+       {
+           string message = "";
+           //this.MouseDown += new MouseEventHandler(this.webBrowser1);
+
+           IDataObject bak = Clipboard.GetDataObject();
+           string text = "";
+           if (bak.GetDataPresent(DataFormats.Text))
+           {
+               text = (String)bak.GetData(DataFormats.Text);
+           }
+           object fo = "t";
+           //DataObject dragData = new DataObject(typeof(string), PetesMethodOfDoom(mqr));
+           //DataObject dragData = new DataObject(typeof(string), PetesMethodOfDoom(mqr));
+
+           //DragDrop.DoDragDrop(TestBox, dragData, DragDropEffects.All);
+           
+           //System.Windows.DragDrop.DoDragDrop(fo, "test", System.Windows.DragDropEffects.Copy);
+           //webBrowser1.DoDragDrop("test", DragDropEffects.All);
+           return message;
+       }
+        
+       */
 
     }
 }
