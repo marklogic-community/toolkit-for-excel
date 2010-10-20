@@ -135,12 +135,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8C7B408D8729739EE06FA93E253E968D"
-        "OwnerKey" = "8:_ECAC670253424CEEA433CD71C9A2225F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A789544E2EA44B6F99D110CCC043AEFD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -197,6 +191,12 @@
         {
         "MsmKey" = "8:_ECAC670253424CEEA433CD71C9A2225F"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_ECFEB567A244F5F8C686952167816CBF"
+        "OwnerKey" = "8:_ECAC670253424CEEA433CD71C9A2225F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -262,6 +262,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_ECFEB567A244F5F8C686952167816CBF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_67C91BE97B8E67E61A0207F75ADBFD89"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -275,12 +281,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_C5CDB2A1B4E274096E953C7B9BFA94EC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8C7B408D8729739EE06FA93E253E968D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -714,37 +714,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8C7B408D8729739EE06FA93E253E968D"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:DocumentFormat.OpenXml, Version=1.0.1803.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_8C7B408D8729739EE06FA93E253E968D"
-                    {
-                    "Name" = "8:DocumentFormat.OpenXml.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:DocumentFormat.OpenXml.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C01C3443D38F40479341D3B70EC54551"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A789544E2EA44B6F99D110CCC043AEFD"
             {
             "SourcePath" = "8:..\\MarkLogic_ExcelAddin\\bin\\Release\\MarkLogic_ExcelAddin.vsto"
@@ -878,6 +847,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_ECFEB567A244F5F8C686952167816CBF"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:DocumentFormat.OpenXml, Version=1.0.1803.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_ECFEB567A244F5F8C686952167816CBF"
+                    {
+                    "Name" = "8:DocumentFormat.OpenXml.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:DocumentFormat.OpenXml.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C01C3443D38F40479341D3B70EC54551"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F40E5E6EDB42E590C425DEED6095969D"
             {
             "AssemblyRegister" = "3:1"
@@ -959,20 +959,6 @@
             "Message" = "8:The Visual Studio Tools for Office 3.0 Runtime is not installed. Please run Setup.exe."
             "InstallUrl" = "8:"
             }
-            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_189B0062414F45129070162A0ACD4B2E"
-            {
-            "Name" = "8:Verify Office 2007 Shared PIA availability"
-            "Condition" = "8:HASSHAREDPIA"
-            "Message" = "8:A required component for interacting with Excel 2007 is not available. Please run setup.exe."
-            "InstallUrl" = "8:"
-            }
-            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_2FDB8202CC1C4DDF99CE0FFD99FC7520"
-            {
-            "Name" = "8:Verify Excel 2007 PIA availability"
-            "Condition" = "8:HASEXCELPIA"
-            "Message" = "8:A required component for interacting with Excel 2007 is not available. Please run setup.exe."
-            "InstallUrl" = "8:"
-            }
         }
         "Locator"
         {
@@ -983,18 +969,6 @@
             "RegKey" = "8:Software\\Microsoft\\vsto runtime Setup\\v9.0.21022"
             "Value" = "8:Install"
             "Property" = "8:VSTORUNTIME"
-            }
-            "{B8A5E33E-1082-4FE2-AC2E-1197791E9409}:_33DB4D8089A643519070F72FEC50068D"
-            {
-            "Name" = "8:Search for Office Excel 2007 PIA"
-            "ComponentId" = "8:{1ABEAF09-435F-47D6-9FEB-0AD05D4EF3EA}"
-            "Property" = "8:HASEXCELPIA"
-            }
-            "{B8A5E33E-1082-4FE2-AC2E-1197791E9409}:_B8CEDFBE9D3040C18A18F74FF00E98FA"
-            {
-            "Name" = "8:Search for Office 2007 Shared PIA"
-            "ComponentId" = "8:{FAB10E66-B22C-4274-8647-7CA1BA5EF30F}"
-            "Property" = "8:HASSHAREDPIA"
             }
         }
         "MsiBootstrapper"
@@ -1007,7 +981,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MarkLogic Add-in for Excel®"
         "ProductCode" = "8:{3A9F5E2C-168B-4D58-94F6-1FD5853E13C4}"
-        "PackageCode" = "8:{9660910C-5F4D-447C-A010-A65DCB6EFB47}"
+        "PackageCode" = "8:{CDE9CE91-46C7-4EF6-AFC9-B734A8D8EE0B}"
         "UpgradeCode" = "8:{22E7B61D-7682-4C8B-9ABE-840C0364115D}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
