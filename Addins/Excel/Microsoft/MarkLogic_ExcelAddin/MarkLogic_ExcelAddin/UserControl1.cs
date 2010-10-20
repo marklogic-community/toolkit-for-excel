@@ -25,6 +25,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using VBA = Microsoft.Vbe.Interop;
+
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.IO;
@@ -585,6 +587,7 @@ namespace MarkLogic_ExcelAddin
 
                         catch (Exception e)
                         {
+                            string do_nothing = e.Message;
                             r = null;
                         }
 
@@ -1435,6 +1438,223 @@ namespace MarkLogic_ExcelAddin
 
                 return message;
             }
+
+            public string readMacroOrig()
+            {
+                //MessageBox.Show("IN ADDIN");
+
+                VBA.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+                string projName = proj.Name;
+
+                //MessageBox.Show("PROJ NAME"+projName);
+
+                VBA.vbext_ProcKind procedureType = VBA.vbext_ProcKind.vbext_pk_Proc;
+                //MessageBox.Show("COUNT"+proj.VBComponents.Count);
+
+
+                try
+                {
+                    foreach (Microsoft.Vbe.Interop.VBComponent component in proj.VBComponents)
+                    {
+                        //MessageBox.Show("IN FOR");
+                        VBA.VBComponent vbComponent = component as VBA.VBComponent;
+                        //MessageBox.Show("CODE MODULE STRING: "+vbComponent.CodeModule.ToString());
+
+                        if (vbComponent != null)
+                        {
+                            string componentName = vbComponent.Name;
+                            VBA.CodeModule componentCode = vbComponent.CodeModule;
+                            int componentCodeLines = componentCode.CountOfLines;
+                            MessageBox.Show("component code lines: " + componentCodeLines);
+                            int line = 1;
+
+                            string composedFile = "";
+                            for (int i = 0; i < componentCode.CountOfLines; i++)
+                            {
+                                composedFile += componentCode.get_Lines(i + 1, 1) + Environment.NewLine;
+                            }
+                            MessageBox.Show("COMPOSED" + composedFile);
+
+                            while (line < componentCodeLines)
+                            {
+                                string procedureName = componentCode.get_ProcOfLine(line, out procedureType);
+                                MessageBox.Show("procedure name" + procedureName);
+                                if (procedureName != string.Empty)
+                                {
+                                    int procedureLines = componentCode.get_ProcCountLines(procedureName, procedureType);
+                                    int procedureStartLine = componentCode.get_ProcStartLine(procedureName, procedureType);
+                                    int codeStartLine = componentCode.get_ProcBodyLine(procedureName, procedureType);
+                                    string comments = "[No comments]";
+                                    if (codeStartLine != procedureStartLine)
+                                    {
+                                        comments = componentCode.get_Lines(line, codeStartLine - procedureStartLine);
+                                    }
+
+                                    int signatureLines = 1;
+                                    while (componentCode.get_Lines(codeStartLine, signatureLines).EndsWith("_"))
+                                    {
+                                        signatureLines++;
+                                    }
+
+                                    string signature = componentCode.get_Lines(codeStartLine, signatureLines);
+                                    signature = signature.Replace("\n", string.Empty);
+                                    signature = signature.Replace("\r", string.Empty);
+                                    signature = signature.Replace("_", string.Empty);
+                                    line += procedureLines - 1;
+
+                                    MessageBox.Show("procName: " + procedureName + "comments: " + comments + "signature: " + signature);
+                                }
+
+
+                                line++;
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("ERROR" + e.Message);
+                }
+                //15.         var projectName = project.Name;
+                //16.         var procedureType = Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Proc;
+
+                return "foo";
+            }
+
+            public int getMacroCount()
+            {
+               // int count=0;
+               // try
+              //  {
+                    VBA.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+                    return proj.VBComponents.Count;
+                    //count = proj.VBComponents.Count;
+               // }
+              //  catch
+             //   {
+               //     count = 0;
+              //  }
+
+               // return count;
+            }
+
+            public string getMacroText(int idx)
+            {
+
+                VBA.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+                string projName = proj.Name;
+                string componentFile = "";
+                object o_idx = idx;
+                try
+                {
+                    
+                    VBA.VBComponent vbComponent = proj.VBComponents.Item(o_idx);
+
+                    
+
+                    if (vbComponent != null)
+                    {
+                        MessageBox.Show("NOT NULL");
+
+                        VBA.CodeModule componentCode = vbComponent.CodeModule;
+                       
+         
+              
+
+                        componentFile = "";
+                        if (componentCode.CountOfLines > 0)
+                        {
+                            for (int i = 0; i < componentCode.CountOfLines; i++)
+                            {
+                                componentFile += componentCode.get_Lines(i + 1, 1) + Environment.NewLine;
+                            }
+                        }
+                        int line = 1;
+                        int componentCodeLines = componentCode.CountOfLines;
+                        VBA.vbext_ProcKind procedureType = VBA.vbext_ProcKind.vbext_pk_Proc;
+                        while (line < componentCodeLines)
+                        {
+                            string procedureName = componentCode.get_ProcOfLine(line, out procedureType);
+                            MessageBox.Show("procedure name" + procedureName);
+                            if (procedureName != string.Empty)
+                            {
+                                int procedureLines = componentCode.get_ProcCountLines(procedureName, procedureType);
+                                int procedureStartLine = componentCode.get_ProcStartLine(procedureName, procedureType);
+                                int codeStartLine = componentCode.get_ProcBodyLine(procedureName, procedureType);
+                                string comments = "[No comments]";
+                                if (codeStartLine != procedureStartLine)
+                                {
+                                    comments = componentCode.get_Lines(line, codeStartLine - procedureStartLine);
+                                }
+
+                                int signatureLines = 1;
+                                while (componentCode.get_Lines(codeStartLine, signatureLines).EndsWith("_"))
+                                {
+                                    signatureLines++;
+                                }
+
+                                string signature = componentCode.get_Lines(codeStartLine, signatureLines);
+                                signature = signature.Replace("\n", string.Empty);
+                                signature = signature.Replace("\r", string.Empty);
+                                signature = signature.Replace("_", string.Empty);
+                                line += procedureLines - 1;
+
+                                MessageBox.Show("procName: " + procedureName + "comments: " + comments + "signature: " + signature);
+                            }
+
+
+                            line++;
+                        }
+
+                       
+                    }
+                    
+                }
+                catch (Exception e)
+                {
+                    componentFile = "error: "+e.Message;
+                    MessageBox.Show("ERROR" + componentFile);
+                }
+                    return componentFile;
+            }
+
+            public String readMacroNew()
+            {
+                
+                VBA.VBProject proj  = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+                string projName = proj.Name;
+
+                //VBA.vbext_ProcKind procedureType = VBA.vbext_ProcKind.vbext_pk_Proc;
+                //MessageBox.Show("COUNT"+proj.VBComponents.Count);
+                
+                try
+                {
+                    foreach ( Microsoft.Vbe.Interop.VBComponent component in proj.VBComponents)
+                    {
+                        VBA.VBComponent vbComponent = component as VBA.VBComponent;
+                        if (vbComponent != null)
+                        {
+                            string componentName = vbComponent.Name;
+                            VBA.CodeModule componentCode = vbComponent.CodeModule;
+
+                            string composedFile="";
+                             for (int i = 0; i < componentCode.CountOfLines; i++)
+                             {
+                                  composedFile += componentCode.get_Lines(i + 1, 1) + Environment.NewLine;
+                             }
+                            MessageBox.Show("COMPOSED"+composedFile);
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {                 
+                    MessageBox.Show("error: " + e.Message);
+                }
+
+                return projName; //"foo";
+            }
+        
 
         
     

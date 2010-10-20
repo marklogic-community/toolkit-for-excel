@@ -78,6 +78,8 @@ namespace MarkLogic_ExcelAddin
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
+            
+           
         
         }
 
