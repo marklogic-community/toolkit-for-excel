@@ -1,0 +1,16 @@
+<config:searchfilters xmlns:config="http://marklogic.com/toolkit/excel/author/config">
+	<config:searchfilter>
+		<config:control-alias>LESSON</config:control-alias>
+		<config:display-label>Lesson</config:display-label>
+	</config:searchfilter>
+	<config:searchfilter>
+		<config:control-alias>MASTER</config:control-alias>
+		<config:display-label>Master</config:display-label>
+	</config:searchfilter>
+	<config:searchfilter>
+		<config:control-alias>REVIEW</config:control-alias>
+		<config:display-label>Review</config:display-label>
+	</config:searchfilter>
+</config:searchfilters>
+
+
