@@ -35,9 +35,18 @@ namespace MarkLogic_ExcelAddin
         public bool mlPaneDisplayed = false;
         private UserControl1 taskPaneControl1;
         private Microsoft.Office.Tools.CustomTaskPane ctpML;
+  
+         
+         // public delegate void ChartEvents_SelectEventHandler(int elementId, int arg1, int arg2);
+         // public event Excel.ChartEvents_SelectEventHandler chartSelected;
+        
+
+
+   
 
         private void ctpML_VisibleChanged(object sender, System.EventArgs e)
         {
+            
             Globals.Ribbons.Ribbon1.viewTaskPaneButton.Checked =
                 ctpML.Visible;
         }
@@ -72,10 +81,80 @@ namespace MarkLogic_ExcelAddin
                 new EventHandler(ctpML_VisibleChanged);
             ctpML.Width = 400;
             ctpML.Visible = ac.getPaneEnabled();
+            //changing follwoing to WB level
+            //Excel.Application app = Globals.ThisAddIn.Application;
+            //app.EnableEvents = true;
+            //app.SheetActivate+= new Microsoft.Office.Interop.Excel.AppEvents_SheetActivateEventHandler(app_SheetActivate);
+        /*THESE
+         * Excel.Application app = Globals.ThisAddIn.Application;
+            app.SheetActivate+=new Microsoft.Office.Interop.Excel.AppEvents_SheetActivateEventHandler(app_SheetActivate);
+            app.WorkbookOpen += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookOpenEventHandler(app_WorkbookOpen
+         */
 
+            //wb.SheetActivate+=new Microsoft.Office.Interop.Excel.WorkbookEvents_SheetActivateEventHandler(wb_SheetActivate);
+            //Excel.Sheets charts = app.Charts;
+            //Excel.ChartObjects chartObjects = (Excel.ChartObjects)(Sheet.ChartObjects(Type.Missing));
+
+           /* foreach (Excel.Worksheet c in charts)
+            {
+                try{
+                Excel.ChartObjects chartObjects = (Excel.ChartObjects)(c.ChartObjects(Type.Missing));
+                MessageBox.Show(chartObjects.Count+"");
+                }catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            */
+           /* Excel.Sheets charts = app.Charts;
+            MessageBox.Show("" + charts.Count);
+            int chartCnt = charts.Count;
+            int idx = 1;
+            foreach (Excel.Worksheet ws in charts)
+            {
+                Microsoft.Office.Tools.Excel.Chart c = (Microsoft.Office.Tools.Excel.Chart)ws.ChartObjects(idx);
+                MessageBox.Show(c.Name);
+                c.SelectEvent+=new Microsoft.Office.Interop.Excel.ChartEvents_SelectEventHandler(chart_SelectEvent);
+                c.ActivateEvent += new Microsoft.Office.Interop.Excel.ChartEvents_ActivateEventHandler(chart_Activate);
+                idx++;
+
+            }
+            
+         */
+       /*     Excel.Sheets charts = Globals.ThisAddIn.Application.Charts;
+            int chartCount = charts.Count;
+            int idx=1;
+            foreach (Excel.Worksheet s in charts)
+            {
+                Excel.Chart chart = s.ChartObjects(idx);
+                chart.Activate()+= new Microsoft.Office.Interop.Excel.ChartEvents_ActivateEventHandler(chart_Activate);
+                idx++;
+                }
+                //c.Activate += new Microsoft.Office.Interop.Excel.ChartEvents_ActivateEventHandler(chart_Activate);
+            }
+            
+            */
 
         }
 
+        // another way (besides using is)to check what sheet is
+  //      foreach (object obj in doc.Sheets)//
+//{
+// Microsoft.Office.Interop.Excel.Worksheet sheet = obj as Microsoft.Office.Interop.Excel.Worksheet;
+// if (sheet != null)
+  // ...
+//}
+
+
+
+       
+
+        //consider 
+        //new, newchart, newsheet events
+
+
+
+        
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
             

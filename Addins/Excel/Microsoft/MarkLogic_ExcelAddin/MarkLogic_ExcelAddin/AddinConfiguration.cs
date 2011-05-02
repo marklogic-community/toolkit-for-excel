@@ -38,6 +38,9 @@ namespace MarkLogic_ExcelAddin
         private string rbnGrpLbl = "";
         private string ctpTtlLbl = "";
 
+        private string isEventsEnabled = "";
+        private bool eventsEnabled = false;
+
         private string isPaneEnabled = "";
         private bool paneEnabled = false;
 
@@ -82,10 +85,14 @@ namespace MarkLogic_ExcelAddin
                 rbnGrpLbl = (string)regKey1.GetValue("RbnGrpLbl");
                 rbnBtnLbl = (string)regKey1.GetValue("RbnBtnLbl");
                 isPaneEnabled = (string)regKey1.GetValue("CTPEnabled");
-
                 if (isPaneEnabled.ToUpper().Equals("TRUE"))
                 {
                     paneEnabled = true;
+                }
+                isEventsEnabled = (string)regKey1.GetValue("EventsEnabled");
+                if (isEventsEnabled.ToUpper().Equals("TRUE"))
+                {
+                    eventsEnabled = true;
                 }
 
             }
@@ -122,6 +129,11 @@ namespace MarkLogic_ExcelAddin
         public bool getPaneEnabled()
         {
             return paneEnabled;
+        }
+
+        public bool getEventsEnabled()
+        {
+            return eventsEnabled;
         }
     }
 

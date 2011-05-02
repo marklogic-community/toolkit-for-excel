@@ -24,8 +24,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Media.Imaging;
 using Excel = Microsoft.Office.Interop.Excel;
-using VBA = Microsoft.Vbe.Interop;
+using VBIDE = Microsoft.Vbe.Interop;
 
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
@@ -35,7 +36,6 @@ using System.IO;
 using Office = Microsoft.Office.Core;
 using Microsoft.Win32;
 using Tools = Microsoft.Office.Tools.Excel;
-using OpenXmlPkg = DocumentFormat.OpenXml.Packaging;
 
 
 namespace MarkLogic_ExcelAddin
@@ -53,6 +53,22 @@ namespace MarkLogic_ExcelAddin
             //private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";  
             private string addinVersion = "1.0-2"; 
             HtmlDocument htmlDoc;
+private const int CF_ENHMETAFILE = 14;
+private const int CF_METAFILEPICT = 3;
+[DllImport("user32.dll")]
+private static extern bool OpenClipboard(IntPtr hWndNewOwner);
+[DllImport("user32.dll")]
+private static extern int IsClipboardFormatAvailable(int wFormat);
+[DllImport("user32.dll")]
+private static extern IntPtr GetClipboardData(int wFormat);
+[DllImport("user32.dll")]
+private static extern int CloseClipboard();
+[DllImport("gdi32.dll")]
+static extern IntPtr CopyEnhMetaFile(IntPtr hemfSrc, IntPtr hNULL);
+[System.Runtime.InteropServices.DllImport("gdi32")]
+public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBuffer);
+//static extern IntPtr CopyEnhMetaFile(IntPtr hemfSrc, string lpszFile);
+//
 
             public UserControl1()
             {
@@ -78,8 +94,22 @@ namespace MarkLogic_ExcelAddin
 
                     this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
 
+                    if (ac.getEventsEnabled())
+                    { 
+                        Excel.Application app = Globals.ThisAddIn.Application;
+                        app.SheetActivate+=new Microsoft.Office.Interop.Excel.AppEvents_SheetActivateEventHandler(app_SheetActivate);
+                        app.WorkbookOpen += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookOpenEventHandler(app_WorkbookOpen);
+                        app.SheetDeactivate += new Microsoft.Office.Interop.Excel.AppEvents_SheetDeactivateEventHandler(app_SheetDeactivate);
+                        app.SheetSelectionChange += new Microsoft.Office.Interop.Excel.AppEvents_SheetSelectionChangeEventHandler(app_SheetSelectionChange);
+                        //app.SheetChange += new Microsoft.Office.Interop.Excel.AppEvents_SheetChangeEventHandler(app_SheetChange);
+                    }
+
                 }
             }
+
+
+
+           
 
             private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
             {
@@ -302,13 +332,22 @@ namespace MarkLogic_ExcelAddin
                 string wsname = "";
                 try
                 {
-                    Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
-                    wsname = ws.Name;
+                    if (Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet is Excel.Worksheet)
+                    {
+                        Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                        wsname = ws.Name;
+                    }
+                    else if (Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet is Excel.Chart)
+                    {
+                        Excel.Chart cs = (Excel.Chart)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                        wsname = cs.Name;
+                    }
                 }
                 catch (Exception e)
                 {
                     string errorMsg = e.Message;
                     wsname = "error: " + errorMsg;
+                    MessageBox.Show(wsname);
                 }
 
                 return wsname;
@@ -444,7 +483,7 @@ namespace MarkLogic_ExcelAddin
                 return message;
             }
 
-            public String addNamedRange(string coordinate1, string coordinate2, string rngName)
+            public String addNamedRange(string coordinate1, string coordinate2, string rngName, string sheetName)
             {
 
                 string message = "";
@@ -455,10 +494,19 @@ namespace MarkLogic_ExcelAddin
 
                 try
                 {
-
-                    Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
-                    Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
-                    Excel.Name nm = ws.Names.Add(rngName, rg, true, missing, missing, missing, missing, missing, missing, missing, missing);
+                    if (sheetName.Equals("active"))
+                    {
+                        Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                        Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
+                        Excel.Name nm = ws.Names.Add(rngName, rg, true, missing, missing, missing, missing, missing, missing, missing, missing);
+                    }
+                    else
+                    {
+                        Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[sheetName]; // (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name];
+                        Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
+                        Excel.Name nm = ws.Names.Add(rngName, rg, true, missing, missing, missing, missing, missing, missing, missing, missing);
+                    
+                    }
 
                 }
                 catch (Exception e)
@@ -493,14 +541,77 @@ namespace MarkLogic_ExcelAddin
 
             }
 
+            public String getWorksheetChartNames(string sheetName)
+            {
+                string message = "";
+                string names = "";
+                object missing = Type.Missing;
+                
+                try
+                {
+                    Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[sheetName];
+                    Excel.ChartObjects cs = (Excel.ChartObjects)ws.ChartObjects(missing);
+
+                    
+                    foreach (Excel.ChartObject c in cs)
+                    {
+                            names += c.Name + ":";
+                    }
+
+                   
+                    if (!(names.Equals("")))
+                    {
+                        names = names.Substring(0, names.Length - 1);
+                    }
+
+                    message = names;
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                    MessageBox.Show(message);
+                }
+                return message;
+            }
+            public String getWorksheetNamedRangeRangeNames(string sheetName)
+            {
+                string message="";
+                string names = "";
+                try
+                {
+                    Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[sheetName];
+                    Excel.Names ns = ws.Names;
+                
+                    foreach (Excel.Name n in ns)
+                        names += n.Name + ":";
+
+                    if (!(names.Equals("")))
+                    {
+                        names = names.Substring(0, names.Length - 1);
+                    }
+
+                    message = names;
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+
+                return message;
+            }
+
+            //for workbooks
             public String getNamedRangeRangeNames()
             {
                 string message = "";
                 string names = "";
+             
                 try
                 {
-                    Excel.Names ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
-
+                    Excel.Names    ns = Globals.ThisAddIn.Application.ActiveWorkbook.Names;
+                    
                     foreach (Excel.Name n in ns)
                         names += n.Name + ":";
 
@@ -632,7 +743,9 @@ namespace MarkLogic_ExcelAddin
                 foreach (Excel.Name nDel in ns)
                 {
                     if (nDel.Name.EndsWith(rngName))
+                    //if(nDel.Name.Equals(rngName))
                     {
+                        //MessageBox.Show("Deleting");
                         nDel.Delete();
                     }
                 }
@@ -647,6 +760,42 @@ namespace MarkLogic_ExcelAddin
                 return message;
             }
 
+            public String getSelectedChartName()
+            {
+                string message = "";
+                try
+                {
+                    //MessageBox.Show("IN FUNCTION");
+
+                    message = Globals.ThisAddIn.Application.ActiveChart.Name;
+                }
+                catch (Exception e)
+                {
+                    string donothing_removewarning = e.Message;
+                   // MessageBox.Show(donothing_removewarning);
+                }
+                return message;
+            }
+
+            public String getSelectedRangeName()
+            {
+                string message = "";
+                try
+                {
+
+                    Excel.Range r = (Excel.Range)Globals.ThisAddIn.Application.Selection;
+                    Excel.Name nm = (Excel.Name)r.Name;
+                    //MessageBox.Show("IN GETSELECTEDRANGENAME" + nm.Name);
+                    message = nm.Name;
+                }
+                catch (Exception e)
+                {
+                    string donothing_removewarning = e.Message;
+                    
+                }
+                return message;
+            }
+
             public String getSelectedRangeCoordinates()
             {
                 string message = "";
@@ -655,7 +804,7 @@ namespace MarkLogic_ExcelAddin
                 try
                 {
                     Excel.Range r = (Excel.Range)Globals.ThisAddIn.Application.Selection;
-
+                  
                     int start = 1;
                     int end = r.Count;
                     int count = 1;
@@ -709,6 +858,7 @@ namespace MarkLogic_ExcelAddin
                         coordinate = r.get_Address(r.Row, r.Column, Microsoft.Office.Interop.Excel.XlReferenceStyle.xlA1, missing, missing);
                         value2 = r.Value2 + "";
                         formula = r.Formula + "";
+                        //r.AddComment
 
                         string cell = "";
                         cell = "{ \"rowIdx\": " + "\"" + row + "\""
@@ -1008,6 +1158,7 @@ namespace MarkLogic_ExcelAddin
                 try
                 {
                     Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
+                    
                     ws.Cells.Select();
                     ws.Cells.Clear();
                     Excel.Range r = (Excel.Range)ws.Cells[1, 1];
@@ -1022,6 +1173,62 @@ namespace MarkLogic_ExcelAddin
                 return message;
 
             }
+
+            //separate function of try catches?
+            public String getSheetType(string sheetName)
+            {
+                string sheetType = "";
+                //MessageBox.Show("IN FUNCTION" + sheetName);
+                try
+                {
+                    Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
+
+                    try
+                    {
+
+                        if ((Excel.Worksheet)wb.Worksheets[sheetName] is Excel.Worksheet)
+                        {
+                            sheetType = "xlWorksheet";
+                            //     MessageBox.Show("HERE 1");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        string donothing_removewarning = e.Message;
+                        try
+                        {
+                            if ((Excel.Chart)wb.Charts[sheetName] is Excel.Chart)  //wont work casting SH to worksheet chart in is
+                            {
+                                //       MessageBox.Show("HERE 3");
+                                sheetType = "xlChart";
+                                //      MessageBox.Show("HERE 2");
+
+                            }
+                        }
+                        catch (Exception e2)
+                        {
+                            string donothing_removewarning2 = e2.Message;
+                        }
+                    }
+
+                    //MessageBox.Show("what the hell is it?");
+                    //not able to determine name
+                    //some meaningful message here?
+ 
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    sheetType = "error: " + errorMsg;
+                    MessageBox.Show("IN ERROR" + e.Message + "----" + e.StackTrace);
+                }
+                //check for other types, maybe update other function with types;
+                //check in office 2007
+
+                return sheetType;
+
+            }
+      
 
             public String getTempPath()
             {
@@ -1038,6 +1245,8 @@ namespace MarkLogic_ExcelAddin
 
                 return tmpPath;
             }
+
+        //UNDER HERE IS QUESTIONABLE
 
             static bool FileInUse(string path)
             {
@@ -1139,7 +1348,7 @@ namespace MarkLogic_ExcelAddin
 
             public String openXlsx(string path, string title, string url, string user, string pwd)
             {
-               // MessageBox.Show("in the addin path:"+path+  "      title"+title+ "   uri: "+url+"user"+user+"pwd"+pwd);
+               //MessageBox.Show("in the addin path:"+path+  "      title:"+title+ "   uri: "+url+" user: "+user+" pwd: "+pwd);
                 string message = "";
                 object missing = Type.Missing;
                 string tmpdoc = "";
@@ -1439,73 +1648,64 @@ namespace MarkLogic_ExcelAddin
                 return message;
             }
 
-            public string readMacroOrig()
+            public int getMacroCount()
             {
-                //MessageBox.Show("IN ADDIN");
+                int count=0;
+                 try
+                 {
+                    VBIDE.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+                    count = proj.VBComponents.Count;
+                 }
+                 catch(Exception e)
+                 {
+                     MessageBox.Show(e.Message);
+                 };
 
-                VBA.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
-                string projName = proj.Name;
+               return count;
+            }
 
-                //MessageBox.Show("PROJ NAME"+projName);
-
-                VBA.vbext_ProcKind procedureType = VBA.vbext_ProcKind.vbext_pk_Proc;
-                //MessageBox.Show("COUNT"+proj.VBComponents.Count);
-
-
+            public string getMacroName(int idx)
+            {
+                string message = "";
                 try
                 {
-                    foreach (Microsoft.Vbe.Interop.VBComponent component in proj.VBComponents)
+                    VBIDE.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+                    object o_idx = idx;
+                    VBIDE.VBComponent vbComponent = proj.VBComponents.Item(o_idx);
+                    message = vbComponent.Name;
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+                return message;
+            }
+
+            public string getMacroProcedureName(int idx)
+            {
+                string message = "";
+                try
+                {
+                    VBIDE.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+                    object o_idx = idx;
+                    VBIDE.VBComponent vbComponent = proj.VBComponents.Item(o_idx);
+                    if (vbComponent != null)
                     {
-                        //MessageBox.Show("IN FOR");
-                        VBA.VBComponent vbComponent = component as VBA.VBComponent;
-                        //MessageBox.Show("CODE MODULE STRING: "+vbComponent.CodeModule.ToString());
-
-                        if (vbComponent != null)
+                        VBIDE.CodeModule componentCode = vbComponent.CodeModule;
+                        if (componentCode.CountOfLines > 0)
                         {
-                            string componentName = vbComponent.Name;
-                            VBA.CodeModule componentCode = vbComponent.CodeModule;
-                            int componentCodeLines = componentCode.CountOfLines;
-                            MessageBox.Show("component code lines: " + componentCodeLines);
                             int line = 1;
-
-                            string composedFile = "";
-                            for (int i = 0; i < componentCode.CountOfLines; i++)
-                            {
-                                composedFile += componentCode.get_Lines(i + 1, 1) + Environment.NewLine;
-                            }
-                            MessageBox.Show("COMPOSED" + composedFile);
-
+                            int componentCodeLines = componentCode.CountOfLines;
+                            VBIDE.vbext_ProcKind procedureType = VBIDE.vbext_ProcKind.vbext_pk_Proc;
                             while (line < componentCodeLines)
                             {
                                 string procedureName = componentCode.get_ProcOfLine(line, out procedureType);
-                                MessageBox.Show("procedure name" + procedureName);
+                                //MessageBox.Show("procedure name" + procedureName);
                                 if (procedureName != string.Empty)
                                 {
-                                    int procedureLines = componentCode.get_ProcCountLines(procedureName, procedureType);
-                                    int procedureStartLine = componentCode.get_ProcStartLine(procedureName, procedureType);
-                                    int codeStartLine = componentCode.get_ProcBodyLine(procedureName, procedureType);
-                                    string comments = "[No comments]";
-                                    if (codeStartLine != procedureStartLine)
-                                    {
-                                        comments = componentCode.get_Lines(line, codeStartLine - procedureStartLine);
-                                    }
-
-                                    int signatureLines = 1;
-                                    while (componentCode.get_Lines(codeStartLine, signatureLines).EndsWith("_"))
-                                    {
-                                        signatureLines++;
-                                    }
-
-                                    string signature = componentCode.get_Lines(codeStartLine, signatureLines);
-                                    signature = signature.Replace("\n", string.Empty);
-                                    signature = signature.Replace("\r", string.Empty);
-                                    signature = signature.Replace("_", string.Empty);
-                                    line += procedureLines - 1;
-
-                                    MessageBox.Show("procName: " + procedureName + "comments: " + comments + "signature: " + signature);
+                                    message = procedureName;
                                 }
-
-
                                 line++;
                             }
                         }
@@ -1513,65 +1713,195 @@ namespace MarkLogic_ExcelAddin
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("ERROR" + e.Message);
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
                 }
-                //15.         var projectName = project.Name;
-                //16.         var procedureType = Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Proc;
-
-                return "foo";
+                return message;
             }
 
-            public int getMacroCount()
+            public string getMacroSignature(int idx)
             {
-               // int count=0;
-               // try
-              //  {
-                    VBA.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
-                    return proj.VBComponents.Count;
-                    //count = proj.VBComponents.Count;
-               // }
-              //  catch
-             //   {
-               //     count = 0;
-              //  }
+                string message = "";
+                string signature = "";
+                try
+                {
+                    VBIDE.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+                    object o_idx = idx;
+                    VBIDE.VBComponent vbComponent = proj.VBComponents.Item(o_idx);
+                    if (vbComponent != null)
+                    {
+                        VBIDE.CodeModule componentCode = vbComponent.CodeModule;
+                        if (componentCode.CountOfLines > 0)
+                        {
+                          int line = 1;
+                          int componentCodeLines = componentCode.CountOfLines;
+                          VBIDE.vbext_ProcKind procedureType = VBIDE.vbext_ProcKind.vbext_pk_Proc;
+                          while (line < componentCodeLines)
+                          {
+                            string procedureName = componentCode.get_ProcOfLine(line, out procedureType);
+                            //MessageBox.Show("procedure name" + procedureName);
+                            if (procedureName != string.Empty)
+                            {
+                                int procedureLines = componentCode.get_ProcCountLines(procedureName, procedureType);
+                                int procedureStartLine = componentCode.get_ProcStartLine(procedureName, procedureType);
+                                int codeStartLine = componentCode.get_ProcBodyLine(procedureName, procedureType);
+                                int signatureLines = 1;
+                                while (componentCode.get_Lines(codeStartLine, signatureLines).EndsWith("_"))
+                                {
+                                    signatureLines++;
+                                }
 
-               // return count;
+                                signature = componentCode.get_Lines(codeStartLine, signatureLines);
+                                signature = signature.Replace("\n", string.Empty);
+                                signature = signature.Replace("\r", string.Empty);
+                                signature = signature.Replace("_", string.Empty);
+                                line += procedureLines - 1;
+                            }
+                            line++;
+                          }
+                        }
+                        message = signature;
+                    }
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                    MessageBox.Show("SIGNATURE ERROR: " + e.Message);
+                }
+                return message;
+            }
+
+            public string getMacroComments(int idx)
+            {
+                string message = "";
+                string comments = "";
+                try
+                {
+                    VBIDE.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+                    object o_idx = idx;
+                    VBIDE.VBComponent vbComponent = proj.VBComponents.Item(o_idx);
+                    if (vbComponent != null)
+                    {
+                        VBIDE.CodeModule componentCode = vbComponent.CodeModule;
+                        if (componentCode.CountOfLines > 0)
+                        {
+                            int line = 1;
+                            int componentCodeLines = componentCode.CountOfLines;
+                            VBIDE.vbext_ProcKind procedureType = VBIDE.vbext_ProcKind.vbext_pk_Proc;
+                            while (line < componentCodeLines)
+                            {
+                                string procedureName = componentCode.get_ProcOfLine(line, out procedureType);
+                                //MessageBox.Show("procedure name" + procedureName);
+                                if (procedureName != string.Empty)
+                                {
+                                    int procedureLines = componentCode.get_ProcCountLines(procedureName, procedureType);
+                                    int procedureStartLine = componentCode.get_ProcStartLine(procedureName, procedureType);
+                                    int codeStartLine = componentCode.get_ProcBodyLine(procedureName, procedureType);
+                                    comments = "[No comments]";
+                                    if (codeStartLine != procedureStartLine)
+                                    {
+                                        comments = componentCode.get_Lines(line, codeStartLine - procedureStartLine);
+                                    }
+
+                                }
+                                line++;
+                            }
+                        }
+                        message = comments;
+                    }
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                    MessageBox.Show("COMMENTS ERROR: " + e.Message);
+                }
+                return message;
+            }
+
+            public string getMacroType(int idx)
+            {
+                 string message = "";
+                 object o_idx = idx;
+                 try
+                 {
+                     VBIDE.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+                     VBIDE.VBComponent vbComponent = proj.VBComponents.Item(o_idx);
+                     message = vbComponent.Type+"";
+                     //vbComponent.
+                 }
+                 catch (Exception e)
+                 {
+                     string errorMsg = e.Message;
+                     message = "error: " + errorMsg;
+                     MessageBox.Show("TYPE ERROR: " + e.Message);
+                 }
+                return message;
             }
 
             public string getMacroText(int idx)
             {
 
-                VBA.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
-                string projName = proj.Name;
+                VBIDE.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+               
+             
+                /*try
+                {
+                    string projName = proj.Name;
+                    MessageBox.Show("projName: " + projName);// 
+                   // MessageBox.Show(" description: " + proj.Description + " buildFileName: " + proj.BuildFileName + " fileName: " + proj.FileName);
+                }
+                catch (Exception x)
+                {
+                    MessageBox.Show("ERROR: " + x.Message);
+                }
+                */
+   /*             try
+                {
+                    VBA.References refs = proj.References;
+                    foreach (VBA.Reference r in refs)
+                    {
+                        MessageBox.Show("REFERENCE: "+r.Name);
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("NO REFS :" + e.Message);
+                }
+                */
                 string componentFile = "";
                 object o_idx = idx;
                 try
                 {
                     
-                    VBA.VBComponent vbComponent = proj.VBComponents.Item(o_idx);
-
+                    VBIDE.VBComponent vbComponent = proj.VBComponents.Item(o_idx);
+                    //MessageBox.Show("TYPE: "+vbComponent.Type + "NAME: "+vbComponent.Name);
+                    
                     
 
                     if (vbComponent != null)
                     {
-                        MessageBox.Show("NOT NULL");
+                        //MessageBox.Show("NOT NULL");
 
-                        VBA.CodeModule componentCode = vbComponent.CodeModule;
-                       
-         
-              
+                        VBIDE.CodeModule componentCode = vbComponent.CodeModule;
+
+                        //MessageBox.Show("Count of lines "+componentCode.CountOfLines);
+                         
 
                         componentFile = "";
                         if (componentCode.CountOfLines > 0)
                         {
+                            
                             for (int i = 0; i < componentCode.CountOfLines; i++)
                             {
                                 componentFile += componentCode.get_Lines(i + 1, 1) + Environment.NewLine;
                             }
                         }
+                        /*
                         int line = 1;
                         int componentCodeLines = componentCode.CountOfLines;
-                        VBA.vbext_ProcKind procedureType = VBA.vbext_ProcKind.vbext_pk_Proc;
+                        VBIDE.vbext_ProcKind procedureType = VBIDE.vbext_ProcKind.vbext_pk_Proc;
                         while (line < componentCodeLines)
                         {
                             string procedureName = componentCode.get_ProcOfLine(line, out procedureType);
@@ -1599,12 +1929,14 @@ namespace MarkLogic_ExcelAddin
                                 signature = signature.Replace("_", string.Empty);
                                 line += procedureLines - 1;
 
-                                MessageBox.Show("procName: " + procedureName + "comments: " + comments + "signature: " + signature);
+                                MessageBox.Show("procName: " + procedureName + "\n\r"+
+                                                "comments: " + comments + "\n\r" +
+                                                "signature: " + signature);
                             }
 
 
                             line++;
-                        }
+                        }*/
 
                        
                     }
@@ -1618,45 +1950,282 @@ namespace MarkLogic_ExcelAddin
                     return componentFile;
             }
 
-            public String readMacroNew()
-            {
-                
-                VBA.VBProject proj  = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
-                string projName = proj.Name;
+        public VBIDE.vbext_ComponentType getComponentTypeFromString(string componentType)
+        {
+            VBIDE.vbext_ComponentType type;
 
-                //VBA.vbext_ProcKind procedureType = VBA.vbext_ProcKind.vbext_pk_Proc;
-                //MessageBox.Show("COUNT"+proj.VBComponents.Count);
-                
+            if (componentType.Equals("vbext_ct_StdModule"))
+            {
+              type =   VBIDE.vbext_ComponentType.vbext_ct_StdModule;
+            }
+            else if (componentType.Equals("vbext_ct_ActiveXDesigner"))
+            {
+               type= VBIDE.vbext_ComponentType.vbext_ct_ActiveXDesigner;
+            }
+            else if (componentType.Equals("vbext_ct_Document"))
+            {
+                type = VBIDE.vbext_ComponentType.vbext_ct_Document;
+            }
+            else if (componentType.Equals("vbext_ct_Document"))
+            {
+              type=   VBIDE.vbext_ComponentType.vbext_ct_Document;
+            }
+            else if (componentType.Equals("vbext_ct_MSForm"))
+            {
+               type= VBIDE.vbext_ComponentType.vbext_ct_MSForm;
+            }
+            else
+            {
+               type = VBIDE.vbext_ComponentType.vbext_ct_StdModule;
+            }
+            
+                return type;
+        }
+
+            public string removeMacro(string macroname)
+            {
+                string message = "";
+                object id = macroname;
+                int count = 0;
                 try
                 {
-                    foreach ( Microsoft.Vbe.Interop.VBComponent component in proj.VBComponents)
+                    Globals.ThisAddIn.Application.EnableEvents = false;
+                    VBIDE.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+                    //count = proj.VBComponents.Count;
+                    foreach (VBIDE.VBComponent vbModule in proj.VBComponents)
                     {
-                        VBA.VBComponent vbComponent = component as VBA.VBComponent;
-                        if (vbComponent != null)
+                        VBIDE.CodeModule cm = vbModule.CodeModule;
+                        if (cm.CountOfLines > 0)
                         {
-                            string componentName = vbComponent.Name;
-                            VBA.CodeModule componentCode = vbComponent.CodeModule;
+                            int line = 1;
+                            int componentCodeLines = cm.CountOfLines;
+                            VBIDE.vbext_ProcKind procedureType = VBIDE.vbext_ProcKind.vbext_pk_Proc;
+           
+                            while (line < componentCodeLines)
+                            {
+                                string procedureName = cm.get_ProcOfLine(line, out procedureType);
+                                if (procedureName.Equals(id))
+                                {
 
-                            string composedFile="";
-                             for (int i = 0; i < componentCode.CountOfLines; i++)
-                             {
-                                  composedFile += componentCode.get_Lines(i + 1, 1) + Environment.NewLine;
-                             }
-                            MessageBox.Show("COMPOSED"+composedFile);
 
+                                    if (procedureName != string.Empty)
+                                    {
+                                        int procedureLines = cm.get_ProcCountLines(procedureName, procedureType);
+                                        int procedureStartLine = cm.get_ProcStartLine(procedureName, procedureType);
+                                        int codeStartLine = cm.get_ProcBodyLine(procedureName, procedureType);
+                                        //MessageBox.Show("name" + procedureName + " lines" + procedureLines + " start" + procedureStartLine + " codeStart" + codeStartLine);
+                                        vbModule.CodeModule.DeleteLines(procedureStartLine, procedureLines);
+                                        break;
+                                    }
+                                   
+                                    line++;
+                                }
+                            }
                         }
                     }
+                    // proj.VBComponents.Remove(vbModule);
+                    Globals.ThisAddIn.Application.EnableEvents = true;
                 }
                 catch (Exception e)
-                {                 
-                    MessageBox.Show("error: " + e.Message);
+                {
+                    Globals.ThisAddIn.Application.EnableEvents = true;
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                    MessageBox.Show("ERROR" + e.Message);
+                }
+                return message;
+            }
+
+            public string addMacro(string macro, string proctype) //addType
+            {
+                string message = "";
+                try
+                {
+                    VBIDE.vbext_ComponentType type = getComponentTypeFromString(proctype);
+                    
+                    VBIDE.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
+                    VBIDE.VBComponent vbModule = proj.VBComponents.Add(type);
+                    string macroCode = macro; // "sub autoMacro()\r\n msgbox \" I am a macro. \" \r\n end sub";
+                    vbModule.CodeModule.AddFromString(macroCode);
+                   
+                     
+                    //oDoc.Application.Run("autoMacro", ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing);
+                }
+                catch (Exception e)
+                {
+                    
+                    //MessageBox.Show("ERROR " + e.Message);
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+                //vbModule = null; 
+                return message;
+            }
+
+            //ran in context of active sheet/missing are optional args to macro
+            public string runMacro(string name) //ran in context of active sheet/missing are optional args to macro
+            {
+                string message = "";
+                object missing = Type.Missing;
+
+                try
+                {
+                    Globals.ThisAddIn.Application.Run(name, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing);
+
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+                return message;
+            }
+
+            public string deletePicture(string sheetName, string imageName)
+            {
+                string message = "";
+                object picName = imageName;
+
+                try
+                {
+                    Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.Worksheets[sheetName];
+                    Excel.Picture pic = (Excel.Picture)ws.Pictures(picName);
+                    pic.Delete();
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                    //MessageBox.Show(message);
+                }
+                return message;
+
+            }
+
+            public string exportChartImagePNG(string chartExportPath)
+            {
+                string message = "";
+                try
+                {
+                    Excel.Chart c = Globals.ThisAddIn.Application.ActiveChart;
+
+                    //name returns sheetname ' '(space) chartname
+                    //by default, they don't have spaces, but you can give them spaces, so how to tease out chartname?
+                    //chart.title? chart.index?
+
+                    //Excel.Chart c = (Excel.Chart)Globals.ThisAddIn.Application.ActiveWorkbook.Charts[chartName];
+                    //need to preserve clipboard before overwriting with image
+                    //MessageBox.Show("2");
+                    
+                    //MessageBox.Show(chartExportPath);
+                    c.Export(chartExportPath, "PNG", false);
+                    
+                    //c.CopyPicture(Microsoft.Office.Interop.Excel.XlPictureAppearance.xlScreen, Microsoft.Office.Interop.Excel.XlCopyPictureFormat.xlBitmap, Microsoft.Office.Interop.Excel.XlPictureAppearance.xlScreen);
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                    MessageBox.Show("ERROR CASTING CHART TO STRING: " + e.Message);
                 }
 
-                return projName; //"foo";
+           
+                return message;
+            }
+
+            public string insertBase64ToImage(string base64String)
+            {
+       
+                string message = "";
+                try
+                {
+                    // Convert Base64 String to byte[]
+                    byte[] imageBytes = Convert.FromBase64String(base64String);
+                    MemoryStream ms = new MemoryStream(imageBytes, 0,
+                      imageBytes.Length);
+
+                    // Convert byte[] to Image
+                    ms.Write(imageBytes, 0, imageBytes.Length);
+                    Image image = Image.FromStream(ms, true);
+                   
+                    Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
+                    Excel.Range oRange = (Excel.Range)ws.Cells[10, 10];
+
+                    //backup clipboard
+                    IDataObject bak = Clipboard.GetDataObject();
+                    string text = "";
+                    if (bak.GetDataPresent(DataFormats.Text))
+                    {
+                        text = (String)bak.GetData(DataFormats.Text);
+                    }
+
+                    System.Windows.Forms.Clipboard.SetDataObject(image, true);
+                    ws.Paste(oRange, false);
+
+                    Excel.Picture s = (Excel.Picture)Globals.ThisAddIn.Application.Selection;
+                    message = s.Name;
+
+                    if (!(text.Equals("")))
+                        Clipboard.SetText(text);
+               
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                    //MessageBox.Show("ERROR: " + e.Message);
+                }
+
+
+                return message;
             }
         
+            public string base64EncodeImage(string chartPath)
+            {
+                string base64String = "";
+           
+                try
+                {
+                    Image img = Image.FromFile(chartPath);
 
-        
+
+                    //MemoryStream ms = new MemoryStream();
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        byte[] imageBytes = ms.ToArray();
+
+                        // Convert byte[] to Base64 String
+                        base64String = Convert.ToBase64String(imageBytes);
+
+                    }
+
+                    img.Dispose();
+
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    base64String = "error: " + errorMsg;
+                }
+                
+                return base64String;
+            }
+
+            public string deleteFile(string filePath)
+            {
+                string message = "";
+                try
+                {
+                    File.Delete(filePath);
+                }
+                catch (Exception e)
+                {
+                    string errorMsg = e.Message;
+                    message = "error: " + errorMsg;
+                }
+                return message;
+            }
     
     }
 }
