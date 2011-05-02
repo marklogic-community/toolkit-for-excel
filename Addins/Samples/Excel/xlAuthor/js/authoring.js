@@ -384,16 +384,35 @@ function insertMacroAction(contentURL, buttonIndex)
 
 }
 
-function insertComponentAction(contenturl, rId, other, buttonIndex)
+function insertNamedRangeAction(contenturl, comtype, docuri, buttonIndex)
 {
+	//alert("uri"+contenturl+" type"+comtype+" docuri"+docuri+" idx"+buttonIndex);
+        var activeCell = MLA.getActiveCell();
+	var rowIdx = activeCell.rowIdx;
+	var colIdx = activeCell.colIdx;
+	//alert("start coord"+activeCell.coordinate+"row"+rowIdx+"col"+colIdx);
 	try{
-             if(rId == null) 
-		  rId = "";
              //have to pass buttonIndex as insertedPart may not be inserted
 	     //when we go to construct the undo button
-	     simpleAjaxComponentInsert(contenturl,rId, other, buttonIndex);
+	     simpleAjaxNamedRangeInsert(contenturl, rowIdx, colIdx,comtype, buttonIndex);
 	}catch(err){
-	     alert("ERROR in insertComponentAction(): "+err.description);
+	     alert("ERROR in insertNamedRangeAction(): "+err.description);
+	}
+
+}
+
+function insertChartAction(contenturl, comtype, buttonIndex)
+{
+
+//	alert("Insert Chart Action, contenturl"+contenturl);
+//	alert("type"+comtype);
+//	alert("buttonindex"+buttonIndex);
+	try{
+             //have to pass buttonIndex as insertedPart may not be inserted
+	     //when we go to construct the undo button
+	     simpleAjaxChartInsert(contenturl,comtype, buttonIndex);
+	}catch(err){
+	     alert("ERROR in insertChartAction(): "+err.description);
 	}
 }
 
@@ -414,18 +433,33 @@ function simpleAjaxMacroInsert(contentURL, buttonIndex)
     });
 }
 
+function simpleAjaxNamedRangeInsert(contenturl,rowIdx, colIdx, type, buttonIndex)
+{ //alert("contenturl"+contenturl+"type"+type+"idx"+buttonIndex);
+    $.ajax({
+          type: "GET",
+          url: "search/insert-component-nr.xqy",
+          data: { uri:contenturl, row:rowIdx, col:colIdx },
+          success: function(msg){
+			try{
+			 insertNamedRangeContent(msg,buttonIndex);
+			}catch(e){
+			  alert("ERROR in SimpleNamedRangeInsert(): "+e.description);
+			}
+                   }
+    });
+}
 
-function simpleAjaxComponentInsert(contenturl,rId, other, buttonIndex)
-{ 
+function simpleAjaxChartInsert(contenturl, type, buttonIndex)
+{ //alert("contenturl"+contenturl+"type"+type+"idx"+buttonIndex);
     $.ajax({
           type: "GET",
           url: "search/insert-component.xqy",
-          data: "uri=" + contenturl+"&rid="+ rId,
+          data: { uri :contenturl },
           success: function(msg){
 			try{
-			 insertComponentContent(msg, other, buttonIndex);
+			 insertChartContent(msg,buttonIndex);
 			}catch(e){
-			  alert("ERROR in SimpleAjaxComponentInsert(): "+e.description);
+			  alert("ERROR in SimpleAjaxChartInsert(): "+e.description);
 			}
                    }
     });
@@ -449,17 +483,16 @@ function setPictureFormat(pictureFormat)
 	var msg = MLA.setPictureFormat(slideindex, shapename, jsonPicFormat);
 }
 
-function setUndoButton(buttonIndex,newShapeName)
+function setUndoButton(buttonIndex,source, imageName)
 {
 	try
 	{
 	     var searchType =$("#searchtype input[@name='search:bst']:checked").val();
-	     var slideIndex = MLA.getSlideIndex();
-	     var shapeName = newShapeName; //MLA.getShapeRangeName();
+	     var sheetName = MLA.getActiveWorksheetName();
 	     var id = "undobutton"+buttonIndex;
 	     var btn = $('#'+id);
 	     btn.children('a').remove();
-	     btn.append("<a href=\"javascript:undoInsert('"+searchType+"','"+slideIndex+"','"+shapeName+"')\" onmouseup='blurSelected(this)' class='smallbtn'>Undo</a>");
+	     btn.append("<a href=\"javascript:undoInsert('"+searchType+"','"+sheetName+"','"+source+"','"+imageName+"')\" onmouseup='blurSelected(this)' class='smallbtn'>Undo</a>");
 	}catch(err){
                alert("ERROR in setUndoButton(): "+err.description); 
 	}
@@ -477,7 +510,7 @@ function insertMacroContent(content, buttonIndex)
 		var macroName = "";
 		
 		if(mplength > 1){
-			alert("length"+mplength);
+			alert("length: "+mplength);
 			//jsonPkg = metaXml.getElementsByTagName("dc:description")[0];
 		}
 		else{
@@ -511,69 +544,112 @@ function insertMacroContent(content, buttonIndex)
 	}
 }
 
-function insertComponentContent(content, buttonIndex)
-{       //take last JSON string for creation of Shape, for each tag on shape, loop through and add custom parts
-	//other is a picture currently, but could include more, hence 'other'
+function checkForEmptyNode(node)
+{
+  if (node.childNodes && node.childNodes.length > 0) {
+     return true;
+  } else{
+     return false;
+	
+  }
+}
+
+function insertNamedRangeContent(content, buttonIndex)
+{
+	try{
+		//alert("Content"+content.xml);
+        var metapart = content.getElementsByTagName("dc:metadata");
+	var tag = metapart[0].getElementsByTagName("dc:identifier")[0].childNodes[0].nodeValue; 
+	var cells = content.getElementsByTagName("cell");
+
+        var namedRangeCells = new Array();
+	var cellValue =null;
+	var cellCoordinate=null;
+	var cellFormula=null;
+	var startCoordinate;
+	var endCoordinate;
+
+	var length = cells.length;
+	var endCoordinateLength = length-1;
+
+	for(var i=0; i < length; i++)
+        {
+		try{
+	 var coord = cells[i].getElementsByTagName("coordinate")[0];
+	 if(checkForEmptyNode(coord))
+	       cellCoordinate=coord.childNodes[0].nodeValue;
+
+	 if(i==0)
+	     startCoordinate=cellCoordinate;
+
+	 if(i==endCoordinateLength)
+	     endCoordinate=cellCoordinate;
+
+	 var value = cells[i].getElementsByTagName("value")[0];
+	 if(checkForEmptyNode(value))
+	       cellValue=value.childNodes[0].nodeValue;
+
+	 var formula = cells[i].getElementsByTagName("formula")[0];
+	 if(checkForEmptyNode(formula))
+	       cellFormula=formula.childNodes[0].nodeValue;
+
+	 var thisCell = new MLA.Cell(cellCoordinate);
+
+	 if(cellValue!=null)
+	         thisCell.value2=cellValue;
+
+	 if(cellFormula!=null)
+		 thisCell.formula = cellFormula;
+
+	 namedRangeCells[i]=thisCell;
+
+	 //alert("coord"+coord+"value"+value);
+          
+
+	        }
+	        catch(err)
+ 	        {
+			alert("ERROR "+err.description);
+	        }
+	}//end of for
+	MLA.setCellValue(namedRangeCells);
+	var sheetName = MLA.getActiveWorksheetName();
+        MLA.addNamedRange(startCoordinate,endCoordinate,tag,sheetName);
+        MLA.addCustomXMLPart(metapart[0].xml);	
+	}//end of try
+	catch(err2)
+	{
+		alert("ERROR IS HERE"+err2.description);
+	}
+}
+
+function insertChartContent(content, buttonIndex)
+{    
 	try{
 		var local = MLA.createXMLDOM(content);
 		var metaparts = local.getElementsByTagName("dc:metadata");
 		var mplength = metaparts.length;
 
-		var jsonPkg = null;
-		var jsonString = "";
-                var shapeRange = null;
+		var chartString = "";
+		var source = "";
 		
 		if(mplength > 1){
-			var metaXml = metaparts[metaparts.length-1];
-			jsonPkg = metaXml.getElementsByTagName("dc:description")[0];
-		}
-		else{
-			jsonPkg = metaparts[0].getElementsByTagName("dc:description")[0];
-		}
-
-                jsonString = jsonPkg.childNodes[0].nodeValue;
-		
-		if(jsonString==null || jsonString =="")
-		{
 			//do nothing
 		}
-		else
-		{
-			//alert("HERE");
-			shapeRange = MLA.jsonParse(jsonString);
-			var newShapeName = "";
+		else{
+			chartString= metaparts[0].getElementsByTagName("dc:description")[0].childNodes[0].nodeValue;
+			source= metaparts[0].getElementsByTagName("dc:source")[0].childNodes[0].nodeValue;
+		}
 
-			//alert("HERE 2");
-			if(shapeRange.shape.type=="msoPicture")
-			{
-				//alert("HERE 3"+other);
-				  insertImage(other);
-				//alert("HERE 4"+other);
-				  setPictureFormat(shapeRange.pictureFormat);
-				//alert("HERE 5"+other);
-				  var slideIndex=MLA.getSlideIndex();
-				  var newShapeName= MLA.getShapeRangeName();
-				  var jsonTags = MLA.jsonStringify(shapeRange.tags);
-				//alert("HERE 6"+other);
-				  MLA.addShapeTags(slideIndex,newShapeName,jsonTags);
-			}
-			else
-			{
-			  var slideIndex = MLA.getSlideIndex();
-			      newShapeName = MLA.addShape(slideIndex,shapeRange);
-			}
+	        var imageName = MLA.insertBase64ToImage(chartString);
 
-			//tags retain name and value, so now loop through 
-			//and just add Custom parts, they're already linked thru tag.value/dc:identifier
-
-                        for (var i = 0; i < metaparts.length; i++) 
-			{ 
-                          MLA.addCustomXMLPart(metaparts[i].xml);
-		        } 
-
-		        setUndoButton(buttonIndex,newShapeName);	
+                for (var i = 0; i < metaparts.length; i++) 
+		{ 
+                     MLA.addCustomXMLPart(metaparts[i].xml);
+		}
+	        //alert("imageName: "+imageName);	
+		setUndoButton(buttonIndex,source, imageName);	
 					
-                }
 	}catch(e)
 	{
 		alert("error: "+e.description);
@@ -629,7 +705,7 @@ function setMetadataPartValues(tagId)
         
 	//set form values in Custom XML Part
 	//start at 2 to skip identifier and first description (we use for json)
-	for(var i = 4;i < meta.childNodes.length; i++){
+	for(var i = 5;i < meta.childNodes.length; i++){
 	        var formID="form-"+i+"-"+controlID;
                 var value = $('#'+formID).val();
 		meta.childNodes[i].text = value;
@@ -739,8 +815,8 @@ function setMacroFocus(enteredId)
 	   var metadata = MLA.getCustomXMLPart(macroMetadataID);
 	   var meta = metadata.getElementsByTagName("dc:metadata")[0];
 
-           //start at 4 to skip relation, type, identifier, description
-	   for(var i = 4;i < meta.childNodes.length; i++){
+           //start at 5 to skip relation, type, identifier, description
+	   for(var i = 5;i < meta.childNodes.length; i++){
 		//assumes XML has QName prefix
 	        var localname = meta.childNodes[i].nodeName.split(":");
 		var formID = "form-"+i+"-"+tagID;
@@ -775,7 +851,7 @@ function setMacroFocus(enteredId)
 	   }//end of for
 	}else{
 		//addcustomxmlpart, set header values to macro, macrotype, procedurname, macrotext, display rest of of form.  call setMacroFocus(procedurename);
-	        
+	        var sourceId = randomId(); 
 	        var procedureName = tagID;
 		var macroType = getMacroTypeByProcedureName(tagID); 
 	        var description =  getMacroTextByProcedureName(tagID);
@@ -783,10 +859,20 @@ function setMacroFocus(enteredId)
 		var stringxml = MLA.unescapeXMLCharEntities(generateTemplate(1));
 		//var stringxml = MLA.unescapeXMLCharEntities(generateTemplate(map.get('",$value,"')));
                 var domxml = MLA.createXMLDOM(stringxml);
+                var source = domxml.getElementsByTagName('dc:source')[0];
                 var relation = domxml.getElementsByTagName('dc:relation')[0];
                 var type = domxml.getElementsByTagName('dc:type')[0];
                 var id = domxml.getElementsByTagName('dc:identifier')[0];
                 var desc = domxml.getElementsByTagName('dc:description')[0];
+
+		if(source.hasChildNodes()){
+		     source.childNodes[0].nodeValue='';
+	 	     source.childNodes[0].nodeValue=sourceId;
+	        }
+	        else{
+	             var child = source.appendChild(domxml.createTextNode(sourceId));
+		}
+
 
                 if(relation.hasChildNodes()){
 		     relation.childNodes[0].nodeValue='';
@@ -856,8 +942,8 @@ function setTagFocus(enteredId)
 	   var metadata = MLA.getCustomXMLPart(metadataID);
 	   var meta = metadata.getElementsByTagName("dc:metadata")[0];
 
-           //start at 2 to skip identifier and first description
-	   for(var i = 4;i < meta.childNodes.length; i++){
+           //start at 4 to skip identifier and first description
+	   for(var i = 5;i < meta.childNodes.length; i++){
 		//assumes XML has QName prefix
 	        var localname = meta.childNodes[i].nodeName.split(":");
 		var formID = "form-"+i+"-"+tagID;
@@ -971,7 +1057,7 @@ function getComponentTags(taggedComponent, taggedType, sheetName) //relation, ty
 
 function refreshMacroList()
 {
-     $('#properties').children('div').remove();
+     //$('#properties').children('div').remove();
 
      if($('#macrolist').children('li').length){   
 	 $('#macrolist').children('li').remove();
@@ -1296,7 +1382,7 @@ function checkComponentTags(value)
 		   componentName=chartName;
 		   componentRelation="chart";
 		   //alert("A CHART"+componentName);
-                   //var sheetName = MLA.getActiveWorksheetName();
+                   var sheetName = MLA.getActiveWorksheetName();
               }else{
                    componentName = MLA.getSelectedRangeName();
 		   coords = MLA.getSelectedRangeCoordinates();
@@ -1305,7 +1391,7 @@ function checkComponentTags(value)
 	      }
 
 	      if(!(componentName==null || componentName =="")){
-		     // alert("componentName in IF: "+componentName);
+		  //alert("componentName in IF: "+componentName);
              	  var customPartIds = MLA.getCustomXMLPartIds();
                   var customPartId = null;
 
@@ -1322,11 +1408,13 @@ function checkComponentTags(value)
 		            if(description==coords){
 				    alert("A named range for the selected coordinates already exists.");
 				    same=true;
+				    break;
 			    }else if(type==componentName){
 		            //alert("componentName "+componentName);
 	                           if(id==value){
-		                     alert("The name entered already exists. Enter a unique name.");
+		                     alert("The name entered already exists. Enter a unique name." );
 		                     same = true;
+				     break;
 	                           }
 			    }
 	                 }else if(relation=="chart"){
@@ -1334,6 +1422,7 @@ function checkComponentTags(value)
 			     if(startsWith(type,sheetName) && id==value){
 				alert("The name entered already exists. Enter a unique name.");
 				same = true;
+				break;
 			     }
 			 }
 	            }
@@ -1343,7 +1432,6 @@ function checkComponentTags(value)
 		      //now check no namedrange type in customxml parts   ends with value or starts with the active sheetname
 		      //applying same label to different named range won't work.  they have to be unique on a sheet, this is MS
 		      //the namedrange will move, and you'll end up with 1 nr in the sheet, but 2 customxml parts with the same relation/type/identifier
-                   //alert("IN THE ELSE"); 
                   var sheetName = MLA.getActiveWorksheetName();
 		  var customPartIds = MLA.getCustomXMLPartIds();
                   var customPartId = null;
@@ -1352,11 +1440,16 @@ function checkComponentTags(value)
                         customPartId = customPartIds[i];
 	                var customPart = MLA.getCustomXMLPart(customPartId);
                         var type = customPart.getElementsByTagName("dc:type")[0].childNodes[0].nodeValue;
-                        var description = customPart.getElementsByTagName("dc:description")[0].childNodes[0].nodeValue;
-			//alert("type: "+type+ " description: "+description+" coords: "+coords+" sheetName: "+sheetName);
+                        var id = customPart.getElementsByTagName("dc:identifier")[0].childNodes[0].nodeValue;
+			//alert("type: "+type+ " coords: "+coords+" sheetName: "+sheetName);
 			  if(startsWith(type,sheetName) && endsWith(type,value)){
 				alert("The name entered already exists. Enter a unique name.");
 				same = true;
+			        break;
+			  }else if(startsWith(type,sheetName) && id==value){
+				alert("The name entered already exists. Enter a unique name.");
+				same = true;
+				break;
 			  }
 		    }
 		  }
@@ -1366,8 +1459,25 @@ function checkComponentTags(value)
     return same;
 }
 
+function deleteCustomPart(source)
+{
+    var customPieceIds = MLA.getCustomXMLPartIds();
+    var customPieceId = null;
 
-function deleteCustomPart(relation, type, partId)
+    if(customPieceIds.length > 0 ){
+	for (i = 0; i < customPieceIds.length; i++){
+            customPieceId = customPieceIds[i];
+	    var customPiece = MLA.getCustomXMLPart(customPieceId);
+            var sourceX = customPiece.getElementsByTagName("dc:source")[0].childNodes[0].nodeValue;
+	    if(sourceX==source)
+	    {
+		MLA.deleteCustomXMLPart(customPieceId);
+	    }
+	}
+    }
+}
+
+function deleteCustomPartTwo(relation, type, partId)
 {
     var customPieceIds = MLA.getCustomXMLPartIds();
     var customPieceId = null;
@@ -1393,24 +1503,30 @@ function deleteCustomPart(relation, type, partId)
 }
 
 
-function deleteWorkbookTag(relation, type, tagvalue)
+/*function deleteWorkbookTag(relation, type, tagvalue)
 {
     deleteCustomPart(relation, type, tagvalue);
     setWorkbookProperties();
+}*/
+
+function deleteWorkbookTag(source)
+{
+    deleteCustomPart(source);
+    setWorkbookProperties();
 }
 
-function deleteWorksheetTag(relation, type, tagvalue)
+function deleteWorksheetTag(source)
 {
-    deleteCustomPart(relation, type, tagvalue);
+    deleteCustomPart(source);
     setWorksheetProperties();
 }
 
-function deleteComponentTag(relation, type, tagvalue)
+function deleteComponentTag(relation, type, source)
 {
     if(relation=="namedrange")
 	    MLA.removeNamedRange(type);
 
-    deleteCustomPart(relation, type, tagvalue);
+    deleteCustomPart(source);
     setComponentProperties();
 }
 
@@ -1432,13 +1548,12 @@ function setWorkbookProperties()
 	   for (i = 0; i < customPartIds.length; i++){
                customPartId = customPartIds[i];
 	       var customPart = MLA.getCustomXMLPart(customPartId);
-               var id = customPart.getElementsByTagName("dc:relation")[0];
-	       if(id.childNodes[0].nodeValue=="workbook"){
-		  var relation =customPart.getElementsByTagName("dc:relation")[0].childNodes[0].nodeValue;
-		  var type =customPart.getElementsByTagName("dc:type")[0].childNodes[0].nodeValue;
+               var relation = customPart.getElementsByTagName("dc:relation")[0].childNodes[0].nodeValue;
+	       if(relation=="workbook"){
+		  var source =customPart.getElementsByTagName("dc:source")[0].childNodes[0].nodeValue;
 		  var tag =customPart.getElementsByTagName("dc:identifier")[0].childNodes[0].nodeValue;
 		  //alert("This tag has been applied");
-		  	tagHtml += "<a href=\"javascript:deleteWorkbookTag('"+relation+"','"+type+"','"+tag+"')\" id='"+tag+"'>"+
+		  	tagHtml += "<a href=\"javascript:deleteWorkbookTag('"+source+"')\" id='"+tag+"'>"+
 		      "<span class='deleteIcon' title='delete tag'><strong><label>"+tag+"</label></strong></span>"+
 	           "</a>"+
 	           "<br/>";
@@ -1476,10 +1591,11 @@ function setWorksheetProperties()
 	       var customPart = MLA.getCustomXMLPart(customPartId);
 	       var relation =customPart.getElementsByTagName("dc:relation")[0].childNodes[0].nodeValue;
 	       var type =customPart.getElementsByTagName("dc:type")[0].childNodes[0].nodeValue;
+	       var source =customPart.getElementsByTagName("dc:source")[0].childNodes[0].nodeValue;
 	       var tag =customPart.getElementsByTagName("dc:identifier")[0].childNodes[0].nodeValue;
 	       if(relation=="worksheet"){
 		       if(type==sheetName){
-		  	tagHtml += "<a href=\"javascript:deleteWorksheetTag('"+relation+"','"+type+"','"+tag+"')\" id='"+tag+"'>"+
+		  	tagHtml += "<a href=\"javascript:deleteWorksheetTag('"+source+"')\" id='"+tag+"'>"+
 		      "<span class='deleteIcon' title='delete tag'><strong><label>"+tag+"</label></strong></span>"+
 	           "</a>"+
 	           "<br/>";
@@ -1500,60 +1616,16 @@ function setWorksheetProperties()
 
 }
 
-function undoInsert(searchType, slideIndex, shapeName)
+function undoInsert(searchType, sheetName, source, imageName)
 {
-    //var searchType =$("input[@name='search:bst']:checked").val();
-    //var slideIndex = MLA.getSlideIndex();
     if(searchType == null || searchType ==""){
 	alert("You must first insert content before you can undo it");
     }else{
-	if(searchType == "slide"){
-		var slide_tags = MLA.getSlideTags(slideIndex);
-                for(var i =0;i<slide_tags.tags.length;i++){
-	            var tag = slide_tags.tags[i];
-		    var tagName = tag.name;
-	            var tagValue = tag.value;
-		    MLA.deleteSlideTag(slideIndex, tagName);
-	            deleteCustomPart(tagValue);
+		    MLA.deletePicture(sheetName, imageName);
+	            deleteCustomPart(source);
 
-		}
-
-	        var slideShapeNames = MLA.getSlideShapeNames(slideIndex);
-
-		for(var j=0;j<slideShapeNames.length;j++){
-		      
-		      var shapeName = slideShapeNames[j];
-		      var shapeRange = MLA.getShapeRangeView(slideIndex, shapeName);
-                      var shape_tags = shapeRange.tags;
-	              for(var i =0;i<shape_tags.length;i++){
-		         var tag = shape_tags[i];
-	                 var tagName = tag.name;
-		         var tagValue = tag.value;
-		         MLA.deleteShapeTag(slideIndex, shapeName, tagName);
-	                 deleteCustomPart(tagValue);
-		      }
-
-		}
-	  	
-		var msg = MLA.deleteSlide(slideIndex);
-	}
-	else
-	{
-		//var shapeName = MLA.getShapeRangeName();
-                var shapeRange = MLA.getShapeRangeView(slideIndex, shapeName);
-                var shape_tags = shapeRange.tags;
-	        for(var i =0;i<shape_tags.length;i++){
-		    var tag = shape_tags[i];
-	            var tagName = tag.name;
-		    var tagValue = tag.value;
-		    MLA.deleteShapeTag(slideIndex,shapeName, tagName);
-	            deleteCustomPart(tagValue);
-		}
-
-		var msg = MLA.deleteShape(slideIndex, shapeName);
-	     
-	}
     }
+
 }
 
 function checkForComponentTags()
@@ -1614,7 +1686,7 @@ function checkForComponentTags()
 }
 
 //relation is either workbook, worksheet, component, macro
-//type is name of workbook, worksheet, componenet, macrotype (vbe_ct*)
+//type is name of workbook, worksheet, component, macrotype (vbe_ct*)
 //identifier is tag applied or procedurename
 //description is used for chart serizization and macro serialization
 
@@ -1623,10 +1695,11 @@ function checkForComponentTags()
 //type (used as name of component) will be the unique identifie
 function setComponentProperties()
 {
-
+//	alert("IN SET COMPONENT PROPERTIES");
 
     var componentProps = $('#properties');
     componentProps.children('div').remove();
+    //append a div?
     $('#properties').show();
     $('#noproperties').hide();
 	
@@ -1662,11 +1735,12 @@ function setComponentProperties()
 	            var customPart = MLA.getCustomXMLPart(customPartId);
 	            //need to add check here for relation
 	            var relation =customPart.getElementsByTagName("dc:relation")[0].childNodes[0].nodeValue;
+	            var source =customPart.getElementsByTagName("dc:source")[0].childNodes[0].nodeValue;
 	            var type =customPart.getElementsByTagName("dc:type")[0].childNodes[0].nodeValue;
 	            var tag =customPart.getElementsByTagName("dc:identifier")[0].childNodes[0].nodeValue;
 	            if(relation=="namedrange" || relation=="chart"){ 
 		            if(type==componentName){ 
-	                     tagHtml += "<a href=\"javascript:deleteComponentTag('"+relation+"','"+type+"','"+tag+"')\" id='"+tag+"'>"+
+	                     tagHtml += "<a href=\"javascript:deleteComponentTag('"+relation+"','"+type+"','"+source+"')\" id='"+tag+"'>"+
 		                        "<span class='deleteIcon' title='delete tag'><strong><label>"+tag+"</label></strong></span>"+
 	                                "</a>"+
 	                                "<br/>";	  
@@ -1685,11 +1759,11 @@ function setComponentProperties()
  
     }catch(err)
     {
-		//do nothing
+              alert("ERROR"+err.description);
     }
 
 
-    return false;
+     return false;
 }
 
 function refreshPropertiesPanel()

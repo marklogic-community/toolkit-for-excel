@@ -15,7 +15,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 :)
+declare namespace dc = "http://purl.org/dc/elements/1.1/";
 
 let $filename := xdmp:get-request-field("uid")
-let $x := fn:doc($filename)
-return $x
+let $image := fn:doc($filename)/dc:metadata/dc:description[1]/node()
+return  binary{xs:hexBinary(xs:base64Binary($image))}

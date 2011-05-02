@@ -23,10 +23,10 @@ xdmp:set-response-content-type('text/html'),
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> <!--harset=iso-8859-1" />-->
 <link rel="stylesheet" href="css/authoring.css" />
 <script type="text/javascript" src="js/jquery-1.5.min.js"></script>
-<script type="text/javascript" src="js/authoring.js"></script>
-<script type="text/javascript" src="js/MarkLogicExcelAddin.js">//</script>
-<script type="text/javascript" src="js/MarkLogicExcelEventSupport.js">//</script>
-<script type="text/javascript" src="js/MarkLogicExcelEventHandlers.js">//</script>
+<script type="text/javascript" src="js/authoring.js?rand={xdmp:random()}"></script>
+<script type="text/javascript" src="js/MarkLogicExcelAddin.js?rand={xdmp:random()}">//</script>
+<script type="text/javascript" src="js/MarkLogicExcelEventSupport.js?rand={xdmp:random()}">//</script>
+<script type="text/javascript" src="js/MarkLogicExcelEventHandlers.js?rand={xdmp:random()}">//</script>
 
 <!-- generate a lookuptable in js as well , so I can add appropriate metadata for control-->
 <script type="text/javascript">{config:generate-js-for-controls()}</script> 

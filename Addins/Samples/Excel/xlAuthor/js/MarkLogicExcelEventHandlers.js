@@ -71,7 +71,7 @@ MLA.rangeSelectedHandler = function(rangeName)
 
 	    var msg = rangeName;
 	    setComponentProperties();
-            if( $('#icon-meta-namedrangectrl').is('.selectedctrl'))
+            if( $('#icon-meta-namedrangectrl').is('.selectedctrl') && $('#icon-meta-namedrangectrl').is(':visible'))
             {
 		clearMetadataForm();
 	        refreshTagTree();
@@ -93,8 +93,11 @@ MLA.chartObjectMouseDownHandler = function(chartName)
 	try
 	{
            //alert("chartName in handler is "+chartName);
-	    setComponentProperties();
-	    if( $('#icon-meta-namedrangectrl').is('.selectedctrl')){
+	    if($('#icon-namedrangectrl').is('.selectedctrl') &&  $('#icon-namedrangectrl').is(':visible')){
+	        setComponentProperties();
+	    }
+
+	    if( $('#icon-meta-namedrangectrl').is('.selectedctrl') && $('#icon-meta-namedrangectrl').is(':visible')){
 		clearMetadataForm();
 	        refreshTagTree();
 	    }
@@ -116,6 +119,7 @@ MLA.chartObjectMouseDownHandler = function(chartName)
 	catch(err)
 	{
 	    msg="error in chartObjectMouseDownHandler: "+err.description;
+	    alert(msg);
 
 	}
 	return msg;

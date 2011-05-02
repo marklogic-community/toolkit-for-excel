@@ -22,18 +22,8 @@ declare namespace xlink="http://www.w3.org/1999/xlink";
 declare namespace pkg="http://schemas.microsoft.com/office/2006/xmlPackage";
 declare namespace ins="http://marklogic.com/openxml/insert";
 declare namespace dc="http://purl.org/dc/elements/1.1/";
-declare namespace ppt=  "http://marklogic.com/openxml/excel";
 
 let $uri := xdmp:get-request-field("uri")
-let $rId := xdmp:get-request-field("rid")
 
-let $doc-props := xdmp:document-properties($uri)
-let $custom-metadata := $doc-props/prop:properties/ppt:shapetags/ppt:shape/ppt:tag[@ppt:rid = $rId]/ppt:custompart
-
-let $metadata := for $meta in $custom-metadata
-                 return <meta>{fn:doc($meta)}</meta>
-
-return xdmp:quote(<insertable>
-                     {$metadata}
-                  </insertable>)
+return xdmp:quote(fn:doc($uri)) 
 

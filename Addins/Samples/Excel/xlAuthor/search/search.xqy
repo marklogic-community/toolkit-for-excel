@@ -47,8 +47,10 @@ declare function ps:page-results(
   let $stop := 1 + $page-stop + ($SIZE * $LOOKAHEAD-PAGES)
   let $results := if($search-type eq "workbook") then
                       cts:search(/ms:worksheet/ms:sheetData/ms:row, $query)[ $start to $stop ]
-                  else (: if($search-type eq "macro") then :)
+                  else if($search-type eq "macro") then 
                       cts:search(/dc:metadata[dc:relation eq "macro"], $query)[ $start to $stop ]
+                  else
+                      cts:search(/dc:metadata[dc:relation eq "chart" or dc:relation eq "namedrange"], $query)[ $start to $stop ] 
   return
     (: if we stepped off of the end, recurse to the previous page :)
     if (empty($results) and ($start - $SIZE) gt 1)
@@ -76,7 +78,8 @@ declare function ps:page-results(
                               $node-uri
 
           let $docprops := if(fn:contains($node-uri, "_xlsx_parts")) then
-                                fn:doc(fn:concat(fn:substring-before($node-uri,"xl/worksheets"),"docProps/core.xml"))
+                                (:fn:doc(fn:concat(fn:substring-before($node-uri,"xl/worksheets"),"docProps/core.xml")):)
+                                fn:doc(fn:concat(fn:substring-before($node-uri,fn:substring-after($node-uri,"_xlsx_parts/")),"docProps/core.xml"))
                            else if(fn:contains($node-uri, "_xlsm_parts")) then
                                  fn:doc(fn:concat(fn:substring-before($node-uri,"customXml"),"docProps/core.xml"))
                            else
@@ -109,7 +112,10 @@ declare function ps:page-results(
 
            attribute modby { $last-mod-by },
            attribute moddate { $last-mod-date },
-           ( $r/preceding-sibling::*[1],$r,$r/following-sibling::*[1])
+            if($search-type eq "workbook") then
+               ( $r/preceding-sibling::*[1],$r,$r/following-sibling::*[1])
+            else
+               $r
           }
       
       }
@@ -225,16 +231,20 @@ return	xdmp:quote(
                                 let $doc-uri := fn:data($hit/@docuri)
                                 let $sheet-num := fn:substring-before(fn:substring-after($uri,"parts/xl/worksheets/"),".xml")
 
-                                let $slideuri :=xdmp:document-properties($uri)/prop:properties/ppt:slideimg/text()
-                                let $src := fn:concat("search/download-support.xqy?uid=",$slideuri)
+                                let $chart-uri :=if($hit/dc:metadata[dc:relation eq "chart"]) then
+                                                   $uri
+                                                 else
+                                                   $uri 
+
+                                let $src := fn:concat("search/download-support.xqy?uid=",$chart-uri)
 
   (:determine tags here :)
-                                let $tag-rid := if(fn:local-name($hit/p:sp) eq "sp") then 
+                                (:let $tag-rid := if(fn:local-name($hit/p:sp) eq "sp") then 
                                                    fn:data($hit/p:sp//p:tags/@r:id)
                                                 else if (fn:local-name($hit/p:pic) eq "pic") then 
                                                    fn:data($hit/p:pic//p:tags/@r:id)
                                                 else
-                                                   fn:data($hit/p:sld/p:cSld/p:custDataLst/p:tags/@r:id)
+                                                   fn:data($hit/p:sld/p:cSld/p:custDataLst/p:tags/@r:id):)
 
                                 let $ctrl := if(fn:local-name($hit/p:sp) eq "sp") then 
                                                  $hit/p:sp 
@@ -243,15 +253,10 @@ return	xdmp:quote(
                                              else
                                                  $hit/ms:worksheet
 
-                                let $pic :=  if(fn:local-name($hit/p:pic) eq "pic") then
-                                               let $pic-rid := $hit/p:pic//a:blip/@r:embed
-                                               let $s-rels := fn:data($hit/@sliderels)
-                                               let $img-uri := fn:replace(fn:data(fn:doc($s-rels)//rel:Relationship[@Id = $pic-rid]/@Target),"\.\.","")
-                                               let $ppt-dir := fn:substring-before($s-rels,"/slides/")
-                                               let $img := fn:concat($ppt-dir, $img-uri)
-                                               return $img                                          
+                                let $type :=  if($hit/dc:metadata[dc:relation eq "chart"]) then
+                                                  "chart"
                                              else 
-                                                 ""
+                                                  "namedrange"
 
                                 let $rows := $hit/ms:row
                                 let $cells := $hit/ms:row/ms:c
@@ -262,21 +267,72 @@ return	xdmp:quote(
                                 let $final := for $row in $rows return <tr>{for $c in $row/ms:c
                                               return <td class="ML-td">{fn:data($c)}</td>}</tr>
 
-                                let $snippet :=  <table class="ML-table" id={fn:concat("table",$idx)}>
-                                                   <tr>{$headers}</tr>
-                                                   <tr>{$final}</tr>
-                                                 </table>
+                                let $snippet :=  if($search-type eq "workbook") then 
+                                                   <table class="ML-table" id={fn:concat("table",$idx)}>
+                                                     <tr>{$headers}</tr>
+                                                     <tr>{$final}</tr>
+                                                   </table>
+                                                 else if($search-type eq "component") then
+                                                       if($type eq "namedrange") then
+                                                         let $nrs := $hit/dc:metadata[dc:relation eq "namedrange"]
+                                                         let $results := 
+                                                           for $nr in $nrs
+                                                           let $deets:= fn:tokenize($nr/dc:type/node(),"!")
+                                                           let $sheetname := $deets[1]
+                                                           let $named := $deets[2]
+                                                           let $range := (:fn:tokenize("$E$3:$F$7",":"):)
+                                                             fn:tokenize($nr/dc:description[1],":")
+                                                           let $s-range := $range[1]
+         
+                                                           let $min := fn:tokenize($s-range,"\$")  
+                                                           (:let $min-col := fn:string-to-codepoints($min[2]):)
+                                                           let $min-col := excel:col-letter-to-idx($min[2])
+                                                           let $min-row := xs:integer($min[3])
+  
+                                                           let $e-range := $range[2]
+ 
+                                                           let $max := fn:tokenize($e-range,"\$")
+                                                           (:let $max-col := fn:string-to-codepoints($max[2]):)
+                                                           let $max-col := excel:col-letter-to-idx($max[2])
+                                                           let $max-row := xs:integer($max[3])
+                 
+                                                           let $sheet:= fn:doc(fn:concat(fn:substring-before($uri,"customXml"),"xl/worksheets/",fn:lower-case($sheetname),".xml"))
+                
+                                                           let $data := $sheet/ms:worksheet/ms:sheetData
+                                                           let $delta := $min-row - 1 
+                                                           (:let $all-cols:= for $idx in $min-col to $max-col
+                                                           return fn:codepoints-to-string($idx):)
+
+                                                           let $cells:= for $cell at $idx in ($min-row to $max-row)
+                                                                        return <ms:row>{
+                                                                                  for $col in $min-col to $max-col (:($all-cols):)
+                                                                                  (:let $a1 := fn:concat($col,$idx+$delta):)
+                                                                                  let $a1 := excel:r1c1-to-a1($idx+$delta,$col)
+                                                                                  return $data/ms:row/ms:c[@r=$a1]
+                                                                               }</ms:row>
+                                                           return $cells
+                                                         let $trs := for $row in $results
+                                                                     return <tr>{for $c in $row/ms:c
+                                                                                 return <td class="ML-td">{fn:data($c)}</td> }</tr>
+
+                                                         return  <table class="ML-table" id={fn:concat("table",$idx)}>
+                                                                    {$trs}
+                                                                 </table>
+                                                       else
+                                                          ()
+                                                 else 
+                                                        ()
 
 
-                                let $icon-type := if (fn:local-name($hit/p:pic) eq "pic") then
+                                (:let $icon-type := if (fn:local-name($hit/p:pic) eq "pic") t/sehen
                                                       "imageIcon"
                                                   else if(fn:local-name($hit/p:sp) eq "sp") then
                                                       "textIcon"
-                                                  else "slideIcon"
+                                                  else "slideIcon":)
 
 				return 
                                  <div class="searchreturnresult">
-                                  <h4>{ if($search-type eq "workbook") then 
+                                  <h4>{ if($search-type eq "workbook" or $search-type eq "component") then 
                                           <a href="./utils/openpkg.xqy?uri={xdmp:url-encode($doc-uri)}" onmouseup="blurSelected(this)" class="blacklink">
                                             {fn:data($hit/@title)}  <!-- presentation name  -->
                                           </a>
@@ -319,18 +375,34 @@ return	xdmp:quote(
                                                                  </div>
                                                  return ($macro-desc, $action)
                                                else (: its a component :)
-                                                 let $highlight := cts:highlight(<p class="searchreturnsnippet" title="{fn:data($ctrl)}">
-                                                                                    <span class="{$icon-type}">&nbsp;</span>
+                                                 let $highlight := if($type eq "namedrange") then
+                                                                                  ( <p class="controltitle">
+                                                                                     <span class="noIcon">{fn:data($hit/dc:metadata/dc:identifier)}</span>
+                                                                                   </p>,
+                                                                                  cts:highlight(<p class="searchreturnsnippet" title="{fn:data($ctrl)}">
+                                                                                    <!--<span class="{$icon-type}">&nbsp;</span>-->
                                                                                        {$snippet} </p>, 
                                                                                        $or-query, 
-                                                                                     <strong class="ML-highlight">{$cts:text}</strong>)  
-                                                  let $img := <img src="{$src}" class="resize"></img>
-                                                      let $action :=  <div id="searchresultactions">
+                                                                                     <strong class="ML-highlight">{$cts:text}</strong>)  )
+                                                                   else
+                                                                       ()
+                                                 let $img := if($type eq "chart") then
+                                                               ( <p class="controltitle">
+                                                                                     <span class="noIcon">{fn:data($hit/dc:metadata/dc:identifier)}</span>
+                                                                 </p>,<br/>,
+                                                                 <img src="{$src}" class="resize"></img>
+                                                               )
+                                                             else 
+                                                               ()
+                                                 let $action :=  <div id="searchresultactions">
                                             {
                                               if ($search-type eq "component") then
-					        <a href="javascript:insertComponentAction('{xdmp:url-encode($uri)}', '{$tag-rid}','{$pic}','{$idx}');" onmouseup="blurSelected(this)" class="smallbtn searchinsertbtn"><span>Insert</span></a>
-                                              else 
-                                                   <a href="javascript:insertSlideAction('{xdmp:url-encode($uri)}', '{$tag-rid}','{xdmp:url-encode($doc-uri)}','{$idx}');" onmouseup="blurSelected(this)" class="smallbtn searchinsertbtn"><span>Insert</span></a>
+                                                 if($type eq "chart") then
+                                                  
+					             <a href="javascript:insertChartAction('{xdmp:url-encode($uri)}','{$type}','{$idx}');" onmouseup="blurSelected(this)" class="smallbtn searchinsertbtn"><span>Insert</span></a>
+                                                 else 
+                                                     <a href="javascript:insertNamedRangeAction('{xdmp:url-encode($uri)}', '{$type}','{xdmp:url-encode($doc-uri)}','{$idx}');" onmouseup="blurSelected(this)" class="smallbtn searchinsertbtn"><span>Insert</span></a>
+                                              else ()
 					    }
                                               &nbsp;
 <!-- <a href="./utils/openpkg.xqy?uri={xdmp:url-encode($uri)}" class="smallbtn">Open</a> -->

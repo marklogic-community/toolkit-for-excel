@@ -55,7 +55,7 @@ let $header:=
                             <input type="radio" class="searchtype" name="search:bst" value="workbook" checked="checked" id="p"/>
                          else
                             <input type="radio" class="searchtype" name="search:bst" value="workbook" id="p"/>
-                     }Worksheets
+                     }Workbooks
                      {
                          if($searchtype eq "macro")
                          then

@@ -1,6 +1,7 @@
 <config:templates xmlns:config="http://marklogic.com/toolkit/excel/author/config">
  <config:template id="1">
    <dc:metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+	   <dc:source/>
 	   <dc:relation/>
 	   <dc:type/>
 	   <dc:identifier/>
@@ -13,6 +14,7 @@
  </config:template>
  <config:template id="2"><!--id could be a name-->
 	 <dc:metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+	   <dc:source/>
            <dc:relation/>
 	   <dc:type/>
 	   <dc:identifier/>
@@ -24,6 +26,7 @@
  </config:template>
  <config:template id="default">
 	 <dc:metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+	   <dc:source/>
 	   <dc:relation/>
 	   <dc:type/>
            <dc:identifier/>

@@ -953,6 +953,27 @@ MLA.exportChartImagePNG = function(chartPath)
         return msg;
 }
 
+MLA.deletePicture = function(sheetName, imageName)
+{
+        var msg = window.external.deletePicture(sheetName, imageName);
+
+	var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to deletePicture; "+errMsg);
+	
+        return msg;
+}
+
+MLA.insertBase64ToImage = function(base64String)
+{
+  	var msg =  window.external.insertBase64ToImage(base64String);
+
+	var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to insertBase64ToImage; "+errMsg);
+	
+        return msg;
+}
 
 MLA.base64EncodeImage = function(chartPath)
 {

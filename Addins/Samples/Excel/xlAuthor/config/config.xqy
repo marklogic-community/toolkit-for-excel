@@ -101,9 +101,21 @@ declare function config:generate-js-workbook-tag-func()
                        "var wbName = MLA.getActiveWorkbookName();",
                        "var stringxml = MLA.unescapeXMLCharEntities(generateTemplate(map.get('",$value,"')));",
                        "var domxml = MLA.createXMLDOM(stringxml);",
+                       "var source = domxml.getElementsByTagName('dc:source')[0];",
                        "var relation = domxml.getElementsByTagName('dc:relation')[0];",
                        "var type = domxml.getElementsByTagName('dc:type')[0];",
                        "var id = domxml.getElementsByTagName('dc:identifier')[0];",
+
+                       "if(source.hasChildNodes())",
+	                   "{",
+		              "source.childNodes[0].nodeValue='';",
+	 	              "source.childNodes[0].nodeValue=tagId;",
+	                   "}", 
+	                   "else",
+	                   "{",
+	                      "var child = source.appendChild(domxml.createTextNode(tagId));",
+	               "}",
+
 
                        "if(relation.hasChildNodes())",
 	                   "{",
@@ -152,15 +164,26 @@ declare function  config:generate-js-worksheet-tag-func()
     let $name := $st/config:name/text()
     let $value := $st/config:value/text()
     return fn:concat("function worksheetTagFunc",$d,"(){",
-                       "var tagId = randomId();",
-                       "if(!(checkWorksheetTags('",$value,"'))){;",
+                      "var tagId = randomId();",
+                      "if(!(checkWorksheetTags('",$value,"'))){;",
 
-                       "var wsName = MLA.getActiveWorksheetName();",
-                       "var stringxml = MLA.unescapeXMLCharEntities(generateTemplate(map.get('",$value,"')));",
-                       "var domxml = MLA.createXMLDOM(stringxml);",
-                       "var relation = domxml.getElementsByTagName('dc:relation')[0];",
-                       "var type = domxml.getElementsByTagName('dc:type')[0];",
-                       "var id = domxml.getElementsByTagName('dc:identifier')[0];",
+                      "var wsName = MLA.getActiveWorksheetName();",
+                      "var stringxml = MLA.unescapeXMLCharEntities(generateTemplate(map.get('",$value,"')));",
+                      "var domxml = MLA.createXMLDOM(stringxml);",
+                      "var source = domxml.getElementsByTagName('dc:source')[0];",
+                      "var relation = domxml.getElementsByTagName('dc:relation')[0];",
+                      "var type = domxml.getElementsByTagName('dc:type')[0];",
+                      "var id = domxml.getElementsByTagName('dc:identifier')[0];",
+
+                      "if(source.hasChildNodes())",
+	                   "{",
+		              "source.childNodes[0].nodeValue='';",
+	 	              "source.childNodes[0].nodeValue=tagId;",
+	                   "}", 
+	                   "else",
+	                   "{",
+	                      "var child = source.appendChild(domxml.createTextNode(tagId));",
+	               "}",
 
                        "if(relation.hasChildNodes())",
 	                   "{",
@@ -237,21 +260,21 @@ declare function  config:generate-js-component-tag-func()
                                      "var newName = trim(chartName.substring(sheetName.length,chartName.length));",
                                      (: "alert('newName '+newName);", :)
                                      "var tmpPath = MLA.getTempPath()+newName+'.PNG';",
-                                     (: "alert('tmpPath '+tmpPath);", :)
+                                      (: "alert('tmpPath '+tmpPath);", :) 
 
  
 	                             "var success = MLA.exportChartImagePNG(tmpPath);",
-                                     (:"alert('success '+success);",:)
+                                     (: "alert('success '+success);", :)
 	   
 	                             "description =MLA.base64EncodeImage(tmpPath);",
-                                     (:"alert('chartImage: '+description);",:) 
+                                     (: "alert('chartImage: '+description);", :) 
                                      "var deleted = MLA.deleteFile(tmpPath);",
                                       (:get image serialization:)
 	                        "}",
                                 "else",
                                 "{",
                                   "var rangeCoords = MLA.getSelectedRangeCoordinates();",   
-                                   (: "alert('rangeCoords'+rangeCoords);", :)
+                                    (: "alert('rangeCoords'+rangeCoords);", :) 
                                 "if(!(rangeCoords==null || rangeCoords==''))",
                                 "{",
                                    "var startCell='';",
@@ -279,10 +302,21 @@ declare function  config:generate-js-component-tag-func()
                                         
                        "var stringxml = MLA.unescapeXMLCharEntities(generateTemplate(map.get('",$value,"')));",
                        "var domxml = MLA.createXMLDOM(stringxml);",
+                       "var source = domxml.getElementsByTagName('dc:source')[0];",
                        "var relation = domxml.getElementsByTagName('dc:relation')[0];",
                        "var type = domxml.getElementsByTagName('dc:type')[0];",
                        "var id = domxml.getElementsByTagName('dc:identifier')[0];",
                        "var desc = domxml.getElementsByTagName('dc:description')[0];",
+
+                      "if(source.hasChildNodes())",
+	                   "{",
+		              "source.childNodes[0].nodeValue='';",
+	 	              "source.childNodes[0].nodeValue=tagId;",
+	                   "}", 
+	                   "else",
+	                   "{",
+	                      "var child = source.appendChild(domxml.createTextNode(tagId));",
+	               "}",
 
                        "if(relation.hasChildNodes())",
 	                   "{",
@@ -330,6 +364,7 @@ declare function  config:generate-js-component-tag-func()
                            "setComponentProperties();",
  
                           "}catch(err){",
+                            "alert('ERROR: '+err.description);",
                             "setComponentProperties();",
                           "}",
 	
