@@ -8,3 +8,13 @@ C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\Microsoft\MarkLogic_ExcelAddin
 C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\Microsoft\MarkLogic_ExcelAddin\InclusionListCustomActions\obj\Release\ResolveAssemblyReference.cache
 C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\Microsoft\MarkLogic_ExcelAddin\InclusionListCustomActions\obj\Release\InclusionListCustomActions.dll
 C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\Microsoft\MarkLogic_ExcelAddin\InclusionListCustomActions\obj\Release\InclusionListCustomActions.pdb
+C:\OfficeTest\MarkLogic_ExcelAddin1\InclusionListCustomActions\bin\Release\InclusionListCustomActions.dll
+C:\OfficeTest\MarkLogic_ExcelAddin1\InclusionListCustomActions\bin\Release\InclusionListCustomActions.pdb
+C:\OfficeTest\MarkLogic_ExcelAddin1\InclusionListCustomActions\obj\Release\ResolveAssemblyReference.cache
+C:\OfficeTest\MarkLogic_ExcelAddin1\InclusionListCustomActions\obj\Release\InclusionListCustomActions.dll
+C:\OfficeTest\MarkLogic_ExcelAddin1\InclusionListCustomActions\obj\Release\InclusionListCustomActions.pdb
+C:\OfficeTest\MarkLogic_ExcelAddin\InclusionListCustomActions\bin\Release\InclusionListCustomActions.dll
+C:\OfficeTest\MarkLogic_ExcelAddin\InclusionListCustomActions\bin\Release\InclusionListCustomActions.pdb
+C:\OfficeTest\MarkLogic_ExcelAddin\InclusionListCustomActions\obj\Release\ResolveAssemblyReference.cache
+C:\OfficeTest\MarkLogic_ExcelAddin\InclusionListCustomActions\obj\Release\InclusionListCustomActions.dll
+C:\OfficeTest\MarkLogic_ExcelAddin\InclusionListCustomActions\obj\Release\InclusionListCustomActions.pdb

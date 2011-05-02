@@ -36,7 +36,7 @@ namespace InclusionListCustomActions
             {
                 throw new InstallException(
                     "You have insufficient privileges to " +
-                    "register a trust relationship. Start Word " +
+                    "register a trust relationship. Start Excel " +
                     "and confirm the trust dialog to run the addin.");
             }
             Uri deploymentManifestLocation = null;
