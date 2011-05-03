@@ -1,0 +1,138 @@
+<!--
+Copyright 2008-2011 Mark Logic Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<xs:schema 
+	xmlns:xs='http://www.w3.org/2001/XMLSchema' 
+	xmlns='http://marklogic.com/toolkit/excel/author/config' 
+	targetNamespace = 'http://marklogic.com/toolkit/excel/author/config'
+	elementFormDefault='qualified'>
+
+
+	<!-- definition of simple elements -->
+	<xs:element name="display-label" type="xs:string"/>
+	<xs:element name="control-alias" type="xs:string"/>
+
+	<xs:element name="name" type="xs:string"/>
+	<xs:element name="value" type="xs:string"/>
+	<xs:element name="metatemplate" type="xs:token"/>
+	<xs:element name="text" type="xs:string"/>
+
+	<!-- definition of complex elements -->
+
+
+	<xs:element name="tag">
+	  <xs:complexType>
+	    <xs:all>
+	       <xs:element ref="name"/>
+	       <xs:element ref="value"/>
+               <xs:element ref="metatemplate"/>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+
+	<xs:element name="workbook">
+	  <xs:complexType>
+	    <xs:sequence>
+               <xs:element ref="tag" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+  	<xs:element name="worksheet">
+	  <xs:complexType>
+	    <xs:sequence>
+               <xs:element ref="tag" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+  	<xs:element name="component">
+	  <xs:complexType>
+	    <xs:sequence>
+               <xs:element ref="tag" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+    	<xs:element name="template">
+	  <xs:complexType>
+	    <xs:sequence>
+	      <xs:any namespace="##other" processContents="skip"/>
+	    </xs:sequence>
+	    <xs:attribute name="id" type="xs:token" use="required"/>
+	  </xs:complexType>
+        </xs:element>
+
+  	<xs:element name="searchfilter">
+	  <xs:complexType>
+	    <xs:all>
+              <xs:element ref="display-label"/>
+              <xs:element ref="control-alias"/>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+
+	<xs:element name="templates">
+          <xs:annotation>
+            <xs:documentation>
+		     Metadata forms to be associated with Content Controls. 
+		     @id maps to the metatemplate element value in controls.xml.
+            </xs:documentation>
+            <xs:appinfo>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+	     <xs:sequence>
+	      <xs:element ref="template" maxOccurs="unbounded"/>
+	     </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+	<xs:element name="searchfilters">
+          <xs:annotation>
+            <xs:documentation>
+		    Filters to be applied to search where 
+		    controlalias is the value searched on in the structure and
+		    diplay-label is the option displayed to the user in the app
+            </xs:documentation>
+            <xs:appinfo>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+	     <xs:sequence>
+	       <xs:element ref="searchfilter" maxOccurs="unbounded"/>
+	     </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+    	<xs:element name="tags">
+          <xs:annotation>
+            <xs:documentation>
+		    The Tags to be displayed in the application.  
+		    Required javascript for interaction with Active Document also generated.
+            </xs:documentation>
+            <xs:appinfo>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+	     <xs:sequence>
+	       <xs:element ref="workbook"/>
+	       <xs:element ref="worksheet"/>
+	       <xs:element ref="component"/>
+	     </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+</xs:schema>
+
