@@ -1,5 +1,5 @@
 /* 
-Copyright 2009-2010 Mark Logic Corporation
+Copyright 2009-2011 MarkLogic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -57,8 +57,7 @@ MLA.Cell = function(){
   var value2;
   var formula;
 
-  switch (typeof arguments[0])
-  {
+  switch (typeof arguments[0]){
     case 'number' : MLA.Cell.$int.apply(this, arguments); break;
     case 'string' : MLA.Cell.$str.apply(this, arguments); break;
     default : /*NOP*/
@@ -163,9 +162,7 @@ MLA.createXMLDOM = function(xmlstring)
 		var xmlDom = new ActiveXObject("Microsoft.XMLDOM");
        		xmlDom.async=false;
        		xmlDom.loadXML(xmlstring);
-	}
-	catch(err)
- 	{
+	}catch(err){
                 throw("Error: Not able to create XMLDOM from string.  Make sure XML is well formed. ");
 	}
 
@@ -221,10 +218,8 @@ MLA.getCustomXMLPartIds = function()
 
 	var customPartIds = partIds.split(" ");
 
-	if(customPartIds.length ==1)
-	{
-		if (customPartIds[0] == null || customPartIds[0] == "")
-		{
+	if(customPartIds.length ==1){
+		if (customPartIds[0] == null || customPartIds[0] == ""){
 			customPartIds.length = 0;
 		}
 	}
@@ -251,12 +246,9 @@ MLA.getCustomXMLPart = function(customXMLPartId)
         
 	var v_cp;
 
-	if(customXMLPart=="")
-	{
+	if(customXMLPart==""){
 		v_cp=null;
-	}
-        else
-	{
+	}else{
         	v_cp = MLA.createXMLDOM(customXMLPart); 
 	}
 
@@ -272,12 +264,10 @@ MLA.getCustomXMLPart = function(customXMLPartId)
 MLA.addCustomXMLPart = function(customPartXml)
 {
 	var v_customPart ="";
-	if(customPartXml.xml)
-	{
+	if(customPartXml.xml){
                v_customPart=customPartXml.xml;
 	}
-	else
-	{
+	else{
 	       v_customPart=customPartXml
 	}
 	
@@ -379,6 +369,19 @@ MLA.getActiveWorksheetName = function()
 	return wsName;
 }
 
+MLA.getSheetType = function(sheetName)
+{
+        var wsType = window.external.getSheetType(sheetName);
+
+	var errMsg = MLA.errorCheck(wsType);
+
+        if(errMsg!=null)
+        	throw("Error: Not able to getSheetName; "+errMsg);
+
+	return wsType;
+}
+
+
 /**
  * Returns the names of all workbooks available as array of strings.
  * @return names of all workbooks
@@ -395,16 +398,12 @@ MLA.getAllWorkbookNames = function()
 
 	var wbnames = names.split("|");  //change this to JSON
 
-        if(wbnames.length ==1)
-	{
-		if (wbnames[0] == null || wbnames[0] == "")
-		{
+        if(wbnames.length ==1){
+		if (wbnames[0] == null || wbnames[0] == ""){
 			wbnames.length = 0;
 		}
 	}
-
 	return wbnames;
-
 }
 
 
@@ -425,16 +424,13 @@ MLA.getActiveWorkbookWorksheetNames = function()
 
 	var wsnames = names.split("|");  //change this to JSON
 
-        if(wsnames.length ==1)
-	{
-		if (wsnames[0] == null || wsnames[0] == "")
-		{
+        if(wsnames.length ==1){
+		if (wsnames[0] == null || wsnames[0] == ""){
 			wsnames.length = 0;
 		}
 	}
 
 	return wsnames;
-
 }
 
 /**
@@ -504,17 +500,18 @@ MLA.setActiveWorksheet = function(sheetname)
 	//return saw;
 }
 
-// HERE
+// UPDATED SIGNATURE TO ADD sheetName 
 /**
  * Names a range in the active worksheet   
  * @param coord1 - starting coordinate of range in A1 notation
  * @param coord2 - end coordinate of range in A1 notation
  * @param rngName - the name to be assigned to the range 
+ * @param sheetName - the name of the worksheet to host the range 
  * @throws Exception if unable to name the specified range
  */
-MLA.addNamedRange = function(coord1,coord2,rngName)
+MLA.addNamedRange = function(coord1,coord2,rngName, sheetName)
 {
-	var nr = window.external.addNamedRange(coord1,coord2,rngName);
+	var nr = window.external.addNamedRange(coord1,coord2,rngName,sheetName);
         var errMsg = MLA.errorCheck(nr);
 	
         if(errMsg!=null)
@@ -534,18 +531,15 @@ MLA.addNamedRange = function(coord1,coord2,rngName)
 MLA.addAutoFilter = function(coord1, coord2, criteria1, operator, criteria2)
 {
 
-	if(criteria1==null)
-	{
+	if(criteria1==null){
 		criteria1="<>";
 	}
 
-	if(criteria2==null)
-	{
+	if(criteria2==null){
 		criteria2="missing";
 	}
 
-	if(operator==null)
-	{
+	if(operator==null){
 		operator="AND";
 	}
 
@@ -573,6 +567,39 @@ MLA.getNamedRangeNames = function()
 
 	var nrsArray = nrs.split(":");
 	return nrsArray;
+}
+
+MLA.getWorksheetChartNames = function(sheetName)
+{
+	var nrsArray="";
+        var nrs = window.external.getWorksheetChartNames(sheetName);
+
+        var errMsg = MLA.errorCheck(nrs);
+	
+        if(errMsg!=null)
+        	throw("Error: Not able to getWorksheetChartNames; "+errMsg);
+
+        if(nrs.length > 0)
+	   nrsArray = nrs.split(":");
+
+	return nrsArray;
+}
+
+MLA.getWorksheetNamedRangeNames = function(sheetName)
+{
+	var nrsArray="";
+        var nrs = window.external.getWorksheetNamedRangeRangeNames(sheetName);
+
+        var errMsg = MLA.errorCheck(nrs);
+	
+        if(errMsg!=null)
+        	throw("Error: Not able to getWorksheetNamedRangeRangeNames; "+errMsg);
+
+        if(nrs.length > 0)
+	   nrsArray = nrs.split(":");
+
+	return nrsArray;
+	
 }
 /**
  * Returns all NamedRange names for the active workbook
@@ -655,6 +682,27 @@ MLA.getSelectedRangeCoordinates = function()
 	return msg;
 }
 
+MLA.getSelectedRangeName = function()
+{
+	var msg = window.external.getSelectedRangeName();
+
+	var errMsg = MLA.errorCheck(msg);
+
+	if(errMsg!=null)
+        	throw("Error: Not able to getSelectedRangeName; "+errMsg);
+        return msg;
+}
+
+MLA.getSelectedChartName = function()
+{
+	var msg = window.external.getSelectedChartName();
+
+	var errMsg = MLA.errorCheck(msg);
+
+	if(errMsg!=null)
+        	throw("Error: Not able to getSelectedChartName; "+errMsg);
+        return msg;
+}
 /**
  * Returns cells selected in active workbook.  This works for contigous cells.  When disparate cells are selected, the last contigous range of cells selected in the active workbook will be returned.
  * @throws Exception if unable to retrieve the coordinates
@@ -673,8 +721,7 @@ MLA.getSelectedCells = function()
      var cells = eval('('+cellstring+')');
      //alert(cells.cells.length);
      var cellArray = new Array();
-     for(var i =0;i<cells.cells.length;i++)
-     {
+     for(var i =0;i<cells.cells.length;i++){
 	     var cell = cells.cells[i];
 	     var mlacell = new MLA.Cell();
              mlacell=cell;
@@ -703,19 +750,15 @@ MLA.getActiveCell = function()
 	var colIdx = cellValues[1];
 	var newCell = new MLA.Cell(parseInt(rowIdx),parseInt(colIdx));
 
-	if(cellValues[2]=="")
-	{
+	if(cellValues[2]==""){
 		newCell.value2=null;
-	}else
-	{
+	}else{
 	        newCell.value2 = cellValues[2];
 	}
 
-	if(cellValues[3]=="")
-	{
+	if(cellValues[3]==""){
 		newCell.formula=null;
-	}else
-	{
+	}else{
 		newCell.formula = cellValues[3];
 	}
 
@@ -785,10 +828,8 @@ MLA.setCellValue = function(cells, sheetname)
 
 	var v_array = MLA.isArray(cells);
 
-	if(v_array)
-	{
-		for(var i =0; i<cells.length; i++)
-		{
+	if(v_array){
+		for(var i =0; i<cells.length; i++){
           		var msg = window.external.setCellValueA1(cells[i].coordinate, cells[i].value2, sheetname);
 		        var errMsg = MLA.errorCheck(msg);
 
@@ -900,3 +941,186 @@ MLA.openXlsx = function(tmpPath, docuri, url, uname, pwd)
         	throw("Error: Not able to openXlsx; "+errMsg);
         return msg;
 }
+
+MLA.exportChartImagePNG = function(chartPath)
+{
+	var msg =  window.external.exportChartImagePNG(chartPath);
+
+	var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to exportChartImagePNG; "+errMsg);
+	
+        return msg;
+}
+
+MLA.deletePicture = function(sheetName, imageName)
+{
+        var msg = window.external.deletePicture(sheetName, imageName);
+
+	var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to deletePicture; "+errMsg);
+	
+        return msg;
+}
+
+MLA.insertBase64ToImage = function(base64String)
+{
+  	var msg =  window.external.insertBase64ToImage(base64String);
+
+	var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to insertBase64ToImage; "+errMsg);
+	
+        return msg;
+}
+
+MLA.base64EncodeImage = function(chartPath)
+{
+	var msg =  window.external.base64EncodeImage(chartPath);
+
+	var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to base64EncodeImage; "+errMsg);
+	
+        return msg;
+}
+
+MLA.deleteFile = function(filePath)
+{
+	var msg =  window.external.deleteFile(filePath);
+
+	var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to deleteFile; "+errMsg);
+	
+        return msg;
+
+}
+
+//functions to add/remove events here
+MLA.addChartObjectMouseDownEvents = function(sheetName)
+{
+	var msg =  window.external.addChartObjectMouseDownEvents(sheetName);
+
+	var errMsg = MLA.errorCheck(msg);
+
+	
+        if(errMsg!=null) 
+        	throw("Error: Not able to addChartObjectMouseDownEvents; "+errMsg);
+	
+        return msg;
+}
+
+MLA.removeChartObjectMouseDownEvents = function(sheetName)
+{
+	var msg =  window.external.removeChartObjectMouseDownEvents(sheetName);
+
+	var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to removeChartObjectMouseDownEvents; "+errMsg);
+	
+        return msg;
+}
+
+MLA.getMacroText = function(index)
+{
+	var source = window.external.getMacroText(index);
+	var errMsg = MLA.errorCheck(source);
+        if(errMsg!=null) 
+        	throw("Error: Not able to getMacroText; "+errMsg);
+	return source;
+}
+
+MLA.runMacro = function(macroName)
+{
+	var msg = window.external.runMacro(macroName);
+        var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to runMacro; "+errMsg);
+	
+        return msg;
+
+}
+
+MLA.getMacroName = function(index)
+{
+        var msg = window.external.getMacroName(index);
+        var errMsg = MLA.errorCheck(msg);
+	//alert(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to getMacroName; "+errMsg);
+	
+        return msg;
+}
+
+MLA.getMacroType = function(index)
+{
+	var msg = window.external.getMacroType(index);
+        var errMsg = MLA.errorCheck(msg);
+	//alert(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to getMacroType; "+errMsg);
+	
+        return msg;
+}
+
+MLA.getMacroProcedureName = function(index)
+{
+	var msg = window.external.getMacroProcedureName(index);
+        var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to getMacroProcedureName; "+errMsg);
+	
+        return msg;
+}
+
+MLA.getMacroComments = function(index)
+{
+	var msg = window.external.getMacroComments(index);
+        var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to getMacroComments; "+errMsg);
+	
+        return msg;
+}
+
+MLA.getMacroSignature= function(index)
+{
+	var msg = window.external.getMacroSignature(index);
+        var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to getMacroSignature; "+errMsg);
+	
+        return msg;
+}
+
+MLA.getMacroCount = function()
+{
+	var msg=window.external.getMacroCount();
+//returns int, needs different error handler
+	return msg;
+}
+
+MLA.addMacro= function(source, componenType)
+{
+	var msg = window.external.addMacro(source, componenType);
+        var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to addMacro; "+errMsg);
+	
+        return msg;
+}
+
+MLA.removeMacro= function(macroName)
+{
+	var msg = window.external.removeMacro(macroName);
+        var errMsg = MLA.errorCheck(msg);
+        if(errMsg!=null) 
+        	throw("Error: Not able to removeMacro; "+errMsg);
+	
+        return msg;
+}
+
+
+
