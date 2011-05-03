@@ -25,7 +25,6 @@ let $header:=
               <div id="searchhead" xmlns="http://www.w3.org/1999/xhtml"><!-- adds line -->
                    <div id="searchform">
                       <input type="text" id="searchbox" style="width:100px" value="{$searchval}" onkeypress="checkForEnter();"/>
-		      <!--<input id="ML-Submit" type="submit" value="search"/>-->
                      
                       <a href="#"  id="sbtn" class="searchbtn" onmouseup="blurSelected(this);" onclick="searchAction();" >Search</a>
                       <a href="#" id="fbtn" class="filterbtn"> Filter </a>

@@ -32,27 +32,22 @@ let $results := for $nr in $nrs
                 let $range := (:fn:tokenize("$A$2:$F$7",":"):)fn:tokenize($nr/dc:description[1],":")
                 let $s-range := $range[1]
                 let $min := fn:tokenize($s-range,"\$")  
-                (:let $min-col := fn:string-to-codepoints($min[2]):)
                 let $min-col := excel:col-letter-to-idx($min[2])
                 let $min-row := xs:integer($min[3])
                 let $e-range := $range[2]
                 let $max := fn:tokenize($e-range,"\$")
-                (:let $max-col := fn:string-to-codepoints($max[2]):)
                 let $max-col := excel:col-letter-to-idx($max[2])
                 let $max-row := xs:integer($max[3])
                 let $sheet:= fn:doc(fn:concat(fn:substring-before($uri,"customXml"),"xl/worksheets/",fn:lower-case($sheetname),".xml"))
                 let $data := $sheet/ms:worksheet/ms:sheetData
                 let $delta := $min-row - 1 
-                (:let $all-cols:= for $idx in $min-col to $max-col
-                                return fn:codepoints-to-string($idx):)
                 
                 let $cells:=   
                    for $cell at $row-idx in ($min-row to $max-row)
                    let $new-row-idx := $start-row-index + $row-idx - 1
                    return 
-                                      for $col at $col-idx in $min-col to $max-col (:($all-cols):)                                      
+                                      for $col at $col-idx in $min-col to $max-col                                       
                                       let $new-col-idx := $start-col-index + $col-idx - 1
-                                      (:let $a1 := fn:concat($col,$row-idx+$delta):)
                                       let $a1 := excel:r1c1-to-a1($row-idx+$delta,$col)
                                       let $cell := $data/ms:row/ms:c[@r=$a1]
                                       return <cell>

@@ -78,14 +78,12 @@ declare function ps:page-results(
                               $node-uri
 
           let $docprops := if(fn:contains($node-uri, "_xlsx_parts")) then
-                                (:fn:doc(fn:concat(fn:substring-before($node-uri,"xl/worksheets"),"docProps/core.xml")):)
                                 fn:doc(fn:concat(fn:substring-before($node-uri,fn:substring-after($node-uri,"_xlsx_parts/")),"docProps/core.xml"))
                            else if(fn:contains($node-uri, "_xlsm_parts")) then
                                  fn:doc(fn:concat(fn:substring-before($node-uri,"customXml"),"docProps/core.xml"))
                            else
                                 fn:doc($node-uri)/pkg:package/pkg:part[@pkg:name="/docProps/core.xml"]/pkg:xmlData
 
-                                 (: need fn:doc of pkg part containing core.xml :)
           let $last-mod-by := $docprops/cp:coreProperties/cp:lastModifiedBy/text()
           let $date :=  $docprops/cp:coreProperties/dcterms:created/text()
           let $title :=if(fn:empty($docprops/cp:coreProperties/dc:title/text())) then
@@ -238,14 +236,6 @@ return	xdmp:quote(
 
                                 let $src := fn:concat("search/download-support.xqy?uid=",$chart-uri)
 
-  (:determine tags here :)
-                                (:let $tag-rid := if(fn:local-name($hit/p:sp) eq "sp") then 
-                                                   fn:data($hit/p:sp//p:tags/@r:id)
-                                                else if (fn:local-name($hit/p:pic) eq "pic") then 
-                                                   fn:data($hit/p:pic//p:tags/@r:id)
-                                                else
-                                                   fn:data($hit/p:sld/p:cSld/p:custDataLst/p:tags/@r:id):)
-
                                 let $ctrl := if(fn:local-name($hit/p:sp) eq "sp") then 
                                                  $hit/p:sp 
                                              else if (fn:local-name($hit/p:pic) eq "pic") then 
@@ -285,14 +275,12 @@ return	xdmp:quote(
                                                            let $s-range := $range[1]
          
                                                            let $min := fn:tokenize($s-range,"\$")  
-                                                           (:let $min-col := fn:string-to-codepoints($min[2]):)
                                                            let $min-col := excel:col-letter-to-idx($min[2])
                                                            let $min-row := xs:integer($min[3])
   
                                                            let $e-range := $range[2]
  
                                                            let $max := fn:tokenize($e-range,"\$")
-                                                           (:let $max-col := fn:string-to-codepoints($max[2]):)
                                                            let $max-col := excel:col-letter-to-idx($max[2])
                                                            let $max-row := xs:integer($max[3])
                  
@@ -300,13 +288,10 @@ return	xdmp:quote(
                 
                                                            let $data := $sheet/ms:worksheet/ms:sheetData
                                                            let $delta := $min-row - 1 
-                                                           (:let $all-cols:= for $idx in $min-col to $max-col
-                                                           return fn:codepoints-to-string($idx):)
 
                                                            let $cells:= for $cell at $idx in ($min-row to $max-row)
                                                                         return <ms:row>{
-                                                                                  for $col in $min-col to $max-col (:($all-cols):)
-                                                                                  (:let $a1 := fn:concat($col,$idx+$delta):)
+                                                                                  for $col in $min-col to $max-col 
                                                                                   let $a1 := excel:r1c1-to-a1($idx+$delta,$col)
                                                                                   return $data/ms:row/ms:c[@r=$a1]
                                                                                }</ms:row>
@@ -324,24 +309,18 @@ return	xdmp:quote(
                                                         ()
 
 
-                                (:let $icon-type := if (fn:local-name($hit/p:pic) eq "pic") t/sehen
-                                                      "imageIcon"
-                                                  else if(fn:local-name($hit/p:sp) eq "sp") then
-                                                      "textIcon"
-                                                  else "slideIcon":)
-
 				return 
                                  <div class="searchreturnresult">
                                   <h4>{ if($search-type eq "workbook" or $search-type eq "component") then 
                                           <a href="./utils/openpkg.xqy?uri={xdmp:url-encode($doc-uri)}" onmouseup="blurSelected(this)" class="blacklink">
-                                            {fn:data($hit/@title)}  <!-- presentation name  -->
+                                            {fn:data($hit/@title)}  
                                           </a>
                                         else
                                              fn:data($hit/@title)
                                        }
                                   </h4> 
                                  <p class="byline">{fn:concat("Modified: ",fn:data($hit/@moddate))}&nbsp; 
-                                          <span>{fn:data($hit/@modby)}</span> <!-- presentation metadata  -->
+                                          <span>{fn:data($hit/@modby)}</span> 
                                  </p>
 
 <!-- if workbook/sheet, list of workbooks only, make title link to open, if opened -->
@@ -380,7 +359,6 @@ return	xdmp:quote(
                                                                                      <span class="noIcon">{fn:data($hit/dc:metadata/dc:identifier)}</span>
                                                                                    </p>,
                                                                                   cts:highlight(<p class="searchreturnsnippet" title="{fn:data($ctrl)}">
-                                                                                    <!--<span class="{$icon-type}">&nbsp;</span>-->
                                                                                        {$snippet} </p>, 
                                                                                        $or-query, 
                                                                                      <strong class="ML-highlight">{$cts:text}</strong>)  )
@@ -405,8 +383,6 @@ return	xdmp:quote(
                                               else ()
 					    }
                                               &nbsp;
-<!-- <a href="./utils/openpkg.xqy?uri={xdmp:url-encode($uri)}" class="smallbtn">Open</a> -->
-                                            <!-- can probably reuse delete used on first pane -->
 					    <span id="{fn:concat("undobutton",$idx)}"><a href="javascript:undoInsert();" onmouseup="blurSelected(this)" class="smallbtn">Undo</a></span>
                                                                        </div>
                                                        return ($highlight, $img,<br/>, $action)

@@ -48,15 +48,14 @@ xdmp:set-response-content-type('text/html'),
   <div id="current-doc">
     <div id="tabs">
      <ul>
-       <li class="fronttab" id="tag-pptx-tab" title="tag presentation palette">
-            <a href="#" id="tags-pptx-show">Tags</a>  <!--was controls-show, snippets-show -->
+       <li class="fronttab" id="tag-xlsx-tab" title="workbook tag palette">
+            <a href="#" id="tags-xlsx-show">Tags</a>  <!--was controls-show, snippets-show -->
        </li>
      </ul>
     </div><!-- end tabs-->
     <div id="controls">
        <div id="buttonbar">
 	  <ul>
-    	    <!--<li><a href="#" class="selectedctrl" id="icon-textctrl" title="rich text">&nbsp;</a></li>-->
             <li><a href="#"  class="selectedctrl" id="icon-xlctrl" title="workbook">&nbsp;</a></li>
             <li><a href="#" id="icon-sheetctrl" title="worksheet">&nbsp;</a></li>
             <li><a href="#" id="icon-namedrangectrl" title="named range">&nbsp;</a></li>
@@ -65,21 +64,21 @@ xdmp:set-response-content-type('text/html'),
 
   <!-- begin following to be generated from config -->
         <div class="inspectorDetails">
-          <div id="presentationtags">
+          <div id="workbooktags">
             <h3><span>Add Tags to Workbook</span></h3>
             <ul class="buttongroup">
               {config:workbook-tags()}
             </ul>
             <br clear="all" />
           </div><!--end text controls-->
-          <div id="slidetags">
+          <div id="worksheettags">
             <h3><span>Add Tags to Worksheet</span></h3>
             <ul class="buttongroup">
               {config:worksheet-tags()}
             </ul>
             <br clear="all" />
           </div> <!--end imgcontrols-->
-          <div id="shapetags">
+          <div id="componenttags">
             <h3><span>Add Tags to Selected Component</span></h3>
             <ul class="buttongroup">
               {config:component-tags()}

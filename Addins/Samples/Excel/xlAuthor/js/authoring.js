@@ -31,9 +31,9 @@ $(document).ready(function() {
        $('#noproperties').hide();
 
    
-       //by default,  presentation tags selected
-       $('#slidetags').hide();
-       $('#shapetags').hide();
+       //by default,  workbook tags selected
+       $('#worksheettags').hide();
+       $('#componenttags').hide();
 
        //by default don't show search filtes
        $('#searchfilter').hide();
@@ -152,9 +152,9 @@ $(document).ready(function() {
           $("#icon-xlctrl").addClass("selectedctrl");     
    
 	  //action
-          $('#slidetags').hide();
-          $('#shapetags').hide();
-          $('#presentationtags').show();
+          $('#worksheettags').hide();
+          $('#componenttags').hide();
+          $('#workbooktags').show();
           setWorkbookProperties();
 	   
           return false;
@@ -170,9 +170,9 @@ $(document).ready(function() {
           $("#icon-sheetctrl").addClass("selectedctrl");     
    
 	  //action
-          $('#presentationtags').hide();
-          $('#shapetags').hide();
-          $('#slidetags').show();
+          $('#workbooktags').hide();
+          $('#componenttags').hide();
+          $('#worksheettags').show();
 	  setWorksheetProperties();
    
           return false;
@@ -188,9 +188,9 @@ $(document).ready(function() {
           $("#icon-namedrangectrl").addClass("selectedctrl");     
    
 	  //action
-          $('#presentationtags').hide();
-          $('#slidetags').hide();
-          $('#shapetags').show();
+          $('#workbooktags').hide();
+          $('#worksheettags').hide();
+          $('#componenttags').show();
           setComponentProperties();
           return false;
   
@@ -386,11 +386,9 @@ function insertMacroAction(contentURL, buttonIndex)
 
 function insertNamedRangeAction(contenturl, comtype, docuri, buttonIndex)
 {
-	//alert("uri"+contenturl+" type"+comtype+" docuri"+docuri+" idx"+buttonIndex);
         var activeCell = MLA.getActiveCell();
 	var rowIdx = activeCell.rowIdx;
 	var colIdx = activeCell.colIdx;
-	//alert("start coord"+activeCell.coordinate+"row"+rowIdx+"col"+colIdx);
 	try{
              //have to pass buttonIndex as insertedPart may not be inserted
 	     //when we go to construct the undo button
@@ -404,9 +402,6 @@ function insertNamedRangeAction(contenturl, comtype, docuri, buttonIndex)
 function insertChartAction(contenturl, comtype, buttonIndex)
 {
 
-//	alert("Insert Chart Action, contenturl"+contenturl);
-//	alert("type"+comtype);
-//	alert("buttonindex"+buttonIndex);
 	try{
              //have to pass buttonIndex as insertedPart may not be inserted
 	     //when we go to construct the undo button
@@ -465,13 +460,12 @@ function simpleAjaxChartInsert(contenturl, type, buttonIndex)
     });
 }
 
-
+/*
 function insertImage(picuri)
 {
        var config = MLA.getConfiguration();
        var fullurl= config.url;
        var picuri = fullurl + "/search/download-support.xqy?uid="+picuri;
-//alert("IN FUNCTION" +config + " / " + fullurl +" / "+picuri);
        var msg = MLA.insertImage(picuri,USER,AUTH);
 }
 
@@ -482,8 +476,24 @@ function setPictureFormat(pictureFormat)
 	var jsonPicFormat = MLA.jsonStringify(pictureFormat);
 	var msg = MLA.setPictureFormat(slideindex, shapename, jsonPicFormat);
 }
+*/
 
-function setUndoButton(buttonIndex,source, imageName)
+function setNamedRangeUndoButton(buttonIndex, source, tag)
+{
+	alert(buttonIndex+" "+source+" "+tag);
+	try
+	{
+	     var searchType =$("#searchtype input[@name='search:bst']:checked").val();
+	     var sheetName = MLA.getActiveWorksheetName();
+	     var id = "undobutton"+buttonIndex;
+	     var btn = $('#'+id);
+	     btn.children('a').remove();
+	     btn.append("<a href=\"javascript:undoNamedRangeInsert('"+searchType+"','"+sheetName+"','"+source+"','"+tag+"')\" onmouseup='blurSelected(this)' class='smallbtn'>Undo</a>");
+	}catch(err){
+               alert("ERROR in setNamedRangeUndoButton(): "+err.description); 
+	}
+}
+function setChartUndoButton(buttonIndex,source, imageName)
 {
 	try
 	{
@@ -492,9 +502,9 @@ function setUndoButton(buttonIndex,source, imageName)
 	     var id = "undobutton"+buttonIndex;
 	     var btn = $('#'+id);
 	     btn.children('a').remove();
-	     btn.append("<a href=\"javascript:undoInsert('"+searchType+"','"+sheetName+"','"+source+"','"+imageName+"')\" onmouseup='blurSelected(this)' class='smallbtn'>Undo</a>");
+	     btn.append("<a href=\"javascript:undoChartInsert('"+searchType+"','"+sheetName+"','"+source+"','"+imageName+"')\" onmouseup='blurSelected(this)' class='smallbtn'>Undo</a>");
 	}catch(err){
-               alert("ERROR in setUndoButton(): "+err.description); 
+               alert("ERROR in setChartUndoButton(): "+err.description); 
 	}
 
 }
@@ -557,9 +567,9 @@ function checkForEmptyNode(node)
 function insertNamedRangeContent(content, buttonIndex)
 {
 	try{
-		//alert("Content"+content.xml);
         var metapart = content.getElementsByTagName("dc:metadata");
 	var tag = metapart[0].getElementsByTagName("dc:identifier")[0].childNodes[0].nodeValue; 
+        var source= metapart[0].getElementsByTagName("dc:source")[0].childNodes[0].nodeValue;
 	var cells = content.getElementsByTagName("cell");
 
         var namedRangeCells = new Array();
@@ -603,23 +613,22 @@ function insertNamedRangeContent(content, buttonIndex)
 
 	 namedRangeCells[i]=thisCell;
 
-	 //alert("coord"+coord+"value"+value);
-          
 
 	        }
 	        catch(err)
  	        {
-			alert("ERROR "+err.description);
+			alert("error 1: in insertNamedRangeContent() "+err.description);
 	        }
 	}//end of for
 	MLA.setCellValue(namedRangeCells);
 	var sheetName = MLA.getActiveWorksheetName();
         MLA.addNamedRange(startCoordinate,endCoordinate,tag,sheetName);
-        MLA.addCustomXMLPart(metapart[0].xml);	
+        MLA.addCustomXMLPart(metapart[0].xml);
+        setNamedRangeUndoButton(buttonIndex, source, tag);	
 	}//end of try
 	catch(err2)
 	{
-		alert("ERROR IS HERE"+err2.description);
+		alert("error 2: in insertNamedRangeContent() "+err.description);
 	}
 }
 
@@ -648,7 +657,7 @@ function insertChartContent(content, buttonIndex)
                      MLA.addCustomXMLPart(metaparts[i].xml);
 		}
 	        //alert("imageName: "+imageName);	
-		setUndoButton(buttonIndex,source, imageName);	
+		setChartUndoButton(buttonIndex,source, imageName);	
 					
 	}catch(e)
 	{
@@ -1477,7 +1486,7 @@ function deleteCustomPart(source)
     }
 }
 
-function deleteCustomPartTwo(relation, type, partId)
+/*function deleteCustomPartTwo(relation, type, partId)
 {
     var customPieceIds = MLA.getCustomXMLPartIds();
     var customPieceId = null;
@@ -1502,13 +1511,7 @@ function deleteCustomPartTwo(relation, type, partId)
     }
 }
 
-
-/*function deleteWorkbookTag(relation, type, tagvalue)
-{
-    deleteCustomPart(relation, type, tagvalue);
-    setWorkbookProperties();
-}*/
-
+*/
 function deleteWorkbookTag(source)
 {
     deleteCustomPart(source);
@@ -1615,8 +1618,20 @@ function setWorksheetProperties()
     }
 
 }
+function undoNamedRangeInsert(searchType, sheetName, source, tag)
+{
+	alert(searchType+" "+sheetName+" "+source+" "+tag);
+	
+    if(searchType == null || searchType ==""){
+	alert("You must first insert content before you can undo it");
+    }else{
+	    MLA.clearNamedRange(tag);
+	    MLA.removeNamedRange(tag);
+	    deleteCustomPart(source);
+    }
+}
 
-function undoInsert(searchType, sheetName, source, imageName)
+function undoChartInsert(searchType, sheetName, source, imageName)
 {
     if(searchType == null || searchType ==""){
 	alert("You must first insert content before you can undo it");
@@ -1793,51 +1808,6 @@ function getJsonString(shapeRange)
     return shapeString;
 }
 
-var globalShapeName = "";
-var globalSlideIndex = "";
-
-function updateComponentJSON(slideIndex, shapeName)
-{
-
-	try{
-		   var shapeRangeView = MLA.getShapeRangeView(slideIndex, shapeName);
-                  
-		   var shape_tags = shapeRangeView.tags;
-   
-                   for(var i =0;i<shape_tags.length;i++)
-                   {
-	               var tag = shape_tags[i];
-		       var tagId = tag.value;
-		       var metadataID = getMetadataPartID(tagId);
-
-                       if(!(metadataID == null))
-		       {
-	                   var metadata = MLA.getCustomXMLPart(metadataID);
-
-			   var jsonStore = metadata.getElementsByTagName("dc:description")[0];
-
-
-			   var myShapeString =getJsonString(shapeRangeView);
-
-			   if(jsonStore.hasChildNodes())
-			   {
-		                 jsonStore.childNodes[0].nodeValue='';
-	 	                 jsonStore.childNodes[0].nodeValue=myShapeString;
-				 replaceCustomMetadataPart(metadataID, metadata)
-			   }
-
-			  // alert(jsonStore.xml);
-
-		       }
-		   }
-                   alert("Component Information Saved.");
-
-	}catch(err)
-	{
-		alert("ERROR: "+err.description);
-	}
-}
-
 function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
@@ -1854,38 +1824,6 @@ function trim(str)
 
 
 //BEGIN EVENT HANDLERS
-//v2 could define all handlers in application code
-//then have application authors tweak, as opposed to editing MarkLogicPowerPointEventSupport.js
-function windowSelectionHandler(shapename)
-{
-    if(!(globalShapeName==shapename))
-    {
-	var origShapeName = globalShapeName;
-
-	globalShapeName=shapename;
-
-	if($('#icon-shapectrl').is('.selectedctrl'))
-	{
-	   setComponentProperties();
-	}
-
-        if($('#metadata').is(':visible'))
-	{  
-            clearMetadataForm();
-	    if($('#icon-meta-shapectrl').is('.selectedctrl'))
-	    {
-	       refreshTagTree();
-	     
-	    }
-	}
-    }else
-    {
-            //refreshPropertiesPanel();	
-    }
- 
-    return false;
-}
-
 function worksheetSelectionHandler(sheetName)
 {
     if( $('#icon-sheetctrl').is('.selectedctrl')){ 
