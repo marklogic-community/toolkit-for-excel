@@ -13,39 +13,118 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-MarkLogicExcelEventHandlers.js - Excel events captured by MarkLogicExcelEventSupport.js
-are routed here. Define your custom handlers here.
+MarkLogicExcelEventHandlers.js - javascript api captures events in PowerPoint.
 
+for events you'd like to use, add try/catch and handler call
 */
 
 var debug = false;
 
 MLA.sheetActivateHandler = function(sheetName)
 {
-    if(debug){
-     alert("in handler sheetActivate sheetName: "+sheetName);
-    }
+        //will need to check, and if in worksheet mode, might highlight something
+	//different in pane )(properties, what tags applied to worksheet
+	try{
+	    var msg = sheetName;
+  	    if(debug){
+	      alert("in handler sheet activate name: "+sheetName);
+	    }
+
+	    var sheetType = MLA.getSheetType(sheetName);
+	    //UPDATE UI
+	    worksheetSelectionHandler(sheetName);
+
+	    if(debug){
+	      alert("sheet type: "+sheetType);
+	    }
+
+	    //ADD CHART MOUSEDOWN EVENTS FOR EMBEDDED CHARTS IN SHEET
+	    if(sheetType=="xlWorksheet"){
+		var msg=MLA.addChartObjectMouseDownEvents(sheetName);
+	    }
+	}catch(err){
+	    msg="error in sheetActivateHandler: "+err.description;
+	    alert(msg);
+	}
+
+	return msg;
 }
 
 MLA.sheetDeactivateHandler = function(sheetName)
 {
-    if(debug){
-     alert("in handler sheetDeactivate sheetName: "+sheetName);
-    }
+	try{
+
+	    var msg = sheetName;
+            var sheetType = MLA.getSheetType(sheetName);
+	    if(sheetType=="xlWorksheet"){
+		var msg=MLA.removeChartObjectMouseDownEvents(sheetName);
+	    }
+	}catch(err){
+	    msg="error in sheetDeactivateHandler: "+err.description;
+	    alert(msg);
+	}
+	//alert("in handler sheet deactivate name: "+sheetName);
+	return msg;
 }
 
 MLA.rangeSelectedHandler = function(rangeName)
 {
-    if(debug){
-     alert("in handler rangeSelectedHandler rangeName: "+rangeName);
-    }
+	try{
+
+	    var msg = rangeName;
+	    setComponentProperties();
+            if( $('#icon-meta-namedrangectrl').is('.selectedctrl') && $('#icon-meta-namedrangectrl').is(':visible'))
+            {
+		clearMetadataForm();
+	        refreshTagTree();
+	    }
+
+	    //need to remove chartObjectEvents here
+	}catch(err)
+ 	{
+	    msg="error in rangeSelectedHandler: "+err.description;
+	}
+	//alert("in handler rangeSelected name: "+rangeName);
+	return msg;
 }
 
 MLA.chartObjectMouseDownHandler = function(chartName)
 {
-    if(debug){
-     alert("in handler chartObjectMouseDownHandler chartName: "+chartName);
-    }
+	var msg=chartName;
+
+	try
+	{
+           //alert("chartName in handler is "+chartName);
+	    if($('#icon-namedrangectrl').is('.selectedctrl') &&  $('#icon-namedrangectrl').is(':visible')){
+	        setComponentProperties();
+	    }
+
+	    if( $('#icon-meta-namedrangectrl').is('.selectedctrl') && $('#icon-meta-namedrangectrl').is(':visible')){
+		clearMetadataForm();
+	        refreshTagTree();
+	    }
+
+	    //var tmpPath = MLA.getTempPath()+chartName+".PNG"; 
+	    //var success = MLA.exportChartImagePNG(tmpPath);
+	    //check for error here on success
+	    //var base64String=MLA.base64EncodeImage(tmpPath);
+
+	    //if(debug)
+	     //alert("CHARTSTRING"+base64String);
+
+	    //var deleted = MLA.deleteFile(tmpPath);
+
+	    //if(debug)
+	     //alert("deleted"+deleted);
+
+	}
+	catch(err)
+	{
+	    msg="error in chartObjectMouseDownHandler: "+err.description;
+	    alert(msg);
+
+	}
+	return msg;
 }
 
 MLA.workbookActivateHandler = function(workbookName)
@@ -138,5 +217,4 @@ MLA.sheetChangeHandler = function(rangeName)
     alert("In sheetChangeHandler, rangeName: "+rangeName);
    }
 }
-
 
