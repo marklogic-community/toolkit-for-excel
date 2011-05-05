@@ -314,6 +314,46 @@ namespace MarkLogic_ExcelAddin
             notifySheetActivate(sheetName);
         }
 
+        void app_SheetBeforeDoubleClick(object Sh, Microsoft.Office.Interop.Excel.Range Target, ref bool Cancel)
+        {
+            string sheetName="";
+            string range = "";
+            try
+            {
+                object missing = Type.Missing;
+                Excel.Worksheet sheet = (Excel.Worksheet)Sh;
+                sheetName=sheet.Name;
+                range = Target.get_Address(missing, missing, Excel.XlReferenceStyle.xlA1, missing, missing);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                sheetName = "error: " + errorMsg;
+            }
+
+            notifySheetBeforeDoubleClick(sheetName, range);
+        }
+
+        void app_SheetBeforeRightClick(object Sh, Microsoft.Office.Interop.Excel.Range Target, ref bool Cancel)
+        {
+            string sheetName = "";
+            string range = "";
+            try
+            {
+                object missing = Type.Missing;
+                Excel.Worksheet sheet = (Excel.Worksheet)Sh;
+                sheetName = sheet.Name;
+                range = Target.get_Address(missing, missing, Excel.XlReferenceStyle.xlA1, missing, missing);
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                sheetName = "error: " + errorMsg;
+            }
+
+            notifySheetBeforeRightClick(sheetName, range);
+        }
+
         void app_SheetDeactivate(object Sh)
         {
              //MessageBox.Show("In Sheet Deactivate");
@@ -653,6 +693,46 @@ namespace MarkLogic_ExcelAddin
                 if (res.StartsWith("error"))
                 {
                     MessageBox.Show("sheetActivateJS: " + res);
+                }
+
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
+
+        public void notifySheetBeforeDoubleClick(string sheetName, string range)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("sheetBeforeDoubleClick", new String[] { sheetName, range });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("sheetBeforeDoubleClickJS: " + res);
+                }
+
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
+
+        public void notifySheetBeforeRightClick(string sheetName, string range)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("sheetBeforeRightClick", new String[] { sheetName, range });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("sheetBeforeRightClickJS: " + res);
                 }
 
             }

@@ -98,6 +98,7 @@ namespace MarkLogic_ExcelAddin
                     if (ac.getEventsEnabled())
                     { 
                         Excel.Application app = Globals.ThisAddIn.Application;
+
                         app.WorkbookActivate += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookActivateEventHandler(app_WorkbookActivate);
                         app.WorkbookAfterXmlExport += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookAfterXmlExportEventHandler(app_WorkbookAfterXmlExport);
                         app.WorkbookAfterXmlImport += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookAfterXmlImportEventHandler(app_WorkbookAfterXmlImport);
@@ -109,6 +110,8 @@ namespace MarkLogic_ExcelAddin
                         app.WorkbookNewSheet += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookNewSheetEventHandler(app_WorkbookNewSheet);
                         app.WorkbookOpen += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookOpenEventHandler(app_WorkbookOpen);
                         app.SheetActivate += new Microsoft.Office.Interop.Excel.AppEvents_SheetActivateEventHandler(app_SheetActivate);
+                        app.SheetBeforeDoubleClick += new Microsoft.Office.Interop.Excel.AppEvents_SheetBeforeDoubleClickEventHandler(app_SheetBeforeDoubleClick);
+                        app.SheetBeforeRightClick += new Microsoft.Office.Interop.Excel.AppEvents_SheetBeforeRightClickEventHandler(app_SheetBeforeRightClick);
                         app.SheetChange += new Microsoft.Office.Interop.Excel.AppEvents_SheetChangeEventHandler(app_SheetChange);
                         app.SheetDeactivate += new Microsoft.Office.Interop.Excel.AppEvents_SheetDeactivateEventHandler(app_SheetDeactivate);
                         app.SheetSelectionChange += new Microsoft.Office.Interop.Excel.AppEvents_SheetSelectionChangeEventHandler(app_SheetSelectionChange);
@@ -118,7 +121,6 @@ namespace MarkLogic_ExcelAddin
 
                 }
             }
-
 
             private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
             {
