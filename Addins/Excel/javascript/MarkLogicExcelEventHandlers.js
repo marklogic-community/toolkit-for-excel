@@ -22,58 +22,107 @@ var debug = false;
 
 MLA.sheetActivateHandler = function(sheetName)
 {
-	try{
-	    alert("in handler sheetActivate sheetName: "+sheetName);
-	}catch(err){
-	    msg="error in sheetActivateHandler: "+err.description;
-	    alert(msg);
-	}
-
-	return msg;
+    if(debug){
+     alert("in handler sheetActivate sheetName: "+sheetName);
+    }
 }
 
 MLA.sheetDeactivateHandler = function(sheetName)
 {
-	try{
-	    alert("in handler sheetDeactivate sheetName: "+sheetName);
-	}catch(err){
-	    msg="error in sheetDeactivateHandler: "+err.description;
-	    alert(msg);
-	}
-
-	return msg;
+    if(debug){
+     alert("in handler sheetDeactivate sheetName: "+sheetName);
+    }
 }
 
 MLA.rangeSelectedHandler = function(rangeName)
 {
-	try{
-	    alert("in handler rangeSelectedHandler rangeName: "+rangeName);
-	}catch(err){
-	    msg="error in rangeSelectedHandler: "+err.description;
-	    alert(msg);
-	}
-
-	return msg;
-}
-	return msg;
+    if(debug){
+     alert("in handler rangeSelectedHandler rangeName: "+rangeName);
+    }
 }
 
 MLA.chartObjectMouseDownHandler = function(chartName)
 {
-	var msg=chartName;
+    if(debug){
+     alert("in handler chartObjectMouseDownHandler chartName: "+chartName);
+    }
+}
 
-	try
-	{
-	    alert("in handler chartObjectMouseDownHandler chartName: "+chartName);
+MLA.workbookActivateHandler = function(workbookName)
+{
+   if(debug){
+    alert("In workbookActivateHandler, workbookName: "+workbookName);
+   }
+}
 
-	}
-	catch(err)
-	{
-	    msg="error in chartObjectMouseDownHandler: "+err.description;
-	    alert(msg);
+MLA.workbookAfterXmlExportHandler = function(workbookName, mapName, url)
+{
+   if(debug){
+    alert("In workbookAfterXmlExportHandler, workbookName: "+workbookName+" mapName: "+mapName+" url: "+url);
+   }
+}
 
-	}
-	return msg;
+MLA.workbookAfterXmlImportHandler = function(workbookName, mapName, refresh)
+{
+   if(debug){
+    alert("In workbookAfterXmlImportHandler, workbookName: "+workbookName+" mapName: "+mapName+" refresh: "+refresh);
+   }
+}
+
+MLA.workbookBeforeXmlExportHandler = function(workbookName, mapName, url)
+{
+   if(debug){
+    alert("In workbookBeforeXmlExportHandler, workbookName: "+workbookName+" mapName: "+mapName+" url: "+url);
+   }
+}
+
+MLA.workbookBeforeXmlImportHandler = function(workbookName, mapName, refresh)
+{
+   if(debug){
+    alert("In workbookBeforeXmlImportHandler, workbookName: "+workbookName+" mapName: "+mapName+" refresh: "+refresh);	
+   }
+}
+
+MLA.workbookBeforeCloseHandler = function(workbookName)
+{
+   if(debug){
+    alert("In workbookBeforeCloseHandler, workbookName: "+workbookName);
+   }    
+}
+
+MLA.workbookBeforeSaveHandler = function(workbookName)
+{
+   if(debug){
+    alert("In workbookBeforeSaveHandler, workbookName: "+workbookName);	
+   }
+}
+
+MLA.workbookDeactivateHandler= function(workbookName)
+{
+   if(debug){
+    alert("In workbookDeactivateHandler, workbookName: "+workbookName);	
+   }
+}
+
+MLA.workbookNewSheetHandler = function(workbookName, sheetName)
+{
+   if(debug){
+    alert("In workbookNewSheetHandler, workbookName: "+workbookName+" sheetName: "+sheetName);
+   }
+}
+
+MLA.workbookOpenHandler = function(workbookName)
+{
+   if(debug){
+    alert("In workbookOpenHandler, workbookName: "+workbookName);
+   }    
+}
+
+MLA.sheetChangeHandler = function(rangeName)
+{
+   if(debug){
+    alert("In sheetChangeHandler, rangeName: "+rangeName);
+   }
 }
 
 
