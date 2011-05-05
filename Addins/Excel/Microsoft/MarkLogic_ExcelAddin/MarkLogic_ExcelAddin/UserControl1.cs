@@ -97,19 +97,27 @@ public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBu
                     if (ac.getEventsEnabled())
                     { 
                         Excel.Application app = Globals.ThisAddIn.Application;
-                        app.SheetActivate+=new Microsoft.Office.Interop.Excel.AppEvents_SheetActivateEventHandler(app_SheetActivate);
+                        app.WorkbookActivate += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookActivateEventHandler(app_WorkbookActivate);
+                        app.WorkbookAfterXmlExport += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookAfterXmlExportEventHandler(app_WorkbookAfterXmlExport);
+                        app.WorkbookAfterXmlImport += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookAfterXmlImportEventHandler(app_WorkbookAfterXmlImport);
+                        app.WorkbookBeforeClose += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookBeforeCloseEventHandler(app_WorkbookBeforeClose);
+                        app.WorkbookBeforeSave += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookBeforeSaveEventHandler(app_WorkbookBeforeSave);
+                        app.WorkbookBeforeXmlExport += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookBeforeXmlExportEventHandler(app_WorkbookBeforeXmlExport);
+                        app.WorkbookBeforeXmlImport += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookBeforeXmlImportEventHandler(app_WorkbookBeforeXmlImport);
+                        app.WorkbookDeactivate += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookDeactivateEventHandler(app_WorkbookDeactivate);
+                        app.WorkbookNewSheet += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookNewSheetEventHandler(app_WorkbookNewSheet);
                         app.WorkbookOpen += new Microsoft.Office.Interop.Excel.AppEvents_WorkbookOpenEventHandler(app_WorkbookOpen);
+                        app.SheetActivate += new Microsoft.Office.Interop.Excel.AppEvents_SheetActivateEventHandler(app_SheetActivate);
+                        app.SheetChange += new Microsoft.Office.Interop.Excel.AppEvents_SheetChangeEventHandler(app_SheetChange);
                         app.SheetDeactivate += new Microsoft.Office.Interop.Excel.AppEvents_SheetDeactivateEventHandler(app_SheetDeactivate);
                         app.SheetSelectionChange += new Microsoft.Office.Interop.Excel.AppEvents_SheetSelectionChangeEventHandler(app_SheetSelectionChange);
-                        //app.SheetChange += new Microsoft.Office.Interop.Excel.AppEvents_SheetChangeEventHandler(app_SheetChange);
+                      
+                        
                     }
 
                 }
             }
 
-
-
-           
 
             private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
             {

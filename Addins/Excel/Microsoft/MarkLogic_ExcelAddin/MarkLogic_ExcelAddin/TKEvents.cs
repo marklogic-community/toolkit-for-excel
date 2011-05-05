@@ -75,16 +75,179 @@ namespace MarkLogic_ExcelAddin
         //END ADD/REMOVE EVENTS
 
         //BEGIN EVENT HANDLERS
-        public void app_SheetChange(object Sh, Excel.Range Target)
+        void app_WorkbookActivate(Excel.Workbook wb)
         {
-            object missing = Type.Missing;
-            Excel.Worksheet sheet = (Excel.Worksheet)Sh;
+            string workbookName = "";
+            try
+            {
+                workbookName = wb.Name;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                workbookName = "error: " + errorMsg;
+            }
 
-            string changedRange = Target.get_Address(missing, missing,
-                Excel.XlReferenceStyle.xlA1, missing, missing);
+            notifyWorkbookActivate(workbookName);
 
-            MessageBox.Show("The value of " + sheet.Name + ":" +
-                changedRange + " was changed.");
+
+        }
+
+        void app_WorkbookAfterXmlExport(Microsoft.Office.Interop.Excel.Workbook wb, Microsoft.Office.Interop.Excel.XmlMap map, string url, Microsoft.Office.Interop.Excel.XlXmlExportResult result)
+        {
+            string workbookName = "";
+            string mapName = map.Name;
+           
+            try
+            {
+                workbookName = wb.Name;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                workbookName = "error: " + errorMsg;
+            }
+
+            notifyWorkbookAfterXmlExport(workbookName, mapName, url);
+        }
+
+        void app_WorkbookAfterXmlImport(Microsoft.Office.Interop.Excel.Workbook wb, Microsoft.Office.Interop.Excel.XmlMap map, bool isRefresh, Microsoft.Office.Interop.Excel.XlXmlImportResult Result)
+        {
+            string workbookName = "";
+            string mapName = map.Name;
+            string refresh="false";
+
+            
+            try
+            {
+                workbookName = wb.Name;
+                if (isRefresh)
+                {
+                    refresh = "true";
+                }
+
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                workbookName = "error: " + errorMsg;
+            }
+
+            notifyWorkbookAfterXmlImport(workbookName, mapName, refresh);
+        }
+
+        void app_WorkbookBeforeClose(Microsoft.Office.Interop.Excel.Workbook wb, ref bool Cancel)
+        {
+            string workbookName = "";
+            try
+            {
+                workbookName = wb.Name;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                workbookName = "error: " + errorMsg;
+            }
+
+            notifyWorkbookBeforeClose(workbookName);
+
+        }
+
+        void app_WorkbookBeforeSave(Microsoft.Office.Interop.Excel.Workbook wb, bool SaveAsUI, ref bool Cancel)
+        {
+            string workbookName = "";
+            try
+            {
+                workbookName = wb.Name;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                workbookName = "error: " + errorMsg;
+            }
+
+            notifyWorkbookBeforeSave(workbookName);
+
+        }
+
+        void app_WorkbookBeforeXmlExport(Microsoft.Office.Interop.Excel.Workbook wb, Microsoft.Office.Interop.Excel.XmlMap map, string url, ref bool cancel)
+        {
+            string workbookName = "";
+            string mapName = map.Name;
+           
+            try
+            {
+                workbookName = wb.Name;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                workbookName = "error: " + errorMsg;
+            }
+
+            notifyWorkbookBeforeXmlExport(workbookName, mapName, url);
+        }
+
+        void app_WorkbookBeforeXmlImport(Microsoft.Office.Interop.Excel.Workbook wb, Microsoft.Office.Interop.Excel.XmlMap map, string url, bool isRefresh, ref bool Cancel)
+        {
+            string workbookName = "";
+            string mapName = map.Name;
+            string refresh = "false";
+
+
+            try
+            {
+                workbookName = wb.Name;
+                if (isRefresh)
+                {
+                    refresh = "true";
+                }
+
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                workbookName = "error: " + errorMsg;
+            }
+
+            notifyWorkbookBeforeXmlImport(workbookName, mapName, refresh);
+        }
+
+        void app_WorkbookDeactivate(Microsoft.Office.Interop.Excel.Workbook wb)
+        {
+            string workbookName = "";
+            try
+            {
+                workbookName = wb.Name;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                workbookName = "error: " + errorMsg;
+            }
+
+            notifyWorkbookDeactivate(workbookName);
+
+        }
+
+        void app_WorkbookNewSheet(Microsoft.Office.Interop.Excel.Workbook wb, object Sh)
+        {
+            string workbookName = "";
+            string sheetName = "";
+            try
+            {
+                workbookName = wb.Name;
+                Excel.Worksheet ws = (Excel.Worksheet)Sh;
+                sheetName = ws.Name;
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                workbookName = "error: " + errorMsg;
+            }
+
+            notifyWorkbookNewSheet(workbookName, sheetName);
+
         }
 
         public void app_WorkbookOpen(Excel.Workbook wb)
@@ -107,6 +270,8 @@ namespace MarkLogic_ExcelAddin
             notifyWorkbookOpen(workbookName);
 
         }
+
+
 
         public void app_SheetActivate(object Sh)
         {
@@ -191,6 +356,28 @@ namespace MarkLogic_ExcelAddin
             notifySheetDeactivate(sheetName);
         }
 
+        public void app_SheetChange(object Sh, Excel.Range Target)
+        {
+            string range = "";
+            try
+            {
+                object missing = Type.Missing;
+                Excel.Worksheet sheet = (Excel.Worksheet)Sh;
+
+                range = Target.get_Address(missing, missing, Excel.XlReferenceStyle.xlA1, missing, missing);
+
+                MessageBox.Show("The value of " + sheet.Name + ":" +
+                    range + " was changed.");
+            }
+            catch (Exception e)
+            {
+                string errorMsg = e.Message;
+                range = "error: " + errorMsg;
+            }
+
+            notifySheetChange(range);
+        }
+
         void app_SheetSelectionChange(object Sh, Microsoft.Office.Interop.Excel.Range Target)
         {
             //MessageBox.Show("In Sheet Selection Change");
@@ -204,6 +391,7 @@ namespace MarkLogic_ExcelAddin
                         sheetName = ws.Name;
                         Excel.Name nm = (Excel.Name)Target.Name;
                         rangeName = nm.Name;
+                    
                         notifyRangeSelected(rangeName);
                     }
             }
@@ -211,7 +399,8 @@ namespace MarkLogic_ExcelAddin
             {
                 string errorMsg = e.Message;
                 string donothing_removewarning = "error: " + errorMsg;
-                //MessageBox.Show("ERROR: " + sheetName);
+                //will error when a named range is not selected as name does not exist for other/individual cells
+                //MessageBox.Show("ERROR: " + sheetName+ " "+donothing_removewarning);
             }
 
             //notifyRangeSelected(rangeName);
@@ -255,6 +444,205 @@ namespace MarkLogic_ExcelAddin
         //END EVENT HANDLERS
 
         //BEGIN NOTIFY
+        public void notifyWorkbookActivate(string workbookName)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("workbookActivate", new String[] { workbookName });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("workbookActivateJS: " + res);
+                }
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
+
+        public void  notifyWorkbookAfterXmlExport(string workbookName, string mapName, string url)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("workbookAfterXmlExport", new String[] { workbookName, mapName, url });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("workbookAfterXmlExportJS: " + res);
+                }
+                // MessageBox.Show("CALLED THE JS");
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
+
+        public void notifyWorkbookAfterXmlImport(string workbookName, string mapName, string refresh)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("workbookAfterXmlImport", new String[] { workbookName, mapName, refresh});
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("workbookAfterXmlImportJS: " + res);
+                }
+                // MessageBox.Show("CALLED THE JS");
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
+
+        public void notifyWorkbookBeforeClose(string workbookName)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("workbookBeforeClose", new String[] { workbookName });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("workbookBeforeCloseJS: " + res);
+                }
+                // MessageBox.Show("CALLED THE JS");
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
+
+        public void notifyWorkbookBeforeSave(string workbookName)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("workbookBeforeSave", new String[] { workbookName });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("workbookBeforeSaveJS: " + res);
+                }
+                // MessageBox.Show("CALLED THE JS");
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
+
+        public void notifyWorkbookBeforeXmlExport(string workbookName, string mapName, string url)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("workbookBeforeXmlExport", new String[] { workbookName, mapName, url });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("workbookBeforeXmlExportJS: " + res);
+                }
+                // MessageBox.Show("CALLED THE JS");
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
+
+        public void notifyWorkbookBeforeXmlImport(string workbookName, string mapName, string url)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("workbookBeforeXmlImport", new String[] { workbookName, mapName, url });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("workbookBeforeXmlImportJS: " + res);
+                }
+                // MessageBox.Show("CALLED THE JS");
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
+
+        public void notifyWorkbookDeactivate(string workbookName)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("workbookDeactivate", new String[] { workbookName });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("workbookDeactivateJS: " + res);
+                }
+                // MessageBox.Show("CALLED THE JS");
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
+
+        public void notifyWorkbookNewSheet(string workbookName, string sheetName)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("workbookNewSheet", new String[] { workbookName, sheetName});
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("workbookNewSheetJS: " + res);
+                }
+                // MessageBox.Show("CALLED THE JS");
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
+
+        public void notifyWorkbookOpen(string workbookName)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("workbookOpen", new String[] { workbookName });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("workbookOpenJS: " + res);
+                }
+                // MessageBox.Show("CALLED THE JS");
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
+
         public void notifySheetActivate(string sheetName)
         {
             try
@@ -275,6 +663,25 @@ namespace MarkLogic_ExcelAddin
             }
         }
 
+        public void notifySheetChange(string rangeName)
+        {
+            try
+            {
+                object result = webBrowser1.Document.InvokeScript("sheetChange", new String[] { rangeName });
+                string res = result.ToString();
+
+                if (res.StartsWith("error"))
+                {
+                    MessageBox.Show("sheetChangeJS: " + res);
+                }
+
+            }
+            catch (Exception e)
+            {
+                string donothing_removewarning = e.Message;
+                //MessageBox.Show(donothing_removewarning);
+            }
+        }
 
         public void notifySheetDeactivate(string sheetName)
         {
@@ -288,26 +695,6 @@ namespace MarkLogic_ExcelAddin
                     MessageBox.Show("sheetDeactivateJS: " + res);
                 }
 
-            }
-            catch (Exception e)
-            {
-                string donothing_removewarning = e.Message;
-                //MessageBox.Show(donothing_removewarning);
-            }
-        }
-
-        public void notifyWorkbookOpen(string workbookName)
-        {
-            try
-            {
-                object result = webBrowser1.Document.InvokeScript("workbookOpen", new String[] { workbookName });
-                string res = result.ToString();
-
-                if (res.StartsWith("error"))
-                {
-                    MessageBox.Show("workbookOpenJS: " + res);
-                }
-               // MessageBox.Show("CALLED THE JS");
             }
             catch (Exception e)
             {
