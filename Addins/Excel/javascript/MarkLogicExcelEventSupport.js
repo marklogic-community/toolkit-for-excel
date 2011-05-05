@@ -33,6 +33,30 @@ sheetActivate = function(sheetName)
 	return msg;
 }
 
+sheetBeforeDoubleClick = function(sheetName, range)
+{
+	try{
+	    var msg = sheetName;
+	    MLA.sheetBeforeDoubleClickHandler(sheetName, range);
+	}catch(err){
+	    msg="error in sheetBeforeDoubleClick: "+err.description;
+	}
+
+	return msg;
+}
+
+sheetBeforeRightClick = function(sheetName, range)
+{
+	try{
+	    var msg = sheetName;
+	    MLA.sheetBeforeRightClickHandler(sheetName, range);
+	}catch(err){
+	    msg="error in sheetBeforeRightClick: "+err.description;
+	}
+
+	return msg;
+}
+
 sheetDeactivate = function(sheetName)
 {
 	try{

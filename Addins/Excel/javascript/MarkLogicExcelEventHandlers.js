@@ -118,6 +118,20 @@ MLA.workbookOpenHandler = function(workbookName)
    }    
 }
 
+MLA.sheetBeforeDoubleClickHandler = function(sheetName, range)
+{
+   if(debug){
+    alert("In sheetBeforeDoubleClickHandler, sheetName: "+sheetName+" range"+range);
+   }    
+}
+
+MLA.sheetBeforeRightClickHandler = function(sheetName, range)
+{
+   if(debug){
+    alert("In sheetBeforeRightClickHandler, sheetName: "+sheetName+" range"+range);
+   }    
+}
+
 MLA.sheetChangeHandler = function(rangeName)
 {
    if(debug){

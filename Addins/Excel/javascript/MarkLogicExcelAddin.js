@@ -111,7 +111,7 @@ this.colIdx=c_values[0];
 }
 
 /** @ignore */
-MLA.version = { "release" : "1.0-20100120" }; 
+MLA.version = { "release" : "2.0-0" }; 
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){
@@ -230,7 +230,7 @@ MLA.getCustomXMLPartIds = function()
 /**
  * Returns the custom XML part, identified by customXMLPartId, that is part of the active Open XML package. (.docx, .xlsx, .pptx, etc.)
  * @param customXMLPartId the id of the custom part to be fetched from the active package
- * @return the XML for the custom part as a DOM object. 
+ * @return the XML for the custom part as a DOM object
  * @type Microsoft.XMLDOM object 
  * @throws Exception if there is error retrieving the custom part 
  */
@@ -257,7 +257,7 @@ MLA.getCustomXMLPart = function(customXMLPartId)
 
 /** Adds custom part to active Open XML package.  Returns the id of the part added.
  *@param customPartXML Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. )
- *@return id for custom part added.
+ *@return id for custom part added
  *@type String
  *@throws Exception if unable to add custom part
  */
@@ -284,7 +284,7 @@ MLA.addCustomXMLPart = function(customPartXml)
 }
 
 /** Deletes custom part from Active Open XML package identified by id.
- *@param customXMLPartId the id of the custom part to be deleted from the active Open XML package.
+ *@param customXMLPartId the id of the custom part to be deleted from the active Open XML package
  *@throws Exception if unable to delete custom part
  */
 MLA.deleteCustomXMLPart = function(customXMLPartId)
@@ -303,7 +303,7 @@ MLA.deleteCustomXMLPart = function(customXMLPartId)
 /**
  *
  *Returns MLA.config. The fields for this object are version, url, and theme.  
-version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color scheme used by Office. 
+version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color scheme used by Office
  *@throws Exception if unable to create MLA.config object
  */
 MLA.getConfiguration = function()
@@ -329,7 +329,7 @@ MLA.getConfiguration = function()
  * Returns the name of the active workbook.
  * @return name of active workbook
  * @type String 
- * @throws Exception if unable to retrieve the active workbook name. 
+ * @throws Exception if unable to retrieve the active workbook name 
  */
 MLA.getActiveWorkbookName = function()
 {
@@ -369,6 +369,13 @@ MLA.getActiveWorksheetName = function()
 	return wsName;
 }
 
+/**
+ * Returns the type of the sheet specified by sheetName.
+ * @param sheetName the name of the sheet to inspect
+ * @return type of sheet
+ * @type String 
+ * @throws Exception if unable to get sheet type
+ */
 MLA.getSheetType = function(sheetName)
 {
         var wsType = window.external.getSheetType(sheetName);
@@ -435,8 +442,8 @@ MLA.getActiveWorkbookWorksheetNames = function()
 
 /**
  * Adds workbook of type Excel.XlWBATemplate.xlWBATWorksheet.  Added workbook receives focus.
- * @param worksheetname - a string that names the worksheet 
- * @return name of workbook added - Note: the only way to name the workbook is to Save it.  Excel returns a default name for the workbook, but this name will change the first time the user saves the workbook. 
+ * @param worksheetname a string that names the worksheet 
+ * @return name of workbook added - Note: the only way to name the workbook is to Save it.  Excel returns a default name for the workbook, but this name will change the first time the user saves the workbook
  * @type String 
  * @throws Exception if unable to add the workbook
  */
@@ -453,12 +460,12 @@ MLA.addWorkbook = function(worksheetname) //,subject,saveas)
 
 /**
  * Adds worksheet to active workbook.  Worksheet will be added to end of existing sheets in workbook at the final position. Added worksheet receives focus.
- * @param name - the name of the worksheet to be added
+ * @param sheetName the name of the worksheet to be added
  * @throws Exception if unable to add the worksheet
  */
-MLA.addWorksheet = function(name)
+MLA.addWorksheet = function(sheetName)
 {
-	var ws = window.external.addWorksheet(name);
+	var ws = window.external.addWorksheet(sheetName);
 
 	var errMsg = MLA.errorCheck(ws);
 	
@@ -470,7 +477,7 @@ MLA.addWorksheet = function(name)
 
 /**
  * Sets the active workbook in Excel. 
- * @param workbookname - a string that is the name of the workbook to receive focus 
+ * @param workbookname a string that is the name of the workbook to receive focus 
  * @throws Exception if unable to activate the specified workbook
  */
 MLA.setActiveWorkbook = function(workbookname)
@@ -486,7 +493,7 @@ MLA.setActiveWorkbook = function(workbookname)
 
 /**
  * Sets the active worksheet in Excel.   
- * @param worksheetname - a string that is the name of the worksheet to receive focus 
+ * @param worksheetname a string that is the name of the worksheet to receive focus 
  * @throws Exception if unable to activate the specified worksheet
  */
 MLA.setActiveWorksheet = function(sheetname)
@@ -500,13 +507,12 @@ MLA.setActiveWorksheet = function(sheetname)
 	//return saw;
 }
 
-// UPDATED SIGNATURE TO ADD sheetName 
 /**
- * Names a range in the active worksheet   
- * @param coord1 - starting coordinate of range in A1 notation
- * @param coord2 - end coordinate of range in A1 notation
- * @param rngName - the name to be assigned to the range 
- * @param sheetName - the name of the worksheet to host the range 
+ * Names a range in the worksheet specified by sheetName. 
+ * @param coord1 starting coordinate of range in A1 notation
+ * @param coord2 end coordinate of range in A1 notation
+ * @param rngName the name to be assigned to the range 
+ * @param sheetName the name of the worksheet to host the range 
  * @throws Exception if unable to name the specified range
  */
 MLA.addNamedRange = function(coord1,coord2,rngName, sheetName)
@@ -521,11 +527,11 @@ MLA.addNamedRange = function(coord1,coord2,rngName, sheetName)
 
 /**
  * Adds AutoFilter to specified range in active worksheet.  
- * @param coord1 - starting coordinate of range in A1 notation
- * @param coord2 - end coordinate of range in A1 notation
- * @param criteria1 - (optional) default '<>'
- * @param operator - (optional) default 'AND'
- * @param criteria2 - (optional) default 'missing'
+ * @param coord1 starting coordinate of range in A1 notation
+ * @param coord2 end coordinate of range in A1 notation
+ * @param criteria1 (optional) default '<>'
+ * @param operator (optional) default 'AND'
+ * @param criteria2 (optional) default 'missing'
  * @throws Exception if unable to add AutoFilter specified range
  */
 MLA.addAutoFilter = function(coord1, coord2, criteria1, operator, criteria2)
@@ -553,7 +559,8 @@ MLA.addAutoFilter = function(coord1, coord2, criteria1, operator, criteria2)
 }
 
 /**
- * Returns all NamedRange names for the active workbook
+ * Returns all NamedRange names for the active workbook.
+ * @type Array
  * @throws Exception if unable to add retrieve NamedRange names
  */
 MLA.getNamedRangeNames = function()
@@ -569,6 +576,12 @@ MLA.getNamedRangeNames = function()
 	return nrsArray;
 }
 
+/**
+ * Returns all Chart names for any charts found on sheet specified by sheetName.
+ * @param sheetName the name of the sheet containing the charts
+ * @type Array
+ * @throws Exception if unable to add retrieve Chart names
+ */
 MLA.getWorksheetChartNames = function(sheetName)
 {
 	var nrsArray="";
@@ -585,6 +598,12 @@ MLA.getWorksheetChartNames = function(sheetName)
 	return nrsArray;
 }
 
+/**
+ * Returns all named range names for any named ranges found on sheet specified by sheetName.
+ * @param sheetName the name of the sheet containing the charts
+ * @type Array
+ * @throws Exception if unable to add retrieve named range names
+ */
 MLA.getWorksheetNamedRangeNames = function(sheetName)
 {
 	var nrsArray="";
@@ -602,8 +621,8 @@ MLA.getWorksheetNamedRangeNames = function(sheetName)
 	
 }
 /**
- * Returns all NamedRange names for the active workbook
- * @param name - the name of the range to be set active in the workbook 
+ * Returns all NamedRange names for the active workbook.
+ * @param name the name of the range to be set active in the workbook 
  * @throws Exception if unable to add retrieve NamedRange names
  */
 MLA.setActiveRangeByName = function(name)
@@ -618,13 +637,13 @@ MLA.setActiveRangeByName = function(name)
 }
 
 /**
- * Clears all cells in the range identified by name
- * @param name - the name of the range to be cleared in the active workbook 
+ * Clears all cells in the range identified by name.
+ * @param rangeName the name of the range to be cleared in the active workbook 
  * @throws Exception if unable to clear the cells in the NamedRange
  */
-MLA.clearNamedRange = function(name)
+MLA.clearNamedRange = function(rangeName)
 {
-	var msg=window.external.clearNamedRange(name);
+	var msg=window.external.clearNamedRange(rangeName);
 	var errMsg = MLA.errorCheck(msg);
 	
         if(errMsg!=null)
@@ -634,9 +653,9 @@ MLA.clearNamedRange = function(name)
 }
 
 /**
- * Clears all cells in the range identified by coordinates provide in A1 notation 
- * @param coord1 - starting coordinate of range to be cleared in A1 notation
- * @param coord2 - end coordinate of range to be cleared in A1 notation 
+ * Clears all cells in the range identified by coordinates provide in A1 notation.
+ * @param coord1 starting coordinate of range to be cleared in A1 notation
+ * @param coord2 end coordinate of range to be cleared in A1 notation 
  * @throws Exception if unable to clear the cells in the range
  */
 MLA.clearRange = function(coord1,coord2)
@@ -652,7 +671,7 @@ MLA.clearRange = function(coord1,coord2)
 
 /**
  * Removes the NamedRange from the active workbook.  Note - cells and values stay intact, this only removes the name from the range.
- * @param name -  the name of the NamedRange to be removed from the active workbook 
+ * @param name the name of the NamedRange to be removed from the active workbook
  * @throws Exception if unable to remove the named range
  */
 MLA.removeNamedRange = function(name)
@@ -668,6 +687,7 @@ MLA.removeNamedRange = function(name)
 
 /**
  * Returns the selected range coordinates.  This works for contiguous ranges.  When disparate cells are selected,  the last coordinates for the last contigous range selected in the active workbook will be returned.
+ * @type String
  * @throws Exception if unable to retrieve the coordinates
  */
 MLA.getSelectedRangeCoordinates = function()
@@ -682,6 +702,11 @@ MLA.getSelectedRangeCoordinates = function()
 	return msg;
 }
 
+/**
+ * Returns the name for the selected range if name exists. 
+ * @type String
+ * @throws Exception if unable to retrieve the named range
+ */
 MLA.getSelectedRangeName = function()
 {
 	var msg = window.external.getSelectedRangeName();
@@ -693,6 +718,11 @@ MLA.getSelectedRangeName = function()
         return msg;
 }
 
+/**
+ * Returns the name for the selected chart. 
+ * @type String
+ * @throws Exception if unable to retrieve the chart name
+ */
 MLA.getSelectedChartName = function()
 {
 	var msg = window.external.getSelectedChartName();
@@ -703,8 +733,10 @@ MLA.getSelectedChartName = function()
         	throw("Error: Not able to getSelectedChartName; "+errMsg);
         return msg;
 }
+
 /**
  * Returns cells selected in active workbook.  This works for contigous cells.  When disparate cells are selected, the last contigous range of cells selected in the active workbook will be returned.
+ * @type MLA.Cell 
  * @throws Exception if unable to retrieve the coordinates
  */
 MLA.getSelectedCells = function()
@@ -734,7 +766,8 @@ MLA.getSelectedCells = function()
 }
 
 /**
- * Returns active cell from the active worksheet in active workbook.  For any range of selected cells, one will always be identified as active; the last selected cell for any range
+ * Returns active cell from the active worksheet in active workbook.  For any range of selected cells, one will always be identified as active; the last selected cell for any range.
+ * @type MLA.Cell
  * @throws Exception if unable to retrieve the active cell
  */
 MLA.getActiveCell = function()
@@ -798,7 +831,7 @@ MLA.getActiveCellText = function()
 
 /**
  * Set the value for the cell at the current cursor position.
- * @param value - the value to be inserted in the active cell
+ * @param value the value to be inserted in the active cell
  * @throws Exception if unable to set the active cell text
  */
 MLA.setActiveCellValue = function(value)
@@ -813,9 +846,9 @@ MLA.setActiveCellValue = function(value)
 }
 
 /**
- * Sets the values for the cells identified by Cell.coordinate
- * @param cells - an array of MLA.Cell objects, the values of which will be used for the values for the given cells in the active workbook.
- * @param sheetname - (optional) the name of the worksheet where the Cell values should be populated.  If no sheetname is provided, the cells will be populated in the active worksheet.
+ * Sets the values for the cells identified by Cell.coordinate.
+ * @param cells an array of MLA.Cell objects, the values of which will be used for the values for the given cells in the active workbook.
+ * @param sheetname (optional) the name of the worksheet where the Cell values should be populated.  If no sheetname is provided, the cells will be populated in the active worksheet.
  * @throws Exception if unable to set the values for the given cells
  */
 MLA.setCellValue = function(cells, sheetname)
@@ -842,8 +875,8 @@ MLA.setCellValue = function(cells, sheetname)
 	return msg;
 }
 /**
- * Converts an A1 notation coordinate to R1C1 notations
- * @param coord - the A1 coordinate to be converted
+ * Converts an A1 notation coordinate to R1C1 notation.
+ * @param coord the A1 coordinate to be converted
  * @throws Exception if unable to convert the coordinate
  */
 MLA.convertA1ToR1C1 = function(coord)
@@ -857,9 +890,9 @@ MLA.convertA1ToR1C1 = function(coord)
 	return msg;
 }
 /**
- * Converts a row index and column index to an A1 notation coordinate
- * @param rowIdx - the row index 
- * @param colIdx - the column index
+ * Converts a row index and column index to an A1 notation coordinate.
+ * @param rowIdx the row index 
+ * @param colIdx the column index
  * @throws Exception if unable to convert to A1 notation
  */
 MLA.convertR1C1ToA1 = function(rowIdx, colIdx)
@@ -874,7 +907,7 @@ MLA.convertR1C1ToA1 = function(rowIdx, colIdx)
 }
 
 /**
- * Clears the contents of the active worksheet in the active workbook
+ * Clears the contents of the active worksheet in the active workbook.
  * @throws Exception if unable to clear the contents of the active worksheet
  */
 MLA.clearWorksheet = function()
@@ -889,7 +922,8 @@ MLA.clearWorksheet = function()
 }
 
 /**
- * Returns the path being used for the /temp dir on the client system
+ * Returns the path being used for the /temp dir on the client system.
+ * @type String
  * @throws Exception if unable to retrieve the /temp path
  */
 MLA.getTempPath = function()
@@ -905,12 +939,12 @@ MLA.getTempPath = function()
 }
 
 /**
- * Saves the active workbook to MarkLogic
- * @param tmpPath - the path for the /tmp dir on the client system. (have to save a local copy) 
- * @param docTitle - the title of the document
- * @param url - the url on MarkLogic Server where the XQuery to save can be found
- * @param uname - the username for MarkLogic Server
- * @param pwd - the password for MarkLogic Server
+ * Saves the active workbook to MarkLogic.
+ * @param tmpPath the path for the /tmp dir on the client system. (have to save a local copy) 
+ * @param docTitle the title of the document
+ * @param url the url on MarkLogic Server where the XQuery to save can be found
+ * @param uname the username for MarkLogic Server
+ * @param pwd the password for MarkLogic Server
  * @throws Exception if unable to save the document to MarkLogic
  */
 MLA.saveActiveWorkbook = function(tmpPath, doctitle, url, uname,pwd)
@@ -924,12 +958,12 @@ MLA.saveActiveWorkbook = function(tmpPath, doctitle, url, uname,pwd)
        return msg;
 }
 /**
- * Open a .xlsx from MarkLogic into Excel
- * @param tmpPath - the path for the /tmp dir on the client system. (have to save a local copy) 
- * @param docuri - the uri for the document in MarkLogic Server
- * @param url - the url on MarkLogic Server where the XQuery to open the document specified by docuri can be found
- * @param uname - the username for MarkLogic Server
- * @param pwd - the password for MarkLogic Server
+ * Open a .xlsx from MarkLogic into Excel.
+ * @param tmpPath the path for the /tmp dir on the client system. (have to save a local copy) 
+ * @param docuri the uri for the document in MarkLogic Server
+ * @param url the url on MarkLogic Server where the XQuery to open the document specified by docuri can be found
+ * @param uname the username for MarkLogic Server
+ * @param pwd the password for MarkLogic Server
  * @throws Exception if unable to open the document into Excel
  */
 MLA.openXlsx = function(tmpPath, docuri, url, uname, pwd)
@@ -942,6 +976,12 @@ MLA.openXlsx = function(tmpPath, docuri, url, uname, pwd)
         return msg;
 }
 
+/**
+ * Saves chart in Excel Workbook to filesystem as .png.
+ * @param chartPath the path for the /tmp dir on the client system. (have to save a local copy) where you want to save the chart image
+ * @type void
+ * @throws Exception if unable to save .png to local filesystem
+ */
 MLA.exportChartImagePNG = function(chartPath)
 {
 	var msg =  window.external.exportChartImagePNG(chartPath);
@@ -953,6 +993,13 @@ MLA.exportChartImagePNG = function(chartPath)
         return msg;
 }
 
+/**
+ * Deletes picture (image), specified by name, from specified sheet in Excel Workbook.
+ * @param sheetName the name of the sheet containing picture to be deleted
+ * @param imageName the name of the picture to be deleted
+ * @type void
+ * @throws Exception if unable to delete the picture
+ */
 MLA.deletePicture = function(sheetName, imageName)
 {
         var msg = window.external.deletePicture(sheetName, imageName);
@@ -964,6 +1011,13 @@ MLA.deletePicture = function(sheetName, imageName)
         return msg;
 }
 
+/**
+ * Inserts a base64 encoded string into sheet, specified by sheetName, as an image.
+ * @param base64String the base64 string to insert
+ * @param sheetName - the name of the sheet to insert the image on
+ * @type void
+ * @throws Exception if unable to insert the image
+ */
 MLA.insertBase64ToImage = function(base64String)
 {
   	var msg =  window.external.insertBase64ToImage(base64String);
@@ -975,6 +1029,12 @@ MLA.insertBase64ToImage = function(base64String)
         return msg;
 }
 
+/**
+ * Returns image found at chartPath as base64 encoded string
+ * @param chartPath the name of the image, including full path on filesystem, to be encoded 
+ * @type String
+ * @throws Exception if unable to delete the picture
+ */
 MLA.base64EncodeImage = function(chartPath)
 {
 	var msg =  window.external.base64EncodeImage(chartPath);
@@ -986,6 +1046,12 @@ MLA.base64EncodeImage = function(chartPath)
         return msg;
 }
 
+/**
+ * Deletes file found with full path at parameter filePath, from the filesystem.
+ * @param filePath the name of the file to be deleted
+ * @type void
+ * @throws Exception if unable to delete the file
+ */
 MLA.deleteFile = function(filePath)
 {
 	var msg =  window.external.deleteFile(filePath);
@@ -999,6 +1065,12 @@ MLA.deleteFile = function(filePath)
 }
 
 //functions to add/remove events here
+/**
+ * Adds chartObjectMouseDown events for each chart on sheet specified by sheetName.
+ * @param sheetName the name of the sheet to add event listeners to
+ * @type void
+ * @throws Exception if unable to add chartObjectMouseDown events
+ */
 MLA.addChartObjectMouseDownEvents = function(sheetName)
 {
 	var msg =  window.external.addChartObjectMouseDownEvents(sheetName);
@@ -1012,6 +1084,12 @@ MLA.addChartObjectMouseDownEvents = function(sheetName)
         return msg;
 }
 
+/**
+ * Removes chartObjectMouseDown events for each chart on sheet specified by sheetName.
+ * @param sheetName the name of the sheet to remove event listeners from
+ * @type void
+ * @throws Exception if unable to remove chartObjectMouseDown events
+ */
 MLA.removeChartObjectMouseDownEvents = function(sheetName)
 {
 	var msg =  window.external.removeChartObjectMouseDownEvents(sheetName);
@@ -1023,6 +1101,12 @@ MLA.removeChartObjectMouseDownEvents = function(sheetName)
         return msg;
 }
 
+/**
+ * Returns macro code as text from macro component specified by index for active workbook.
+ * @param index the index of the macro to decompile and return as string
+ * @type String
+ * @throws Exception if unable to get macro text
+ */
 MLA.getMacroText = function(index)
 {
 	var source = window.external.getMacroText(index);
@@ -1032,6 +1116,12 @@ MLA.getMacroText = function(index)
 	return source;
 }
 
+/**
+ * Runs macro, specified by macro name, in the active workbook.
+ * @param macroName the name of the macro to run in the active workbook
+ * @type void
+ * @throws Exception if unable to run macro
+ */
 MLA.runMacro = function(macroName)
 {
 	var msg = window.external.runMacro(macroName);
@@ -1043,6 +1133,12 @@ MLA.runMacro = function(macroName)
 
 }
 
+/**
+ * Returns macro name for macro component specified by index for active workbook.
+ * @param index the index of the macro component
+ * @type String
+ * @throws Exception if unable to get macro name
+ */
 MLA.getMacroName = function(index)
 {
         var msg = window.external.getMacroName(index);
@@ -1054,6 +1150,12 @@ MLA.getMacroName = function(index)
         return msg;
 }
 
+/**
+ * Returns macro type for macro component specified by index for active workbook.
+ * @param index - the index of the macro component
+ * @type String
+ * @throws Exception if unable to get macro type 
+ */
 MLA.getMacroType = function(index)
 {
 	var msg = window.external.getMacroType(index);
@@ -1065,6 +1167,12 @@ MLA.getMacroType = function(index)
         return msg;
 }
 
+/**
+ * Returns macro procedure name for macro component specified by index for active workbook.
+ * @param index - the index of the macro component
+ * @type String
+ * @throws Exception if unable to get macro name
+ */
 MLA.getMacroProcedureName = function(index)
 {
 	var msg = window.external.getMacroProcedureName(index);
@@ -1075,6 +1183,12 @@ MLA.getMacroProcedureName = function(index)
         return msg;
 }
 
+/**
+ * Returns macro comments for macro component specified by index for active workbook. comments here are any that are in the first lines prior to any procedure definition for the macro.
+ * @param index the index of the macro component
+ * @type String
+ * @throws Exception if unable to get macro comments
+ */
 MLA.getMacroComments = function(index)
 {
 	var msg = window.external.getMacroComments(index);
@@ -1085,6 +1199,12 @@ MLA.getMacroComments = function(index)
         return msg;
 }
 
+/**
+ * Returns macro signature for macro component specified by index for active workbook. 
+ * @param index the index of the macro component
+ * @type String
+ * @throws Exception if unable to get macro signature
+ */
 MLA.getMacroSignature= function(index)
 {
 	var msg = window.external.getMacroSignature(index);
@@ -1095,13 +1215,24 @@ MLA.getMacroSignature= function(index)
         return msg;
 }
 
+/**
+ * Returns count of macros in active workbook. This count can then be used as the index in other functions related functions.
+ * @type String
+ * @throws Exception if unable to get macro comments
+ */
 MLA.getMacroCount = function()
 {
 	var msg=window.external.getMacroCount();
-//returns int, needs different error handler
 	return msg;
 }
 
+/**
+ * Adds macro to active workbook.
+ * @param source the source code (string) for the macro to be added
+ * @param componentType the componentType to add the macro as to the active workbook
+ * @type void
+ * @throws Exception if unable to add macro to active workbook
+ */
 MLA.addMacro= function(source, componenType)
 {
 	var msg = window.external.addMacro(source, componenType);
@@ -1112,6 +1243,12 @@ MLA.addMacro= function(source, componenType)
         return msg;
 }
 
+/**
+ * Removes macro, specified by macroName, from active workbook.
+ * @param macroName the componentType to add the macro as to the active workbook
+ * @type void
+ * @throws Exception if unable to remove macro
+ */
 MLA.removeMacro= function(macroName)
 {
 	var msg = window.external.removeMacro(macroName);
@@ -1121,6 +1258,4 @@ MLA.removeMacro= function(macroName)
 	
         return msg;
 }
-
-
 
