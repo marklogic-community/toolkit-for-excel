@@ -53,22 +53,23 @@ namespace MarkLogic_ExcelAddin
             //private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";  
             private string addinVersion = "1.0-2"; 
             HtmlDocument htmlDoc;
-private const int CF_ENHMETAFILE = 14;
-private const int CF_METAFILEPICT = 3;
-[DllImport("user32.dll")]
-private static extern bool OpenClipboard(IntPtr hWndNewOwner);
-[DllImport("user32.dll")]
-private static extern int IsClipboardFormatAvailable(int wFormat);
-[DllImport("user32.dll")]
-private static extern IntPtr GetClipboardData(int wFormat);
-[DllImport("user32.dll")]
-private static extern int CloseClipboard();
-[DllImport("gdi32.dll")]
-static extern IntPtr CopyEnhMetaFile(IntPtr hemfSrc, IntPtr hNULL);
-[System.Runtime.InteropServices.DllImport("gdi32")]
-public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBuffer);
-//static extern IntPtr CopyEnhMetaFile(IntPtr hemfSrc, string lpszFile);
-//
+
+            /*private const int CF_ENHMETAFILE = 14;
+              private const int CF_METAFILEPICT = 3;
+              [DllImport("user32.dll")]
+              private static extern bool OpenClipboard(IntPtr hWndNewOwner);
+              [DllImport("user32.dll")]
+              private static extern int IsClipboardFormatAvailable(int wFormat);
+              [DllImport("user32.dll")]
+              private static extern IntPtr GetClipboardData(int wFormat);
+              [DllImport("user32.dll")]
+              private static extern int CloseClipboard();
+              [DllImport("gdi32.dll")]
+              static extern IntPtr CopyEnhMetaFile(IntPtr hemfSrc, IntPtr hNULL);
+              [System.Runtime.InteropServices.DllImport("gdi32")]
+              public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBuffer);
+            **/
+            //static extern IntPtr CopyEnhMetaFile(IntPtr hemfSrc, string lpszFile);
 
             public UserControl1()
             {
@@ -751,7 +752,6 @@ public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBu
                 foreach (Excel.Name nDel in ns)
                 {
                     if (nDel.Name.EndsWith(rngName))
-                    //if(nDel.Name.Equals(rngName))
                     {
                         //MessageBox.Show("Deleting");
                         nDel.Delete();
@@ -773,8 +773,6 @@ public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBu
                 string message = "";
                 try
                 {
-                    //MessageBox.Show("IN FUNCTION");
-
                     message = Globals.ThisAddIn.Application.ActiveChart.Name;
                 }
                 catch (Exception e)
@@ -1094,29 +1092,6 @@ public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBu
                 return message;
             }
 
-        /*
-            //how we set cell values currently
-            //may want to use entire cell object
-            public String setCellValueA1(string coordinate, string value)
-            {
-                //MessageBox.Show("IN STRING METHOD");
-                object missing = Type.Missing;
-                string message = "";
-
-                try
-                {
-                    Excel.Range r2 = Globals.ThisAddIn.Application.get_Range(coordinate, missing);
-                    r2.Value2 = value;
-                }
-                catch (Exception e)
-                {
-                    string errorMsg = e.Message;
-                    message = "error: " + errorMsg;
-                }
-                return message;
-            }
-        */
-
             //utility, using so cell objects have both coordinate references
             public String convertA1ToR1C1(string coordinate)
             {
@@ -1186,7 +1161,6 @@ public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBu
             public String getSheetType(string sheetName)
             {
                 string sheetType = "";
-                //MessageBox.Show("IN FUNCTION" + sheetName);
                 try
                 {
                     Excel.Workbook wb = Globals.ThisAddIn.Application.ActiveWorkbook;
@@ -1236,7 +1210,6 @@ public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBu
                 return sheetType;
 
             }
-      
 
             public String getTempPath()
             {
@@ -1254,8 +1227,7 @@ public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBu
                 return tmpPath;
             }
 
-        //UNDER HERE IS QUESTIONABLE
-
+            //UNDER HERE IS QUESTIONABLE
             static bool FileInUse(string path)
             {
                 string __message = "";
@@ -1614,38 +1586,11 @@ public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBu
                 }
 
                 ws = (Excel.Worksheet)ws.Next;
-                /*    for (int i = 2; i < length + 2; i++)
-                    {
-                        string startcol = "A" + i;
-                        string endcol = width + i;
-                        Excel.Range rng = ws.get_Range(startcol, endcol);
-                        foreach (Excel.Range cell in rng)
-                        {
-                            cell.Value2 = 3.3;
-                        }
-                    }
-                    */
-
-                //   Excel.Range rng = ws.get_Range("A1", "B1");
-
-                /*     foreach (Excel.Range cell in rng){
-
-                         cell.Value2 = 3.3;
-                     }
-
-                     Excel.Range rng2 = ws.get_Range("B2", "C2");
-                     foreach (Excel.Range cell in rng2)
-                     {
-
-                         cell.Value2 = 3.3;
-                     }
-                     */
-
-
 
                 return "";
             }
-        //not used, testing
+
+            //not used, testing
             public String addCustomProperty(string key, string value)
             {
                 string message = "";
@@ -1837,7 +1782,6 @@ public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBu
                      VBIDE.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
                      VBIDE.VBComponent vbComponent = proj.VBComponents.Item(o_idx);
                      message = vbComponent.Type+"";
-                     //vbComponent.
                  }
                  catch (Exception e)
                  {
@@ -1850,52 +1794,17 @@ public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBu
 
             public string getMacroText(int idx)
             {
-
                 VBIDE.VBProject proj = Globals.ThisAddIn.Application.ActiveWorkbook.VBProject;
                
-             
-                /*try
-                {
-                    string projName = proj.Name;
-                    MessageBox.Show("projName: " + projName);// 
-                   // MessageBox.Show(" description: " + proj.Description + " buildFileName: " + proj.BuildFileName + " fileName: " + proj.FileName);
-                }
-                catch (Exception x)
-                {
-                    MessageBox.Show("ERROR: " + x.Message);
-                }
-                */
-   /*             try
-                {
-                    VBA.References refs = proj.References;
-                    foreach (VBA.Reference r in refs)
-                    {
-                        MessageBox.Show("REFERENCE: "+r.Name);
-                    }
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("NO REFS :" + e.Message);
-                }
-                */
                 string componentFile = "";
                 object o_idx = idx;
                 try
                 {
-                    
                     VBIDE.VBComponent vbComponent = proj.VBComponents.Item(o_idx);
-                    //MessageBox.Show("TYPE: "+vbComponent.Type + "NAME: "+vbComponent.Name);
                     
-                    
-
                     if (vbComponent != null)
                     {
-                        //MessageBox.Show("NOT NULL");
-
                         VBIDE.CodeModule componentCode = vbComponent.CodeModule;
-
-                        //MessageBox.Show("Count of lines "+componentCode.CountOfLines);
-                         
 
                         componentFile = "";
                         if (componentCode.CountOfLines > 0)
@@ -1906,46 +1815,6 @@ public static extern int GetEnhMetaFileBits(int hemf, int cbBuffer, byte[] lpbBu
                                 componentFile += componentCode.get_Lines(i + 1, 1) + Environment.NewLine;
                             }
                         }
-                        /*
-                        int line = 1;
-                        int componentCodeLines = componentCode.CountOfLines;
-                        VBIDE.vbext_ProcKind procedureType = VBIDE.vbext_ProcKind.vbext_pk_Proc;
-                        while (line < componentCodeLines)
-                        {
-                            string procedureName = componentCode.get_ProcOfLine(line, out procedureType);
-                            MessageBox.Show("procedure name" + procedureName);
-                            if (procedureName != string.Empty)
-                            {
-                                int procedureLines = componentCode.get_ProcCountLines(procedureName, procedureType);
-                                int procedureStartLine = componentCode.get_ProcStartLine(procedureName, procedureType);
-                                int codeStartLine = componentCode.get_ProcBodyLine(procedureName, procedureType);
-                                string comments = "[No comments]";
-                                if (codeStartLine != procedureStartLine)
-                                {
-                                    comments = componentCode.get_Lines(line, codeStartLine - procedureStartLine);
-                                }
-
-                                int signatureLines = 1;
-                                while (componentCode.get_Lines(codeStartLine, signatureLines).EndsWith("_"))
-                                {
-                                    signatureLines++;
-                                }
-
-                                string signature = componentCode.get_Lines(codeStartLine, signatureLines);
-                                signature = signature.Replace("\n", string.Empty);
-                                signature = signature.Replace("\r", string.Empty);
-                                signature = signature.Replace("_", string.Empty);
-                                line += procedureLines - 1;
-
-                                MessageBox.Show("procName: " + procedureName + "\n\r"+
-                                                "comments: " + comments + "\n\r" +
-                                                "signature: " + signature);
-                            }
-
-
-                            line++;
-                        }*/
-
                        
                     }
                     
