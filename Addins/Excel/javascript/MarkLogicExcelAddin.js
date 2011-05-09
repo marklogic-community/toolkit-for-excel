@@ -512,11 +512,16 @@ MLA.setActiveWorksheet = function(sheetname)
  * @param coord1 starting coordinate of range in A1 notation
  * @param coord2 end coordinate of range in A1 notation
  * @param rngName the name to be assigned to the range 
- * @param sheetName the name of the worksheet to host the range 
+ * @param sheetName (optional) default 'active' ; the name of the worksheet to host the range 
  * @throws Exception if unable to name the specified range
  */
 MLA.addNamedRange = function(coord1,coord2,rngName, sheetName)
 {
+
+	if(sheetName==null || sheetName==""){
+		sheetName="active";
+	}
+
 	var nr = window.external.addNamedRange(coord1,coord2,rngName,sheetName);
         var errMsg = MLA.errorCheck(nr);
 	
@@ -529,13 +534,17 @@ MLA.addNamedRange = function(coord1,coord2,rngName, sheetName)
  * Adds AutoFilter to specified range in active worksheet.  
  * @param coord1 starting coordinate of range in A1 notation
  * @param coord2 end coordinate of range in A1 notation
+ * @param sheetName (optional) default 'active'
  * @param criteria1 (optional) default '<>'
  * @param operator (optional) default 'AND'
  * @param criteria2 (optional) default 'missing'
  * @throws Exception if unable to add AutoFilter specified range
  */
-MLA.addAutoFilter = function(coord1, coord2, criteria1, operator, criteria2)
+MLA.addAutoFilter = function(coord1, coord2, sheetName, criteria1, operator, criteria2)
 {
+        if(sheetName==null || sheetName==""){
+		sheetName="active";
+	}
 
 	if(criteria1==null){
 		criteria1="<>";
@@ -549,7 +558,7 @@ MLA.addAutoFilter = function(coord1, coord2, criteria1, operator, criteria2)
 		operator="AND";
 	}
 
-	var rng = window.external.addAutoFilter(coord1,coord2,criteria1,operator,criteria2);
+	var rng = window.external.addAutoFilter(coord1,coord2,sheetName,criteria1,operator,criteria2);
 	var errMsg = MLA.errorCheck(rng);
 	
         if(errMsg!=null)
@@ -672,6 +681,7 @@ MLA.clearRange = function(coord1,coord2)
 /**
  * Removes the NamedRange from the active workbook.  Note - cells and values stay intact, this only removes the name from the range.
  * @param name the name of the NamedRange to be removed from the active workbook
+ * @param sheetName (optional) default 'active'
  * @throws Exception if unable to remove the named range
  */
 MLA.removeNamedRange = function(name)
@@ -908,11 +918,16 @@ MLA.convertR1C1ToA1 = function(rowIdx, colIdx)
 
 /**
  * Clears the contents of the active worksheet in the active workbook.
- * @throws Exception if unable to clear the contents of the active worksheet
+ * @param sheetName default 'active'
+ * @throws Exception if unable to clear the contents of the worksheet specified in the active workbook
  */
-MLA.clearWorksheet = function()
+MLA.clearWorksheet = function(sheetName)
 {
-	var msg=window.external.clearActiveWorksheet();
+	if(sheetName==null || sheetName==""){
+		sheetName="active";
+	}
+
+	var msg=window.external.clearWorksheet(sheetName);
 	var errMsg = MLA.errorCheck(msg);
 
         if(errMsg!=null) 
@@ -1014,13 +1029,17 @@ MLA.deletePicture = function(sheetName, imageName)
 /**
  * Inserts a base64 encoded string into sheet, specified by sheetName, as an image.
  * @param base64String the base64 string to insert
- * @param sheetName - the name of the sheet to insert the image on
+ * @param sheetName (optional) default 'active'
  * @type void
  * @throws Exception if unable to insert the image
  */
-MLA.insertBase64ToImage = function(base64String)
+MLA.insertBase64ToImage = function(base64String, sheetName)
 {
-  	var msg =  window.external.insertBase64ToImage(base64String);
+	if(sheetName==null || sheetName==""){
+		sheetName="active";
+	}
+
+  	var msg =  window.external.insertBase64ToImage(base64String, sheetName);
 
 	var errMsg = MLA.errorCheck(msg);
         if(errMsg!=null) 
