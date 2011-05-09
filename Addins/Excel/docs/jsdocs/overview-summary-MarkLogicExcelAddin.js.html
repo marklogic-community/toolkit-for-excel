@@ -84,7 +84,7 @@ function asd() {
 
  http://www.marklogic.com 
 
- <BR/><BR/><B>Version: </B>0.1<BR/><BR/><B>Author:</B> Pete Aven pete.aven@marklogic.com
+ <BR/><BR/><B>Version: </B>2.0<BR/><BR/><B>Author:</B> Pete Aven pete.aven@marklogic.com
  <BR/>
 	
 </p>
@@ -120,25 +120,7 @@ function asd() {
 <!-- ========== END METHOD SUMMARY =========== -->
 
 
-        <pre class="sourceview"><span class="comment">/* 
-Copyright 2008 Mark Logic Corporation
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-MarkLogicExcelAddin.js - javascript api for interacting with webBrowser control within Custom Task Pane enabled in Excel.
-*/</span>
-
-<span class="comment">/** 
+        <pre class="sourceview"> 
  * <span class="attrib">@fileoverview</span>  API documentation for MarkLogicExcelAddin.js
  *
  *
@@ -146,7 +128,7 @@ MarkLogicExcelAddin.js - javascript api for interacting with webBrowser control 
  * {<span class="attrib">@link</span> http://www.marklogic.com} 
  *
  * <span class="attrib">@author</span> Pete Aven pete.aven<span class="attrib">@marklogic</span>.com
- * <span class="attrib">@version</span> 0.1 
+ * <span class="attrib">@version</span>2.0
  */</span>
 
 
@@ -155,15 +137,7 @@ MarkLogicExcelAddin.js - javascript api for interacting with webBrowser control 
  *
  * The functions here provide ways for interacting with the  active Workbooks, Worksheets, and Cells in Excel; however, the functions getCustomXMLPart(), getCustomXMLPartIds(), addCustomXMLPart(), and deleteCustomXMLPart() will work for any Open XML package, provided they are used within the context of an Addin for the appropriate Office application.
  */</span>
-<span class="comment">//var MLA = {};</span>
-
-<span class="reserved">function</span> MLA(){
-      <span class="reserved">this</span>.getClassName = <span class="reserved">function</span>(){
-      <span class="reserved">return</span> <span class="literal">"MLA"</span>;
-   
-      }
-}
-
+<span class="reserved">function</span> MLA(){};
 
 
 
@@ -179,8 +153,7 @@ MLA.Cell = <span class="reserved">function</span>(){
   var value2;
   var formula;
 
-  switch (typeof arguments[0])
-  {
+  switch (typeof arguments[0]){
     case <span class="literal">'number'</span> : MLA.Cell.$int.apply(<span class="reserved">this</span>, arguments); break;
     case <span class="literal">'string'</span> : MLA.Cell.$str.apply(<span class="reserved">this</span>, arguments); break;
     default : <span class="comment">/*NOP*/</span>
@@ -234,7 +207,7 @@ var c_values = cell.split(<span class="literal">":"</span>);
 }
 
 <span class="comment">/** <span class="attrib">@ignore</span> */</span>
-MLA.version = { <span class="literal">"release"</span> : <span class="literal">"@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION"</span> }; 
+MLA.version = { <span class="literal">"release"</span> : <span class="literal">"2.0-0"</span> }; 
 
 <span class="comment">/** <span class="attrib">@ignore</span> */</span>
 MLA.SimpleRange = <span class="reserved">function</span>(begin,finish){
@@ -276,6 +249,7 @@ MLA.errorCheck = <span class="reserved">function</span>(message)
 <span class="comment">/** Utility function for creating Microsoft.XMLDOM object from string.
  *
  *<span class="attrib">@param</span> xmlString the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML
+ *<span class="attrib">@type</span> Microsoft.XMLDOM
  *<span class="attrib">@return</span> Microsoft.XMLDOM object
  *<span class="attrib">@throws</span> Exception if unable to create the XMLDOM object
  */</span>
@@ -285,9 +259,7 @@ MLA.createXMLDOM = <span class="reserved">function</span>(xmlstring)
 		var xmlDom = new ActiveXObject(<span class="literal">"Microsoft.XMLDOM"</span>);
        		xmlDom.async=false;
        		xmlDom.loadXML(xmlstring);
-	}
-	catch(err)
- 	{
+	}catch(err){
                 throw(<span class="literal">"Error: Not able to create XMLDOM from string.  Make sure XML is well formed. "</span>);
 	}
 
@@ -343,10 +315,8 @@ MLA.getCustomXMLPartIds = <span class="reserved">function</span>()
 
 	var customPartIds = partIds.split(<span class="literal">" "</span>);
 
-	<span class="reserved">if</span>(customPartIds.length ==1)
-	{
-		<span class="reserved">if</span> (customPartIds[0] == null || customPartIds[0] == <span class="literal">""</span>)
-		{
+	<span class="reserved">if</span>(customPartIds.length ==1){
+		<span class="reserved">if</span> (customPartIds[0] == null || customPartIds[0] == <span class="literal">""</span>){
 			customPartIds.length = 0;
 		}
 	}
@@ -357,8 +327,8 @@ MLA.getCustomXMLPartIds = <span class="reserved">function</span>()
 <span class="comment">/**
  * Returns the custom XML part, identified by customXMLPartId, that is part of the active Open XML package. (.docx, .xlsx, .pptx, etc.)
  * <span class="attrib">@param</span> customXMLPartId the id of the custom part to be fetched from the active package
- * <span class="attrib">@return</span> the XML for the custom part as a DOM object. 
- * <span class="attrib">@type</span> Microsoft.XMLDOM object 
+ * <span class="attrib">@return</span> the XML for the custom part as a DOM object
+ * <span class="attrib">@type</span> Microsoft.XMLDOM 
  * <span class="attrib">@throws</span> Exception if there is error retrieving the custom part 
  */</span>
 MLA.getCustomXMLPart = <span class="reserved">function</span>(customXMLPartId)
@@ -373,12 +343,9 @@ MLA.getCustomXMLPart = <span class="reserved">function</span>(customXMLPartId)
         
 	var v_cp;
 
-	<span class="reserved">if</span>(customXMLPart==<span class="literal">""</span>)
-	{
+	<span class="reserved">if</span>(customXMLPart==<span class="literal">""</span>){
 		v_cp=null;
-	}
-        <span class="reserved">else</span>
-	{
+	}<span class="reserved">else</span>{
         	v_cp = MLA.createXMLDOM(customXMLPart); 
 	}
 
@@ -387,19 +354,17 @@ MLA.getCustomXMLPart = <span class="reserved">function</span>(customXMLPartId)
 
 <span class="comment">/** Adds custom part to active Open XML package.  Returns the id of the part added.
  *<span class="attrib">@param</span> customPartXML Either A) an XMLDOM object that is the custom part to be added to the active Open XML package, or B)The string serialization of the XML to be added as a custom part to the active Open XML package. ( The XML must be well-formed. )
- *<span class="attrib">@return</span> id for custom part added.
+ *<span class="attrib">@return</span> id for custom part added
  *<span class="attrib">@type</span> String
  *<span class="attrib">@throws</span> Exception if unable to add custom part
  */</span>
 MLA.addCustomXMLPart = <span class="reserved">function</span>(customPartXml)
 {
 	var v_customPart =<span class="literal">""</span>;
-	<span class="reserved">if</span>(customPartXml.xml)
-	{
+	<span class="reserved">if</span>(customPartXml.xml){
                v_customPart=customPartXml.xml;
 	}
-	<span class="reserved">else</span>
-	{
+	<span class="reserved">else</span>{
 	       v_customPart=customPartXml
 	}
 	
@@ -416,7 +381,7 @@ MLA.addCustomXMLPart = <span class="reserved">function</span>(customPartXml)
 }
 
 <span class="comment">/** Deletes custom part from Active Open XML package identified by id.
- *<span class="attrib">@param</span> customXMLPartId the id of the custom part to be deleted from the active Open XML package.
+ *<span class="attrib">@param</span> customXMLPartId the id of the custom part to be deleted from the active Open XML package
  *<span class="attrib">@throws</span> Exception if unable to delete custom part
  */</span>
 MLA.deleteCustomXMLPart = <span class="reserved">function</span>(customXMLPartId)
@@ -435,7 +400,8 @@ MLA.deleteCustomXMLPart = <span class="reserved">function</span>(customXMLPartId
 <span class="comment">/**
  *
  *Returns MLA.config. The fields for this object are version, url, and theme.  
-version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color scheme used by Office. 
+version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color scheme used by Office
+ *<span class="attrib">@type</span> MLA.config
  *<span class="attrib">@throws</span> Exception if unable to create MLA.config object
  */</span>
 MLA.getConfiguration = <span class="reserved">function</span>()
@@ -461,7 +427,7 @@ MLA.getConfiguration = <span class="reserved">function</span>()
  * Returns the name of the active workbook.
  * <span class="attrib">@return</span> name of active workbook
  * <span class="attrib">@type</span> String 
- * <span class="attrib">@throws</span> Exception if unable to retrieve the active workbook name. 
+ * <span class="attrib">@throws</span> Exception if unable to retrieve the active workbook name 
  */</span>
 MLA.getActiveWorkbookName = <span class="reserved">function</span>()
 {
@@ -502,6 +468,26 @@ MLA.getActiveWorksheetName = <span class="reserved">function</span>()
 }
 
 <span class="comment">/**
+ * Returns the type of the sheet specified by sheetName.
+ * <span class="attrib">@param</span> sheetName the name of the sheet to inspect
+ * <span class="attrib">@return</span> type of sheet
+ * <span class="attrib">@type</span> String 
+ * <span class="attrib">@throws</span> Exception if unable to get sheet type
+ */</span>
+MLA.getSheetType = <span class="reserved">function</span>(sheetName)
+{
+        var wsType = window.external.getSheetType(sheetName);
+
+	var errMsg = MLA.errorCheck(wsType);
+
+        <span class="reserved">if</span>(errMsg!=null)
+        	throw(<span class="literal">"Error: Not able to getSheetName; "</span>+errMsg);
+
+	<span class="reserved">return</span> wsType;
+}
+
+
+<span class="comment">/**
  * Returns the names of all workbooks available as array of strings.
  * <span class="attrib">@return</span> names of all workbooks
  * <span class="attrib">@type</span> Array 
@@ -517,16 +503,12 @@ MLA.getAllWorkbookNames = <span class="reserved">function</span>()
 
 	var wbnames = names.split(<span class="literal">"|"</span>);  <span class="comment">//change this to JSON</span>
 
-        <span class="reserved">if</span>(wbnames.length ==1)
-	{
-		<span class="reserved">if</span> (wbnames[0] == null || wbnames[0] == <span class="literal">""</span>)
-		{
+        <span class="reserved">if</span>(wbnames.length ==1){
+		<span class="reserved">if</span> (wbnames[0] == null || wbnames[0] == <span class="literal">""</span>){
 			wbnames.length = 0;
 		}
 	}
-
 	<span class="reserved">return</span> wbnames;
-
 }
 
 
@@ -547,22 +529,19 @@ MLA.getActiveWorkbookWorksheetNames = <span class="reserved">function</span>()
 
 	var wsnames = names.split(<span class="literal">"|"</span>);  <span class="comment">//change this to JSON</span>
 
-        <span class="reserved">if</span>(wsnames.length ==1)
-	{
-		<span class="reserved">if</span> (wsnames[0] == null || wsnames[0] == <span class="literal">""</span>)
-		{
+        <span class="reserved">if</span>(wsnames.length ==1){
+		<span class="reserved">if</span> (wsnames[0] == null || wsnames[0] == <span class="literal">""</span>){
 			wsnames.length = 0;
 		}
 	}
 
 	<span class="reserved">return</span> wsnames;
-
 }
 
 <span class="comment">/**
  * Adds workbook of type Excel.XlWBATemplate.xlWBATWorksheet.  Added workbook receives focus.
- * <span class="attrib">@param</span> worksheetname - a string that names the worksheet 
- * <span class="attrib">@return</span> name of workbook added - Note: the only way to name the workbook is to Save it.  Excel returns a default name for the workbook, but this name will change the first time the user saves the workbook. 
+ * <span class="attrib">@param</span> worksheetname a string that names the worksheet 
+ * <span class="attrib">@return</span> name of workbook added - Note: the only way to name the workbook is to Save it.  Excel returns a default name for the workbook, but this name will change the first time the user saves the workbook
  * <span class="attrib">@type</span> String 
  * <span class="attrib">@throws</span> Exception if unable to add the workbook
  */</span>
@@ -579,12 +558,14 @@ MLA.addWorkbook = <span class="reserved">function</span>(worksheetname) <span cl
 
 <span class="comment">/**
  * Adds worksheet to active workbook.  Worksheet will be added to end of existing sheets in workbook at the final position. Added worksheet receives focus.
- * <span class="attrib">@param</span> name - the name of the worksheet to be added
+ * <span class="attrib">@param</span> sheetName the name of the worksheet to be added
+ * <span class="attrib">@return</span> name of sheet added
+ * <span class="attrib">@type</span> String 
  * <span class="attrib">@throws</span> Exception if unable to add the worksheet
  */</span>
-MLA.addWorksheet = <span class="reserved">function</span>(name)
+MLA.addWorksheet = <span class="reserved">function</span>(sheetName)
 {
-	var ws = window.external.addWorksheet(name);
+	var ws = window.external.addWorksheet(sheetName);
 
 	var errMsg = MLA.errorCheck(ws);
 	
@@ -596,7 +577,8 @@ MLA.addWorksheet = <span class="reserved">function</span>(name)
 
 <span class="comment">/**
  * Sets the active workbook in Excel. 
- * <span class="attrib">@param</span> workbookname - a string that is the name of the workbook to receive focus 
+ * <span class="attrib">@param</span> workbookname a string that is the name of the workbook to receive focus 
+ * <span class="attrib">@type</span> void
  * <span class="attrib">@throws</span> Exception if unable to activate the specified workbook
  */</span>
 MLA.setActiveWorkbook = <span class="reserved">function</span>(workbookname)
@@ -612,7 +594,8 @@ MLA.setActiveWorkbook = <span class="reserved">function</span>(workbookname)
 
 <span class="comment">/**
  * Sets the active worksheet in Excel.   
- * <span class="attrib">@param</span> worksheetname - a string that is the name of the worksheet to receive focus 
+ * <span class="attrib">@param</span> worksheetname a string that is the name of the worksheet to receive focus 
+ * <span class="attrib">@type</span> void
  * <span class="attrib">@throws</span> Exception if unable to activate the specified worksheet
  */</span>
 MLA.setActiveWorksheet = <span class="reserved">function</span>(sheetname)
@@ -626,17 +609,23 @@ MLA.setActiveWorksheet = <span class="reserved">function</span>(sheetname)
 	<span class="comment">//return saw;</span>
 }
 
-<span class="comment">// HERE</span>
 <span class="comment">/**
- * Names a range in the active worksheet   
- * <span class="attrib">@param</span> coord1 - starting coordinate of range in A1 notation
- * <span class="attrib">@param</span> coord2 - end coordinate of range in A1 notation
- * <span class="attrib">@param</span> rngName - the name to be assigned to the range 
+ * Names a range in the worksheet specified by sheetName. 
+ * <span class="attrib">@param</span> coord1 starting coordinate of range in A1 notation
+ * <span class="attrib">@param</span> coord2 end coordinate of range in A1 notation
+ * <span class="attrib">@param</span> rngName the name to be assigned to the range 
+ * <span class="attrib">@param</span> sheetName (optional) default 'active' ; the name of the worksheet to host the range 
+ * <span class="attrib">@type</span> void
  * <span class="attrib">@throws</span> Exception if unable to name the specified range
  */</span>
-MLA.addNamedRange = <span class="reserved">function</span>(coord1,coord2,rngName)
+MLA.addNamedRange = <span class="reserved">function</span>(coord1,coord2,rngName, sheetName)
 {
-	var nr = window.external.addNamedRange(coord1,coord2,rngName);
+
+	<span class="reserved">if</span>(sheetName==null || sheetName==<span class="literal">""</span>){
+		sheetName=<span class="literal">"active"</span>;
+	}
+
+	var nr = window.external.addNamedRange(coord1,coord2,rngName,sheetName);
         var errMsg = MLA.errorCheck(nr);
 	
         <span class="reserved">if</span>(errMsg!=null)
@@ -646,32 +635,34 @@ MLA.addNamedRange = <span class="reserved">function</span>(coord1,coord2,rngName
 
 <span class="comment">/**
  * Adds AutoFilter to specified range in active worksheet.  
- * <span class="attrib">@param</span> coord1 - starting coordinate of range in A1 notation
- * <span class="attrib">@param</span> coord2 - end coordinate of range in A1 notation
- * <span class="attrib">@param</span> criteria1 - (optional) default '&lt;&gt;'
- * <span class="attrib">@param</span> operator - (optional) default 'AND'
- * <span class="attrib">@param</span> criteria2 - (optional) default 'missing'
+ * <span class="attrib">@param</span> coord1 starting coordinate of range in A1 notation
+ * <span class="attrib">@param</span> coord2 end coordinate of range in A1 notation
+ * <span class="attrib">@param</span> sheetName (optional) default 'active'
+ * <span class="attrib">@param</span> criteria1 (optional) default '&lt;&gt;'
+ * <span class="attrib">@param</span> operator (optional) default 'AND'
+ * <span class="attrib">@param</span> criteria2 (optional) default 'missing'
+ * <span class="attrib">@type</span> void
  * <span class="attrib">@throws</span> Exception if unable to add AutoFilter specified range
  */</span>
-MLA.addAutoFilter = <span class="reserved">function</span>(coord1, coord2, criteria1, operator, criteria2)
+MLA.addAutoFilter = <span class="reserved">function</span>(coord1, coord2, sheetName, criteria1, operator, criteria2)
 {
+        <span class="reserved">if</span>(sheetName==null || sheetName==<span class="literal">""</span>){
+		sheetName=<span class="literal">"active"</span>;
+	}
 
-	<span class="reserved">if</span>(criteria1==null)
-	{
+	<span class="reserved">if</span>(criteria1==null){
 		criteria1=<span class="literal">"&lt;&gt;"</span>;
 	}
 
-	<span class="reserved">if</span>(criteria2==null)
-	{
+	<span class="reserved">if</span>(criteria2==null){
 		criteria2=<span class="literal">"missing"</span>;
 	}
 
-	<span class="reserved">if</span>(operator==null)
-	{
+	<span class="reserved">if</span>(operator==null){
 		operator=<span class="literal">"AND"</span>;
 	}
 
-	var rng = window.external.addAutoFilter(coord1,coord2,criteria1,operator,criteria2);
+	var rng = window.external.addAutoFilter(coord1,coord2,sheetName,criteria1,operator,criteria2);
 	var errMsg = MLA.errorCheck(rng);
 	
         <span class="reserved">if</span>(errMsg!=null)
@@ -681,7 +672,8 @@ MLA.addAutoFilter = <span class="reserved">function</span>(coord1, coord2, crite
 }
 
 <span class="comment">/**
- * Returns all NamedRange names for the active workbook
+ * Returns all NamedRange names for the active workbook.
+ * <span class="attrib">@type</span> Array
  * <span class="attrib">@throws</span> Exception if unable to add retrieve NamedRange names
  */</span>
 MLA.getNamedRangeNames = <span class="reserved">function</span>()
@@ -696,9 +688,55 @@ MLA.getNamedRangeNames = <span class="reserved">function</span>()
 	var nrsArray = nrs.split(<span class="literal">":"</span>);
 	<span class="reserved">return</span> nrsArray;
 }
+
 <span class="comment">/**
- * Returns all NamedRange names for the active workbook
- * <span class="attrib">@param</span> name - the name of the range to be set active in the workbook 
+ * Returns all Chart names for any charts found on sheet specified by sheetName.
+ * <span class="attrib">@param</span> sheetName the name of the sheet containing the charts
+ * <span class="attrib">@type</span> Array
+ * <span class="attrib">@throws</span> Exception if unable to add retrieve Chart names
+ */</span>
+MLA.getWorksheetChartNames = <span class="reserved">function</span>(sheetName)
+{
+	var nrsArray=<span class="literal">""</span>;
+        var nrs = window.external.getWorksheetChartNames(sheetName);
+
+        var errMsg = MLA.errorCheck(nrs);
+	
+        <span class="reserved">if</span>(errMsg!=null)
+        	throw(<span class="literal">"Error: Not able to getWorksheetChartNames; "</span>+errMsg);
+
+        <span class="reserved">if</span>(nrs.length &gt; 0)
+	   nrsArray = nrs.split(<span class="literal">":"</span>);
+
+	<span class="reserved">return</span> nrsArray;
+}
+
+<span class="comment">/**
+ * Returns all named range names for any named ranges found on sheet specified by sheetName.
+ * <span class="attrib">@param</span> sheetName the name of the sheet containing the charts
+ * <span class="attrib">@type</span> Array
+ * <span class="attrib">@throws</span> Exception if unable to add retrieve named range names
+ */</span>
+MLA.getWorksheetNamedRangeNames = <span class="reserved">function</span>(sheetName)
+{
+	var nrsArray=<span class="literal">""</span>;
+        var nrs = window.external.getWorksheetNamedRangeRangeNames(sheetName);
+
+        var errMsg = MLA.errorCheck(nrs);
+	
+        <span class="reserved">if</span>(errMsg!=null)
+        	throw(<span class="literal">"Error: Not able to getWorksheetNamedRangeRangeNames; "</span>+errMsg);
+
+        <span class="reserved">if</span>(nrs.length &gt; 0)
+	   nrsArray = nrs.split(<span class="literal">":"</span>);
+
+	<span class="reserved">return</span> nrsArray;
+	
+}
+<span class="comment">/**
+ * Returns all NamedRange names for the active workbook.
+ * <span class="attrib">@param</span> name the name of the range to be set active in the workbook 
+ * <span class="attrib">@type</span> void
  * <span class="attrib">@throws</span> Exception if unable to add retrieve NamedRange names
  */</span>
 MLA.setActiveRangeByName = <span class="reserved">function</span>(name)
@@ -713,13 +751,14 @@ MLA.setActiveRangeByName = <span class="reserved">function</span>(name)
 }
 
 <span class="comment">/**
- * Clears all cells in the range identified by name
- * <span class="attrib">@param</span> name - the name of the range to be cleared in the active workbook 
+ * Clears all cells in the range identified by name.
+ * <span class="attrib">@param</span> rangeName the name of the range to be cleared in the active workbook 
+ * <span class="attrib">@type</span> void
  * <span class="attrib">@throws</span> Exception if unable to clear the cells in the NamedRange
  */</span>
-MLA.clearNamedRange = <span class="reserved">function</span>(name)
+MLA.clearNamedRange = <span class="reserved">function</span>(rangeName)
 {
-	var msg=window.external.clearNamedRange(name);
+	var msg=window.external.clearNamedRange(rangeName);
 	var errMsg = MLA.errorCheck(msg);
 	
         <span class="reserved">if</span>(errMsg!=null)
@@ -729,9 +768,10 @@ MLA.clearNamedRange = <span class="reserved">function</span>(name)
 }
 
 <span class="comment">/**
- * Clears all cells in the range identified by coordinates provide in A1 notation 
- * <span class="attrib">@param</span> coord1 - starting coordinate of range to be cleared in A1 notation
- * <span class="attrib">@param</span> coord2 - end coordinate of range to be cleared in A1 notation 
+ * Clears all cells in the range identified by coordinates provide in A1 notation.
+ * <span class="attrib">@param</span> coord1 starting coordinate of range to be cleared in A1 notation
+ * <span class="attrib">@param</span> coord2 end coordinate of range to be cleared in A1 notation 
+ * <span class="attrib">@type</span> void
  * <span class="attrib">@throws</span> Exception if unable to clear the cells in the range
  */</span>
 MLA.clearRange = <span class="reserved">function</span>(coord1,coord2)
@@ -747,7 +787,9 @@ MLA.clearRange = <span class="reserved">function</span>(coord1,coord2)
 
 <span class="comment">/**
  * Removes the NamedRange from the active workbook.  Note - cells and values stay intact, this only removes the name from the range.
- * <span class="attrib">@param</span> name -  the name of the NamedRange to be removed from the active workbook 
+ * <span class="attrib">@param</span> name the name of the NamedRange to be removed from the active workbook
+ * <span class="attrib">@param</span> sheetName (optional) default 'active'
+ * <span class="attrib">@type</span> void
  * <span class="attrib">@throws</span> Exception if unable to remove the named range
  */</span>
 MLA.removeNamedRange = <span class="reserved">function</span>(name)
@@ -763,6 +805,7 @@ MLA.removeNamedRange = <span class="reserved">function</span>(name)
 
 <span class="comment">/**
  * Returns the selected range coordinates.  This works for contiguous ranges.  When disparate cells are selected,  the last coordinates for the last contigous range selected in the active workbook will be returned.
+ * <span class="attrib">@type</span> String
  * <span class="attrib">@throws</span> Exception if unable to retrieve the coordinates
  */</span>
 MLA.getSelectedRangeCoordinates = <span class="reserved">function</span>()
@@ -778,7 +821,40 @@ MLA.getSelectedRangeCoordinates = <span class="reserved">function</span>()
 }
 
 <span class="comment">/**
+ * Returns the name for the selected range if name exists. 
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to retrieve the named range
+ */</span>
+MLA.getSelectedRangeName = <span class="reserved">function</span>()
+{
+	var msg = window.external.getSelectedRangeName();
+
+	var errMsg = MLA.errorCheck(msg);
+
+	<span class="reserved">if</span>(errMsg!=null)
+        	throw(<span class="literal">"Error: Not able to getSelectedRangeName; "</span>+errMsg);
+        <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Returns the name for the selected chart. 
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to retrieve the chart name
+ */</span>
+MLA.getSelectedChartName = <span class="reserved">function</span>()
+{
+	var msg = window.external.getSelectedChartName();
+
+	var errMsg = MLA.errorCheck(msg);
+
+	<span class="reserved">if</span>(errMsg!=null)
+        	throw(<span class="literal">"Error: Not able to getSelectedChartName; "</span>+errMsg);
+        <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
  * Returns cells selected in active workbook.  This works for contigous cells.  When disparate cells are selected, the last contigous range of cells selected in the active workbook will be returned.
+ * <span class="attrib">@type</span> MLA.Cell 
  * <span class="attrib">@throws</span> Exception if unable to retrieve the coordinates
  */</span>
 MLA.getSelectedCells = <span class="reserved">function</span>()
@@ -795,8 +871,7 @@ MLA.getSelectedCells = <span class="reserved">function</span>()
      var cells = eval(<span class="literal">'('</span>+cellstring+<span class="literal">')'</span>);
      <span class="comment">//alert(cells.cells.length);</span>
      var cellArray = new Array();
-     <span class="reserved">for</span>(var i =0;i&lt;cells.cells.length;i++)
-     {
+     <span class="reserved">for</span>(var i =0;i&lt;cells.cells.length;i++){
 	     var cell = cells.cells[i];
 	     var mlacell = new MLA.Cell();
              mlacell=cell;
@@ -809,7 +884,8 @@ MLA.getSelectedCells = <span class="reserved">function</span>()
 }
 
 <span class="comment">/**
- * Returns active cell from the active worksheet in active workbook.  For any range of selected cells, one will always be identified as active; the last selected cell for any range
+ * Returns active cell from the active worksheet in active workbook.  For any range of selected cells, one will always be identified as active; the last selected cell for any range.
+ * <span class="attrib">@type</span> MLA.Cell
  * <span class="attrib">@throws</span> Exception if unable to retrieve the active cell
  */</span>
 MLA.getActiveCell = <span class="reserved">function</span>()
@@ -825,19 +901,15 @@ MLA.getActiveCell = <span class="reserved">function</span>()
 	var colIdx = cellValues[1];
 	var newCell = new MLA.Cell(parseInt(rowIdx),parseInt(colIdx));
 
-	<span class="reserved">if</span>(cellValues[2]==<span class="literal">""</span>)
-	{
+	<span class="reserved">if</span>(cellValues[2]==<span class="literal">""</span>){
 		newCell.value2=null;
-	}<span class="reserved">else</span>
-	{
+	}<span class="reserved">else</span>{
 	        newCell.value2 = cellValues[2];
 	}
 
-	<span class="reserved">if</span>(cellValues[3]==<span class="literal">""</span>)
-	{
+	<span class="reserved">if</span>(cellValues[3]==<span class="literal">""</span>){
 		newCell.formula=null;
-	}<span class="reserved">else</span>
-	{
+	}<span class="reserved">else</span>{
 		newCell.formula = cellValues[3];
 	}
 
@@ -877,7 +949,8 @@ MLA.getActiveCellText = <span class="reserved">function</span>()
 
 <span class="comment">/**
  * Set the value for the cell at the current cursor position.
- * <span class="attrib">@param</span> value - the value to be inserted in the active cell
+ * <span class="attrib">@param</span> value the value to be inserted in the active cell
+ * <span class="attrib">@type</span> void
  * <span class="attrib">@throws</span> Exception if unable to set the active cell text
  */</span>
 MLA.setActiveCellValue = <span class="reserved">function</span>(value)
@@ -892,9 +965,10 @@ MLA.setActiveCellValue = <span class="reserved">function</span>(value)
 }
 
 <span class="comment">/**
- * Sets the values for the cells identified by Cell.coordinate
- * <span class="attrib">@param</span> cells - an array of MLA.Cell objects, the values of which will be used for the values for the given cells in the active workbook.
- * <span class="attrib">@param</span> sheetname - (optional) the name of the worksheet where the Cell values should be populated.  If no sheetname is provided, the cells will be populated in the active worksheet.
+ * Sets the values for the cells identified by Cell.coordinate.
+ * <span class="attrib">@param</span> cells an array of MLA.Cell objects, the values of which will be used for the values for the given cells in the active workbook.
+ * <span class="attrib">@param</span> sheetname (optional) the name of the worksheet where the Cell values should be populated.  If no sheetname is provided, the cells will be populated in the active worksheet.
+ * <span class="attrib">@type</span> void
  * <span class="attrib">@throws</span> Exception if unable to set the values for the given cells
  */</span>
 MLA.setCellValue = <span class="reserved">function</span>(cells, sheetname)
@@ -907,10 +981,8 @@ MLA.setCellValue = <span class="reserved">function</span>(cells, sheetname)
 
 	var v_array = MLA.isArray(cells);
 
-	<span class="reserved">if</span>(v_array)
-	{
-		<span class="reserved">for</span>(var i =0; i&lt;cells.length; i++)
-		{
+	<span class="reserved">if</span>(v_array){
+		<span class="reserved">for</span>(var i =0; i&lt;cells.length; i++){
           		var msg = window.external.setCellValueA1(cells[i].coordinate, cells[i].value2, sheetname);
 		        var errMsg = MLA.errorCheck(msg);
 
@@ -923,8 +995,10 @@ MLA.setCellValue = <span class="reserved">function</span>(cells, sheetname)
 	<span class="reserved">return</span> msg;
 }
 <span class="comment">/**
- * Converts an A1 notation coordinate to R1C1 notations
- * <span class="attrib">@param</span> coord - the A1 coordinate to be converted
+ * Converts an A1 notation coordinate to R1C1 notation.
+ * <span class="attrib">@param</span> coord the A1 coordinate to be converted
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@return</span> coordninate in R1C1 notation format
  * <span class="attrib">@throws</span> Exception if unable to convert the coordinate
  */</span>
 MLA.convertA1ToR1C1 = <span class="reserved">function</span>(coord)
@@ -938,9 +1012,11 @@ MLA.convertA1ToR1C1 = <span class="reserved">function</span>(coord)
 	<span class="reserved">return</span> msg;
 }
 <span class="comment">/**
- * Converts a row index and column index to an A1 notation coordinate
- * <span class="attrib">@param</span> rowIdx - the row index 
- * <span class="attrib">@param</span> colIdx - the column index
+ * Converts a row index and column index to an A1 notation coordinate.
+ * <span class="attrib">@param</span> rowIdx the row index 
+ * <span class="attrib">@param</span> colIdx the column index
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@return</span> coordinate in A1 notation format
  * <span class="attrib">@throws</span> Exception if unable to convert to A1 notation
  */</span>
 MLA.convertR1C1ToA1 = <span class="reserved">function</span>(rowIdx, colIdx)
@@ -955,12 +1031,18 @@ MLA.convertR1C1ToA1 = <span class="reserved">function</span>(rowIdx, colIdx)
 }
 
 <span class="comment">/**
- * Clears the contents of the active worksheet in the active workbook
- * <span class="attrib">@throws</span> Exception if unable to clear the contents of the active worksheet
+ * Clears the contents of the active worksheet in the active workbook.
+ * <span class="attrib">@param</span> sheetName (optional) default 'active'
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to clear the contents of the worksheet specified in the active workbook
  */</span>
-MLA.clearWorksheet = <span class="reserved">function</span>()
+MLA.clearWorksheet = <span class="reserved">function</span>(sheetName)
 {
-	var msg=window.external.clearActiveWorksheet();
+	<span class="reserved">if</span>(sheetName==null || sheetName==<span class="literal">""</span>){
+		sheetName=<span class="literal">"active"</span>;
+	}
+
+	var msg=window.external.clearWorksheet(sheetName);
 	var errMsg = MLA.errorCheck(msg);
 
         <span class="reserved">if</span>(errMsg!=null) 
@@ -970,7 +1052,8 @@ MLA.clearWorksheet = <span class="reserved">function</span>()
 }
 
 <span class="comment">/**
- * Returns the path being used for the /temp dir on the client system
+ * Returns the path being used for the /temp dir on the client system.
+ * <span class="attrib">@type</span> String
  * <span class="attrib">@throws</span> Exception if unable to retrieve the /temp path
  */</span>
 MLA.getTempPath = <span class="reserved">function</span>()
@@ -986,12 +1069,13 @@ MLA.getTempPath = <span class="reserved">function</span>()
 }
 
 <span class="comment">/**
- * Saves the active workbook to MarkLogic
- * <span class="attrib">@param</span> tmpPath - the path for the /tmp dir on the client system. (have to save a local copy) 
- * <span class="attrib">@param</span> docTitle - the title of the document
- * <span class="attrib">@param</span> url - the url on MarkLogic Server where the XQuery to save can be found
- * <span class="attrib">@param</span> uname - the username for MarkLogic Server
- * <span class="attrib">@param</span> pwd - the password for MarkLogic Server
+ * Saves the active workbook to MarkLogic.
+ * <span class="attrib">@param</span> tmpPath the path for the /tmp dir on the client system. (have to save a local copy) 
+ * <span class="attrib">@param</span> docTitle the title of the document
+ * <span class="attrib">@param</span> url the url on MarkLogic Server where the XQuery to save can be found
+ * <span class="attrib">@param</span> uname the username for MarkLogic Server
+ * <span class="attrib">@param</span> pwd the password for MarkLogic Server
+ * <span class="attrib">@type</span> void
  * <span class="attrib">@throws</span> Exception if unable to save the document to MarkLogic
  */</span>
 MLA.saveActiveWorkbook = <span class="reserved">function</span>(tmpPath, doctitle, url, uname,pwd)
@@ -1005,12 +1089,12 @@ MLA.saveActiveWorkbook = <span class="reserved">function</span>(tmpPath, doctitl
        <span class="reserved">return</span> msg;
 }
 <span class="comment">/**
- * Open a .xlsx from MarkLogic into Excel
- * <span class="attrib">@param</span> tmpPath - the path for the /tmp dir on the client system. (have to save a local copy) 
- * <span class="attrib">@param</span> docuri - the uri for the document in MarkLogic Server
- * <span class="attrib">@param</span> url - the url on MarkLogic Server where the XQuery to open the document specified by docuri can be found
- * <span class="attrib">@param</span> uname - the username for MarkLogic Server
- * <span class="attrib">@param</span> pwd - the password for MarkLogic Server
+ * Open a .xlsx from MarkLogic into Excel.
+ * <span class="attrib">@param</span> tmpPath the path for the /tmp dir on the client system. (have to save a local copy) 
+ * <span class="attrib">@param</span> docuri the uri for the document in MarkLogic Server
+ * <span class="attrib">@param</span> url the url on MarkLogic Server where the XQuery to open the document specified by docuri can be found
+ * <span class="attrib">@param</span> uname the username for MarkLogic Server
+ * <span class="attrib">@param</span> pwd the password for MarkLogic Server
  * <span class="attrib">@throws</span> Exception if unable to open the document into Excel
  */</span>
 MLA.openXlsx = <span class="reserved">function</span>(tmpPath, docuri, url, uname, pwd)
@@ -1022,27 +1106,294 @@ MLA.openXlsx = <span class="reserved">function</span>(tmpPath, docuri, url, unam
         	throw(<span class="literal">"Error: Not able to openXlsx; "</span>+errMsg);
         <span class="reserved">return</span> msg;
 }
-     <span class="comment">// var msg = window.external.OpenXlsx(tmpPath, docuri, url, "zeke","zeke")</span>
-     <span class="comment">//</span>
 
-<span class="comment">/*
-MLA.setCellValueR1C1 = function(cells)
+<span class="comment">/**
+ * Saves chart in Excel Workbook to filesystem as .png.
+ * <span class="attrib">@param</span> chartPath the path for the /tmp dir on the client system. (have to save a local copy) where you want to save the chart image
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to save .png to local filesystem
+ */</span>
+MLA.exportChartImagePNG = <span class="reserved">function</span>(chartPath)
 {
-	alert("IN R1C1 FUNCTION");
+	var msg =  window.external.exportChartImagePNG(chartPath);
 
-	var v_array = MLA.isArray(cells);
+	var errMsg = MLA.errorCheck(msg);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to exportChartImagePNG; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+}
 
-	if(v_array)
-	{
-		for(var i =0; i&lt;cells.length; i++)
-		{
-          		var msg = window.external.setCellValueA1(cells[i].rowIdx, cells[i].colIdx, cells[i].value2);
-		}
+<span class="comment">/**
+ * Deletes picture (image), specified by name, from specified sheet in Excel Workbook.
+ * <span class="attrib">@param</span> sheetName the name of the sheet containing picture to be deleted
+ * <span class="attrib">@param</span> imageName the name of the picture to be deleted
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to delete the picture
+ */</span>
+MLA.deletePicture = <span class="reserved">function</span>(sheetName, imageName)
+{
+        var msg = window.external.deletePicture(sheetName, imageName);
+
+	var errMsg = MLA.errorCheck(msg);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to deletePicture; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Inserts a base64 encoded string into sheet, specified by sheetName, as an image.
+ * <span class="attrib">@param</span> base64String the base64 string to insert
+ * <span class="attrib">@param</span> sheetName (optional) default 'active'
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to insert the image
+ */</span>
+MLA.insertBase64ToImage = <span class="reserved">function</span>(base64String, sheetName)
+{
+	<span class="reserved">if</span>(sheetName==null || sheetName==<span class="literal">""</span>){
+		sheetName=<span class="literal">"active"</span>;
 	}
 
-	return msg;
+  	var msg =  window.external.insertBase64ToImage(base64String, sheetName);
+
+	var errMsg = MLA.errorCheck(msg);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to insertBase64ToImage; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
 }
-*/</span>
+
+<span class="comment">/**
+ * Returns image found at chartPath as base64 encoded string
+ * <span class="attrib">@param</span> chartPath the name of the image, including full path on filesystem, to be encoded 
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to delete the picture
+ */</span>
+MLA.base64EncodeImage = <span class="reserved">function</span>(chartPath)
+{
+	var msg =  window.external.base64EncodeImage(chartPath);
+
+	var errMsg = MLA.errorCheck(msg);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to base64EncodeImage; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Deletes file found with full path at parameter filePath, from the filesystem.
+ * <span class="attrib">@param</span> filePath the name of the file to be deleted
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to delete the file
+ */</span>
+MLA.deleteFile = <span class="reserved">function</span>(filePath)
+{
+	var msg =  window.external.deleteFile(filePath);
+
+	var errMsg = MLA.errorCheck(msg);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to deleteFile; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+
+}
+
+<span class="comment">//functions to add/remove events here</span>
+<span class="comment">/**
+ * Adds chartObjectMouseDown events for each chart on sheet specified by sheetName.
+ * <span class="attrib">@param</span> sheetName the name of the sheet to add event listeners to
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to add chartObjectMouseDown events
+ */</span>
+MLA.addChartObjectMouseDownEvents = <span class="reserved">function</span>(sheetName)
+{
+	var msg =  window.external.addChartObjectMouseDownEvents(sheetName);
+
+	var errMsg = MLA.errorCheck(msg);
+
+	
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to addChartObjectMouseDownEvents; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Removes chartObjectMouseDown events for each chart on sheet specified by sheetName.
+ * <span class="attrib">@param</span> sheetName the name of the sheet to remove event listeners from
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to remove chartObjectMouseDown events
+ */</span>
+MLA.removeChartObjectMouseDownEvents = <span class="reserved">function</span>(sheetName)
+{
+	var msg =  window.external.removeChartObjectMouseDownEvents(sheetName);
+
+	var errMsg = MLA.errorCheck(msg);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to removeChartObjectMouseDownEvents; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Returns macro code as text from macro component specified by index for active workbook.
+ * <span class="attrib">@param</span> index the index of the macro to decompile and return as string
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to get macro text
+ */</span>
+MLA.getMacroText = <span class="reserved">function</span>(index)
+{
+	var source = window.external.getMacroText(index);
+	var errMsg = MLA.errorCheck(source);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to getMacroText; "</span>+errMsg);
+	<span class="reserved">return</span> source;
+}
+
+<span class="comment">/**
+ * Runs macro, specified by macro name, in the active workbook.
+ * <span class="attrib">@param</span> macroName the name of the macro to run in the active workbook
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to run macro
+ */</span>
+MLA.runMacro = <span class="reserved">function</span>(macroName)
+{
+	var msg = window.external.runMacro(macroName);
+        var errMsg = MLA.errorCheck(msg);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to runMacro; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+
+}
+
+<span class="comment">/**
+ * Returns macro name for macro component specified by index for active workbook.
+ * <span class="attrib">@param</span> index the index of the macro component
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to get macro name
+ */</span>
+MLA.getMacroName = <span class="reserved">function</span>(index)
+{
+        var msg = window.external.getMacroName(index);
+        var errMsg = MLA.errorCheck(msg);
+	<span class="comment">//alert(msg);</span>
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to getMacroName; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Returns macro type for macro component specified by index for active workbook.
+ * <span class="attrib">@param</span> index - the index of the macro component
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to get macro type 
+ */</span>
+MLA.getMacroType = <span class="reserved">function</span>(index)
+{
+	var msg = window.external.getMacroType(index);
+        var errMsg = MLA.errorCheck(msg);
+	<span class="comment">//alert(msg);</span>
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to getMacroType; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Returns macro procedure name for macro component specified by index for active workbook.
+ * <span class="attrib">@param</span> index - the index of the macro component
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to get macro name
+ */</span>
+MLA.getMacroProcedureName = <span class="reserved">function</span>(index)
+{
+	var msg = window.external.getMacroProcedureName(index);
+        var errMsg = MLA.errorCheck(msg);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to getMacroProcedureName; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Returns macro comments for macro component specified by index for active workbook. comments here are any that are in the first lines prior to any procedure definition for the macro.
+ * <span class="attrib">@param</span> index the index of the macro component
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to get macro comments
+ */</span>
+MLA.getMacroComments = <span class="reserved">function</span>(index)
+{
+	var msg = window.external.getMacroComments(index);
+        var errMsg = MLA.errorCheck(msg);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to getMacroComments; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Returns macro signature for macro component specified by index for active workbook. 
+ * <span class="attrib">@param</span> index the index of the macro component
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to get macro signature
+ */</span>
+MLA.getMacroSignature= <span class="reserved">function</span>(index)
+{
+	var msg = window.external.getMacroSignature(index);
+        var errMsg = MLA.errorCheck(msg);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to getMacroSignature; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Returns count of macros in active workbook. This count can then be used as the index in other functions related functions.
+ * <span class="attrib">@type</span> String
+ * <span class="attrib">@throws</span> Exception if unable to get macro comments
+ */</span>
+MLA.getMacroCount = <span class="reserved">function</span>()
+{
+	var msg=window.external.getMacroCount();
+	<span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Adds macro to active workbook.
+ * <span class="attrib">@param</span> source the source code (string) for the macro to be added
+ * <span class="attrib">@param</span> componentType the componentType to add the macro as to the active workbook
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to add macro to active workbook
+ */</span>
+MLA.addMacro= <span class="reserved">function</span>(source, componenType)
+{
+	var msg = window.external.addMacro(source, componenType);
+        var errMsg = MLA.errorCheck(msg);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to addMacro; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+}
+
+<span class="comment">/**
+ * Removes macro, specified by macroName, from active workbook.
+ * <span class="attrib">@param</span> macroName the componentType to add the macro as to the active workbook
+ * <span class="attrib">@type</span> void
+ * <span class="attrib">@throws</span> Exception if unable to remove macro
+ */</span>
+MLA.removeMacro= <span class="reserved">function</span>(macroName)
+{
+	var msg = window.external.removeMacro(macroName);
+        var errMsg = MLA.errorCheck(msg);
+        <span class="reserved">if</span>(errMsg!=null) 
+        	throw(<span class="literal">"Error: Not able to removeMacro; "</span>+errMsg);
+	
+        <span class="reserved">return</span> msg;
+}
+
 </pre>
 	<hr>
 
@@ -1101,6 +1452,6 @@ MLA.setCellValueR1C1 = function(cells)
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Apr  8 14:29:46 2009</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Mon May  9 09:07:22 2011</div>
 </body>
 </html>

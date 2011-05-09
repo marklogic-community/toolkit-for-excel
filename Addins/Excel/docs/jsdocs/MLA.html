@@ -161,17 +161,34 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
 	 </FONT>
       </TD>
       <TD>
 	 <CODE>
 	    <B>
-	       <A HREF="#!s!addAutoFilter">addAutoFilter</A></B>(coord1, coord2, criteria1, operator, criteria2)
+	       <A HREF="#!s!addAutoFilter">addAutoFilter</A></B>(coord1, coord2, sheetName, criteria1, operator, criteria2)
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	 Adds AutoFilter to specified range in active worksheet.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!addChartObjectMouseDownEvents">addChartObjectMouseDownEvents</A></B>(sheetName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Adds chartObjectMouseDown events for each chart on sheet specified by sheetName.
       </TD>
    </TR>
 
@@ -195,17 +212,34 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
 	 </FONT>
       </TD>
       <TD>
 	 <CODE>
 	    <B>
-	       <A HREF="#!s!addNamedRange">addNamedRange</A></B>(coord1,coord2,rngName)
+	       <A HREF="#!s!addMacro">addMacro</A></B>(source, componenType)
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Names a range in the active worksheet
+	 Adds macro to active workbook.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!addNamedRange">addNamedRange</A></B>(coord1,coord2,rngName, sheetName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Names a range in the worksheet specified by sheetName.
       </TD>
    </TR>
 
@@ -229,13 +263,13 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
 	 </FONT>
       </TD>
       <TD>
 	 <CODE>
 	    <B>
-	       <A HREF="#!s!addWorksheet">addWorksheet</A></B>(name)
+	       <A HREF="#!s!addWorksheet">addWorksheet</A></B>(sheetName)
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -246,24 +280,41 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
 	 </FONT>
       </TD>
       <TD>
 	 <CODE>
 	    <B>
-	       <A HREF="#!s!clearNamedRange">clearNamedRange</A></B>(name)
+	       <A HREF="#!s!base64EncodeImage">base64EncodeImage</A></B>(chartPath)
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Clears all cells in the range identified by name
+	 Returns image found at chartPath as base64 encoded string
       </TD>
    </TR>
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!clearNamedRange">clearNamedRange</A></B>(rangeName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Clears all cells in the range identified by name.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -273,31 +324,31 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Clears all cells in the range identified by coordinates provide in A1 notation
+	 Clears all cells in the range identified by coordinates provide in A1 notation.
       </TD>
    </TR>
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
 	 </FONT>
       </TD>
       <TD>
 	 <CODE>
 	    <B>
-	       <A HREF="#!s!clearWorksheet">clearWorksheet</A></B>()
+	       <A HREF="#!s!clearWorksheet">clearWorksheet</A></B>(sheetName)
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Clears the contents of the active worksheet in the active workbook
+	 Clears the contents of the active worksheet in the active workbook.
       </TD>
    </TR>
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -307,14 +358,14 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Converts an A1 notation coordinate to R1C1 notations
+	 Converts an A1 notation coordinate to R1C1 notation.
       </TD>
    </TR>
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -324,14 +375,14 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Converts a row index and column index to an A1 notation coordinate
+	 Converts a row index and column index to an A1 notation coordinate.
       </TD>
    </TR>
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;Microsoft.XMLDOM</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -365,7 +416,58 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!deleteFile">deleteFile</A></B>(filePath)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Deletes file found with full path at parameter filePath, from the filesystem.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!deletePicture">deletePicture</A></B>(sheetName, imageName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Deletes picture (image), specified by name, from specified sheet in Excel Workbook.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!exportChartImagePNG">exportChartImagePNG</A></B>(chartPath)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Saves chart in Excel Workbook to filesystem as .png.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;<a href="MLA/Cell.html">MLA.Cell</a></CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -467,7 +569,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;MLA.config</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -484,7 +586,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Microsoft.XMLDOM object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;Microsoft.XMLDOM</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -518,7 +620,126 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getMacroComments">getMacroComments</A></B>(index)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns macro comments for macro component specified by index for active workbook.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getMacroCount">getMacroCount</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns count of macros in active workbook.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getMacroName">getMacroName</A></B>(index)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns macro name for macro component specified by index for active workbook.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getMacroProcedureName">getMacroProcedureName</A></B>(index)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns macro procedure name for macro component specified by index for active workbook.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getMacroSignature">getMacroSignature</A></B>(index)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns macro signature for macro component specified by index for active workbook.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getMacroText">getMacroText</A></B>(index)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns macro code as text from macro component specified by index for active workbook.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getMacroType">getMacroType</A></B>(index)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns macro type for macro component specified by index for active workbook.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;Array</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -528,14 +749,14 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Returns all NamedRange names for the active workbook
+	 Returns all NamedRange names for the active workbook.
       </TD>
    </TR>
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;<a href="MLA/Cell.html">MLA.Cell</a></CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -552,7 +773,24 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getSelectedChartName">getSelectedChartName</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns the name for the selected chart.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -569,7 +807,41 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getSelectedRangeName">getSelectedRangeName</A></B>()
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns the name for the selected range if name exists.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getSheetType">getSheetType</A></B>(sheetName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns the type of the sheet specified by sheetName.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;String</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -579,7 +851,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Returns the path being used for the /temp dir on the client system
+	 Returns the path being used for the /temp dir on the client system.
       </TD>
    </TR>
 
@@ -603,6 +875,57 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;Array</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getWorksheetChartNames">getWorksheetChartNames</A></B>(sheetName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns all Chart names for any charts found on sheet specified by sheetName.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;Array</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!getWorksheetNamedRangeNames">getWorksheetNamedRangeNames</A></B>(sheetName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Returns all named range names for any named ranges found on sheet specified by sheetName.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!insertBase64ToImage">insertBase64ToImage</A></B>(base64String, sheetName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Inserts a base64 encoded string into sheet, specified by sheetName, as an image.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
 	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
 	 </FONT>
       </TD>
@@ -613,14 +936,48 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Open a .xlsx from MarkLogic into Excel
+	 Open a .xlsx from MarkLogic into Excel.
       </TD>
    </TR>
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!removeChartObjectMouseDownEvents">removeChartObjectMouseDownEvents</A></B>(sheetName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Removes chartObjectMouseDown events for each chart on sheet specified by sheetName.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!removeMacro">removeMacro</A></B>(macroName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Removes macro, specified by macroName, from active workbook.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -637,7 +994,24 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#!s!runMacro">runMacro</A></B>(macroName)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Runs macro, specified by macro name, in the active workbook.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -647,14 +1021,14 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Saves the active workbook to MarkLogic
+	 Saves the active workbook to MarkLogic.
       </TD>
    </TR>
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -671,7 +1045,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -681,14 +1055,14 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Returns all NamedRange names for the active workbook
+	 Returns all NamedRange names for the active workbook.
       </TD>
    </TR>
 
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -705,7 +1079,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -722,7 +1096,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&lt;static&gt;&nbsp;Object</CODE>
+	    <CODE>&lt;static&gt;&nbsp;void</CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -732,7 +1106,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 </CODE>
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Sets the values for the cells identified by Cell.coordinate
+	 Sets the values for the cells identified by Cell.coordinate.
       </TD>
    </TR>
 
@@ -804,7 +1178,7 @@ MLA</H3>
 
    <A NAME="!s!addAutoFilter"><!-- --></A>
    <H3>addAutoFilter</H3>
-   <PRE>&lt;static&gt; Object <B>addAutoFilter</B>(coord1, coord2, criteria1, operator, criteria2)</PRE>
+   <PRE>&lt;static&gt; void <B>addAutoFilter</B>(coord1, coord2, sheetName, criteria1, operator, criteria2)</PRE>
    
       <UL>Adds AutoFilter to specified range in active worksheet.</UL>
    
@@ -814,19 +1188,22 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>coord1</CODE> -  - starting coordinate of range in A1 notation  
+     <UL><CODE>coord1</CODE> -  starting coordinate of range in A1 notation  
       </UL> 
    
-     <UL><CODE>coord2</CODE> -  - end coordinate of range in A1 notation  
+     <UL><CODE>coord2</CODE> -  end coordinate of range in A1 notation  
       </UL> 
    
-     <UL><CODE>criteria1</CODE> -  - (optional) default '<>'  
+     <UL><CODE>sheetName</CODE> -  (optional) default 'active'  
       </UL> 
    
-     <UL><CODE>operator</CODE> -  - (optional) default 'AND'  
+     <UL><CODE>criteria1</CODE> -  (optional) default '<>'  
       </UL> 
    
-     <UL><CODE>criteria2</CODE> -  - (optional) default 'missing'  
+     <UL><CODE>operator</CODE> -  (optional) default 'AND'  
+      </UL> 
+   
+     <UL><CODE>criteria2</CODE> -  (optional) default 'missing'  
       </UL> 
    
    </UL>
@@ -839,6 +1216,36 @@ MLA</H3>
    
    <UL>   
    <B>Throws:</B><UL>- Exception if unable to add AutoFilter specified range</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!addChartObjectMouseDownEvents"><!-- --></A>
+   <H3>addChartObjectMouseDownEvents</H3>
+   <PRE>&lt;static&gt; void <B>addChartObjectMouseDownEvents</B>(sheetName)</PRE>
+   
+      <UL>Adds chartObjectMouseDown events for each chart on sheet specified by sheetName.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>sheetName</CODE> -  the name of the sheet to add event listeners to  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add chartObjectMouseDown events</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -867,7 +1274,7 @@ MLA</H3>
    <UL>
    <B>Returns:</B>
         <UL>
-        id for custom part added.  
+        id for custom part added  
         </UL>
    </UL>
    
@@ -881,11 +1288,11 @@ MLA</H3>
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
-   <A NAME="!s!addNamedRange"><!-- --></A>
-   <H3>addNamedRange</H3>
-   <PRE>&lt;static&gt; Object <B>addNamedRange</B>(coord1,coord2,rngName)</PRE>
+   <A NAME="!s!addMacro"><!-- --></A>
+   <H3>addMacro</H3>
+   <PRE>&lt;static&gt; void <B>addMacro</B>(source, componenType)</PRE>
    
-      <UL>Names a range in the active worksheet</UL>
+      <UL>Adds macro to active workbook.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -893,13 +1300,49 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>coord1</CODE> -  - starting coordinate of range in A1 notation  
+     <UL><CODE>source</CODE> -  the source code (string) for the macro to be added  
       </UL> 
    
-     <UL><CODE>coord2</CODE> -  - end coordinate of range in A1 notation  
+     <UL><CODE>componentType</CODE> -  the componentType to add the macro as to the active workbook  
       </UL> 
    
-     <UL><CODE>rngName</CODE> -  - the name to be assigned to the range   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add macro to active workbook</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!addNamedRange"><!-- --></A>
+   <H3>addNamedRange</H3>
+   <PRE>&lt;static&gt; void <B>addNamedRange</B>(coord1,coord2,rngName, sheetName)</PRE>
+   
+      <UL>Names a range in the worksheet specified by sheetName.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>coord1</CODE> -  starting coordinate of range in A1 notation  
+      </UL> 
+   
+     <UL><CODE>coord2</CODE> -  end coordinate of range in A1 notation  
+      </UL> 
+   
+     <UL><CODE>rngName</CODE> -  the name to be assigned to the range   
+      </UL> 
+   
+     <UL><CODE>sheetName</CODE> -  (optional) default 'active' ; the name of the worksheet to host the range   
       </UL> 
    
    </UL>
@@ -929,7 +1372,7 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>worksheetname</CODE> -  - a string that names the worksheet   
+     <UL><CODE>worksheetname</CODE> -  a string that names the worksheet   
       </UL> 
    
    </UL>
@@ -940,7 +1383,7 @@ MLA</H3>
    <UL>
    <B>Returns:</B>
         <UL>
-        name of workbook added - Note: the only way to name the workbook is to Save it.  Excel returns a default name for the workbook, but this name will change the first time the user saves the workbook.    
+        name of workbook added - Note: the only way to name the workbook is to Save it.  Excel returns a default name for the workbook, but this name will change the first time the user saves the workbook   
         </UL>
    </UL>
    
@@ -956,7 +1399,7 @@ MLA</H3>
 
    <A NAME="!s!addWorksheet"><!-- --></A>
    <H3>addWorksheet</H3>
-   <PRE>&lt;static&gt; Object <B>addWorksheet</B>(name)</PRE>
+   <PRE>&lt;static&gt; String <B>addWorksheet</B>(sheetName)</PRE>
    
       <UL>Adds worksheet to active workbook.  Worksheet will be added to end of existing sheets in workbook at the final position. Added worksheet receives focus.</UL>
    
@@ -966,13 +1409,20 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>name</CODE> -  - the name of the worksheet to be added  
+     <UL><CODE>sheetName</CODE> -  the name of the worksheet to be added  
       </UL> 
    
    </UL>
    
    <!-- METHOD PARAMETERS END -->
 
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        name of sheet added   
+        </UL>
+   </UL>
    
 
    <!-- ADDITIONAL ATTRIBUTES START -->
@@ -984,11 +1434,11 @@ MLA</H3>
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
-   <A NAME="!s!clearNamedRange"><!-- --></A>
-   <H3>clearNamedRange</H3>
-   <PRE>&lt;static&gt; Object <B>clearNamedRange</B>(name)</PRE>
+   <A NAME="!s!base64EncodeImage"><!-- --></A>
+   <H3>base64EncodeImage</H3>
+   <PRE>&lt;static&gt; String <B>base64EncodeImage</B>(chartPath)</PRE>
    
-      <UL>Clears all cells in the range identified by name</UL>
+      <UL>Returns image found at chartPath as base64 encoded string</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -996,7 +1446,37 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>name</CODE> -  - the name of the range to be cleared in the active workbook   
+     <UL><CODE>chartPath</CODE> -  the name of the image, including full path on filesystem, to be encoded   
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to delete the picture</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!clearNamedRange"><!-- --></A>
+   <H3>clearNamedRange</H3>
+   <PRE>&lt;static&gt; void <B>clearNamedRange</B>(rangeName)</PRE>
+   
+      <UL>Clears all cells in the range identified by name.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>rangeName</CODE> -  the name of the range to be cleared in the active workbook   
       </UL> 
    
    </UL>
@@ -1016,9 +1496,9 @@ MLA</H3>
 
    <A NAME="!s!clearRange"><!-- --></A>
    <H3>clearRange</H3>
-   <PRE>&lt;static&gt; Object <B>clearRange</B>(coord1,coord2)</PRE>
+   <PRE>&lt;static&gt; void <B>clearRange</B>(coord1,coord2)</PRE>
    
-      <UL>Clears all cells in the range identified by coordinates provide in A1 notation</UL>
+      <UL>Clears all cells in the range identified by coordinates provide in A1 notation.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -1026,10 +1506,10 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>coord1</CODE> -  - starting coordinate of range to be cleared in A1 notation  
+     <UL><CODE>coord1</CODE> -  starting coordinate of range to be cleared in A1 notation  
       </UL> 
    
-     <UL><CODE>coord2</CODE> -  - end coordinate of range to be cleared in A1 notation   
+     <UL><CODE>coord2</CODE> -  end coordinate of range to be cleared in A1 notation   
       </UL> 
    
    </UL>
@@ -1049,12 +1529,20 @@ MLA</H3>
 
    <A NAME="!s!clearWorksheet"><!-- --></A>
    <H3>clearWorksheet</H3>
-   <PRE>&lt;static&gt; Object <B>clearWorksheet</B>()</PRE>
+   <PRE>&lt;static&gt; void <B>clearWorksheet</B>(sheetName)</PRE>
    
-      <UL>Clears the contents of the active worksheet in the active workbook</UL>
+      <UL>Clears the contents of the active worksheet in the active workbook.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>sheetName</CODE> -  (optional) default 'active'  
+      </UL> 
+   
+   </UL>
    
    <!-- METHOD PARAMETERS END -->
 
@@ -1063,7 +1551,7 @@ MLA</H3>
    <!-- ADDITIONAL ATTRIBUTES START -->
    
    <UL>   
-   <B>Throws:</B><UL>- Exception if unable to clear the contents of the active worksheet</UL>
+   <B>Throws:</B><UL>- Exception if unable to clear the contents of the worksheet specified in the active workbook</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -1071,9 +1559,9 @@ MLA</H3>
 
    <A NAME="!s!convertA1ToR1C1"><!-- --></A>
    <H3>convertA1ToR1C1</H3>
-   <PRE>&lt;static&gt; Object <B>convertA1ToR1C1</B>(coord)</PRE>
+   <PRE>&lt;static&gt; String <B>convertA1ToR1C1</B>(coord)</PRE>
    
-      <UL>Converts an A1 notation coordinate to R1C1 notations</UL>
+      <UL>Converts an A1 notation coordinate to R1C1 notation.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -1081,13 +1569,20 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>coord</CODE> -  - the A1 coordinate to be converted  
+     <UL><CODE>coord</CODE> -  the A1 coordinate to be converted  
       </UL> 
    
    </UL>
    
    <!-- METHOD PARAMETERS END -->
 
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        coordninate in R1C1 notation format   
+        </UL>
+   </UL>
    
 
    <!-- ADDITIONAL ATTRIBUTES START -->
@@ -1101,9 +1596,9 @@ MLA</H3>
 
    <A NAME="!s!convertR1C1ToA1"><!-- --></A>
    <H3>convertR1C1ToA1</H3>
-   <PRE>&lt;static&gt; Object <B>convertR1C1ToA1</B>(rowIdx, colIdx)</PRE>
+   <PRE>&lt;static&gt; String <B>convertR1C1ToA1</B>(rowIdx, colIdx)</PRE>
    
-      <UL>Converts a row index and column index to an A1 notation coordinate</UL>
+      <UL>Converts a row index and column index to an A1 notation coordinate.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -1111,16 +1606,23 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>rowIdx</CODE> -  - the row index   
+     <UL><CODE>rowIdx</CODE> -  the row index   
       </UL> 
    
-     <UL><CODE>colIdx</CODE> -  - the column index  
+     <UL><CODE>colIdx</CODE> -  the column index  
       </UL> 
    
    </UL>
    
    <!-- METHOD PARAMETERS END -->
 
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        coordinate in A1 notation format   
+        </UL>
+   </UL>
    
 
    <!-- ADDITIONAL ATTRIBUTES START -->
@@ -1134,7 +1636,7 @@ MLA</H3>
 
    <A NAME="!s!createXMLDOM"><!-- --></A>
    <H3>createXMLDOM</H3>
-   <PRE>&lt;static&gt; Object <B>createXMLDOM</B>(xmlstring)</PRE>
+   <PRE>&lt;static&gt; Microsoft.XMLDOM <B>createXMLDOM</B>(xmlstring)</PRE>
    
       <UL>Utility function for creating Microsoft.XMLDOM object from string.</UL>
    
@@ -1181,7 +1683,7 @@ MLA</H3>
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>customXMLPartId</CODE> -  the id of the custom part to be deleted from the active Open XML package. 
+     <UL><CODE>customXMLPartId</CODE> -  the id of the custom part to be deleted from the active Open XML package 
       </UL> 
    
    </UL>
@@ -1199,11 +1701,104 @@ MLA</H3>
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="!s!deleteFile"><!-- --></A>
+   <H3>deleteFile</H3>
+   <PRE>&lt;static&gt; void <B>deleteFile</B>(filePath)</PRE>
+   
+      <UL>Deletes file found with full path at parameter filePath, from the filesystem.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>filePath</CODE> -  the name of the file to be deleted  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to delete the file</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!deletePicture"><!-- --></A>
+   <H3>deletePicture</H3>
+   <PRE>&lt;static&gt; void <B>deletePicture</B>(sheetName, imageName)</PRE>
+   
+      <UL>Deletes picture (image), specified by name, from specified sheet in Excel Workbook.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>sheetName</CODE> -  the name of the sheet containing picture to be deleted  
+      </UL> 
+   
+     <UL><CODE>imageName</CODE> -  the name of the picture to be deleted  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to delete the picture</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!exportChartImagePNG"><!-- --></A>
+   <H3>exportChartImagePNG</H3>
+   <PRE>&lt;static&gt; void <B>exportChartImagePNG</B>(chartPath)</PRE>
+   
+      <UL>Saves chart in Excel Workbook to filesystem as .png.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>chartPath</CODE> -  the path for the /tmp dir on the client system. (have to save a local copy) where you want to save the chart image  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to save .png to local filesystem</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!getActiveCell"><!-- --></A>
    <H3>getActiveCell</H3>
-   <PRE>&lt;static&gt; Object <B>getActiveCell</B>()</PRE>
+   <PRE>&lt;static&gt; <a href="MLA/Cell.html">MLA.Cell</a> <B>getActiveCell</B>()</PRE>
    
-      <UL>Returns active cell from the active worksheet in active workbook.  For any range of selected cells, one will always be identified as active; the last selected cell for any range</UL>
+      <UL>Returns active cell from the active worksheet in active workbook.  For any range of selected cells, one will always be identified as active; the last selected cell for any range.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -1273,7 +1868,7 @@ MLA</H3>
    <!-- ADDITIONAL ATTRIBUTES START -->
    
    <UL>   
-   <B>Throws:</B><UL>- Exception if unable to retrieve the active workbook name.</UL>
+   <B>Throws:</B><UL>- Exception if unable to retrieve the active workbook name</UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -1368,10 +1963,10 @@ MLA</H3>
 
    <A NAME="!s!getConfiguration"><!-- --></A>
    <H3>getConfiguration</H3>
-   <PRE>&lt;static&gt; Object <B>getConfiguration</B>()</PRE>
+   <PRE>&lt;static&gt; MLA.config <B>getConfiguration</B>()</PRE>
    
       <UL>Returns MLA.config. The fields for this object are version, url, and theme.  
-version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color scheme used by Office.</UL>
+version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color scheme used by Office</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -1391,7 +1986,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
 
    <A NAME="!s!getCustomXMLPart"><!-- --></A>
    <H3>getCustomXMLPart</H3>
-   <PRE>&lt;static&gt; Microsoft.XMLDOM object <B>getCustomXMLPart</B>(customXMLPartId)</PRE>
+   <PRE>&lt;static&gt; Microsoft.XMLDOM <B>getCustomXMLPart</B>(customXMLPartId)</PRE>
    
       <UL>Returns the custom XML part, identified by customXMLPartId, that is part of the active Open XML package. (.docx, .xlsx, .pptx, etc.)</UL>
    
@@ -1412,7 +2007,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Returns:</B>
         <UL>
-        the XML for the custom part as a DOM object.    
+        the XML for the custom part as a DOM object   
         </UL>
    </UL>
    
@@ -1451,11 +2046,213 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="!s!getMacroComments"><!-- --></A>
+   <H3>getMacroComments</H3>
+   <PRE>&lt;static&gt; String <B>getMacroComments</B>(index)</PRE>
+   
+      <UL>Returns macro comments for macro component specified by index for active workbook. comments here are any that are in the first lines prior to any procedure definition for the macro.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>index</CODE> -  the index of the macro component  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get macro comments</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getMacroCount"><!-- --></A>
+   <H3>getMacroCount</H3>
+   <PRE>&lt;static&gt; String <B>getMacroCount</B>()</PRE>
+   
+      <UL>Returns count of macros in active workbook. This count can then be used as the index in other functions related functions.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get macro comments</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getMacroName"><!-- --></A>
+   <H3>getMacroName</H3>
+   <PRE>&lt;static&gt; String <B>getMacroName</B>(index)</PRE>
+   
+      <UL>Returns macro name for macro component specified by index for active workbook.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>index</CODE> -  the index of the macro component  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get macro name</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getMacroProcedureName"><!-- --></A>
+   <H3>getMacroProcedureName</H3>
+   <PRE>&lt;static&gt; String <B>getMacroProcedureName</B>(index)</PRE>
+   
+      <UL>Returns macro procedure name for macro component specified by index for active workbook.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>index</CODE> -  - the index of the macro component  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get macro name</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getMacroSignature"><!-- --></A>
+   <H3>getMacroSignature</H3>
+   <PRE>&lt;static&gt; String <B>getMacroSignature</B>(index)</PRE>
+   
+      <UL>Returns macro signature for macro component specified by index for active workbook.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>index</CODE> -  the index of the macro component  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get macro signature</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getMacroText"><!-- --></A>
+   <H3>getMacroText</H3>
+   <PRE>&lt;static&gt; String <B>getMacroText</B>(index)</PRE>
+   
+      <UL>Returns macro code as text from macro component specified by index for active workbook.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>index</CODE> -  the index of the macro to decompile and return as string  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get macro text</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getMacroType"><!-- --></A>
+   <H3>getMacroType</H3>
+   <PRE>&lt;static&gt; String <B>getMacroType</B>(index)</PRE>
+   
+      <UL>Returns macro type for macro component specified by index for active workbook.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>index</CODE> -  - the index of the macro component  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get macro type</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!getNamedRangeNames"><!-- --></A>
    <H3>getNamedRangeNames</H3>
-   <PRE>&lt;static&gt; Object <B>getNamedRangeNames</B>()</PRE>
+   <PRE>&lt;static&gt; Array <B>getNamedRangeNames</B>()</PRE>
    
-      <UL>Returns all NamedRange names for the active workbook</UL>
+      <UL>Returns all NamedRange names for the active workbook.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -1475,7 +2272,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
 
    <A NAME="!s!getSelectedCells"><!-- --></A>
    <H3>getSelectedCells</H3>
-   <PRE>&lt;static&gt; Object <B>getSelectedCells</B>()</PRE>
+   <PRE>&lt;static&gt; <a href="MLA/Cell.html">MLA.Cell</a> <B>getSelectedCells</B>()</PRE>
    
       <UL>Returns cells selected in active workbook.  This works for contigous cells.  When disparate cells are selected, the last contigous range of cells selected in the active workbook will be returned.</UL>
    
@@ -1495,9 +2292,31 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="!s!getSelectedChartName"><!-- --></A>
+   <H3>getSelectedChartName</H3>
+   <PRE>&lt;static&gt; String <B>getSelectedChartName</B>()</PRE>
+   
+      <UL>Returns the name for the selected chart.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to retrieve the chart name</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!getSelectedRangeCoordinates"><!-- --></A>
    <H3>getSelectedRangeCoordinates</H3>
-   <PRE>&lt;static&gt; Object <B>getSelectedRangeCoordinates</B>()</PRE>
+   <PRE>&lt;static&gt; String <B>getSelectedRangeCoordinates</B>()</PRE>
    
       <UL>Returns the selected range coordinates.  This works for contiguous ranges.  When disparate cells are selected,  the last coordinates for the last contigous range selected in the active workbook will be returned.</UL>
    
@@ -1517,11 +2336,70 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="!s!getSelectedRangeName"><!-- --></A>
+   <H3>getSelectedRangeName</H3>
+   <PRE>&lt;static&gt; String <B>getSelectedRangeName</B>()</PRE>
+   
+      <UL>Returns the name for the selected range if name exists.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to retrieve the named range</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getSheetType"><!-- --></A>
+   <H3>getSheetType</H3>
+   <PRE>&lt;static&gt; String <B>getSheetType</B>(sheetName)</PRE>
+   
+      <UL>Returns the type of the sheet specified by sheetName.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>sheetName</CODE> -  the name of the sheet to inspect  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        type of sheet   
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to get sheet type</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!getTempPath"><!-- --></A>
    <H3>getTempPath</H3>
-   <PRE>&lt;static&gt; Object <B>getTempPath</B>()</PRE>
+   <PRE>&lt;static&gt; String <B>getTempPath</B>()</PRE>
    
-      <UL>Returns the path being used for the /temp dir on the client system</UL>
+      <UL>Returns the path being used for the /temp dir on the client system.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -1564,11 +2442,11 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
-   <A NAME="!s!openXlsx"><!-- --></A>
-   <H3>openXlsx</H3>
-   <PRE>&lt;static&gt; Object <B>openXlsx</B>(tmpPath, docuri, url, uname, pwd)</PRE>
+   <A NAME="!s!getWorksheetChartNames"><!-- --></A>
+   <H3>getWorksheetChartNames</H3>
+   <PRE>&lt;static&gt; Array <B>getWorksheetChartNames</B>(sheetName)</PRE>
    
-      <UL>Open a .xlsx from MarkLogic into Excel</UL>
+      <UL>Returns all Chart names for any charts found on sheet specified by sheetName.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -1576,19 +2454,112 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>tmpPath</CODE> -  - the path for the /tmp dir on the client system. (have to save a local copy)   
+     <UL><CODE>sheetName</CODE> -  the name of the sheet containing the charts  
       </UL> 
    
-     <UL><CODE>docuri</CODE> -  - the uri for the document in MarkLogic Server  
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add retrieve Chart names</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getWorksheetNamedRangeNames"><!-- --></A>
+   <H3>getWorksheetNamedRangeNames</H3>
+   <PRE>&lt;static&gt; Array <B>getWorksheetNamedRangeNames</B>(sheetName)</PRE>
+   
+      <UL>Returns all named range names for any named ranges found on sheet specified by sheetName.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>sheetName</CODE> -  the name of the sheet containing the charts  
       </UL> 
    
-     <UL><CODE>url</CODE> -  - the url on MarkLogic Server where the XQuery to open the document specified by docuri can be found  
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to add retrieve named range names</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!insertBase64ToImage"><!-- --></A>
+   <H3>insertBase64ToImage</H3>
+   <PRE>&lt;static&gt; void <B>insertBase64ToImage</B>(base64String, sheetName)</PRE>
+   
+      <UL>Inserts a base64 encoded string into sheet, specified by sheetName, as an image.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>base64String</CODE> -  the base64 string to insert  
       </UL> 
    
-     <UL><CODE>uname</CODE> -  - the username for MarkLogic Server  
+     <UL><CODE>sheetName</CODE> -  (optional) default 'active'  
       </UL> 
    
-     <UL><CODE>pwd</CODE> -  - the password for MarkLogic Server  
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to insert the image</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!openXlsx"><!-- --></A>
+   <H3>openXlsx</H3>
+   <PRE>&lt;static&gt; Object <B>openXlsx</B>(tmpPath, docuri, url, uname, pwd)</PRE>
+   
+      <UL>Open a .xlsx from MarkLogic into Excel.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>tmpPath</CODE> -  the path for the /tmp dir on the client system. (have to save a local copy)   
+      </UL> 
+   
+     <UL><CODE>docuri</CODE> -  the uri for the document in MarkLogic Server  
+      </UL> 
+   
+     <UL><CODE>url</CODE> -  the url on MarkLogic Server where the XQuery to open the document specified by docuri can be found  
+      </UL> 
+   
+     <UL><CODE>uname</CODE> -  the username for MarkLogic Server  
+      </UL> 
+   
+     <UL><CODE>pwd</CODE> -  the password for MarkLogic Server  
       </UL> 
    
    </UL>
@@ -1606,9 +2577,69 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="!s!removeChartObjectMouseDownEvents"><!-- --></A>
+   <H3>removeChartObjectMouseDownEvents</H3>
+   <PRE>&lt;static&gt; void <B>removeChartObjectMouseDownEvents</B>(sheetName)</PRE>
+   
+      <UL>Removes chartObjectMouseDown events for each chart on sheet specified by sheetName.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>sheetName</CODE> -  the name of the sheet to remove event listeners from  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to remove chartObjectMouseDown events</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!removeMacro"><!-- --></A>
+   <H3>removeMacro</H3>
+   <PRE>&lt;static&gt; void <B>removeMacro</B>(macroName)</PRE>
+   
+      <UL>Removes macro, specified by macroName, from active workbook.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>macroName</CODE> -  the componentType to add the macro as to the active workbook  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to remove macro</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="!s!removeNamedRange"><!-- --></A>
    <H3>removeNamedRange</H3>
-   <PRE>&lt;static&gt; Object <B>removeNamedRange</B>(name)</PRE>
+   <PRE>&lt;static&gt; void <B>removeNamedRange</B>(name)</PRE>
    
       <UL>Removes the NamedRange from the active workbook.  Note - cells and values stay intact, this only removes the name from the range.</UL>
    
@@ -1618,7 +2649,10 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>name</CODE> -  -  the name of the NamedRange to be removed from the active workbook   
+     <UL><CODE>name</CODE> -  the name of the NamedRange to be removed from the active workbook  
+      </UL> 
+   
+     <UL><CODE>sheetName</CODE> -  (optional) default 'active'  
       </UL> 
    
    </UL>
@@ -1636,11 +2670,11 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
-   <A NAME="!s!saveActiveWorkbook"><!-- --></A>
-   <H3>saveActiveWorkbook</H3>
-   <PRE>&lt;static&gt; Object <B>saveActiveWorkbook</B>(tmpPath, doctitle, url, uname,pwd)</PRE>
+   <A NAME="!s!runMacro"><!-- --></A>
+   <H3>runMacro</H3>
+   <PRE>&lt;static&gt; void <B>runMacro</B>(macroName)</PRE>
    
-      <UL>Saves the active workbook to MarkLogic</UL>
+      <UL>Runs macro, specified by macro name, in the active workbook.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -1648,19 +2682,49 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>tmpPath</CODE> -  - the path for the /tmp dir on the client system. (have to save a local copy)   
+     <UL><CODE>macroName</CODE> -  the name of the macro to run in the active workbook  
       </UL> 
    
-     <UL><CODE>url</CODE> -  - the url on MarkLogic Server where the XQuery to save can be found  
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>Throws:</B><UL>- Exception if unable to run macro</UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!saveActiveWorkbook"><!-- --></A>
+   <H3>saveActiveWorkbook</H3>
+   <PRE>&lt;static&gt; void <B>saveActiveWorkbook</B>(tmpPath, doctitle, url, uname,pwd)</PRE>
+   
+      <UL>Saves the active workbook to MarkLogic.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>tmpPath</CODE> -  the path for the /tmp dir on the client system. (have to save a local copy)   
       </UL> 
    
-     <UL><CODE>uname</CODE> -  - the username for MarkLogic Server  
+     <UL><CODE>url</CODE> -  the url on MarkLogic Server where the XQuery to save can be found  
       </UL> 
    
-     <UL><CODE>pwd</CODE> -  - the password for MarkLogic Server  
+     <UL><CODE>uname</CODE> -  the username for MarkLogic Server  
       </UL> 
    
-     <UL><CODE>docTitle</CODE> -  - the title of the document  
+     <UL><CODE>pwd</CODE> -  the password for MarkLogic Server  
+      </UL> 
+   
+     <UL><CODE>docTitle</CODE> -  the title of the document  
       </UL> 
    
    </UL>
@@ -1680,7 +2744,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
 
    <A NAME="!s!setActiveCellValue"><!-- --></A>
    <H3>setActiveCellValue</H3>
-   <PRE>&lt;static&gt; Object <B>setActiveCellValue</B>(value)</PRE>
+   <PRE>&lt;static&gt; void <B>setActiveCellValue</B>(value)</PRE>
    
       <UL>Set the value for the cell at the current cursor position.</UL>
    
@@ -1690,7 +2754,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>value</CODE> -  - the value to be inserted in the active cell  
+     <UL><CODE>value</CODE> -  the value to be inserted in the active cell  
       </UL> 
    
    </UL>
@@ -1710,9 +2774,9 @@ version - the version of the Addin library, url - the url used by the Addin WebB
 
    <A NAME="!s!setActiveRangeByName"><!-- --></A>
    <H3>setActiveRangeByName</H3>
-   <PRE>&lt;static&gt; Object <B>setActiveRangeByName</B>(name)</PRE>
+   <PRE>&lt;static&gt; void <B>setActiveRangeByName</B>(name)</PRE>
    
-      <UL>Returns all NamedRange names for the active workbook</UL>
+      <UL>Returns all NamedRange names for the active workbook.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -1720,7 +2784,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>name</CODE> -  - the name of the range to be set active in the workbook   
+     <UL><CODE>name</CODE> -  the name of the range to be set active in the workbook   
       </UL> 
    
    </UL>
@@ -1740,7 +2804,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
 
    <A NAME="!s!setActiveWorkbook"><!-- --></A>
    <H3>setActiveWorkbook</H3>
-   <PRE>&lt;static&gt; Object <B>setActiveWorkbook</B>(workbookname)</PRE>
+   <PRE>&lt;static&gt; void <B>setActiveWorkbook</B>(workbookname)</PRE>
    
       <UL>Sets the active workbook in Excel.</UL>
    
@@ -1750,7 +2814,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>workbookname</CODE> -  - a string that is the name of the workbook to receive focus   
+     <UL><CODE>workbookname</CODE> -  a string that is the name of the workbook to receive focus   
       </UL> 
    
    </UL>
@@ -1770,7 +2834,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
 
    <A NAME="!s!setActiveWorksheet"><!-- --></A>
    <H3>setActiveWorksheet</H3>
-   <PRE>&lt;static&gt; Object <B>setActiveWorksheet</B>(sheetname)</PRE>
+   <PRE>&lt;static&gt; void <B>setActiveWorksheet</B>(sheetname)</PRE>
    
       <UL>Sets the active worksheet in Excel.</UL>
    
@@ -1780,7 +2844,7 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>worksheetname</CODE> -  - a string that is the name of the worksheet to receive focus   
+     <UL><CODE>worksheetname</CODE> -  a string that is the name of the worksheet to receive focus   
       </UL> 
    
    </UL>
@@ -1800,9 +2864,9 @@ version - the version of the Addin library, url - the url used by the Addin WebB
 
    <A NAME="!s!setCellValue"><!-- --></A>
    <H3>setCellValue</H3>
-   <PRE>&lt;static&gt; Object <B>setCellValue</B>(cells, sheetname)</PRE>
+   <PRE>&lt;static&gt; void <B>setCellValue</B>(cells, sheetname)</PRE>
    
-      <UL>Sets the values for the cells identified by Cell.coordinate</UL>
+      <UL>Sets the values for the cells identified by Cell.coordinate.</UL>
    
 
    <!-- METHOD PARAMETERS START -->
@@ -1810,10 +2874,10 @@ version - the version of the Addin library, url - the url used by the Addin WebB
    <UL>
    <B>Parameters:</B>
    
-     <UL><CODE>cells</CODE> -  - an array of MLA.Cell objects, the values of which will be used for the values for the given cells in the active workbook.  
+     <UL><CODE>cells</CODE> -  an array of MLA.Cell objects, the values of which will be used for the values for the given cells in the active workbook.  
       </UL> 
    
-     <UL><CODE>sheetname</CODE> -  - (optional) the name of the worksheet where the Cell values should be populated.  If no sheetname is provided, the cells will be populated in the active worksheet.  
+     <UL><CODE>sheetname</CODE> -  (optional) the name of the worksheet where the Cell values should be populated.  If no sheetname is provided, the cells will be populated in the active worksheet.  
       </UL> 
    
    </UL>
@@ -1897,6 +2961,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 <FONT SIZE="-1">
 
 </FONT>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Apr  8 14:29:46 2009</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Mon May  9 09:07:22 2011</div>
 </BODY>
 </HTML>
