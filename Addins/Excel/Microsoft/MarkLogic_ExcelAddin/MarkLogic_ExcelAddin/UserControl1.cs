@@ -499,25 +499,21 @@ namespace MarkLogic_ExcelAddin
 
                 string message = "";
                 object missing = Type.Missing;
+                
+                try{
+                   Excel.Worksheet ws = null;
 
-                //add check for name
-                //get range, check name
+                   if (sheetName.Equals("active"))
+                   {
+                      ws = ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                   }
+                   else
+                   {
+                      ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[sheetName]; 
+                   }
 
-                try
-                {
-                    if (sheetName.Equals("active"))
-                    {
-                        Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
-                        Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
-                        Excel.Name nm = ws.Names.Add(rngName, rg, true, missing, missing, missing, missing, missing, missing, missing, missing);
-                    }
-                    else
-                    {
-                        Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[sheetName]; // (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[name];
-                        Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
-                        Excel.Name nm = ws.Names.Add(rngName, rg, true, missing, missing, missing, missing, missing, missing, missing, missing);
-                    
-                    }
+                   Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
+                   Excel.Name nm = ws.Names.Add(rngName, rg, true, missing, missing, missing, missing, missing, missing, missing, missing);
 
                 }
                 catch (Exception e)
@@ -526,18 +522,27 @@ namespace MarkLogic_ExcelAddin
                     message = "error: " + errorMsg;
                 }
 
-
                 return message;
             }
 
-            public String addAutoFilter(string coordinate1, string coordinate2, string criteria1, string v_operator, string criteria2)
+            public String addAutoFilter(string coordinate1,string coordinate2, string sheetName, string criteria1, string v_operator, string criteria2)
             {
                 string message = "";
                 object missing = Type.Missing;
 
                 try
                 {
-                    Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                    Excel.Worksheet ws = null;
+
+                    if (sheetName.Equals("active"))
+                    {
+                        ws = ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                    }
+                    else
+                    {
+                        ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[sheetName];
+                    }
+
                     Excel.Range rg = ws.get_Range(coordinate1, coordinate2);
                     rg.AutoFilter(1, "<>", Excel.XlAutoFilterOperator.xlOr, missing, true);
                 }
@@ -1136,13 +1141,22 @@ namespace MarkLogic_ExcelAddin
                 return message;
             }
 
-            public String clearActiveWorksheet()
+            public String clearWorksheet(string sheetName)
             {
                 string message = "";
                 object missing = Type.Missing;
                 try
                 {
-                    Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
+                    Excel.Worksheet ws = null;
+
+                    if (sheetName.Equals("active"))
+                    {
+                        ws = ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                    }
+                    else
+                    {
+                        ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[sheetName];
+                    }
                     
                     ws.Cells.Select();
                     ws.Cells.Clear();
@@ -2012,7 +2026,7 @@ namespace MarkLogic_ExcelAddin
                 return message;
             }
 
-            public string insertBase64ToImage(string base64String)
+            public string insertBase64ToImage(string base64String, string sheetName)
             {
        
                 string message = "";
@@ -2026,8 +2040,18 @@ namespace MarkLogic_ExcelAddin
                     // Convert byte[] to Image
                     ms.Write(imageBytes, 0, imageBytes.Length);
                     Image image = Image.FromStream(ms, true);
-                   
-                    Excel.Worksheet ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
+
+                    Excel.Worksheet ws = null;
+
+                    if (sheetName.Equals("active"))
+                    {
+                        ws = ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
+                    }
+                    else
+                    {
+                        ws = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveWorkbook.Sheets[sheetName];
+                    }
+
                     Excel.Range oRange = (Excel.Range)ws.Cells[10, 10];
 
                     //backup clipboard

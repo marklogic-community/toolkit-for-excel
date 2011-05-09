@@ -406,8 +406,7 @@ namespace MarkLogic_ExcelAddin
 
                 range = Target.get_Address(missing, missing, Excel.XlReferenceStyle.xlA1, missing, missing);
 
-                MessageBox.Show("The value of " + sheet.Name + ":" +
-                    range + " was changed.");
+               // MessageBox.Show("The value of " + sheet.Name + ":" +range + " was changed.");
             }
             catch (Exception e)
             {
