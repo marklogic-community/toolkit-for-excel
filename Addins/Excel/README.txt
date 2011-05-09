@@ -44,6 +44,12 @@ MLA.removeChartObjectMouseDownEvents()
 MLA.removeMacro()
 MLA.runMacro()
 
+following functions updated to take optional parameter, sheetName, to specify which worksheet in active workbook function should act on:
+
+addAutoFilter()
+addNamedRange()
+clearWorksheet()
+
 now capture following events:
 
 sheetActivate()
