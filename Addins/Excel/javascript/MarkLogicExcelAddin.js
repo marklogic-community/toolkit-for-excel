@@ -153,6 +153,7 @@ MLA.errorCheck = function(message)
 /** Utility function for creating Microsoft.XMLDOM object from string.
  *
  *@param xmlString the string to be loaded into a XMLDOM object.  The string must be serialized, well-formed XML
+ *@type Microsoft.XMLDOM
  *@return Microsoft.XMLDOM object
  *@throws Exception if unable to create the XMLDOM object
  */
@@ -231,7 +232,7 @@ MLA.getCustomXMLPartIds = function()
  * Returns the custom XML part, identified by customXMLPartId, that is part of the active Open XML package. (.docx, .xlsx, .pptx, etc.)
  * @param customXMLPartId the id of the custom part to be fetched from the active package
  * @return the XML for the custom part as a DOM object
- * @type Microsoft.XMLDOM object 
+ * @type Microsoft.XMLDOM 
  * @throws Exception if there is error retrieving the custom part 
  */
 MLA.getCustomXMLPart = function(customXMLPartId)
@@ -304,6 +305,7 @@ MLA.deleteCustomXMLPart = function(customXMLPartId)
  *
  *Returns MLA.config. The fields for this object are version, url, and theme.  
 version - the version of the Addin library, url - the url used by the Addin WebBrowser control, theme - the current color scheme used by Office
+ *@type MLA.config
  *@throws Exception if unable to create MLA.config object
  */
 MLA.getConfiguration = function()
@@ -461,6 +463,8 @@ MLA.addWorkbook = function(worksheetname) //,subject,saveas)
 /**
  * Adds worksheet to active workbook.  Worksheet will be added to end of existing sheets in workbook at the final position. Added worksheet receives focus.
  * @param sheetName the name of the worksheet to be added
+ * @return name of sheet added
+ * @type String 
  * @throws Exception if unable to add the worksheet
  */
 MLA.addWorksheet = function(sheetName)
@@ -478,6 +482,7 @@ MLA.addWorksheet = function(sheetName)
 /**
  * Sets the active workbook in Excel. 
  * @param workbookname a string that is the name of the workbook to receive focus 
+ * @type void
  * @throws Exception if unable to activate the specified workbook
  */
 MLA.setActiveWorkbook = function(workbookname)
@@ -494,6 +499,7 @@ MLA.setActiveWorkbook = function(workbookname)
 /**
  * Sets the active worksheet in Excel.   
  * @param worksheetname a string that is the name of the worksheet to receive focus 
+ * @type void
  * @throws Exception if unable to activate the specified worksheet
  */
 MLA.setActiveWorksheet = function(sheetname)
@@ -513,6 +519,7 @@ MLA.setActiveWorksheet = function(sheetname)
  * @param coord2 end coordinate of range in A1 notation
  * @param rngName the name to be assigned to the range 
  * @param sheetName (optional) default 'active' ; the name of the worksheet to host the range 
+ * @type void
  * @throws Exception if unable to name the specified range
  */
 MLA.addNamedRange = function(coord1,coord2,rngName, sheetName)
@@ -538,6 +545,7 @@ MLA.addNamedRange = function(coord1,coord2,rngName, sheetName)
  * @param criteria1 (optional) default '<>'
  * @param operator (optional) default 'AND'
  * @param criteria2 (optional) default 'missing'
+ * @type void
  * @throws Exception if unable to add AutoFilter specified range
  */
 MLA.addAutoFilter = function(coord1, coord2, sheetName, criteria1, operator, criteria2)
@@ -632,6 +640,7 @@ MLA.getWorksheetNamedRangeNames = function(sheetName)
 /**
  * Returns all NamedRange names for the active workbook.
  * @param name the name of the range to be set active in the workbook 
+ * @type void
  * @throws Exception if unable to add retrieve NamedRange names
  */
 MLA.setActiveRangeByName = function(name)
@@ -648,6 +657,7 @@ MLA.setActiveRangeByName = function(name)
 /**
  * Clears all cells in the range identified by name.
  * @param rangeName the name of the range to be cleared in the active workbook 
+ * @type void
  * @throws Exception if unable to clear the cells in the NamedRange
  */
 MLA.clearNamedRange = function(rangeName)
@@ -665,6 +675,7 @@ MLA.clearNamedRange = function(rangeName)
  * Clears all cells in the range identified by coordinates provide in A1 notation.
  * @param coord1 starting coordinate of range to be cleared in A1 notation
  * @param coord2 end coordinate of range to be cleared in A1 notation 
+ * @type void
  * @throws Exception if unable to clear the cells in the range
  */
 MLA.clearRange = function(coord1,coord2)
@@ -682,6 +693,7 @@ MLA.clearRange = function(coord1,coord2)
  * Removes the NamedRange from the active workbook.  Note - cells and values stay intact, this only removes the name from the range.
  * @param name the name of the NamedRange to be removed from the active workbook
  * @param sheetName (optional) default 'active'
+ * @type void
  * @throws Exception if unable to remove the named range
  */
 MLA.removeNamedRange = function(name)
@@ -842,6 +854,7 @@ MLA.getActiveCellText = function()
 /**
  * Set the value for the cell at the current cursor position.
  * @param value the value to be inserted in the active cell
+ * @type void
  * @throws Exception if unable to set the active cell text
  */
 MLA.setActiveCellValue = function(value)
@@ -859,6 +872,7 @@ MLA.setActiveCellValue = function(value)
  * Sets the values for the cells identified by Cell.coordinate.
  * @param cells an array of MLA.Cell objects, the values of which will be used for the values for the given cells in the active workbook.
  * @param sheetname (optional) the name of the worksheet where the Cell values should be populated.  If no sheetname is provided, the cells will be populated in the active worksheet.
+ * @type void
  * @throws Exception if unable to set the values for the given cells
  */
 MLA.setCellValue = function(cells, sheetname)
@@ -887,6 +901,8 @@ MLA.setCellValue = function(cells, sheetname)
 /**
  * Converts an A1 notation coordinate to R1C1 notation.
  * @param coord the A1 coordinate to be converted
+ * @type String
+ * @return coordninate in R1C1 notation format
  * @throws Exception if unable to convert the coordinate
  */
 MLA.convertA1ToR1C1 = function(coord)
@@ -903,6 +919,8 @@ MLA.convertA1ToR1C1 = function(coord)
  * Converts a row index and column index to an A1 notation coordinate.
  * @param rowIdx the row index 
  * @param colIdx the column index
+ * @type String
+ * @return coordinate in A1 notation format
  * @throws Exception if unable to convert to A1 notation
  */
 MLA.convertR1C1ToA1 = function(rowIdx, colIdx)
@@ -918,7 +936,8 @@ MLA.convertR1C1ToA1 = function(rowIdx, colIdx)
 
 /**
  * Clears the contents of the active worksheet in the active workbook.
- * @param sheetName default 'active'
+ * @param sheetName (optional) default 'active'
+ * @type void
  * @throws Exception if unable to clear the contents of the worksheet specified in the active workbook
  */
 MLA.clearWorksheet = function(sheetName)
@@ -960,6 +979,7 @@ MLA.getTempPath = function()
  * @param url the url on MarkLogic Server where the XQuery to save can be found
  * @param uname the username for MarkLogic Server
  * @param pwd the password for MarkLogic Server
+ * @type void
  * @throws Exception if unable to save the document to MarkLogic
  */
 MLA.saveActiveWorkbook = function(tmpPath, doctitle, url, uname,pwd)
