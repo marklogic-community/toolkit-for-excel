@@ -1,0 +1,317 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+	Events
+
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../stylesheet.css" TITLE="Style">
+</HEAD>
+<SCRIPT>
+function asd()
+{
+parent.document.title="Events";
+}
+</SCRIPT>
+<BODY BGCOLOR="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=3 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../overview-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">  <A HREF="../overview-summary-MarkLogicExcelAddin.js.html"><FONT CLASS="NavBarFont1"><B>File</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev">&nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../overview-tree.html"><FONT CLASS="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <!--TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"-->    <!--A HREF="deprecated-list.html"--><!--FONT CLASS="NavBarFont1">Deprecated</FONT--><!--/A--><!--&nbsp;</TD-->
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../index-all.html"--><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+<B></B>
+</EM>
+</TD
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../MLA.html"><B>PREV CLASS</B></A><!-- 
+   NEXT CLASS 
+-->
+&nbsp;<B>NEXT CLASS</B></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="" TARGET="_top"><B>NO FRAMES</B></A>  &nbsp;
+&nbsp;
+<SCRIPT>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="../allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</SCRIPT>
+<NOSCRIPT>
+<A HREF="../allclasses-noframe.html" TARGET=""><B>All Classes</B></A>
+</NOSCRIPT>
+</FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY:&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+<HR>
+
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>Events</H2>
+<PRE>Object
+   |
+   +--<b>MLA.&lt;events&gt;</b>
+</PRE>
+
+
+<HR>
+<DL>
+   <!-- Class definition -->
+   <DT>
+   <B>Event Handling</B>
+   
+
+</DL>
+   
+   <P>
+   <BR/>Events are captured in the Excel application and information is passed to MarkLogicExcelEventSupport.js which in turn calls the functions in MarkLogicExcelEventHandlers.js.   Developers should define their custom functions within MarkLogicEventHandlers.js
+
+   <br/><br/> Following events now captured:<br/><br/>
+
+  MLA.chartObjectMouseDown()<br/>
+  MLA.sheetActivate()<br/>
+  MLA.sheetBeforeDoubleClick()<br/>
+  MLA.sheetBeforeRightClick()<br/>
+  MLA.sheetChange()<br/>
+  MLA.sheetDeactivate()<br/>
+  MLA.rangeSelected() <br/>
+    -sheetSelectionChange Event only caught when selection is named range<br/>
+  MLA.workbookActivate()<br/>
+  MLA.workbookAfterXmlExport()<br/>
+  MLA.workbookAfterXmlImport()<br/>
+  MLA.workbookBeforeXmlExport()<br/>
+  MLA.workbookBeforeXmlImport()<br/>
+  MLA.workbookBeforeClose()<br/>
+  MLA.workbookBeforeSave()<br/>
+  MLA.workbookDeactivate()<br/>
+  MLA.workbookNewSheet()<br/>
+  MLA.workbookOpen()<br/>
+
+  
+   </P>
+   
+   <HR>
+
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+
+<!-- ======== END NESTED CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+   
+
+<!-- =========== END FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+
+<!-- ============ FIELD DETAIL START =========== -->
+
+
+<!-- ============ FIELD DETAIL END =========== -->
+
+    <!-- ========= CONSTRUCTOR DETAIL START ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+   <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+      <TD COLSPAN=1>
+      <FONT SIZE="+2"><B>Event Detail</B></FONT>
+      </TD>
+   </TR>
+</TABLE>
+<br/>
+<B>MLA.chartObjectMouseDownHandler(chartName)</B>
+<UL>Occurs when a mouse button is pressed while the pointer is over a chart. Returns name of chart selected.<br/><i>Note: This is not an application level event, see MLA.addChartObjectMouseDownEvents()</i>  </UL>
+<B>MLA.rangeSelectedHandler(rangeName)</B>
+<UL> Occurs when the named range is selected on any worksheet. Returns named ranges selected.  </UL>
+<B>MLA.sheetActivateHandler(sheetName)</B>
+<UL> Occurs when any sheet is activated. Returns name of sheet activated.   
+</UL>
+<B>MLA.sheetBeforeDoubleClickHandler(sheetName, range)</B>
+<UL>Occurs when any worksheet is double-clicked, before the default double-click action. Returns sheetName and range where double-click is about to occur.
+</UL>
+<B>MLA.sheetBeforeRightClickHandler(sheetName, range)</B>
+<UL> Occurs when any worksheet is right-clicked, before the default right-click action.   Returns sheetName and range where right-click is about to occur.
+</UL>
+<B>MLA.sheetChangeHandler(range)</B>
+<UL> Occurs when cells in any worksheet are changed by the user or by an external link. Returns range where change occurred.
+</UL>
+<B>MLA.sheetDeactivateHandler(sheetName)</B>
+<UL>
+	Occurs when any sheet is deactivated. Returns name of sheet deactivated.   
+</UL>
+<B>MLA.workbookActivateHandler(workbookName)</B>
+<UL>
+Occurs when any workbook is activated. Returns name of workbook activated.
+</UL>
+<B>MLA.workbookAfterXmlExportHandler(workbookName, mapName, url)</B>
+<UL>
+	Occurs after Microsoft Excel saves or exports XML data from the specified workbook.  Returns the following<br/>
+       	<br/>workbookName: name of workbook that exported XML
+	<br/>mapName: the name of the XmlMap used to export the data
+        <br/>	url: the location of the exported file
+</UL>
+<B>MLA.workbookAfterXmlImportHandler(workbookName, mapName, refresh)</B>
+<UL>
+	Occurs after Excel saves or exports XML data from the specified workbook.  Returns the following<br/>
+       	<br/>workbookName: name of workbook that imported XML
+	<br/>mapName: the name of the XmlMap used to import the data
+	<br/>refresh: "true" if the event was triggered by refreshing an existing connection to XML data, "false" if a new mapping was created.
+</UL>
+<B>MLA.workbookBeforeCloseHandler(workbookName)</B>
+<UL>
+
+Occurs immediately before any open workbook closes. Returns name of workbook closing.
+</UL>
+<B>MLA.workbookBeforeSaveHandler(workbookName)</B>
+<UL>
+Occurs before any open workbook is saved. Returns name of workbook saving.
+</UL>
+<B>MLA.workbookBeforeXmlExportHandler(workbookName, mapName, url)</B>
+<UL>
+	Occurs before Excel saves or exports XML data from the specified workbook.  Returns the following<br/>
+       	<br/>workbookName: name of workbook that is exporting XML
+	<br/>mapName: the name of the XmlMap to be used to export the data
+        <br/>url: the location to export the file to
+</UL>
+<B>MLA.workbookBeforeXmlImportHandler(workbookName, mapName, refresh)</B>
+<UL>
+	Occurs after Excel saves or exports XML data from the specified workbook.  Returns the following<br/>
+       	<br/>workbookName: name of workbook that is importing XML
+	<br/>mapName: the name of the XmlMap used to be used to import the data
+	<br/>refresh: "true" if the event was triggered by refreshing an existing connection to XML data, "false" if a new mapping was created.
+</UL>
+<B>MLA.workbookDeactivateHandler(workbookName)</B>
+<UL>
+Occurs when any workbook is deactivated. Returns name of workbook deactivated.
+</UL>
+<B>MLA.workbookNewSheetHandler(workbookName, sheetName)</B>
+<UL>
+Occurs when a new sheet is created in any open workbook. Returns name of workbook adding sheet and name of sheet added.
+</UL>
+
+<B>MLA.workbookOpenHandler(workbookName)</B>
+<UL>
+Occurs when a workbook is opened. Returns name of workbook opened.
+</UL>
+
+
+
+
+   </UL>
+<br/>
+
+
+
+<!-- Constructor return value(s) -->
+
+<!-- End constructor return value(s) -->
+
+<!-- ADDITIONAL ATTRIBUTES -->
+
+<HR/>
+<!-- END ADDITIONAL ATTRIBUTES  -->
+
+<!-- ========= CONSTRUCTOR DETAIL END ======== -->
+
+
+<!-- ============ METHOD DETAIL START ========== -->
+
+
+<!-- ============ METHOD DETAIL END ========== -->
+
+<!-- ========= END OF CLASS DATA ========= -->
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=3 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../overview-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">  <A HREF="../overview-summary-MarkLogicExcelAddin.js.html"><FONT CLASS="NavBarFont1"><B>File</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../overview-tree.html"><FONT CLASS="NavBarFont1"><b>Tree</b></FONT></A>&nbsp;</TD>
+  <!--TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"-->    <!--A HREF="deprecated-list.html"--><!--FONT CLASS="NavBarFont1">Deprecated</FONT--><!--/A--><!--&nbsp;</TD-->
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../index-all.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+<B></B>
+</EM>
+</TD
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../MLA.html"><B>PREV CLASS</B></A><!-- 
+   NEXT CLASS 
+-->
+&nbsp;<B>NEXT CLASS</B></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="" TARGET="_top"><B>NO FRAMES</B></A>  &nbsp;
+&nbsp;
+<SCRIPT>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="../allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</SCRIPT>
+<NOSCRIPT>
+<A HREF="../allclasses-noframe.html" TARGET=""><B>All Classes</B></A>
+</NOSCRIPT>
+</FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY:&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<FONT SIZE="-1">
+
+</FONT>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Apr  8 14:29:46 2011</div>
+</BODY>
+</HTML>
