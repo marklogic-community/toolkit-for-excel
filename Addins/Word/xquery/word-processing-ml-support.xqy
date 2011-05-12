@@ -395,7 +395,7 @@ declare function ooxml:custom-xml-highlight-exec(
                                    <w:customXmlPr>
                                     {
                                      for $attr at $d in $attrs 
-                                      return <w:attr w:name ={$attr}  w:val={$vals[$d]} />
+                                      return <w:attr w:name ="{$attr}"  w:val="{$vals[$d]}" />
                                     }
                                     </w:customXmlPr>
                                    else ()
@@ -530,16 +530,6 @@ declare function ooxml:get-part-content-type(
     then
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml"
    :)
-};
-
-declare function get-base-uri(
-  $node as node()
-) as xs:string?
-{
-(: similar check to above, but return default directory-filename for part in .docx package :)
- (: this is really just meant for document.xml, or advanced devs , mgmt of custom parts or files where number > 1 for same file become problemnatic
-  but we want to be able to construct server side document.xml 
-:)
 };
 
 declare function get-image-part-content-type(
@@ -1609,7 +1599,7 @@ declare function ooxml:list-paragraph-property(
        <w:pStyle w:val="ListParagraph"/>
        <w:numPr>
          <w:ilvl w:val="0"/>
-         <w:numId w:val={$num-id}/>
+         <w:numId w:val="{$num-id}"/>
        </w:numPr>
      </w:pPr>
 };
