@@ -5,3 +5,6 @@ C:\cygwin\home\paven\MLOS\Office2007\Addins\Word\tests\MarkLogic_WordAddin_Test\
 C:\cygwin\home\paven\MLOS\Office2007\Addins\Word\tests\MarkLogic_WordAddin_Test\MarkLogic_WordAddin_Test\obj\Debug\ResolveAssemblyReference.cache
 C:\cygwin\home\paven\MLOS\Office2007\Addins\Word\tests\MarkLogic_WordAddin_Test\MarkLogic_WordAddin_Test\obj\Debug\MarkLogic_WordAddin_Test.exe
 C:\cygwin\home\paven\MLOS\Office2007\Addins\Word\tests\MarkLogic_WordAddin_Test\MarkLogic_WordAddin_Test\obj\Debug\MarkLogic_WordAddin_Test.pdb
+C:\cygwin\home\paven\SVNADDINS\integrations\Office\trunk\Addins\Word\tests\MarkLogic_WordAddin_Test\MarkLogic_WordAddin_Test\obj\Debug\MarkLogic_WordAddin_Test.csproj.ResolveComReference.cache
+C:\cygwin\home\paven\SVNADDINS\integrations\Office\trunk\Addins\Word\tests\MarkLogic_WordAddin_Test\MarkLogic_WordAddin_Test\obj\Debug\MarkLogic_WordAddin_Test.exe
+C:\cygwin\home\paven\SVNADDINS\integrations\Office\trunk\Addins\Word\tests\MarkLogic_WordAddin_Test\MarkLogic_WordAddin_Test\obj\Debug\MarkLogic_WordAddin_Test.pdb

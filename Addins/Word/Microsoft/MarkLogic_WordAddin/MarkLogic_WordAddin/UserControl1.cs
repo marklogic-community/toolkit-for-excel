@@ -47,7 +47,7 @@ namespace MarkLogic_WordAddin
         private bool debug = false;
         private bool debugMsg = false;
         private string color = "";
-        private string addinVersion = "1.2-1";
+        private string addinVersion = "1.2-1";  //automate update of this
         HtmlDocument htmlDoc;
         public Word.Document udoc;
       
@@ -697,13 +697,20 @@ namespace MarkLogic_WordAddin
             try
             {
                 Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
+
+                TextWriter tw = new StreamWriter(@"C:\Users\paven\AppData\Local\Temp\MYOPC.xml");
+                tw.WriteLine(opc_xml);
+                tw.Close();
+
+                //save file as test
+
                 doc.Application.Selection.InsertXML(opc_xml, ref missing);
             }
             catch (Exception e)
             {
                 string errorMsg = e.Message;
                 message = "error: " + errorMsg;
-                //MessageBox.Show("ERROR " + message);
+                MessageBox.Show("ERROR " + message);
             }
 
             return message;
@@ -1386,6 +1393,9 @@ namespace MarkLogic_WordAddin
             try
             {
                 Word.ContentControls ccs = Globals.ThisAddIn.Application.ActiveDocument.ContentControls;
+                //MessageBox.Show("CONTROL COUNT" + ccs.Count);
+                
+       
                 foreach (Word.ContentControl cc in ccs)
                 {
                     //MessageBox.Show("Control Tag:" + cc.Tag + " title: " + cc.Title + " id: "+cc.ID);
@@ -1394,14 +1404,173 @@ namespace MarkLogic_WordAddin
 
                 ids=ids.Remove(ids.Length-1);
                 message = ids;
+
+        /*        Word.StoryRanges ranges = Globals.ThisAddIn.Application.ActiveDocument.StoryRanges;
+                foreach (Word.Range range in ranges)
+                {
+                    try
+                    {
+                       // Word.ContentControls allControls = FindContentControls(range);
+                       // foreach (Word.ContentControl cc in allControls)
+                       // {
+                       //     MessageBox.Show(cc.Title + "|" + cc.Tag);
+                       // }
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("ERROR IS HERE" + e.Message);
+                    }
+                }
+
+                try
+                {
+                  //  MessageBox.Show("1 INLINESHAPE COUNT" + Globals.ThisAddIn.Application.ActiveDocument.InlineShapes.Count);
+                    foreach (Word.Shape shp in Globals.ThisAddIn.Application.ActiveDocument.InlineShapes)
+                    {
+                    //     MessageBox.Show("1 INLINESHAPE CC COUNTS" + shp.TextFrame.TextRange.ContentControls.Count);
+                       //  Word.ContentControls ccc = shp.TextFrame.TextRange.ContentControls;
+                       //  foreach (Word.ContentControl cc in ccc)
+                       //  {
+                      //       MessageBox.Show(cc.Title + "|" + cc.Tag);
+                       //  }
+
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("1 ERROR" + e.Message);
+                }
+
+                try
+                {
+                      //MessageBox.Show("2 SHAPE COUNT" + Globals.ThisAddIn.Application.ActiveDocument.Shapes.Count);
+                      foreach (Word.Shape shp in Globals.ThisAddIn.Application.ActiveDocument.Shapes)
+                      {
+                         try
+                         {
+
+                             //MessageBox.Show("SHAPE TYPE " + shp.Type + "  2 SHAPE CC COUNTS" + shp.TextFrame.TextRange.ContentControls.Count);
+                            // Word.ContentControls ccc = shp.TextFrame.TextRange.ContentControls;
+                            // foreach (Word.ContentControl cc in ccc)
+                            // {
+                              //   MessageBox.Show(cc.Title + "|" + cc.Tag);
+                           //  }
+                         }
+                         catch (Exception e)
+                         {
+                             MessageBox.Show("not able to have text " + e.Message);
+                         }
+
+
+                      }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("2 ERROR" + e.Message);
+                }
+
+                try
+                {
+                    //MessageBox.Show("SHAPE COUNT" + Globals.ThisAddIn.Application.ActiveDocument.CommandBars.Count );
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("3 ERROR" + e.Message);
+                }
+
+                try
+                {
+                    //MessageBox.Show("SHAPE COUNT" + Globals.ThisAddIn.Application.ActiveDocument.Fields.Count );
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("4 ERROR" + e.Message);
+                }
+
+                try
+                {
+                    //MessageBox.Show("SHAPE COUNT" + Globals.ThisAddIn.Application.ActiveDocument.FormFields.Count );
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("5 ERROR" + e.Message);
+                }
+                try
+                {
+                    //MessageBox.Show("SHAPE COUNT" + Globals.ThisAddIn.Application.ActiveDocument.Tables.Count );
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("6 ERROR" + e.Message);
+                }
+
+                
+
+           
+               // foreach (Word.Shape shp in Globals.ThisAddIn.Application.ActiveDocument.InlineShapes)
+               // {
+               //     MessageBox.Show("SHAPE COUNTS" + shp.TextFrame.TextRange.ContentControls.Count);
+               //     Word.ContentControls ccc = shp.TextFrame.TextRange.ContentControls;
+               //     foreach (Word.ContentControl cc in ccc)
+               //     {
+               //         MessageBox.Show(cc.Title + "|" + cc.Tag);
+               //     }
+
+
+                //}
+         * */
             }
             catch (Exception e)
             {
                 string errorMsg = e.Message;
                 message = "error: " + errorMsg;
+                //MessageBox.Show("MESSAGE"+message);
             }
 
             return message;
+        }
+
+        private static Word.ContentControls FindContentControls(Word.Range rangeStory)
+        {
+            Word.ContentControls contentControls = null;
+           // Word.StoryRanges other = range;
+           // foreach (Word.Range range in other)
+           // {
+                if (rangeStory.StoryType != Word.WdStoryType.wdTextFrameStory)
+                {
+                    //MessageBox.Show("NOT A TEXT FRAME");
+
+                  
+                }
+
+                //Word.Range rangeStory = range;
+                //do
+               // {
+                 //   contentControls = null;
+                    try
+                    {
+                        if (/*rangeStory != null && rangeStory.ShapeRange != null &&*/ rangeStory.ContentControls.Count > 0)
+                        {
+                           contentControls = rangeStory.ContentControls;
+                         
+                        }
+                    }
+                    catch (COMException) { }
+                    if (contentControls != null)
+                    {
+                        //MessageBox.Show("COUNT IN FUNC" + contentControls.Count);
+                        return contentControls;
+                    }
+
+                   
+                   // rangeStory = rangeStory.NextStoryRange;
+
+                //}
+                //while (rangeStory != null);
+           // }
+
+            return contentControls;
         }
 
         public string getContentControlIdsByTag(string tag)
