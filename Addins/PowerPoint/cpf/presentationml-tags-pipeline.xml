@@ -18,7 +18,7 @@ xsi:schemaLocation="http://marklogic.com/cpf/pipelines pipelines.xsd"
        <annotation>
    	  Update properties for slide.xml and presentation.xml of PowerPoint package only
        </annotation>
-       <state>http://marklogic.com/states/initial</state>
+       <state>http://marklogic.com/states/slidemapped</state>
        <on-success>http://marklogic.com/states/tagged</on-success>
        <on-failure>http://marklogic.com/states/error</on-failure>
        <priority>9300</priority>
