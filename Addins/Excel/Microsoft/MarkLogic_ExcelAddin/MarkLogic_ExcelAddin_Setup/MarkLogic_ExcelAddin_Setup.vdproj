@@ -1164,7 +1164,7 @@
                                     "Condition" = "8:"
                                     "Transitive" = "11:FALSE"
                                     "ValueTypes" = "3:1"
-                                    "Value" = "8:http://localhost:8023/xlAuthor"
+                                    "Value" = "8:http://www.marklogic.com"
                                     }
                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_77D440727D684185AD2E4C5A319DEA3A"
                                     {
@@ -1172,7 +1172,7 @@
                                     "Condition" = "8:"
                                     "Transitive" = "11:FALSE"
                                     "ValueTypes" = "3:1"
-                                    "Value" = "8:MarkLogic XLerator"
+                                    "Value" = "8:My Task Pane"
                                     }
                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_93F2BD70BABF4AE7B717B275E3F788A7"
                                     {
