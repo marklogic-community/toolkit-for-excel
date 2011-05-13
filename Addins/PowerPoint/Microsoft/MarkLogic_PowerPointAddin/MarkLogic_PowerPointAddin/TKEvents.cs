@@ -139,7 +139,7 @@ namespace MarkLogic_PowerPointAddin
 
                             System.Runtime.InteropServices.Marshal.FinalReleaseComObject(slides);
                             System.Runtime.InteropServices.Marshal.FinalReleaseComObject(p);
-
+                           
                             GC.Collect();
                             GC.WaitForPendingFinalizers();
                             GC.Collect();
@@ -163,8 +163,13 @@ namespace MarkLogic_PowerPointAddin
                     catch (Exception e)
                     {
                         string donothing_removewarning = e.Message;
+                        MessageBox.Show("MESSAGE" + donothing_removewarning);
                         System.Runtime.InteropServices.Marshal.FinalReleaseComObject(ppta);
                         ppta = null;
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
                     }
                     finally
                     {
