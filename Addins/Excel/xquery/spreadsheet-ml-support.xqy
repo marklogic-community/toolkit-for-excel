@@ -1,5 +1,5 @@
 xquery version "1.0-ml";
-(: Copyright 2009-2010 Mark Logic Corporation
+(: Copyright 2009-2011 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -94,7 +94,8 @@ declare function excel:cell-string-value(
     for $c in $cells
     return
       if ( $c/@t="s" ) then  (: using fn:string(.) instead of /text() to account for empty string :)
-            $shared-strings/ms:si[fn:data($c/ms:v)+1]/ms:t/fn:string(.)
+                (:$shared-strings/ms:si[fn:data($c/ms:v)+1]/ms:t/fn:string(.):)
+   fn:string-join($shared-strings/ms:si[fn:data($c/ms:v)+1]//ms:t/fn:string(.), "") 
       else
 	    $c/ms:v/text()
 };
@@ -128,35 +129,34 @@ declare function excel:xlsx-manifest(
 
 (: ====MAP SHARED================================================================================================= :)
 (: Currently only maps SharedStrings, update for formulas? (within ws) or separate function ? :)
-
 declare function excel:map-shared-strings(
-  $sheet          as element(ms:worksheet), 
-  $shared-strings as element(ms:sst)  
+  $sheet as element(ms:worksheet),
+  $shared-strings as element(ms:sst)
 )as element(ms:worksheet)
 {
     (: for $sheet in $sheets ?, check function mapping :)
-    let $shared := fn:data($shared-strings//ms:t)
+    let $shared := $shared-strings/ms:si/fn:string-join(.//ms:t/fn:string(.), "")
     let $rows := for $row at $d in $sheet//ms:row
-                 let $cells  :=  for $cell at $e in $row/ms:c
-                                 let $c := if(fn:data($cell/@t) eq "s") 
-                                           then 
-                                             element ms:c { $cell/@* except $cell/@t, attribute t{"inlineStr"}, element ms:is { element ms:t { $shared[($cell/ms:v+1 cast as xs:integer)] } } }  
+                 let $cells := for $cell at $e in $row/ms:c
+                                 let $c := if(fn:data($cell/@t) eq "s")
+                                           then
+                                             element ms:c { $cell/@* except $cell/@t, attribute t{"inlineStr"}, element ms:is { element ms:t { $shared[($cell/ms:v+1 cast as xs:integer)] } } }
                                            else
                                              $cell
-                                                          
+                                                           
                                   return $c
-                     
+                      
                  return element ms:row{ $row/@*, $cells }
-                               
-    let $worksheet   :=  $sheet/* except ( $sheet/ms:sheetData, $sheet/ms:tableParts, $sheet/ms:pageMargins, $sheet/ms:pageSetup, $sheet/ms:drawing)
-    let $page-setup :=  $sheet/ms:pageSetup 
-    let $table-parts :=  $sheet/ms:tableParts
-    let $sheet-data  :=  $sheet/ms:sheetData
-    let $drawing := $sheet/ms:drawing
-    let $ws := element ms:worksheet {  $sheet/ms:worksheet/@*, $worksheet, element ms:sheetData{ $sheet-data/@*, $rows },  $page-setup ,$table-parts, $drawing  }
+                                
+    let $worksheet := $sheet/* except ( $sheet/ms:sheetData, $sheet/ms:tableParts, $sheet/ms:pageMargins, $sheet/ms:pageSetup)
+    let $page-setup := $sheet/ms:pageSetup
+    let $table-parts := $sheet/ms:tableParts
+    let $sheet-data := $sheet/ms:sheetData
+    let $ws := element ms:worksheet { $sheet/ms:worksheet/@*, $worksheet, element ms:sheetData{ $sheet-data/@*, $rows }, $page-setup ,$table-parts }
     return $ws
+ 
+}; 
 
-};
 
 (: ============================================================================================================== :)
 (: Simple Validation used by table generation :)
@@ -315,7 +315,7 @@ declare function excel:cell(
                         else attribute s{$date-id},
                         $formula, $value }
     else
-              <ms:c r={$a1-ref} t="inlineStr"> 
+              <ms:c r="{$a1-ref}" t="inlineStr"> 
                     <ms:is>
                         <ms:t>{$value}</ms:t>
                     </ms:is>
@@ -332,7 +332,7 @@ declare function excel:row(
                                                    order by excel:col-letter-to-idx(excel:a1-column($i/@r)) ascending
                                                    return $i
                                   return
-                                   <ms:row r={excel:a1-row($cells[1]/@r)}>{$ordcells}</ms:row>
+                                   <ms:row r="{excel:a1-row($cells[1]/@r)}">{$ordcells}</ms:row>
                    else 
                       excel:error("All cells are not in the same row.  Unable to create row.")
     return $return
@@ -470,7 +470,7 @@ declare function excel:content-types(
            for $i in 1 to $worksheet-count
            let $sheet-name := fn:concat("/xl/worksheets/sheet", $i )
            return
-	     <Override PartName={$sheet-name} ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+	     <Override PartName="{$sheet-name}" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
         }
        </Types>
     return $content-types
@@ -490,13 +490,13 @@ declare function excel:content-types(
            for $i in 1 to $worksheet-count
            let $sheet-name := fn:concat("/xl/worksheets/sheet", $i )
            return
-	     <Override PartName={$sheet-name} ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+	     <Override PartName="{$sheet-name}" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
         }
         {
             for $j in 1 to $tbl-count
             let $table-name :=  fn:concat("/xl/tables/table", $j,".xml" )
             return
-                <Override PartName={$table-name} ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml"/>
+                <Override PartName="{$table-name}" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml"/>
         }
        </Types>
     return $content-types
@@ -513,7 +513,7 @@ declare function excel:workbook(
           for $i at $d in 1 to $worksheet-count
           let $sheet-name := fn:concat("Sheet", $d )
           let $rId := fn:concat("rId",$d)
-          return <sheet name={$sheet-name} sheetId={$d} r:id={$rId} />
+          return <sheet name="{$sheet-name}" sheetId="{$d}" r:id="{$rId}" />
         }
         </sheets>
        </workbook>
@@ -539,7 +539,7 @@ declare function excel:workbook-rels(
           for $i at $d in 1 to $worksheet-count (: d redundant, STAMP OUT LET!! :)
           let $target := fn:concat("worksheets/sheet", $d,".xml")
           let $rId := fn:concat("rId",$d) 
-	  return <Relationship Id={$rId} Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target={$target}/>
+	  return <Relationship Id="{$rId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="{$target}"/>
         }
        </Relationships>
     return $workbookrels
@@ -558,7 +558,7 @@ declare function excel:worksheet-rels(
           let $target := fn:concat("../tables/table",($start-ind + $i - 1),".xml")
           let $id := fn:concat("rId",$i)
           return
-            <Relationship Id={$id} Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/table" Target={$target}/>
+            <Relationship Id="{$id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/table" Target="{$target}"/>
         }
        </Relationships> 
     return $worksheetrels
@@ -600,17 +600,17 @@ declare function excel:table(
 
     let $column-count := fn:count($column-names)
     let $table :=
-      <table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id={$id} name={$disp-name} displayName={$disp-name} ref="{$tablerange}"  totalsRowShown="0" >
+      <table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id="{$id}" name="{$disp-name}" displayName="{$disp-name}" ref="{$tablerange}"  totalsRowShown="0" >
          {
              if(fn:empty($auto-filter) or $auto-filter) then
              <autoFilter ref="{$tablerange}"/>
              else 
               () 
          }
-             <tableColumns count={$column-count}> 
+             <tableColumns count="{$column-count}"> 
          {
                for $i at $d in $column-names
-               return <tableColumn id={$d} name={$i}/>
+               return <tableColumn id="{$d}" name="{$i}"/>
          }
              </tableColumns>
          {
@@ -658,12 +658,12 @@ declare function excel:worksheet(
                       </sheetData>
                       {
                         if(fn:not(fn:empty($tbl-count)) and $tbl-count  gt 0) then
-                          <tableParts count={$tbl-count}>
+                          <tableParts count="{$tbl-count}">
                            {
                             for $i in 1 to $tbl-count
                             let $id := fn:concat("rId",$i)
                             return 
-                                <tablePart r:id={$id} />
+                                <tablePart r:id="{$id}" />
                            }
                           </tableParts>
                         else () 
