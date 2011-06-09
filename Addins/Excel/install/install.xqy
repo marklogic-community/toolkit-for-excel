@@ -5,7 +5,7 @@ import module namespace dom = "http://marklogic.com/cpf/domains"
 		  at "/MarkLogic/cpf/domains.xqy";
 import module namespace p = "http://marklogic.com/cpf/pipelines" at "/MarkLogic/cpf/pipelines.xqy";
 
-(: Source and target directories for spreadsheet-ml-support.xqy :)
+(: Source directory for spreadsheet-ml-support.xqy :)
 declare variable $config:SUPPORT-SRC-PATH := 
           "C:\Users\paven\Desktop\Excel\xquery\";
 
