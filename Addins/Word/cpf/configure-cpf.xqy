@@ -6,32 +6,59 @@ import module namespace dom = "http://marklogic.com/cpf/domains"
 		  at "/MarkLogic/cpf/domains.xqy";
 import module namespace p = "http://marklogic.com/cpf/pipelines" at "/MarkLogic/cpf/pipelines.xqy";
 
-declare variable $config:Support-Src-Path := 
-          "C:\Users\paven\Desktop\installer\word\xquery\";
-declare variable $config:Support-Dest-Path := 
-          "C:\Program Files\MarkLogic\Modules\MarkLogic\openxml\";
+(: Source and target directories for word-processing-ml-support.xqy :)
+declare variable $config:SUPPORT-SRC-PATH := 
+          "C:\Users\paven\Desktop\Word\xquery\";
 
-declare variable $config:Triggers-Database := "TK-Triggers";
+(: Support .xqy files will be copied from $config:Support-Src-Path
+   and placed under $config:Server-Root/Modules/MarkLogic/openxml/".
+   If you have a non-standard configuration of MarkLogic Server,  
+   update $config:Server-Root accordingly. :)
+declare variable $config:SERVER-ROOT:= 
 
-declare variable $config:Domain-Name := "OpenXML";
-declare variable $config:Domain-Description := "Handling incoming Open XML documents";
-declare variable $config:Domain-Scope := "directory";
-declare variable $config:Domain-URI := "/";
-declare variable $config:Domain-Depth := "infinity";
-declare variable $config:Context-Database := "Modules";
-declare variable $config:Context-Root :=     "/";
-declare variable $config:Restart-User := "admin";
+                  let $platform := xdmp:platform()
+                  return if($platform eq "winnt") then
+                               "C:/Program Files/MarkLogic/"
+                         else if($platform eq "linux") then
+                               "/opt/MarkLogic/"
+                         else if($platform eq "macosx") then
+                               "~/Library/MarkLogic/"
+                         else if($platform eq "solaris") then
+                               "/opt/MARKlogic/"
+                         else ();
+
+(: The CPF Restart User. The default below assumes a user named 'admin' 
+   having admin priveleges.  Update for your environment accordingly.
+
+   Also, this is fine for development
+   but you'll want to reconsider your restart user when deploying your 
+   application to a Production environment.:)   
+declare variable $config:RESTART-USER := "admin";
+
+declare variable $config:TRIGGERS-DB := "TK-Triggers";
+
+(:  If you already have CPF installed with a Domain configured for the same $config:Domain-URI
+    you'll end up with 2 domains with different names, but for the same URI. 
+    Don't cross the streams!  Rename $Domain-Name accordingly. :)
+declare variable $config:DOMAIN-NAME := "OpenXML";
+declare variable $config:DOMAIN-DESCRIPTION := "Handling incoming Open XML documents";
+declare variable $config:DOMAIN-SCOPE := "directory";
+declare variable $config:DOMAIN-URI := "/";
+declare variable $config:DOMAIN-DEPTH := "infinity";
+declare variable $config:CONTEXT-DB := "Modules";
+declare variable $config:CONTEXT-ROOT :=     "/";
 
 
 declare function config:install-xqy-support()
 {
 try{
   let $file := "word-processing-ml-support.xqy"
-  let $src  := fn:concat($config:Support-Src-Path, $file)
-  let $dest := fn:concat($config:Support-Dest-Path, $file)
+  let $src  := fn:concat($config:SUPPORT-SRC-PATH, $file)
+  let $openxml-path := fn:concat($config:SERVER-ROOT,"Modules/MarkLogic/openxml/")
+  let $dest := fn:concat($openxml-path, $file)
   let $doc  := xdmp:document-get($src)
   return (xdmp:save($dest, $doc),
-         fn:concat("Step 1: install-xqy-support(); ",$file," copied to ",$config:Support-Dest-Path))
+         fn:concat("Step 1: install-xqy-support(); ",$file," copied to ",$openxml-path))
          
 }catch($e){
   $e
@@ -48,7 +75,6 @@ xdmp:eval("
 		  at '/MarkLogic/cpf/domains.xqy';
            import module namespace p = 'http://marklogic.com/cpf/pipelines' at '/MarkLogic/cpf/pipelines.xqy';
            declare variable $config:d-name as xs:string external;
-           declare variable $config:triggersdb as xs:string external;
            declare variable $config:d-description as xs:string external;
            declare variable $config:d-scope as xs:string external;
            declare variable $config:d-URI as xs:string external;
@@ -63,17 +89,16 @@ xdmp:eval("
 		                     $config:c-root ),
               (), 
               () )", 
-              ( (xs:QName("config:d-name"), $config:Domain-Name),
-                (xs:QName("config:d-description"), $config:Domain-Description),
-                (xs:QName("config:d-scope"), $config:Domain-Scope),
-                (xs:QName("config:d-URI"), $config:Domain-URI),
-                (xs:QName("config:d-depth"), $config:Domain-Depth),
-                (xs:QName("config:d-description"), $config:Domain-Description),
-                (xs:QName("config:c-db"), $config:Context-Database),
-                (xs:QName("config:c-root"), $config:Context-Root)
+              ( (xs:QName("config:d-name"), $config:DOMAIN-NAME),
+                (xs:QName("config:d-description"), $config:DOMAIN-DESCRIPTION),
+                (xs:QName("config:d-scope"), $config:DOMAIN-SCOPE),
+                (xs:QName("config:d-URI"), $config:DOMAIN-URI),
+                (xs:QName("config:d-depth"), $config:DOMAIN-DEPTH),
+                (xs:QName("config:c-db"), $config:CONTEXT-DB),
+                (xs:QName("config:c-root"), $config:CONTEXT-ROOT)
                ),
               <options xmlns="xdmp:eval">
-		    <database>{xdmp:database($config:Triggers-Database)}</database>
+		    <database>{xdmp:database($config:TRIGGERS-DB)}</database>
 	      </options>),
               "Step 2: create-domain(); Domain Created"
 }catch($e){
@@ -99,13 +124,13 @@ xdmp:eval("declare namespace config='http://marklogic.com/toolkit/word/cpf-confi
               dom:evaluation-context( xdmp:database($config:c-db), '/' ),
               fn:data(dom:get($config:d-name)/dom:domain-id), 
               ())",
-              ((xs:QName("config:r-user"),$config:Restart-User),
-               (xs:QName("config:c-db"), $config:Context-Database),
-               (xs:QName("config:d-name"), $config:Domain-Name)
+              ((xs:QName("config:r-user"),$config:RESTART-USER),
+               (xs:QName("config:c-db"), $config:CONTEXT-DB),
+               (xs:QName("config:d-name"), $config:DOMAIN-NAME)
                
                ),
               <options xmlns="xdmp:eval">
-		    <database>{xdmp:database($config:Triggers-Database)}</database>
+		    <database>{xdmp:database($config:TRIGGERS-DB)}</database>
               </options>),
          "Step 3: create-configuration(); Configuration Created\n"
 }catch($e){
@@ -130,7 +155,7 @@ xdmp:eval("declare namespace config='http://marklogic.com/toolkit/word/cpf-confi
                p:insert(xdmp:document-get('Installer/openxml/wordprocessingml-pipeline.xml')))",
                (),
                <options xmlns="xdmp:eval">
-		    <database>{xdmp:database($config:Triggers-Database)}</database>
+		    <database>{xdmp:database($config:TRIGGERS-DB)}</database>
                </options>),
  "Step 4: load-pipelines(); Status Change Handling, Open XML Extract, and WordprocessinML Process pipelines loaded"
 }catch($e){
@@ -153,9 +178,9 @@ xdmp:eval("declare namespace config='http://marklogic.com/toolkit/word/cpf-confi
 		  p:get('Office OpenXML Extract')/p:pipeline-id ),
                dom:add-pipeline( $config:d-name, 
 		  p:get('WordprocessingML Process')/p:pipeline-id ))",
-               ((xs:QName("config:d-name"), $config:Domain-Name)),
+               ((xs:QName("config:d-name"), $config:DOMAIN-NAME)),
                <options xmlns="xdmp:eval">
-		    <database>{xdmp:database($config:Triggers-Database)}</database>
+		    <database>{xdmp:database($config:TRIGGERS-DB)}</database>
                </options>),
  "Step 5: attach-pipelines(); Pipelines attached to domain"
 }catch($e){
