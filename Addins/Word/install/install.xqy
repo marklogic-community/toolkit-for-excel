@@ -10,10 +10,10 @@ import module namespace p = "http://marklogic.com/cpf/pipelines" at "/MarkLogic/
 declare variable $config:SUPPORT-SRC-PATH := 
           "C:\Users\paven\Desktop\Word\xquery\";
 
-(: Support .xqy files will be copied from $config:Support-Src-Path
-   and placed under $config:Server-Root/Modules/MarkLogic/openxml/".
+(: Support .xqy files will be copied from $config:SUPPORT-SRC-PATH
+   and placed under $config:SERVER-ROOT/Modules/MarkLogic/openxml/".
    If you have a non-standard configuration of MarkLogic Server,  
-   update $config:Server-Root accordingly. :)
+   update $config:SERVER-ROOT accordingly. :)
 declare variable $config:SERVER-ROOT:= 
 
                   let $platform := xdmp:platform()
@@ -35,11 +35,11 @@ declare variable $config:SERVER-ROOT:=
    application to a Production environment.:)   
 declare variable $config:RESTART-USER := "admin";
 
-declare variable $config:TRIGGERS-DB := "TK-Triggers";
+declare variable $config:TRIGGERS-DB := "Triggers";
 
-(:  If you already have CPF installed with a Domain configured for the same $config:Domain-URI
+(:  If you already have CPF installed with a Domain configured for the same $config:DOMAIN-URI
     you'll end up with 2 domains with different names, but for the same URI. 
-    Don't cross the streams!  Rename $Domain-Name accordingly. :)
+    Don't cross the streams!  Rename $DOMAIN-NAME accordingly. :)
 declare variable $config:DOMAIN-NAME := "OpenXML";
 declare variable $config:DOMAIN-DESCRIPTION := "Handling incoming Open XML documents";
 declare variable $config:DOMAIN-SCOPE := "directory";
