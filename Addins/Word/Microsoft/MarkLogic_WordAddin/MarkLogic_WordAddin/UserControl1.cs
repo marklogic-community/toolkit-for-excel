@@ -698,9 +698,11 @@ namespace MarkLogic_WordAddin
             {
                 Word.Document doc = Globals.ThisAddIn.Application.ActiveDocument;
 
-                TextWriter tw = new StreamWriter(@"C:\Users\paven\AppData\Local\Temp\MYOPC.xml");
-                tw.WriteLine(opc_xml);
-                tw.Close();
+                //save file as test
+                /* TextWriter tw = new StreamWriter(@"C:\Users\paven\AppData\Local\Temp\MYOPC.xml");
+                   tw.WriteLine(opc_xml);
+                   tw.Close();
+                **/
 
                 //save file as test
 
@@ -2586,6 +2588,11 @@ namespace MarkLogic_WordAddin
             }
 
             return message;
+        }
+
+        private void webBrowser1_DocumentCompleted_1(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+
         }
 
         /* Review, added these 3 for Jay.
