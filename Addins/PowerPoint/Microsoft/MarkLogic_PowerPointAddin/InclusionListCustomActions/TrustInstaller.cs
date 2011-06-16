@@ -22,7 +22,8 @@ namespace InclusionListCustomActions
     public class TrustInstaller
         : Installer
     {
-        const string RSA_PublicKey = "<RSAKeyValue><Modulus>93MD+siaeGISDMcDzEV9Xgw+7Iqj8OigoSyd/tG82Q41LLkBEbzEUtXKnn/W91FECr70VPHg1eZOiqk63hI2CBVN4r6XSfuH8joxsjWgP5vQ15f5g6B231b8tLIlQPjsGDY5wp43jGmeYidDUvha3Ks0feibcnZd9VGBviPBA9c=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
+        const string RSA_PublicKey = //"<RSAKeyValue><Modulus>93MD+siaeGISDMcDzEV9Xgw+7Iqj8OigoSyd/tG82Q41LLkBEbzEUtXKnn/W91FECr70VPHg1eZOiqk63hI2CBVN4r6XSfuH8joxsjWgP5vQ15f5g6B231b8tLIlQPjsGDY5wp43jGmeYidDUvha3Ks0feibcnZd9VGBviPBA9c=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
+                                      "<RSAKeyValue><Modulus>7gHIKmLiyQkhW07itEmo6pqtripn5LRV4JH816ozS6PVm+BDkM2Bef9Mro3dG2utAvMzN/OW/BImbxdFk7vgyirulYg6OKV5alZg6EQfTRPLCJ/6yDlDskKnBEQdZDtkIHI18P/+HdBkumEYWzSuBlftPXHykh9VafHS0fye7rs=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
 
         public override void Install(IDictionary stateSaver)
         {
