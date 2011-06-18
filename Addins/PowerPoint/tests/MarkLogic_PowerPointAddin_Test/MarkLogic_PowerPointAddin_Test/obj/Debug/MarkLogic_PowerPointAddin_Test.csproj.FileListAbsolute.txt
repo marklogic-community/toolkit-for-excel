@@ -4,3 +4,9 @@ C:\cygwin\home\paven\MLOS\Office2007\Addins\PowerPoint\tests\MarkLogic_PowerPoin
 C:\cygwin\home\paven\MLOS\Office2007\Addins\PowerPoint\tests\MarkLogic_PowerPointAddin_Test\MarkLogic_PowerPointAddin_Test\bin\Debug\MarkLogic_PowerPointAddin_Test.pdb
 C:\cygwin\home\paven\MLOS\Office2007\Addins\PowerPoint\tests\MarkLogic_PowerPointAddin_Test\MarkLogic_PowerPointAddin_Test\obj\Debug\MarkLogic_PowerPointAddin_Test.exe
 C:\cygwin\home\paven\MLOS\Office2007\Addins\PowerPoint\tests\MarkLogic_PowerPointAddin_Test\MarkLogic_PowerPointAddin_Test\obj\Debug\MarkLogic_PowerPointAddin_Test.pdb
+C:\Users\sreddy\SVN_HOME\b4_2\qa\testdata\toolkits\Ppt-Addin\MarkLogic_PowerPointAddin_Test\MarkLogic_PowerPointAddin_Test\obj\Debug\MarkLogic_PowerPointAddin_Test.csproj.ResolveComReference.cache
+C:\Users\sreddy\SVN_HOME\b4_2\qa\testdata\toolkits\Ppt-Addin\MarkLogic_PowerPointAddin_Test\MarkLogic_PowerPointAddin_Test\obj\Debug\MarkLogic_PowerPointAddin_Test.exe
+C:\Users\sreddy\SVN_HOME\b4_2\qa\testdata\toolkits\Ppt-Addin\MarkLogic_PowerPointAddin_Test\MarkLogic_PowerPointAddin_Test\obj\Debug\MarkLogic_PowerPointAddin_Test.pdb
+C:\Users\sreddy\SVN_HOME\b4_2\qa\testdata\toolkits\Ppt-Addin\MarkLogic_PowerPointAddin_Test\MarkLogic_PowerPointAddin_Test\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\sreddy\SVN_HOME\b4_2\qa\testdata\toolkits\Ppt-Addin\MarkLogic_PowerPointAddin_Test\MarkLogic_PowerPointAddin_Test\bin\Debug\MarkLogic_PowerPointAddin_Test.exe
+C:\Users\sreddy\SVN_HOME\b4_2\qa\testdata\toolkits\Ppt-Addin\MarkLogic_PowerPointAddin_Test\MarkLogic_PowerPointAddin_Test\bin\Debug\MarkLogic_PowerPointAddin_Test.pdb
