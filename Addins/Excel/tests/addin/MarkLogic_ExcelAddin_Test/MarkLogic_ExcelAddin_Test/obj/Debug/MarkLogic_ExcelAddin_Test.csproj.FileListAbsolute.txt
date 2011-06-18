@@ -4,3 +4,9 @@ C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\tests\addin\MarkLogic_ExcelAdd
 C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\tests\addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\bin\Debug\MarkLogic_ExcelAddin_Test.pdb
 C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\tests\addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\obj\Debug\MarkLogic_ExcelAddin_Test.exe
 C:\cygwin\home\paven\MLOS\Office2007\Addins\Excel\tests\addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\obj\Debug\MarkLogic_ExcelAddin_Test.pdb
+C:\Users\sreddy\SVN_HOME\b4_2\qa\testdata\toolkits\Excel-Addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\bin\Debug\MarkLogic_ExcelAddin_Test.exe
+C:\Users\sreddy\SVN_HOME\b4_2\qa\testdata\toolkits\Excel-Addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\bin\Debug\MarkLogic_ExcelAddin_Test.pdb
+C:\Users\sreddy\SVN_HOME\b4_2\qa\testdata\toolkits\Excel-Addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\sreddy\SVN_HOME\b4_2\qa\testdata\toolkits\Excel-Addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\obj\Debug\MarkLogic_ExcelAddin_Test.csproj.ResolveComReference.cache
+C:\Users\sreddy\SVN_HOME\b4_2\qa\testdata\toolkits\Excel-Addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\obj\Debug\MarkLogic_ExcelAddin_Test.exe
+C:\Users\sreddy\SVN_HOME\b4_2\qa\testdata\toolkits\Excel-Addin\MarkLogic_ExcelAddin_Test\MarkLogic_ExcelAddin_Test\obj\Debug\MarkLogic_ExcelAddin_Test.pdb

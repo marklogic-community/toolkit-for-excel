@@ -37,9 +37,10 @@ namespace MarkLogic_ExcelAddin_Test
              
                 object install = true;
                 object missing = System.Reflection.Missing.Value;
-                
+                object file=args[0];
                 //For Save As
-                object file = @"c:\unitTestAddin\outputs\test.xlsx";
+                //object file = @"c:\unitTestAddin\outputs\test.xlsx";             
+
                 Excel.Application excelApp;
                 Excel.Workbook wb;
                 
@@ -48,9 +49,10 @@ namespace MarkLogic_ExcelAddin_Test
                 wb = excelApp.Workbooks.Add(Excel.XlWBATemplate.xlWBATWorksheet);
                 Excel.Worksheet ws = (Excel.Worksheet)wb.ActiveSheet;
                 
+                
                 wb.SaveAs(file, missing, missing, missing, missing, missing, Excel.XlSaveAsAccessMode.xlNoChange, missing, missing, missing, missing, missing);
 
-                System.Threading.Thread.Sleep(20000);
+                System.Threading.Thread.Sleep(10000);
 
                 wb.Save();
                 excelApp.Workbooks.Close();
