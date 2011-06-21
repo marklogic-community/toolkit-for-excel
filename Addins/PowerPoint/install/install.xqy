@@ -10,12 +10,12 @@ import module namespace p = "http://marklogic.com/cpf/pipelines"
 (: Source directory for presentation-ml-support.xqy,
                         presentation-ml-support-content-types.xqy :)
 declare variable $config:SUPPORT-SRC-PATH := 
-          "C:\Users\paven\Desktop\PowerPoint\xquery\";
+          "C:/Users/user/Desktop/PowerPoint/xquery/";
 
 (: Source directory for map-slide-action.xqy, 
                         pptx-set-tags-action :)
 declare variable $config:CPF-SRC-PATH :=
-          "C:\Users\paven\Desktop\PowerPoint\cpf\";
+          "C:/Users/user/Desktop/PowerPoint/cpf/";
 
 (: Support .xqy files will be copied from $config:SUPPORT-SRC-PATH
    and placed under $config:SERVER-ROOT/Modules/MarkLogic/openxml/".
@@ -49,7 +49,7 @@ declare variable $config:SERVER-ROOT:=
    application to a Production environment.:)   
 declare variable $config:RESTART-USER := "admin";
 
-declare variable $config:TRIGGERS-DB := "TK-Triggers";
+declare variable $config:TRIGGERS-DB := "Triggers";
 
 (:  If you already have CPF installed with a Domain configured 
     for the same $config:DOMAIN-URI you'll end up with 2 domains 
