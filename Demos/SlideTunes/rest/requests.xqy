@@ -34,7 +34,7 @@ declare variable $requests:options as element(rest:options)
     <rest:http method="GET"/>
     <rest:param name="format" match="(xml|json)">$1</rest:param>
   </rest:request>
-  <rest:request uri="^(.+presentations.+(ppt|pptx))$" endpoint="/fetch-presentation.xqy">
+  <rest:request uri="^(.+presentations.+(ppt|pptx))$" endpoint="/presentation-fetch.xqy">
     <rest:uri-param name="deck">$1</rest:uri-param>
     <rest:http method="GET"/>
   </rest:request>
@@ -51,15 +51,15 @@ declare variable $requests:options as element(rest:options)
     <rest:param name="format" match="(xml|json)">$1</rest:param>
     <rest:param name="start" as="integer">$1</rest:param>
   </rest:request>
-  <rest:request uri="^(.+playlists.+(xml|json))$" endpoint="/fetch-playlist.xqy">
+  <rest:request uri="^(.+playlists.+(xml|json))$" endpoint="/playlist-fetch.xqy">
     <rest:uri-param name="deck">$1</rest:uri-param>
     <rest:http method="GET"/>
   </rest:request>
-  <rest:request uri="^(.+playlists.+(xml|json))$" endpoint="/put-playlist.xqy">
+  <rest:request uri="^(.+playlists.+(xml|json))$" endpoint="/playlist-put.xqy">
     <rest:uri-param name="deck">$1</rest:uri-param>
     <rest:http method="PUT"/>
   </rest:request>
- <rest:request uri="^(.+playlists.+(xml|json))$" endpoint="/delete-playlist.xqy">
+ <rest:request uri="^(.+playlists.+(xml|json))$" endpoint="/playlist-delete.xqy">
     <rest:uri-param name="deck">$1</rest:uri-param>
     <rest:http method="DELETE"/>
   </rest:request>
