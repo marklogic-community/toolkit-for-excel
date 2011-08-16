@@ -16,14 +16,15 @@ return (
 	
     <script src="js/jquery-1.6.2.min.js?rand={xdmp:random()}" type="text/javascript"></script>
     <script src="js/jquery-ui-1.8.15.custom.min.js?rand={xdmp:random()}" type="text/javascript"></script>
-	<script src="js/jquery.hoverscroll.js?rand={xdmp:random()}" type="text/javascript" ></script>
+    <script src="js/jquery.hoverscroll.js?rand={xdmp:random()}" type="text/javascript" ></script>
     <script src="js/slidetunes.js?rand={xdmp:random()}" type="text/javascript"></script>
+    <script src="js/MarkLogicPowerPointAddin.js?rand={xdmp:random()}">//</script>
 </head>
 <body>
 	<div id="deck-viewer">
 		<div id="deck-viewer-arrow"></div>
 		<div id="deck-viewer-contents">
-			<div id="deck-viewer-header">Deck Name</div>
+			<div id="deck-viewer-header">Deck Preview</div>
 			<div id="deck-viewer-slides">
 				<div id="deck-viewer-slide-previous"></div>
 				<div id="deck-viewer-list">				
@@ -37,7 +38,7 @@ return (
 						<li><img src="images/slide-placeholder-lg.png" title="" /></li>
 					</ul>
 				</div>
-				<div id="deck-viewer-slide-next"></div>
+			<div id="deck-viewer-slide-next"></div>
 			</div>
 		</div>
 
@@ -52,6 +53,11 @@ return (
 	</div>
 	<div id="wrapper">
 		<div id="container">
+                        <div class="vmenu">
+                              <div class="first_li"><span>Open in Playlist</span></div>
+	                      <div class="second_li"><span>Open in Workspace</span></div>
+                        </div>
+
 			<div id="deck-container">				
 				<div id="deck-lists">
 					<div class="library">Library</div>	
@@ -71,6 +77,7 @@ return (
 						<div class="name">My Decks</div>
 					</div>
 					<ul id="deck-mydecks">
+<!--
 						<li>
                                                       <div id="test">
 							<div class="deck-thumb"><img src="images/slide-placeholder-sm.png" /></div>
@@ -101,14 +108,16 @@ return (
 								<p class="date">mm/dd/yyyy</p>		
 							</div>								
 						</li>
+-->
 					</ul>
 					
 					
-					<div id="header-sales-presentations" class="deck-title">
+					<div id="header-myplaylists" class="deck-title">
 						<div class="library-deck-btn"></div>
 						<div class="name">My Playlists</div>
 					</div>
-					<ul id="deck-sales-presentations">
+					<ul id="deck-myplaylists">
+<!--
 						<li>
 							<div class="deck-thumb"><img src="images/slide-placeholder-sm.png" /></div>
 							<div class="deck-details">
@@ -137,7 +146,10 @@ return (
 								<p class="date">mm/dd/yyyy</p>		
 							</div>								
 						</li>
-					</ul>					
+
+-->
+					</ul>
+
 				</div>					
 				<div id="deck-view">
 					<div id="deck-header">

@@ -386,3 +386,24 @@ img {
 	border:1px solid #000;	
 }
 
+.vmenu{
+	 border:1px solid #aaa;
+	 position:absolute;
+	 background:#fff;	
+	 display:none;
+	 font-size:0.75em;
+}
+.vmenu .first_li span{
+	width:100px;
+	display:block;
+	padding:5px 10px;
+	cursor:pointer;
+}
+
+.vmenu .second_li span{
+	width:100px;
+	display:block;
+	padding:5px 10px;
+	cursor:pointer;
+}
+    
