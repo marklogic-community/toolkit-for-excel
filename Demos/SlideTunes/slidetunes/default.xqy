@@ -172,7 +172,7 @@ return (
 							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
 							<li><img src="images/slide-placeholder-med.png" title="" /></li>
 							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
-							<li><img src="images/slide-placeholder-med.png" title="" /></li>
+						<!--	<li><img src="images/slide-placeholder-med.png" title="" /></li>
 							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
 							<li><img src="images/slide-placeholder-med.png" title="" /></li>
 							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
@@ -199,12 +199,12 @@ return (
 							<li><img src="images/slide-placeholder-med.png" title="" /></li>
 							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
 							<li><img src="images/slide-placeholder-med.png" title="" /></li>
-							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
+							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>-->
 						</ul>
 					</div>
 					<div id="deck-slide-view"></div>
 					<div id="deck-search-results">
-						<ul class="connect">
+						 <ul class="connect">
 							<li><img src="images/slide-placeholder-lg.png" title="" /></li>
 							<li><img src="images/slide-placeholder-red-lg.png" title="" /></li>
 							<li><img src="images/slide-placeholder-lg.png" title="" /></li>

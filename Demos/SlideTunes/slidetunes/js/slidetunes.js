@@ -8,8 +8,8 @@ var SEARCHURI = RESTSERVER +"/office";
 var PRESOURI = RESTSERVER+"/office/presentations";
 var PLAYLISTURI = RESTSERVER+"/playlists";
 
-var GETLIST = APPSERVER + "/shuffle2/get.xqy";
-var GETSLDS = APPSERVER + "/shuffle2/get-slides.xqy";
+var GETLIST = APPSERVER + "/slidetunes/xquery/get.xqy";
+var GETSLDS = APPSERVER + "/slidetunes/xquery/get-slides.xqy";
 
 $(document).ready(function() {
 
@@ -17,10 +17,10 @@ $(document).ready(function() {
                     return false;
                 });
 	 
-		$('#deck-playlist ul').hoverscroll({
+	/*	$('#deck-playlist ul').hoverscroll({
 			width:		"100%",        // Width of the list
 			height:		47         // Height of the list
-		});
+		});*/
 		
 		// search results are connected... meaning I can drag TO the playlist
 		$( "#deck-search-results ul" ).sortable({
@@ -311,15 +311,72 @@ setContextMenu = function(rId)
 presoAction = function(presentation){
     var serveruri = PRESOURI;
     var slideuri = presentation + "/slides";
-    alert("PRESOACTION: "+slideuri);
-    //simpleAjaxFetchImages(serveruri, slideuri, "workspace");
+    //alert("PRESOACTION: serveruri:"+serveruri+" slideuri"+slideuri);
+    simpleAjaxFetchImages(serveruri, slideuri, "workspace");
 }
 
 plAction = function(playlist){
     var serveruri = PRESOURI;
     var slideuri = PLAYLISTURI+playlist;
-    alert("PLACTION: "+slideuri);
-    //simpleAjaxFetchImages(serveruri, slideuri, "playlists");
+    //alert("PLACTION: "+slideuri);
+    simpleAjaxFetchImages(serveruri, slideuri, "playlists");
 }
 
+function simpleAjaxFetchImages(serveruri, slideuri, destination)
+{
+    var newurl = GETSLDS; 
+
+    $.ajax({
+	type: "GET",
+	url: newurl,
+	data: { srvuri : serveruri, slduri: slideuri, dest: destination },
+	success: function(msg){
+
+	  try{
+
+	    if(destination == "workspace"){
+	       updateWorkspaceImages(msg);
+	    }
+	    else{
+	       updatePlaylistImages(msg);
+	    }
+	  }catch(e){
+	      alert("ERROR"+e.description);
+	  }
+	}
+    });
+}
+
+updateWorkspaceImages = function(msg){
+    //alert(msg);
+    if($('#deck-search-results').children('ul').length){   
+        $('#deck-search-results').children('ul').remove();
+    }
+    var plList = $('#deck-search-results');
+    plList.html(msg);
+
+    	$( "#deck-search-results ul" ).sortable({
+			opacity: 0.6,
+			connectWith: "#deck-playlist ul"
+	}).disableSelection();	
+}
+
+updatePlaylistImages = function(msg){
+    if($('#deck-playlist').children('ul').length){   
+         $('#deck-playlist').children('ul').remove();
+    }
+    var plList = $('#deck-playlist');
+    plList.html(msg);
+
+ /*   $('#deck-playlist ul').hoverscroll({
+	 width:  "100%",        // Width of the list
+	 height:  47         // Height of the list
+    });*/
+
+    $( "#deck-playlist ul" ).sortable({
+         opacity: 0.6
+    }).disableSelection();		
+
+	
+}
 
