@@ -17,10 +17,11 @@ $(document).ready(function() {
                     return false;
                 });
 	 
-	/*	$('#deck-playlist ul').hoverscroll({
+		$('#deck-playlist ul').hoverscroll({
 			width:		"100%",        // Width of the list
 			height:		47         // Height of the list
-		});*/
+		});
+		resizeDeckPlaylist();
 		
 		// search results are connected... meaning I can drag TO the playlist
 		$( "#deck-search-results ul" ).sortable({
@@ -35,7 +36,16 @@ $(document).ready(function() {
 		//}).disableSelection();		
 		
 		$( "#deck-playlist ul" ).sortable({
-			opacity: 0.6
+			opacity: 0.6,
+			over: function(event, ui) { 
+				resizeDeckPlaylist();
+			},
+			receive: function(event, ui) { 
+				resizeDeckPlaylist();
+			},
+			update: function(event,ui){
+		         	updatePlaylist();
+			}
 		}).disableSelection();		
 
 		$('.library-deck-btn').live('click',function(ev) {
@@ -103,6 +113,21 @@ $(document).ready(function() {
 
 		
 	});
+
+resizeDeckPlaylist = function(){
+		var size = 0;
+		$('#deck-playlist ul').children().each(function() {
+			if  (!$(this).hasClass('item'))
+				$(this).addClass('item');
+			
+			size += $(this).width() + parseInt($(this).css('padding-left')) + parseInt($(this).css('padding-right'))
+				+ parseInt($(this).css('margin-left')) + parseInt($(this).css('margin-right'));					
+		});
+		// Apply computed width to listcontainer
+		$('#deck-playlist ul').width(size + 20);
+
+
+}
 
 checkEventElement = function(e){
     var e=e ? e : window.event;
@@ -316,6 +341,8 @@ presoAction = function(presentation){
 }
 
 plAction = function(playlist){
+	//alert("PLAYLIST: "+playlist);
+	$(".plname").text(playlist);
     var serveruri = PRESOURI;
     var slideuri = PLAYLISTURI+playlist;
     //alert("PLACTION: "+slideuri);
@@ -324,7 +351,9 @@ plAction = function(playlist){
 
 function simpleAjaxFetchImages(serveruri, slideuri, destination)
 {
-    var newurl = GETSLDS; 
+    var newurl = GETSLDS;
+
+   //alert("ServerURI: "+serveruri+" SlideURI: "+slideuri+" NewURL: "+newurl); 
 
     $.ajax({
 	type: "GET",
@@ -368,15 +397,117 @@ updatePlaylistImages = function(msg){
     var plList = $('#deck-playlist');
     plList.html(msg);
 
- /*   $('#deck-playlist ul').hoverscroll({
+    $('#deck-playlist ul').hoverscroll({
 	 width:  "100%",        // Width of the list
 	 height:  47         // Height of the list
-    });*/
+    });
+
+   /* $( "#deck-playlist ul" ).sortable({
+         opacity: 0.6,
+	 update: function(event,ui){ updatePlaylist() }
+    }).disableSelection(); */
 
     $( "#deck-playlist ul" ).sortable({
-         opacity: 0.6
+			opacity: 0.6,
+			over: function(event, ui) { 
+				resizeDeckPlaylist();
+			},
+			receive: function(event, ui) { 
+				resizeDeckPlaylist();
+			},
+			update: function(event,ui){
+		         	updatePlaylist();
+		       	}
     }).disableSelection();		
+    
 
 	
 }
+
+updatePlaylist = function(){
+//alert("SLIDE ADDED");
+//went to listcontainer class as #deck-playlist has two other children divs before the ul
+//var srcAttrs = $('#deck-playlist').children('ul').children('li').children('span').children('img');
+var srcAttrs = $('.listcontainer').children('ul').children('li').children('span').children('img');
+//alert("LENGTH: "+srcAttrs.length);
+
+	var ACTIVE_PLAYLIST="<playlist><slides>";
+
+	
+	srcAttrs.each( function()
+ 	                {
+
+			try{
+		         var url =  $(this).attr('src');
+			 var single = $(this).parent('span').attr('id');
+			 
+			 alert("URL: "+url+" SINGLE: "+single);
+			 ACTIVE_PLAYLIST+="<slide>"+
+			                     "<image>"+
+					        url+
+					     "</image>"+
+					     "<single>"+
+					         single+
+			                     "</single>"+
+					   "</slide>";
+
+					   }catch(e){
+		alert("ERROR"+e.description);
+	}
+
+	                }
+		     );
+	
+
+        ACTIVE_PLAYLIST+="</slides></playlist>";
+
+	//need to save to ML here
+	alert("ACTIVE_PLAYLIST"+ACTIVE_PLAYLIST);
+
+
+}	
+
+addPlaylist = function(){
+alert("ADDING PLAYLIST");
+}
+    var modalWindow = {  
+        parent:"body",  
+        windowId:null,  
+        content:null,  
+        width:null,  
+        height:null,  
+        close:function()  
+        {  
+            $(".modal-window").remove();  
+            $(".modal-overlay").remove();  
+       },  
+       open:function()  
+       {  
+          var modal = "";  
+           modal += "<div class=\"modal-overlay\"></div>";  
+           modal += "<div id=\"" + this.windowId + "\" class=\"modal-window\" style=\"width:" + this.width + "px; height:" + this.height + "px; margin-top:-" + (this.height / 2) + "px; margin-left:-" + (this.width / 2) + "px;\">";  
+           modal += this.content;  
+           modal += "</div>";      
+     
+          $(this.parent).append(modal);  
+    
+          $(".modal-window").append("<a class=\"close-window\"></a>");  
+
+	  // add save button, close window, update for new playlist accordingly
+           $(".close-window").click(function(){modalWindow.close();});  
+           $(".modal-overlay").click(function(){modalWindow.close();});  
+
+	   
+       }  
+   };  
+
+
+openMyModal = function(source)  
+   {  
+       modalWindow.windowId = "myModal";  
+       modalWindow.width = 480;  
+       modalWindow.height = 405;  
+       modalWindow.content = "<iframe width='480' height='405' frameborder='0' scrolling='no' allowtransparency='true' src='" + source + "'></iframe>";  
+       modalWindow.open();  
+   };  
 

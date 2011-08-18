@@ -12,25 +12,39 @@ let $results := if($dest eq "workspace") then
                   let $slides := xdmp:http-get(fn:concat($server,$slideuri))[2]/node()
                   let $imageuris := for $s in $slides/slide
                                     return fn:concat($server, fn:string($s/image))
+
+                  let $singles := for $sing in $slides/slide
+                                  return fn:string($sing/single)
                   return
                     xdmp:quote(<ul class="connect">
                                 {
-                                 for $img in $imageuris
+                                 for $img at $idx in $imageuris
                                  let $src := $img
-                                 (:let $src := fn:concat("download-support.xqy?uri=",$img):)
-                                 return <li><img src="{$src}"/></li>
+                                 return <li>
+                                          <span id="{$singles[$idx]}">
+                                             <img src="{$src}"/>
+                                          </span>
+                                        </li>
                                 }
                                </ul>)
                 else 
                   let $slides := xdmp:http-get($slideuri)[2]/node()
                   let $imageuris := for $i in $slides/slides/slide
                                     return fn:concat($server, fn:string($i/image))
+
+                  let $singles := for $sing in $slides/slides/slide
+                                  return fn:string($sing/single)
+
                   return
                     xdmp:quote(<ul class="connect">
                                 {
-                                 for $img in $imageuris
+                                 for $img at $idx in $imageuris
                                  let $src := $img
-                                 return <li><img src="{$src}"/></li>
+                                 return <li>
+                                          <span id="{$singles[$idx]}">
+                                             <img src="{$src}"/>
+                                          </span>
+                                        </li>
                                 }
                                </ul>)            
 return $results

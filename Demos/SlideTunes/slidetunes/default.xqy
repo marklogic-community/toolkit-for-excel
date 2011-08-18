@@ -116,6 +116,15 @@ return (
 						<div class="library-deck-btn"></div>
 						<div class="name">My Playlists</div>
 					</div>
+
+		                        <!--<div class="gear-btn" title="Add a playlist">
+							<p>
+                                                           <a href="xquery/modal-playlist-add.xqy" target="_blank" onclick="openMyModal('xquery/modal-playlist-add.xqy'); return false;">
+                                                              <img src="images/plus.png" />
+                                                           </a>
+                                                        </p>
+			                </div>-->
+				
 					<ul id="deck-myplaylists">
 <!--
 						<li>
@@ -155,9 +164,16 @@ return (
 					<div id="deck-header">
 						<div id="deck">
 							<p>
-								<span class="name">MyPlaylist</span>
-								<span class="commands">commands</span>
-							</p>
+								<span class="plname">MyPlaylist</span>&nbsp;
+								<span class="commands">commands</span>&nbsp;&nbsp;
+                                                           <!--<a href="http://localhost:8030/slidetunes/xquery/modal.html" target="_blank" onclick="openMyModal('http://localhost:8030/slidetunes/xquery/modal.html'); return false;">-->
+                                                           <span class="gear-btn" title="Add a playlist">
+                                                              <a href="xquery/modal-playlist-add.xqy" target="_blank" onclick="openMyModal('xquery/modal-playlist-add.xqy'); return false;">
+                                                              <img src="images/plus.png" />
+                                                             </a>
+                                                            </span>
+                                                      
+                                                        </p>
 						</div>
 						<!--<div class="filter">
 							<label id="playlist-filter-label" for="playlist-filter">
@@ -168,11 +184,12 @@ return (
 					</div>
 					<div id="deck-playlist">
 						<ul class="connect">
-							<li><img src="images/slide-placeholder-med.png" title="" /></li>
-							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
-							<li><img src="images/slide-placeholder-med.png" title="" /></li>
-							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
+                                                <li></li>
 						<!--	<li><img src="images/slide-placeholder-med.png" title="" /></li>
+							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
+							<li><img src="images/slide-placeholder-med.png" title="" /></li>
+							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
+							<li><img src="images/slide-placeholder-med.png" title="" /></li>
 							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
 							<li><img src="images/slide-placeholder-med.png" title="" /></li>
 							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
@@ -205,7 +222,7 @@ return (
 					<div id="deck-slide-view"></div>
 					<div id="deck-search-results">
 						 <ul class="connect">
-							<li><img src="images/slide-placeholder-lg.png" title="" /></li>
+						 <!--	<li><img src="images/slide-placeholder-lg.png" title="" /></li>
 							<li><img src="images/slide-placeholder-red-lg.png" title="" /></li>
 							<li><img src="images/slide-placeholder-lg.png" title="" /></li>
 							<li><img src="images/slide-placeholder-red-lg.png" title="" /></li>
@@ -235,7 +252,7 @@ return (
 							<li><img src="images/slide-placeholder-red-lg.png" title="" /></li>
 							<li><img src="images/slide-placeholder-lg.png" title="" /></li>
 							<li><img src="images/slide-placeholder-red-lg.png" title="" /></li>
-							<li><img src="images/slide-placeholder-lg.png" title="" /></li>
+							<li><img src="images/slide-placeholder-lg.png" title="" /></li> -->
 						</ul>						
 					</div>
 				</div>

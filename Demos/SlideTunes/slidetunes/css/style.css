@@ -138,7 +138,7 @@ img {
 #deck {
 	float:left;
 }
-#deck  .name {
+#deck  .plname {
 	font-size:24px;
 	line-height:24px;
 	font-weight:bold;
@@ -254,7 +254,7 @@ img {
 }
 
 .gear-btn {
-	float:left;
+    float:right;
     background: url("../images/btn-bg.png") repeat-x scroll 0 0 transparent;
     border: 1px solid #B2B2B2;
     border-radius: 5px 5px 5px 5px;
@@ -385,7 +385,7 @@ img {
 	height:190px;
 	border:1px solid #000;	
 }
-
+/* BEGIN RIGHT CLICK MENU */
 .vmenu{
 	 border:1px solid #aaa;
 	 position:absolute;
@@ -406,4 +406,75 @@ img {
 	padding:5px 10px;
 	cursor:pointer;
 }
-    
+/* END LEFT CLICK MENU*/
+
+/* BEGIN ADD PLAYLIST MODAL*/
+    .modal-overlay  
+    {  
+        position:fixed;  
+        top:0;  
+        right:0;  
+        bottom:0;  
+       left:0;  
+        height:100%;  
+       width:100%;  
+       margin:0;  
+       padding:0;  
+       background:#E1E1E1;  
+       /*background:#fff;  */
+       opacity:.75;  
+      filter: alpha(opacity=75);  
+      -moz-opacity: 0.75;  
+       z-index:101;  
+   }  
+   .modal-window  
+   {  
+       position:fixed;  
+       top:50%;  
+       left:50%;  
+       margin:0;  
+       padding:0;  
+       z-index:102;  
+   }  
+   .close-window  
+   {  
+       position:absolute;  
+       width:32px;  
+       height:32px;  
+       right:8px;  
+       top:8px;  
+       background:transparent url('../images/close-button.png') no-repeat scroll right top;  
+       text-indent:-99999px;  
+       overflow:hidden;  
+       cursor:pointer;  
+       opacity:.5;  
+       filter: alpha(opacity=50);  
+       -moz-opacity: 0.5;  
+   }  
+   .close-window:hover  
+   {  
+       opacity:.99;  
+       filter: alpha(opacity=99);  
+       -moz-opacity: 0.99;  
+  }  
+  .modal-html, .modal-body
+  {
+	margin:0;
+	padding:0;
+  }
+  .modal-div
+  {
+	width:480px;
+	height:405px;
+	background:#FFFFFF;
+	color:#6f6f6f;
+  }
+  .modal-h1
+  {
+	top:10%;
+	text-align:center;
+	position:absolute;
+	margin:0 auto;
+	width:100%;
+  }
+/* END ADD PLAYLIST MODAL*/
