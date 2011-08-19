@@ -254,7 +254,7 @@ img {
 }
 
 .gear-btn {
-    float:right;
+    /*float:right;*/
     background: url("../images/btn-bg.png") repeat-x scroll 0 0 transparent;
     border: 1px solid #B2B2B2;
     border-radius: 5px 5px 5px 5px;
@@ -468,6 +468,14 @@ img {
 	height:405px;
 	background:#FFFFFF;
 	color:#6f6f6f;
+  }
+
+  .modal-input{
+	  top:20%;
+	  position:absolute;
+	margin:10 auto;
+	padding: 20px;
+	width:100%;
   }
   .modal-h1
   {

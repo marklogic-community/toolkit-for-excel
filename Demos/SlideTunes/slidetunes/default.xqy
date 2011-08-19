@@ -185,6 +185,7 @@ return (
 					<div id="deck-playlist">
 						<ul class="connect">
                                                 <li></li>
+                                                <!--<li class="dummy">Add a Slide</li>-->
 						<!--	<li><img src="images/slide-placeholder-med.png" title="" /></li>
 							<li><img src="images/slide-placeholder-red-med.png" title="" /></li>
 							<li><img src="images/slide-placeholder-med.png" title="" /></li>

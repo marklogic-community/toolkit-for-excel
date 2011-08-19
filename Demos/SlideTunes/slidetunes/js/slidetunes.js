@@ -391,6 +391,10 @@ updateWorkspaceImages = function(msg){
 }
 
 updatePlaylistImages = function(msg){
+
+     
+//$('#deck-playlist').children('ul').children('.dummy').remove();
+
     if($('#deck-playlist').children('ul').length){   
          $('#deck-playlist').children('ul').remove();
     }
@@ -428,6 +432,8 @@ updatePlaylist = function(){
 //alert("SLIDE ADDED");
 //went to listcontainer class as #deck-playlist has two other children divs before the ul
 //var srcAttrs = $('#deck-playlist').children('ul').children('li').children('span').children('img');
+//
+$(".dummy").remove()
 var srcAttrs = $('.listcontainer').children('ul').children('li').children('span').children('img');
 //alert("LENGTH: "+srcAttrs.length);
 
@@ -467,8 +473,48 @@ var srcAttrs = $('.listcontainer').children('ul').children('li').children('span'
 
 }	
 
-addPlaylist = function(){
-alert("ADDING PLAYLIST");
+addPlaylist = function(tempname){
+
+
+    var playlistname = PLAYLISTDIR+tempname+".xml";
+    alert("ADDING PLAYLIST" +playlistname);
+    //setName on playlist
+    $(".plname").text(playlistname);
+
+       //clear whats in playlist, add empty li so we can add to it
+    if($('#deck-playlist').children('ul').length){   
+         $('#deck-playlist').children('ul').remove();
+    }
+
+    var plList = $('#deck-playlist');
+    plList.html("<ul class='connect'><li class='dummy'>Add a Slide Here</li></ul>");
+
+    $('#deck-playlist ul').hoverscroll({
+	 width:  "100%",        // Width of the list
+	 height:  47         // Height of the list
+    });
+
+    $( "#deck-playlist ul" ).sortable({
+			opacity: 0.6,
+			over: function(event, ui) { 
+				resizeDeckPlaylist();
+			},
+			receive: function(event, ui) { 
+				resizeDeckPlaylist();
+			},
+			update: function(event,ui){
+		         	updatePlaylist();
+		       	}
+    }).disableSelection();		
+ 
+alert("AT END");       
+    //setName on playlist
+       
+     //save empty playlist doc to ML?
+       
+       //reset playlist list on left
+       
+       //close the modal window
 }
     var modalWindow = {  
         parent:"body",  
@@ -476,10 +522,13 @@ alert("ADDING PLAYLIST");
         content:null,  
         width:null,  
         height:null,  
-        close:function()  
-        {  
+        close:function(plname)  
+        {    
             $(".modal-window").remove();  
-            $(".modal-overlay").remove();  
+            $(".modal-overlay").remove();
+
+	    if(plname.length >0)
+		  addPlaylist(plname);  
        },  
        open:function()  
        {  
@@ -496,7 +545,6 @@ alert("ADDING PLAYLIST");
 	  // add save button, close window, update for new playlist accordingly
            $(".close-window").click(function(){modalWindow.close();});  
            $(".modal-overlay").click(function(){modalWindow.close();});  
-
 	   
        }  
    };  
@@ -507,7 +555,7 @@ openMyModal = function(source)
        modalWindow.windowId = "myModal";  
        modalWindow.width = 480;  
        modalWindow.height = 405;  
-       modalWindow.content = "<iframe width='480' height='405' frameborder='0' scrolling='no' allowtransparency='true' src='" + source + "'></iframe>";  
+       modalWindow.content = "<iframe width='480' height='205' frameborder='0' scrolling='no' allowtransparency='true' src='" + source + "'></iframe>";  
        modalWindow.open();  
    };  
 

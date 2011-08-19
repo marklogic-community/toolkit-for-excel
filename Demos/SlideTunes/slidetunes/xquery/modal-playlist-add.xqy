@@ -10,14 +10,26 @@ return (
 	<link href="../css/reset.css" type="text/css" rel="stylesheet" media="screen, print"/>	
 	<link href="../css/jquery.hoverscroll.css" type="text/css" rel="stylesheet" media="screen" />
 	<link href="../css/style.css" type="text/css" rel="stylesheet" media="screen, print"/>
-
-	<title>modal</title>
+        <script src="../js/jquery-1.6.2.min.js?rand={xdmp:random()}" type="text/javascript"></script>
+        <script src="../js/jquery-ui-1.8.15.custom.min.js?rand={xdmp:random()}" type="text/javascript"></script>
+        <script src="../js/jquery.hoverscroll.js?rand={xdmp:random()}" type="text/javascript" ></script>
+        <script src="../js/slidetunes.js?rand={xdmp:random()}" type="text/javascript"></script>
+        <script src="../js/MarkLogicPowerPointAddin.js?rand={xdmp:random()}">//</script>
+	<title>Add Playlist Modal</title>
 </head>
 
 <body class="modal-body">
 <div class="modal-div">
 
-<h1 class="modal-h1">Add Playlist</h1>
+  <h1 class="modal-h1">Add Playlist</h1><br/>
+  <div class="modal-input">
+        Name: <input id="playlistname" type="text" name="playlistname" />
+              <br/>
+              <br/>
+              <br/>
+              <input type="submit" onclick="self.parent.modalWindow.close($('#playlistname').val()); return false;"  value="Save" />
+  
+  </div>
 </div>
 </body>
 </html>
