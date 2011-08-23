@@ -11,6 +11,8 @@ var PLAYLISTURI = RESTSERVER+"/playlists";
 var GETLIST = APPSERVER + "/slidetunes/xquery/get.xqy";
 var GETSLDS = APPSERVER + "/slidetunes/xquery/get-slides.xqy";
 
+var SAVEPLAYLIST = APPSERVER + "/slidetunes/xquery/save-playlist.xqy";
+
 $(document).ready(function() {
 
 		$(document).bind("contextmenu",function(e){
@@ -108,8 +110,8 @@ $(document).ready(function() {
 			$('#deck-viewer').hide();
 		});
 
-		populateLibraryListing(PRESOURI+PRESODIR, "presentations");
-                populateLibraryListing(PLAYLISTURI+PLAYLISTDIR,"playlists");
+		populateLibraryListing(PRESOURI+PRESODIR, "presentations", randomId());
+                populateLibraryListing(PLAYLISTURI+PLAYLISTDIR,"playlists", randomId());
 
 		
 	});
@@ -135,15 +137,14 @@ checkEventElement = function(e){
     return event_element;
 }
 	
-populateLibraryListing = function(uri, destination){
-    //alert(uri);
-    var presos = simpleAjaxFetchPresentationList(uri, destination);
+populateLibraryListing = function(uri, destination, rand){
+    var presos = simpleAjaxFetchPresentationList(uri, destination, rand);
 	
 }
 
-simpleAjaxFetchPresentationList = function(uri, destination)
+simpleAjaxFetchPresentationList = function(uri, destination, rand)
 {
-    var newurl = GETLIST;
+    var newurl = GETLIST+"?"+rand;
 
     $.ajax({
 	type: "GET",
@@ -151,6 +152,9 @@ simpleAjaxFetchPresentationList = function(uri, destination)
 	data: { geturi : uri },
 	success: function(msg){
 	  try{
+
+               
+
 	  if(destination == "presentations"){
 	     updateLibPresentationList(msg);
 	  }
@@ -210,7 +214,6 @@ updateLibPresentationList = function(msg){
 
 	    aref.bind('mousedown', function(e) {
                         //setControlFocus(window.event.srcElement.id);
-			//alert("Foo");
                 e.preventDefault();
 	
 	         //check for right click
@@ -231,7 +234,6 @@ updateLibPresentationList = function(msg){
 }
 
 updateLibPlaylistList =  function(msg){
-
     try{
         var local =  MLA.createXMLDOM(msg);
         var pls = local.getElementsByTagName("playlist");
@@ -239,7 +241,6 @@ updateLibPlaylistList =  function(msg){
         if($('#deck-myplaylists').children('li').length){   
 	    $('#deck-myplaylists').children('li').remove();
         }
-    
         var plList = $('#deck-myplaylists');
 
         for (var i = 0; i < pls.length; i++) {
@@ -272,7 +273,6 @@ updateLibPlaylistList =  function(msg){
 
 	 aref.bind('mousedown', function(e) {
                         //setControlFocus(window.event.srcElement.id);
-			//alert("Foo");
          e.preventDefault();
 	         //check for right click
 	 if( e.button == 2 ){ 
@@ -293,8 +293,6 @@ updateLibPlaylistList =  function(msg){
 
 setContextMenu = function(rId)
 {
-    //alert("rId in func: "+rId);
-	
     var aref = $('#'+rId)
 
     var pos = aref.offset();  
@@ -312,7 +310,6 @@ setContextMenu = function(rId)
     });
 
     $('.vmenu .second_li').bind('click',function() {
-        //alert("SECOND"+aref.text() + $('.vmenu .second_li').text() );
 	presoAction(aref.text());
         $('.vmenu .second_li').unbind('click');
    	$('.vmenu').hide();
@@ -336,16 +333,13 @@ setContextMenu = function(rId)
 presoAction = function(presentation){
     var serveruri = PRESOURI;
     var slideuri = presentation + "/slides";
-    //alert("PRESOACTION: serveruri:"+serveruri+" slideuri"+slideuri);
     simpleAjaxFetchImages(serveruri, slideuri, "workspace");
 }
 
 plAction = function(playlist){
-	//alert("PLAYLIST: "+playlist);
 	$(".plname").text(playlist);
     var serveruri = PRESOURI;
     var slideuri = PLAYLISTURI+playlist;
-    //alert("PLACTION: "+slideuri);
     simpleAjaxFetchImages(serveruri, slideuri, "playlists");
 }
 
@@ -377,7 +371,6 @@ function simpleAjaxFetchImages(serveruri, slideuri, destination)
 }
 
 updateWorkspaceImages = function(msg){
-    //alert(msg);
     if($('#deck-search-results').children('ul').length){   
         $('#deck-search-results').children('ul').remove();
     }
@@ -429,17 +422,17 @@ updatePlaylistImages = function(msg){
 }
 
 updatePlaylist = function(){
-//alert("SLIDE ADDED");
 //went to listcontainer class as #deck-playlist has two other children divs before the ul
 //var srcAttrs = $('#deck-playlist').children('ul').children('li').children('span').children('img');
-//
-$(".dummy").remove()
+$(".dummy").remove();
+
+var plName = $(".plname").text();
+
 var srcAttrs = $('.listcontainer').children('ul').children('li').children('span').children('img');
-//alert("LENGTH: "+srcAttrs.length);
 
 	var ACTIVE_PLAYLIST="<playlist><slides>";
 
-	
+	var idxLength = PRESOURI.length;
 	srcAttrs.each( function()
  	                {
 
@@ -447,10 +440,9 @@ var srcAttrs = $('.listcontainer').children('ul').children('li').children('span'
 		         var url =  $(this).attr('src');
 			 var single = $(this).parent('span').attr('id');
 			 
-			 alert("URL: "+url+" SINGLE: "+single);
 			 ACTIVE_PLAYLIST+="<slide>"+
 			                     "<image>"+
-					        url+
+					        url.substring(idxLength)+
 					     "</image>"+
 					     "<single>"+
 					         single+
@@ -458,7 +450,7 @@ var srcAttrs = $('.listcontainer').children('ul').children('li').children('span'
 					   "</slide>";
 
 					   }catch(e){
-		alert("ERROR"+e.description);
+		                               alert("ERROR"+e.description);
 	}
 
 	                }
@@ -467,17 +459,14 @@ var srcAttrs = $('.listcontainer').children('ul').children('li').children('span'
 
         ACTIVE_PLAYLIST+="</slides></playlist>";
 
-	//need to save to ML here
-	alert("ACTIVE_PLAYLIST"+ACTIVE_PLAYLIST);
+	//alert("ACTIVE_PLAYLIST"+ACTIVE_PLAYLIST);
 
-
+        savePlaylist(plName, ACTIVE_PLAYLIST);
 }	
 
 addPlaylist = function(tempname){
 
-
     var playlistname = PLAYLISTDIR+tempname+".xml";
-    alert("ADDING PLAYLIST" +playlistname);
     //setName on playlist
     $(".plname").text(playlistname);
 
@@ -506,15 +495,59 @@ addPlaylist = function(tempname){
 		         	updatePlaylist();
 		       	}
     }).disableSelection();		
- 
-alert("AT END");       
-    //setName on playlist
+        
        
      //save empty playlist doc to ML?
+     var PLAYLISTDOC = "<playlist><slides></slides></playlist>";
+     savePlaylist(playlistname, PLAYLISTDOC);
+     
+     //IE caches here, need a rand?
+     //its asynchronous, need to wait for savePlaylist to return
+     //populateLibraryListing(PLAYLISTURI+PLAYLISTDIR,"playlists", randomId());
+        
+     //reset playlist list on left
        
-       //reset playlist list on left
-       
-       //close the modal window
+}
+
+function randomId()
+{
+    var currentTime = new Date();	
+    var randomNum = Math.floor(Math.random()*50000);
+    var id =   // currentTime.getHours()+":" +
+   	       // currentTime.getMinutes() + ":" +
+	       // currentTime.getSeconds() + ":" +
+	       "SL"+currentTime.getTime()+randomNum;
+ 
+    return id;
+}
+
+
+function savePlaylist(playlistName, galleryXml)
+{ ///publish/myPlaylist.xml"
+	//PLAYLISTURI 
+
+    var newurl = SAVEPLAYLIST; //"/xquery/save-playlist.xqy";
+
+    $.ajax({
+          type: "GET",
+          url: newurl, //"search/search.xqy",
+          data: { uri: PLAYLISTURI, plname : playlistName , gallery : galleryXml  },
+          success: function(msg){
+			try{
+			     //Document is ready
+			    $(function(){
+                               // TODO only have to do this in case of new playlist
+			       // add check 
+                               populateLibraryListing(PLAYLISTURI+PLAYLISTDIR,"playlists", randomId());
+                            });
+
+			}catch(e)
+			{
+			    alert("ERROR"+e.description);
+			}
+		   }			
+                   
+     });
 }
     var modalWindow = {  
         parent:"body",  
