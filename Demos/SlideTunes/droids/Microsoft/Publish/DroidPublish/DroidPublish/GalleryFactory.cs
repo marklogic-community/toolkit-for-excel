@@ -16,7 +16,7 @@ namespace DroidPublish
         {
             Uri serverUri = new Uri("xcc://oslo:oslo@localhost:8032");
             //MessageBox.Show("URI: " + galleryURI);
-            String galleryFetcherUri = "gallery-fetcher.xqy"; //args[1];
+            String galleryFetcherUri = "publish-fetcher.xqy"; //args[1];
 
             string[] tempSourcePres = galleryURI.Split('/');
 
@@ -83,7 +83,7 @@ namespace DroidPublish
                  FileInfo[] sourceFile = new FileInfo[1];
                  sourceFile[0] = new FileInfo(tmpSourcePres);
 
-                 string[] sourceURI = { "/publish/"+fileName };
+                 string[] sourceURI = { "/out/"+fileName };
 
                 ContentLoader loader = new ContentLoader(serverUri);
                 loader.Load(sourceURI, sourceFile);
@@ -102,6 +102,22 @@ namespace DroidPublish
                 File.Move(tmpSourcePres, deleteSourcePres);
 
          
+        }
+
+        public void deleteGallery(string galleryURI)
+        {
+            try
+            {
+                Uri serverUri = new Uri("xcc://oslo:oslo@localhost:8032");
+                String galleryFetcherUri = "publish-delete.xqy"; //args[1];
+                ModuleRunner fetchRunner = new ModuleRunner(serverUri);
+                fetchRunner.Request.SetNewStringVariable("doc", galleryURI);
+                String[] result = fetchRunner.InvokeToStringArray(galleryFetcherUri);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("ERROR" + e.Message);
+            }
         }
 
     }
