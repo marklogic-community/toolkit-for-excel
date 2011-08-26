@@ -265,20 +265,12 @@ updateLibPlaylistList =  function(msg){
 				"</div>"+
 			     "</li>");
 
-
-	    /*plList.append("<li>"+
-                           "<div id='"+rId+"'>"+
- 			       //"<a href='javascript:plAction("+'"'+pl+'"'+");'>"+
-			            pl+
-		               //"</a>"+
-			    "</div>"+
-		          "</li>");*/
          var aref = $('#'+rId);
 
 	 aref.bind('mousedown', function(e) {
-                        //setControlFocus(window.event.srcElement.id);
+                       
          e.preventDefault();
-	         //check for right click
+	 //check for right click
 	 if( e.button == 2 ){ 
                 var event_element=checkEventElement(e);
 		e.preventDefault();
@@ -301,13 +293,12 @@ setContextMenu = function(rId)
 
     var pos = aref.offset();  
     var width = aref.width();
-        //show the menu directly over the placeholder
+    //show the menu directly over the placeholder
     $(".vmenu").css( { "left": (pos.left) + "px", "top":pos.top + "px" } );
     $(".vmenu").show();
  
-        //need to unbind, or we keep binding and end up with multiple 
+    //need to unbind, or we keep binding and end up with multiple 
     $('.vmenu .first_li').bind('click',function() {
-        //plAction()
 	plAction(aref.text());
         $('.vmenu .first_li').unbind('click');
         $('.vmenu').hide();
@@ -364,14 +355,12 @@ plAction = function(playlist){
 }
 
 deleteAction = function(playlist){
-
     deletePlaylist(PLAYLISTURI+playlist);  
 }
 
-function simpleAjaxFetchImages(serveruri, slideuri, destination)
-{
+simpleAjaxFetchImages =function(serveruri, slideuri, destination){
+   
     var newurl = GETSLDS;
-
    //alert("ServerURI: "+serveruri+" SlideURI: "+slideuri+" NewURL: "+newurl); 
 
     $.ajax({
@@ -402,16 +391,13 @@ updateWorkspaceImages = function(msg){
     var plList = $('#deck-search-results');
     plList.html(msg);
 
-    	$( "#deck-search-results ul" ).sortable({
+    $( "#deck-search-results ul" ).sortable({
 			opacity: 0.6,
 			connectWith: "#deck-playlist ul"
-	}).disableSelection();	
+    }).disableSelection();	
 }
 
 updatePlaylistImages = function(msg){
-
-     
-//$('#deck-playlist').children('ul').children('.dummy').remove();
 
     if($('#deck-playlist').children('ul').length){   
          $('#deck-playlist').children('ul').remove();
@@ -423,11 +409,6 @@ updatePlaylistImages = function(msg){
 	 width:  "100%",        // Width of the list
 	 height:  47         // Height of the list
     });
-
-   /* $( "#deck-playlist ul" ).sortable({
-         opacity: 0.6,
-	 update: function(event,ui){ updatePlaylist() }
-    }).disableSelection(); */
 
     $( "#deck-playlist ul" ).sortable({
 			opacity: 0.6,
@@ -442,26 +423,24 @@ updatePlaylistImages = function(msg){
 		       	}
     }).disableSelection();		
     
-
-	
 }
 
 updatePlaylist = function(){
-//went to listcontainer class as #deck-playlist has two other children divs before the ul
-//var srcAttrs = $('#deck-playlist').children('ul').children('li').children('span').children('img');
-$(".dummy").remove();
+    //went to listcontainer class as #deck-playlist has two other children divs before the ul
+    //var srcAttrs = $('#deck-playlist').children('ul').children('li').children('span').children('img');
+    $(".dummy").remove();
 
-var plName = $(".plname").text();
+    var plName = $(".plname").text();
 
-var srcAttrs = $('.listcontainer').children('ul').children('li').children('span').children('img');
+    var srcAttrs = $('.listcontainer').children('ul').children('li').children('span').children('img');
 
-	var ACTIVE_PLAYLIST="<playlist><slides>";
+    var ACTIVE_PLAYLIST="<playlist><slides>";
 
-	var idxLength = PRESOURI.length;
-	srcAttrs.each( function()
- 	                {
+    var idxLength = PRESOURI.length;
+    srcAttrs.each( function()
+ 	           {
 
-			try{
+		      try{
 		         var url =  $(this).attr('src');
 			 var single = $(this).parent('span').attr('id');
 			 
@@ -474,19 +453,15 @@ var srcAttrs = $('.listcontainer').children('ul').children('li').children('span'
 			                     "</single>"+
 					   "</slide>";
 
-					   }catch(e){
-		                               alert("ERROR"+e.description);
-	}
+		      }catch(e){
+		         alert("ERROR"+e.description);
+	              }
 
-	                }
-		     );
+	           });
 	
 
-        ACTIVE_PLAYLIST+="</slides></playlist>";
-
-	//alert("ACTIVE_PLAYLIST"+ACTIVE_PLAYLIST);
-
-        savePlaylist(plName, ACTIVE_PLAYLIST);
+    ACTIVE_PLAYLIST+="</slides></playlist>";
+    savePlaylist(plName, ACTIVE_PLAYLIST);
 }	
 
 addPlaylist = function(tempname){
@@ -495,7 +470,7 @@ addPlaylist = function(tempname){
     //setName on playlist
     $(".plname").text(playlistname);
 
-       //clear whats in playlist, add empty li so we can add to it
+    //clear whats in playlist, add empty li so we can add to it
     if($('#deck-playlist').children('ul').length){   
          $('#deck-playlist').children('ul').remove();
     }
@@ -528,10 +503,6 @@ addPlaylist = function(tempname){
      
      //IE caches here, need a rand?
      //its asynchronous, need to wait for savePlaylist to return
-     //populateLibraryListing(PLAYLISTURI+PLAYLISTDIR,"playlists", randomId());
-        
-     //reset playlist list on left
-       
 }
 
 function randomId()
@@ -548,9 +519,8 @@ function randomId()
 
 
 function savePlaylist(playlistName, galleryXml)
-{ ///publish/myPlaylist.xml"
-	//PLAYLISTURI 
-   //TODO clean up this and save-playlist.xqy, its not using PLAYLIST URI, couldn't PUT XML?  only text/binary?  so doing direct xdmp:document-insert
+{ 
+    //TODO clean up this and save-playlist.xqy, its not using PLAYLIST URI, couldn't PUT XML?  only text/binary?  so doing direct xdmp:document-insert
     var newurl = SAVEPLAYLIST; //"/xquery/save-playlist.xqy";
 
     $.ajax({
@@ -578,7 +548,6 @@ function savePlaylist(playlistName, galleryXml)
 function deletePlaylist(playlistName)
 { 
     var newurl = DELETEPLAYLIST; //"/xquery/playlist-delete.xqy";
- alert("DELETING"+playlistName);
     $.ajax({
           type: "GET",
           url: newurl, 
@@ -587,8 +556,6 @@ function deletePlaylist(playlistName)
 			try{
 			     //Document is ready
 			    $(function(){
-                               // TODO only have to do this in case of new playlist
-			       // add check 
                                populateLibraryListing(PLAYLISTURI+PLAYLISTDIR,"playlists", randomId());
                             });
 
@@ -603,9 +570,7 @@ function deletePlaylist(playlistName)
 
 
 function publishPlaylist(playlistName)
-{ ///publish/myPlaylist.xml"
-	//PLAYLISTURI 
-   //TODO clean up this and save-playlist.xqy, its not using PLAYLIST URI, couldn't PUT XML?  only text/binary?  so doing direct xdmp:document-insert
+{ 
     var newurl = EXPORTPLAYLIST; //"/xquery/export-playlist.xqy";
 
     $.ajax({
@@ -616,18 +581,9 @@ function publishPlaylist(playlistName)
 			try{
 			//need to poll for .pptx with unique id 
 			//unique id provided by msg? or create here?
-
-			//alert("Published As: "+msg);
+			//start poller here
 		          intval="";	
 			  start_int(msg);
-			//start poller here
-
-			     //Document is ready
-			    //$(function(){
-                               // TODO only have to do this in case of new playlist
-			       // add check 
-                              // populateLibraryListing(PLAYLISTURI+PLAYLISTDIR,"playlists", randomId());
-                            //});
 
 			}catch(e)
 			{
@@ -638,7 +594,7 @@ function publishPlaylist(playlistName)
      });
 }
  
-    var modalWindow = {  
+var modalWindow = {  
         parent:"body",  
         windowId:null,  
         content:null,  
@@ -669,38 +625,30 @@ function publishPlaylist(playlistName)
            $(".modal-overlay").click(function(){modalWindow.close();});  
 	   
        }  
-   };  
-
+};  
 
 openMyModal = function(source)  
-   {  
-       modalWindow.windowId = "myModal";  
-       modalWindow.width = 480;  
-       modalWindow.height = 405;  
-       modalWindow.content = "<iframe width='480' height='205' frameborder='0' scrolling='no' allowtransparency='true' src='" + source + "'></iframe>";  
-       modalWindow.open();  
-   };  
+{  
+    modalWindow.windowId = "myModal";  
+    modalWindow.width = 480;  
+    modalWindow.height = 405;  
+    modalWindow.content = "<iframe width='480' height='205' frameborder='0' scrolling='no' allowtransparency='true' src='" + source + "'></iframe>";  
+    modalWindow.open();  
+};  
 
 exportPlaylist = function(){
- var fullPlaylistName = $(".plname").text();
- //var friendlyName = fullPlaylistName.substring(PLAYLISTDIR.length);
-
-       //alert("exportPlayist: "+fullPlaylistName+"  PLAYLISTDIR: "+PLAYLISTDIR);
-       var published = publishPlaylist(fullPlaylistName);
-       //alert("Published as: "+published);
-   
+    var fullPlaylistName = $(".plname").text();
+    var published = publishPlaylist(fullPlaylistName);
 }
 
 var intval="";
 start_int = function(fileName){
-      if(intval==""){
-          alert("IN IF");
+     if(intval==""){
           intval=window.setInterval("start_poll('"+fileName+"')",2000);
-      }else{
-           alert("IN ELSE");  
-     	      stop_int(intval);
-      }
-    }
+     }else{
+          stop_int(intval);
+     }
+}
 
 stop_int = function(intval){
         
@@ -710,10 +658,6 @@ stop_int = function(intval){
      }
 }
 
-//start_poll = function(){
-//query for .pptx, if true, fetch .pptx and stop_int, else poll
-
-//}
 
 start_poll = function(fileName)
 { 
@@ -728,17 +672,10 @@ start_poll = function(fileName)
 			//need to poll for .pptx with unique id 
 			//unique id provided by msg? or create here?
 
-			if(msg=="true"){
-			    stop_int(intval);
-			    openPptx(fileName);
-			}
-
-			     //Document is ready
-			    //$(function(){
-                               // TODO only have to do this in case of new playlist
-			       // add check 
-                              // populateLibraryListing(PLAYLISTURI+PLAYLISTDIR,"playlists", randomId());
-                            //});
+			   if(msg=="true"){
+			      stop_int(intval);
+			      openPptx(fileName);
+			   }
 
 			}catch(e)
 			{
@@ -756,7 +693,7 @@ clearPlaylistExportLink = function()
 
 openPptx = function(fileName){
 
-	//now question of whether to force export each time, or retain it if it exists in out?
+    //now question of whether to force export each time, or retain it if it exists in out?
 
     var tokens = fileName.split("/");
     var fName = tokens[tokens.length-1];
