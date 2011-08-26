@@ -56,6 +56,7 @@ return (
                         <div class="vmenu">
                               <div class="first_li"><span>Open in Playlist</span></div>
 	                      <div class="second_li"><span>Open in Workspace</span></div>
+	                      <div class="third_li"><span>Delete</span></div>
                         </div>
 
 			<div id="deck-container">				
@@ -172,6 +173,20 @@ return (
                                                               <img src="images/plus.png" />
                                                              </a>
                                                             </span>
+                                                            &nbsp;&nbsp;
+                                                            <span title="Export a playlist to PowerPoint">
+                                                              <a href="#"  onclick="exportPlaylist();">
+                                                               <img src="images/export.png" />
+                                                             </a>
+                                                            </span>
+                                                            &nbsp;&nbsp;
+                                                             <span id="openpptx" title="Open PPTX">
+                                                              <!--<a href="/slidetunes/xquery/open-binary.xqy?uri=/out/myPlaylist.pptx">
+                                                                 myPlaylist.pptx 
+                                                             </a>-->
+                                                            </span>
+  
+  
                                                       
                                                         </p>
 						</div>

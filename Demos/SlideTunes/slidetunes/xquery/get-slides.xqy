@@ -9,7 +9,7 @@ let $dest := xdmp:get-request-field("dest")
 let $results := if($dest eq "workspace") then 
 
 (:"/paven/one.pptx/slides":)
-                  let $slides := xdmp:http-get(fn:concat($server,$slideuri))[2]/node()
+                  let $slides := xdmp:http-get(fn:concat($server,xdmp:url-encode($slideuri)))[2]/node()
                   let $imageuris := for $s in $slides/slide
                                     return fn:concat($server, fn:string($s/image))
 

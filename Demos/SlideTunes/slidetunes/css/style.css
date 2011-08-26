@@ -406,6 +406,13 @@ img {
 	padding:5px 10px;
 	cursor:pointer;
 }
+
+.vmenu .third_li span{
+	width:100px;
+	display:block;
+	padding:5px 10px;
+	cursor:pointer;
+}
 /* END LEFT CLICK MENU*/
 
 /* BEGIN ADD PLAYLIST MODAL*/

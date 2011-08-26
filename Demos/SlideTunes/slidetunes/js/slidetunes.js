@@ -12,6 +12,10 @@ var GETLIST = APPSERVER + "/slidetunes/xquery/get.xqy";
 var GETSLDS = APPSERVER + "/slidetunes/xquery/get-slides.xqy";
 
 var SAVEPLAYLIST = APPSERVER + "/slidetunes/xquery/save-playlist.xqy";
+var DELETEPLAYLIST = APPSERVER + "/slidetunes/xquery/delete-playlist.xqy";
+var EXPORTPLAYLIST = APPSERVER + "/slidetunes/xquery/export-playlist.xqy";
+var EXISTS = APPSERVER +  "/slidetunes/xquery/exists.xqy";
+var OPENPPTX = APPSERVER +  "/slidetunes/xquery/open-binary.xqy";
 
 $(document).ready(function() {
 
@@ -314,6 +318,13 @@ setContextMenu = function(rId)
         $('.vmenu .second_li').unbind('click');
    	$('.vmenu').hide();
     });
+
+    $('.vmenu .third_li').bind('click',function() {
+	deleteAction(aref.text());
+        $('.vmenu .third_li').unbind('click');
+   	$('.vmenu').hide();
+    });
+
  
     $(".first_li span").hover(function () {
         $(this).css({backgroundColor : '#E0EDFE' , cursor : 'pointer'})
@@ -328,6 +339,13 @@ setContextMenu = function(rId)
     function () {
 	$(this).css('background-color' , '#fff' );
     });
+
+     $(".third_li span").hover(function () {
+        $(this).css({backgroundColor : '#E0EDFE' , cursor : 'pointer'})
+    },
+    function () {
+	$(this).css('background-color' , '#fff' );
+    });
 }
 
 presoAction = function(presentation){
@@ -337,10 +355,17 @@ presoAction = function(presentation){
 }
 
 plAction = function(playlist){
-	$(".plname").text(playlist);
+
+    clearPlaylistExportLink();
+    $(".plname").text(playlist);
     var serveruri = PRESOURI;
     var slideuri = PLAYLISTURI+playlist;
     simpleAjaxFetchImages(serveruri, slideuri, "playlists");
+}
+
+deleteAction = function(playlist){
+
+    deletePlaylist(PLAYLISTURI+playlist);  
 }
 
 function simpleAjaxFetchImages(serveruri, slideuri, destination)
@@ -525,12 +550,12 @@ function randomId()
 function savePlaylist(playlistName, galleryXml)
 { ///publish/myPlaylist.xml"
 	//PLAYLISTURI 
-
+   //TODO clean up this and save-playlist.xqy, its not using PLAYLIST URI, couldn't PUT XML?  only text/binary?  so doing direct xdmp:document-insert
     var newurl = SAVEPLAYLIST; //"/xquery/save-playlist.xqy";
 
     $.ajax({
           type: "GET",
-          url: newurl, //"search/search.xqy",
+          url: newurl, 
           data: { uri: PLAYLISTURI, plname : playlistName , gallery : galleryXml  },
           success: function(msg){
 			try{
@@ -549,6 +574,70 @@ function savePlaylist(playlistName, galleryXml)
                    
      });
 }
+
+function deletePlaylist(playlistName)
+{ 
+    var newurl = DELETEPLAYLIST; //"/xquery/playlist-delete.xqy";
+ alert("DELETING"+playlistName);
+    $.ajax({
+          type: "GET",
+          url: newurl, 
+          data: { uri: playlistName  },
+          success: function(msg){
+			try{
+			     //Document is ready
+			    $(function(){
+                               // TODO only have to do this in case of new playlist
+			       // add check 
+                               populateLibraryListing(PLAYLISTURI+PLAYLISTDIR,"playlists", randomId());
+                            });
+
+			}catch(e)
+			{
+			    alert("ERROR"+e.description);
+			}
+		   }			
+                   
+     });
+}
+
+
+function publishPlaylist(playlistName)
+{ ///publish/myPlaylist.xml"
+	//PLAYLISTURI 
+   //TODO clean up this and save-playlist.xqy, its not using PLAYLIST URI, couldn't PUT XML?  only text/binary?  so doing direct xdmp:document-insert
+    var newurl = EXPORTPLAYLIST; //"/xquery/export-playlist.xqy";
+
+    $.ajax({
+          type: "GET",
+          url: newurl, 
+          data: { plname : playlistName },
+          success: function(msg){
+			try{
+			//need to poll for .pptx with unique id 
+			//unique id provided by msg? or create here?
+
+			//alert("Published As: "+msg);
+		          intval="";	
+			  start_int(msg);
+			//start poller here
+
+			     //Document is ready
+			    //$(function(){
+                               // TODO only have to do this in case of new playlist
+			       // add check 
+                              // populateLibraryListing(PLAYLISTURI+PLAYLISTDIR,"playlists", randomId());
+                            //});
+
+			}catch(e)
+			{
+			    alert("ERROR"+e.description);
+			}
+		   }			
+                   
+     });
+}
+ 
     var modalWindow = {  
         parent:"body",  
         windowId:null,  
@@ -591,4 +680,118 @@ openMyModal = function(source)
        modalWindow.content = "<iframe width='480' height='205' frameborder='0' scrolling='no' allowtransparency='true' src='" + source + "'></iframe>";  
        modalWindow.open();  
    };  
+
+exportPlaylist = function(){
+ var fullPlaylistName = $(".plname").text();
+ //var friendlyName = fullPlaylistName.substring(PLAYLISTDIR.length);
+
+       //alert("exportPlayist: "+fullPlaylistName+"  PLAYLISTDIR: "+PLAYLISTDIR);
+       var published = publishPlaylist(fullPlaylistName);
+       //alert("Published as: "+published);
+   
+}
+
+var intval="";
+start_int = function(fileName){
+      if(intval==""){
+          alert("IN IF");
+          intval=window.setInterval("start_poll('"+fileName+"')",2000);
+      }else{
+           alert("IN ELSE");  
+     	      stop_int(intval);
+      }
+    }
+
+stop_int = function(intval){
+        
+     if(intval!=""){
+         window.clearInterval(intval);
+         intval="";
+     }
+}
+
+//start_poll = function(){
+//query for .pptx, if true, fetch .pptx and stop_int, else poll
+
+//}
+
+start_poll = function(fileName)
+{ 
+    var newurl = EXISTS; //"/xquery/exists.xqy";
+
+    $.ajax({
+          type: "GET",
+          url: newurl, 
+          data: { filename : fileName },
+          success: function(msg){
+			try{
+			//need to poll for .pptx with unique id 
+			//unique id provided by msg? or create here?
+
+			if(msg=="true"){
+			    stop_int(intval);
+			    openPptx(fileName);
+			}
+
+			     //Document is ready
+			    //$(function(){
+                               // TODO only have to do this in case of new playlist
+			       // add check 
+                              // populateLibraryListing(PLAYLISTURI+PLAYLISTDIR,"playlists", randomId());
+                            //});
+
+			}catch(e)
+			{
+			    alert("ERROR"+e.description);
+			}
+		   }			
+                   
+     });
+}
+
+clearPlaylistExportLink = function()
+{
+    $('#openpptx').children().remove();
+}
+
+openPptx = function(fileName){
+
+	//now question of whether to force export each time, or retain it if it exists in out?
+
+    var tokens = fileName.split("/");
+    var fName = tokens[tokens.length-1];
+
+    var pptxLink = $('#openpptx');
+
+    pptxLink.append("<a href='/slidetunes/xquery/open-binary.xqy?uri="+fileName+">"+
+                                    fName+ 
+                    "</a>");
+	
+/*
+ * below is good and all, but we should provide a link and let browser decide what to do
+	var newurl = OPENPPTX;
+alert("FILENAME: "+fileName + "newurl: "+newurl);
+	$.ajax({
+          type: "GET",
+          url: newurl, 
+          data: { uri : fileName },
+          success: function(msg){
+			try{
+			//need to poll for .pptx with unique id 
+			//unique id provided by msg? or create here?
+                            alert("DOC RETURNED");
+			    return msg;
+
+			    //DELETE NOW
+
+			}catch(e)
+			{
+			    alert("ERROR"+e.description);
+			}
+		   }			
+                   
+     });
+*/
+}
+
 
