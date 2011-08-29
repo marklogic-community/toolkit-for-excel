@@ -355,7 +355,9 @@ plAction = function(playlist){
 }
 
 deleteAction = function(playlist){
-    deletePlaylist(PLAYLISTURI+playlist);  
+	var plName = $(".plname").text();
+	alert("playlist" +plName);
+        deletePlaylist(PLAYLISTURI+plName);  
 }
 
 simpleAjaxFetchImages =function(serveruri, slideuri, destination){
@@ -547,7 +549,9 @@ function savePlaylist(playlistName, galleryXml)
 
 function deletePlaylist(playlistName)
 { 
-    var newurl = DELETEPLAYLIST; //"/xquery/playlist-delete.xqy";
+    var newurl = DELETEPLAYLIST; //"/xquery/delete-playlist.xqy";
+
+    alert("newurl: "+newurl+"  playlistName: "+playlistName);
     $.ajax({
           type: "GET",
           url: newurl, 
@@ -557,6 +561,7 @@ function deletePlaylist(playlistName)
 			     //Document is ready
 			    $(function(){
                                populateLibraryListing(PLAYLISTURI+PLAYLISTDIR,"playlists", randomId());
+			       //need to clear out playlist header and body as well
                             });
 
 			}catch(e)
@@ -700,7 +705,7 @@ openPptx = function(fileName){
 
     var pptxLink = $('#openpptx');
 
-    pptxLink.append("<a href='/slidetunes/xquery/open-binary.xqy?uri="+fileName+">"+
+    pptxLink.append("<a href='/slidetunes/xquery/open-binary.xqy?uri="+fileName+"'>"+
                                     fName+ 
                     "</a>");
 	
