@@ -1,9 +1,10 @@
 xquery version "1.0-ml";
-(: Copyright 2002-2008 Mark Logic Corporation.  All Rights Reserved. :)
+(: Copyright 2002-2011 MarkLogic Corporation.  All Rights Reserved. :)
 (: package.xqy: A library for Office OpenXML Developer Package Support      :)
 
 module namespace ooxml = "http://marklogic.com/openxml";
 
+(: Office 2007 :)
 declare namespace w="http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 declare namespace v="urn:schemas-microsoft-com:vml";
 declare namespace zip="xdmp:zip";
@@ -12,6 +13,19 @@ declare namespace cp="http://schemas.openxmlformats.org/package/2006/metadata/co
 declare namespace dc="http://purl.org/dc/elements/1.1/";
 declare namespace dcterms ="http://purl.org/dc/terms/";
 declare namespace rels = "http://schemas.openxmlformats.org/package/2006/relationships";
+
+(: Office 2010 :)
+declare namespace a="http://schemas.openxmlformats.org/drawingml/2006/main";
+declare namespace pic="http://schemas.openxmlformats.org/drawingml/2006/picture";
+declare namespace wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas";
+declare namespace mc="http://schemas.openxmlformats.org/markup-compatibility/2006";
+declare namespace wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing";
+declare namespace w14="http://schemas.microsoft.com/office/word/2010/wordml";
+declare namespace wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup";
+declare namespace wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk";
+declare namespace wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape";
+
+
 
 declare function ooxml:list-length-error()
 {
@@ -123,7 +137,7 @@ declare function ooxml:package-parts-insert(
   $package-parts as node()*,
   $permissions as element(sec:permission)*,
   $collections as xs:string*,
-  $quality as xs:int
+  $quality as xs:int?
 ) as empty-sequence()
 { 
    let $return := if(ooxml:validate-list-length-equal($uris,$package-parts)) then 
@@ -142,7 +156,7 @@ declare function ooxml:package-parts-insert(
   $package-parts as node()*,
   $permissions as element(sec:permission)*,
   $collections as xs:string*,
-  $quality as xs:int,
+  $quality as xs:int?,
   $forest-ids as xs:unsignedLong*
 ) as empty-sequence()
 {
