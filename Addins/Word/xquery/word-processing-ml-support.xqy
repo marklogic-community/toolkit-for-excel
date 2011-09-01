@@ -478,7 +478,10 @@ declare function ooxml:get-part-content-type(
         "application/vnd.openxmlformats-package.relationships+xml"
     else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "document")) 
     then
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml" 
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"
+    else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "glossaryDocument")) 
+    then
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml" 
     else if(fn:node-name($node) eq fn:QName($ooxml:DRAWINGML, "theme")) 
     then
         "application/vnd.openxmlformats-officedocument.theme+xml"
@@ -489,8 +492,14 @@ declare function ooxml:get-part-content-type(
     then
         "application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"
     else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "styles"))
-    then 
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"
+    then
+       (: need to check uri, w:styles document used for: styles.xml glossary/styles.xml, stylesWithEffects.xml, glossary/stylesWithEffects.xml 
+          stylesWithEffects.xml has a different content type, though it is same document as styles, just with a different name :)
+         let $uri := fn:substring-after(fn:base-uri($node), "docx_parts")
+         return if(fn:contains($uri,"stylesWithEffects")) then
+                    "application/vnd.ms-word.stylesWithEffects+xml"
+               else
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"
     else if(fn:node-name($node) eq fn:QName($ooxml:WORDPROCESSINGML, "fonts"))
     then
         "application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"
@@ -525,11 +534,6 @@ declare function ooxml:get-part-content-type(
     else 
         "application/xml"
 
-   (:  need to account for glossary
-    else if(fn:ends-with($uri,"glossary/document.xml"))
-    then
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml"
-   :)
 };
 
 declare function get-image-part-content-type(
