@@ -3,7 +3,6 @@ xquery version "1.0-ml";
 (: package.xqy: A library for Office OpenXML Developer Package Support      :)
 module namespace ooxml = "http://marklogic.com/openxml";
 
-(:Office 2007:)
 declare namespace w="http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 declare namespace v="urn:schemas-microsoft-com:vml";
 declare namespace ve="http://schemas.openxmlformats.org/markup-compatibility/2006";
@@ -13,18 +12,6 @@ declare namespace m="http://schemas.openxmlformats.org/officeDocument/2006/math"
 declare namespace wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing";
 declare namespace w10="urn:schemas-microsoft-com:office:word";
 declare namespace wne="http://schemas.microsoft.com/office/word/2006/wordml";
-
-(:Office 2010:)
-declare namespace a="http://schemas.openxmlformats.org/drawingml/2006/main";
-declare namespace pic="http://schemas.openxmlformats.org/drawingml/2006/picture";
-declare namespace wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas";
-declare namespace mc="http://schemas.openxmlformats.org/markup-compatibility/2006";
-declare namespace wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing";
-declare namespace w14="http://schemas.microsoft.com/office/word/2010/wordml";
-declare namespace wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup";
-declare namespace wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk";
-declare namespace wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape";
-
 
 import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy";
 
@@ -43,24 +30,9 @@ for $i in $x/node() return dispatch($i)
 
 declare function dispatch ($x as node()*) as node()*
 {
-(: adding namespaces for Office 2010.  This wasn't required for 2007, where you only had to declare the namespaces
-   actually used in document.xml.  2010 requires these, even if not used in document.xml.  
-   No harm in using with Office 2007 as it will discard what's not used when it consumes the XML :)
      typeswitch ($x)
        case text() return $x
        case document-node() return document {$x/@*,passthru($x)}
-       case element(w:document) return <w:document xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
-                                                   xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"
-                                                   xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
-                                                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                                                   xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
-                                                   xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
-                                                   xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
-                                                   xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
-                                                   xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
-                                        >
-                                           {$x/@*,passthru($x)}
-                                       </w:document> 
        case element(w:p) return mergeruns($x) 
        case element() return  element{fn:name($x)} {$x/@*,passthru($x)}
        default return $x
