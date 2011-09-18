@@ -20,7 +20,7 @@
         <div><img src="images/varspace.gif" alt="" height="1" width="178"/></div>
         <div class="host-details" style="padding-left: 20px; padding-top: 10px">
           <div>This page was generated</div>
-          <div>December&#160;08,&#160;2009</div>
+          <div>December&#160;08,&#160;2011</div>
           <div>5:50&#160;PM</div>
         </div>
       </td>
@@ -58,8 +58,9 @@
     XQuery modules, 
     copy it to your App Server root and include a line similar to the following in your XQuery prolog:</p>
     <pre xml:space="preserve">
-import module namespace ooxml="http://marklogic.com/openxml" 
-	    at "/word-processing-ml-support.xqy";</pre>
+import module namespace ooxml = "http://marklogic.com/openxml" 
+            at "/MarkLogic/openxml/word-processing-ml.xqy";
+
     <p>The WordProcessingML functions are used to manipulate Microsoft Office
     Open XML documents.</p>
   
@@ -95,7 +96,7 @@ import module namespace ooxml="http://marklogic.com/openxml"
             </b></a> 
           </td>
 			    <td style="font-family: arial; font-size: 10pt;">
-          This function formats a base64 encoded string for Office 2007.
+          This function formats a base64 encoded string for Office 2007/2010.
           </td>
      </tr>
      <tr class="mainbody">
@@ -699,7 +700,7 @@ return ooxml:body($para)
           <img src="images/varspace.gif" width="8"/>
           <b>Summary:</b>
           <div style="margin-left:.5in; margin-right:8px; font-family:arial;                        font-size:10pt"> <br/>
-            This function formats a base64 encoded string for Office 2007.
+            This function formats a base64 encoded string for Office 2007/2010.
           </div><br/>
           </td>
 				</tr>
@@ -2524,7 +2525,8 @@ function is intended to help get you started with dynamic document generation fo
         <img src="images/varspace.gif" width="8"/>
         <b>Usage Notes:</b>
             <div style="margin-left:.5in; margin-right:8px; font-family:arial;                          font-size:10pt">
-            <br/>
+	    <br/>Documents created using ooxml:create-simple-docx() or ooxml:docx-package() that only use the Content Types, Relationships, and Document.xml parts, will find the documents open in Office 2010 in compatability mode. (First example below.)  
+<br/><br/>Documents created using ooxml:docx-package() that use the other constructors to pass in the additional files required for a .docx package, will find the document to open in the correct mode for both Office 2007 and Office 2010. (Second example below.)
             </div><br/>
         </td>
 				</tr>
@@ -2554,6 +2556,39 @@ return xdmp:zip-manifest(ooxml:docx-package($content-types, $rels, $doc))
             </div>
             </td>
 				</tr>
+
+    <tr class="mainbody">
+				  <td><img src="images/varspace.gif" width="8"/>
+            <font style="font-size:10pt;font-family:Arial"><b>Example:</b></font>
+            <div style="margin-left:.5in; margin-right:8px; font-size:9pt;                          font-family:Courier"> 
+            <pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace ooxml= "http://marklogic.com/openxml" at
+                               "/MarkLogic/openxml/word-processing-ml-support.xqy";
+
+let $content-types:= ooxml:default-content-types()
+let $rels := ooxml:package-rels()
+let $para := ooxml:create-paragraph("Hello, World!")
+let $doc := ooxml:document(ooxml:body($para))
+
+let $doc-rels := ooxml:document-rels()
+let $numbering := ooxml:numbering()
+let $styles := ooxml:styles()
+let $settings := ooxml:settings()
+let $theme := ooxml:theme()
+let $font-table := ooxml:font-table() 
+
+return xdmp:save("C:\MyDoc.docx",ooxml:docx-package($content-types, $rels, $doc, $doc-rels, $numbering, $styles, $settings, $theme, $font-table))
+=>
+Open MyDoc.docx in Word 2007 or 2010 and it will open in the correct mode for the respective application (NOT compatability mode).
+</pre>
+  
+            </div>
+            </td>
+				</tr>
+
+
+
 
 
         <tr class="mainbody">
@@ -3540,7 +3575,7 @@ declare namespace w=
 
 let $styleids := "oslo"
 let $styles := doc("/Test_docx_parts/word/styles.xml") 
-return ooxml:get-style-definitions($styleids, $styles)/w:style
+return ooxml:get-style-definition($styleids, $styles)/w:style
 =&gt;
 &lt;w:style xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
        	w:type="character" w:customStyle="1" w:styleId="oslo"&gt;
