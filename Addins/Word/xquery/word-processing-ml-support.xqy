@@ -1,5 +1,5 @@
 xquery version "1.0-ml";
-(: Copyright 2008-2010 Mark Logic Corporation
+(: Copyright 2008-2011 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ declare namespace r="http://schemas.openxmlformats.org/officeDocument/2006/relat
 declare namespace pr = "http://schemas.openxmlformats.org/package/2006/relationships";
 declare namespace types = "http://schemas.openxmlformats.org/package/2006/content-types";
 declare namespace zip   = "xdmp:zip";
+(:office 2010 :)
+declare namespace mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"; 
 
 import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy";
 
@@ -52,7 +54,7 @@ declare variable $ooxml:CORE-PROPERTIES := "http://schemas.openxmlformats.org/pa
 declare variable $ooxml:CUSTOM-PROPERTIES := "http://schemas.openxmlformats.org/officeDocument/2006/custom-properties";
 declare variable $ooxml:CUSTOM-XML-PROPS := "http://schemas.openxmlformats.org/officeDocument/2006/customXml";
 
-(:version 1.2-1:)
+(:version 2.0:)
 
 declare function ooxml:error($message as xs:string)
 {
@@ -668,13 +670,12 @@ declare function ooxml:package-files-only(
 (: END FLAT OPC Package serialization =======================================  :)
 
 (:BEGIN functions for server side document creation =========================  :)
-declare function ooxml:package-rels( 
+declare function ooxml:package-rels(
 ) as element(pr:Relationships)
-{   
+{
     <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-        <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="/word/document.xml" />
+       <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
     </Relationships>
-     
 };
 
 (: creating ooxml:default-content-types/ooxml:simple-content-types for now
@@ -684,16 +685,16 @@ declare function ooxml:package-rels(
 declare function ooxml:default-content-types(
 ) as element(types:Types)
 {
-       <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-          <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
-          <Default Extension="xml" ContentType="application/xml"/>
-          <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
-          <Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/>
-          <Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
-          <Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>
-          <Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/>
-          <Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/>
-       </Types>
+    <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+        <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+        <Default Extension="xml" ContentType="application/xml"/>
+        <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+        <Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/>
+        <Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+        <Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>
+        <Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/>
+        <Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/>
+    </Types>
 };
 
 declare function ooxml:simple-content-types(
@@ -709,48 +710,31 @@ declare function ooxml:simple-content-types(
 declare function ooxml:font-table(
 ) as element(w:fonts)
 {
-<w:fonts xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-  <w:font w:name="Symbol">
-    <w:panose1 w:val="05050102010706020507"/>
-    <w:charset w:val="02"/>
-    <w:family w:val="roman"/>
-    <w:pitch w:val="variable"/>
-    <w:sig w:usb0="00000000" w:usb1="10000000" w:usb2="00000000" w:usb3="00000000" w:csb0="80000000" w:csb1="00000000"/>
-  </w:font>
+<w:fonts xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+         xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
+         xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
+         xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
+         mc:Ignorable="w14">
   <w:font w:name="Times New Roman">
     <w:panose1 w:val="02020603050405020304"/>
     <w:charset w:val="00"/>
     <w:family w:val="roman"/>
     <w:pitch w:val="variable"/>
-    <w:sig w:usb0="20002A87" w:usb1="80000000" w:usb2="00000008" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
-  </w:font>
-  <w:font w:name="Courier New">
-    <w:panose1 w:val="02070309020205020404"/>
-    <w:charset w:val="00"/>
-    <w:family w:val="modern"/>
-    <w:pitch w:val="fixed"/>
-    <w:sig w:usb0="20002A87" w:usb1="80000000" w:usb2="00000008" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
-  </w:font>
-  <w:font w:name="Wingdings">
-    <w:panose1 w:val="05000000000000000000"/>
-    <w:charset w:val="02"/>
-    <w:family w:val="auto"/>
-    <w:pitch w:val="variable"/>
-    <w:sig w:usb0="00000000" w:usb1="10000000" w:usb2="00000000" w:usb3="00000000" w:csb0="80000000" w:csb1="00000000"/>
+    <w:sig w:usb0="E0002AFF" w:usb1="C0007841" w:usb2="00000009" w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
   </w:font>
   <w:font w:name="Calibri">
     <w:panose1 w:val="020F0502020204030204"/>
     <w:charset w:val="00"/>
     <w:family w:val="swiss"/>
     <w:pitch w:val="variable"/>
-    <w:sig w:usb0="A00002EF" w:usb1="4000207B" w:usb2="00000000" w:usb3="00000000" w:csb0="0000009F" w:csb1="00000000"/>
+    <w:sig w:usb0="E10002FF" w:usb1="4000ACFF" w:usb2="00000009" w:usb3="00000000" w:csb0="0000019F" w:csb1="00000000"/>
   </w:font>
   <w:font w:name="Cambria">
     <w:panose1 w:val="02040503050406030204"/>
     <w:charset w:val="00"/>
     <w:family w:val="roman"/>
     <w:pitch w:val="variable"/>
-    <w:sig w:usb0="A00002EF" w:usb1="4000004B" w:usb2="00000000" w:usb3="00000000" w:csb0="0000009F" w:csb1="00000000"/>
+    <w:sig w:usb0="E00002FF" w:usb1="400004FF" w:usb2="00000000" w:usb3="00000000" w:csb0="0000019F" w:csb1="00000000"/>
   </w:font>
 </w:fonts>
 
@@ -759,11 +743,26 @@ declare function ooxml:font-table(
 declare function ooxml:numbering(
 ) as element(w:numbering)
 {
-<w:numbering xmlns:ve="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml">
+<w:numbering xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:o="urn:schemas-microsoft-com:office:office" 
+             xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
+             xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
+             xmlns:v="urn:schemas-microsoft-com:vml" 
+             xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
+             xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
+             xmlns:w10="urn:schemas-microsoft-com:office:word" 
+             xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
+             xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
+             xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
+             xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
+             xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
+             xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+             mc:Ignorable="w14 wp14">
   <w:abstractNum w:abstractNumId="0">
-    <w:nsid w:val="024D68ED"/>
+    <w:nsid w:val="73F96E0C"/>
     <w:multiLevelType w:val="hybridMultilevel"/>
-    <w:tmpl w:val="4A228AE4"/>
+    <w:tmpl w:val="01DA662E"/>
     <w:lvl w:ilvl="0" w:tplc="0409000F">
       <w:start w:val="1"/>
       <w:numFmt w:val="decimal"/>
@@ -846,151 +845,48 @@ declare function ooxml:numbering(
       </w:pPr>
     </w:lvl>
   </w:abstractNum>
-  <w:abstractNum w:abstractNumId="1">
-    <w:nsid w:val="0C8C0FAC"/>
-    <w:multiLevelType w:val="hybridMultilevel"/>
-    <w:tmpl w:val="ECCE2F5C"/>
-    <w:lvl w:ilvl="0" w:tplc="04090001">
-      <w:start w:val="1"/>
-      <w:numFmt w:val="bullet"/>
-      <w:lvlText w:val="?"/>
-      <w:lvlJc w:val="left"/>
-      <w:pPr>
-        <w:ind w:left="720" w:hanging="360"/>
-      </w:pPr>
-      <w:rPr>
-        <w:rFonts w:ascii="Symbol" w:hAnsi="Symbol" w:hint="default"/>
-      </w:rPr>
-    </w:lvl>
-    <w:lvl w:ilvl="1" w:tplc="04090003" w:tentative="1">
-      <w:start w:val="1"/>
-      <w:numFmt w:val="bullet"/>
-      <w:lvlText w:val="o"/>
-      <w:lvlJc w:val="left"/>
-      <w:pPr>
-        <w:ind w:left="1440" w:hanging="360"/>
-      </w:pPr>
-      <w:rPr>
-        <w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New" w:hint="default"/>
-      </w:rPr>
-    </w:lvl>
-    <w:lvl w:ilvl="2" w:tplc="04090005" w:tentative="1">
-      <w:start w:val="1"/>
-      <w:numFmt w:val="bullet"/>
-      <w:lvlText w:val="?"/>
-      <w:lvlJc w:val="left"/>
-      <w:pPr>
-        <w:ind w:left="2160" w:hanging="360"/>
-      </w:pPr>
-      <w:rPr>
-        <w:rFonts w:ascii="Wingdings" w:hAnsi="Wingdings" w:hint="default"/>
-      </w:rPr>
-    </w:lvl>
-    <w:lvl w:ilvl="3" w:tplc="04090001" w:tentative="1">
-      <w:start w:val="1"/>
-      <w:numFmt w:val="bullet"/>
-      <w:lvlText w:val="?"/>
-      <w:lvlJc w:val="left"/>
-      <w:pPr>
-        <w:ind w:left="2880" w:hanging="360"/>
-      </w:pPr>
-      <w:rPr>
-        <w:rFonts w:ascii="Symbol" w:hAnsi="Symbol" w:hint="default"/>
-      </w:rPr>
-    </w:lvl>
-    <w:lvl w:ilvl="4" w:tplc="04090003" w:tentative="1">
-      <w:start w:val="1"/>
-      <w:numFmt w:val="bullet"/>
-      <w:lvlText w:val="o"/>
-      <w:lvlJc w:val="left"/>
-      <w:pPr>
-        <w:ind w:left="3600" w:hanging="360"/>
-      </w:pPr>
-      <w:rPr>
-        <w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New" w:hint="default"/>
-      </w:rPr>
-    </w:lvl>
-    <w:lvl w:ilvl="5" w:tplc="04090005" w:tentative="1">
-      <w:start w:val="1"/>
-      <w:numFmt w:val="bullet"/>
-      <w:lvlText w:val="?"/>
-      <w:lvlJc w:val="left"/>
-      <w:pPr>
-        <w:ind w:left="4320" w:hanging="360"/>
-      </w:pPr>
-      <w:rPr>
-        <w:rFonts w:ascii="Wingdings" w:hAnsi="Wingdings" w:hint="default"/>
-      </w:rPr>
-    </w:lvl>
-    <w:lvl w:ilvl="6" w:tplc="04090001" w:tentative="1">
-      <w:start w:val="1"/>
-      <w:numFmt w:val="bullet"/>
-      <w:lvlText w:val="?"/>
-      <w:lvlJc w:val="left"/>
-      <w:pPr>
-        <w:ind w:left="5040" w:hanging="360"/>
-      </w:pPr>
-      <w:rPr>
-        <w:rFonts w:ascii="Symbol" w:hAnsi="Symbol" w:hint="default"/>
-      </w:rPr>
-    </w:lvl>
-    <w:lvl w:ilvl="7" w:tplc="04090003" w:tentative="1">
-      <w:start w:val="1"/>
-      <w:numFmt w:val="bullet"/>
-      <w:lvlText w:val="o"/>
-      <w:lvlJc w:val="left"/>
-      <w:pPr>
-        <w:ind w:left="5760" w:hanging="360"/>
-      </w:pPr>
-      <w:rPr>
-        <w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New" w:hint="default"/>
-      </w:rPr>
-    </w:lvl>
-    <w:lvl w:ilvl="8" w:tplc="04090005" w:tentative="1">
-      <w:start w:val="1"/>
-      <w:numFmt w:val="bullet"/>
-      <w:lvlText w:val="?"/>
-      <w:lvlJc w:val="left"/>
-      <w:pPr>
-        <w:ind w:left="6480" w:hanging="360"/>
-      </w:pPr>
-      <w:rPr>
-        <w:rFonts w:ascii="Wingdings" w:hAnsi="Wingdings" w:hint="default"/>
-      </w:rPr>
-    </w:lvl>
-  </w:abstractNum>
   <w:num w:numId="1">
-    <w:abstractNumId w:val="1"/>
-  </w:num>
-  <w:num w:numId="2">
     <w:abstractNumId w:val="0"/>
   </w:num>
 </w:numbering>
+
 
 };
 
 declare function ooxml:settings(
 ) as element(w:settings)
 {
-<w:settings xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main">
+<w:settings xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:o="urn:schemas-microsoft-com:office:office" 
+            xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
+            xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
+            xmlns:v="urn:schemas-microsoft-com:vml" 
+            xmlns:w10="urn:schemas-microsoft-com:office:word" 
+            xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
+            xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
+            xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main" 
+            mc:Ignorable="w14">
   <w:zoom w:percent="100"/>
   <w:proofState w:spelling="clean" w:grammar="clean"/>
   <w:defaultTabStop w:val="720"/>
   <w:characterSpacingControl w:val="doNotCompress"/>
   <w:compat>
-    <w:useFELayout/>
+    <w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="14"/>
+    <w:compatSetting w:name="overrideTableStyleFontSizeAndJustification" w:uri="http://schemas.microsoft.com/office/word" w:val="1"/>
+    <w:compatSetting w:name="enableOpenTypeFeatures" w:uri="http://schemas.microsoft.com/office/word" w:val="1"/>
+    <w:compatSetting w:name="doNotFlipMirrorIndents" w:uri="http://schemas.microsoft.com/office/word" w:val="1"/>
   </w:compat>
   <w:rsids>
-    <w:rsidRoot w:val="003D2A77"/>
-    <w:rsid w:val="002A2DDE"/>
-    <w:rsid w:val="00397362"/>
-    <w:rsid w:val="003D2A77"/>
+    <w:rsidRoot w:val="001D6F99"/>
+    <w:rsid w:val="001D6F99"/>
+    <w:rsid w:val="00516A85"/>
+    <w:rsid w:val="007C00EF"/>
   </w:rsids>
   <m:mathPr>
     <m:mathFont m:val="Cambria Math"/>
     <m:brkBin m:val="before"/>
     <m:brkBinSub m:val="--"/>
-    <m:smallFrac m:val="off"/>
+    <m:smallFrac m:val="0"/>
     <m:dispDef/>
     <m:lMargin m:val="0"/>
     <m:rMargin m:val="0"/>
@@ -1002,7 +898,7 @@ declare function ooxml:settings(
   <w:themeFontLang w:val="en-US"/>
   <w:clrSchemeMapping w:bg1="light1" w:t1="dark1" w:bg2="light2" w:t2="dark2" w:accent1="accent1" w:accent2="accent2" w:accent3="accent3" w:accent4="accent4" w:accent5="accent5" w:accent6="accent6" w:hyperlink="hyperlink" w:followedHyperlink="followedHyperlink"/>
   <w:shapeDefaults>
-    <o:shapedefaults v:ext="edit" spidmax="3074"/>
+    <o:shapedefaults v:ext="edit" spidmax="1026"/>
     <o:shapelayout v:ext="edit">
       <o:idmap v:ext="edit" data="1"/>
     </o:shapelayout>
@@ -1011,16 +907,21 @@ declare function ooxml:settings(
   <w:listSeparator w:val=","/>
 </w:settings>
 
+
 };
 
 declare function ooxml:styles(
 ) as element(w:styles)
 {
-<w:styles xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:styles xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+          xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
+          xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
+          xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
+          mc:Ignorable="w14">
   <w:docDefaults>
     <w:rPrDefault>
       <w:rPr>
-        <w:rFonts w:asciiTheme="minorHAnsi" w:eastAsiaTheme="minorEastAsia" w:hAnsiTheme="minorHAnsi" w:cstheme="minorBidi"/>
+        <w:rFonts w:asciiTheme="minorHAnsi" w:eastAsiaTheme="minorHAnsi" w:hAnsiTheme="minorHAnsi" w:cstheme="minorBidi"/>
         <w:sz w:val="22"/>
         <w:szCs w:val="22"/>
         <w:lang w:val="en-US" w:eastAsia="en-US" w:bidi="ar-SA"/>
@@ -1174,7 +1075,6 @@ declare function ooxml:styles(
   <w:style w:type="paragraph" w:default="1" w:styleId="Normal">
     <w:name w:val="Normal"/>
     <w:qFormat/>
-    <w:rsid w:val="00397362"/>
   </w:style>
   <w:style w:type="character" w:default="1" w:styleId="DefaultParagraphFont">
     <w:name w:val="Default Paragraph Font"/>
@@ -1187,7 +1087,6 @@ declare function ooxml:styles(
     <w:uiPriority w:val="99"/>
     <w:semiHidden/>
     <w:unhideWhenUsed/>
-    <w:qFormat/>
     <w:tblPr>
       <w:tblInd w:w="0" w:type="dxa"/>
       <w:tblCellMar>
@@ -1209,7 +1108,7 @@ declare function ooxml:styles(
     <w:basedOn w:val="Normal"/>
     <w:uiPriority w:val="34"/>
     <w:qFormat/>
-    <w:rsid w:val="003D2A77"/>
+    <w:rsid w:val="007C00EF"/>
     <w:pPr>
       <w:ind w:left="720"/>
       <w:contextualSpacing/>
@@ -1296,6 +1195,7 @@ declare function ooxml:theme(
         <a:font script="Mong" typeface="Mongolian Baiti"/>
         <a:font script="Viet" typeface="Times New Roman"/>
         <a:font script="Uigh" typeface="Microsoft Uighur"/>
+        <a:font script="Geor" typeface="Sylfaen"/>
       </a:majorFont>
       <a:minorFont>
         <a:latin typeface="Calibri"/>
@@ -1330,6 +1230,7 @@ declare function ooxml:theme(
         <a:font script="Mong" typeface="Mongolian Baiti"/>
         <a:font script="Viet" typeface="Arial"/>
         <a:font script="Uigh" typeface="Microsoft Uighur"/>
+        <a:font script="Geor" typeface="Sylfaen"/>
       </a:minorFont>
     </a:fontScheme>
     <a:fmtScheme name="Office">
@@ -1509,11 +1410,11 @@ declare function ooxml:document-rels(
 ) as element(pr:Relationships)
 {
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>
-  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
-  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/>
-  <Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>
-  <Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/>
+   <Relationship Id="rId7" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>
+   <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+   <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/>
+   <Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/>
+   <Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>
 </Relationships>
 };
 
@@ -1583,8 +1484,24 @@ declare function ooxml:document(
   $body as element(w:body)
 ) as element(w:document)
 {
-    <w:document>
-     {$body}
+   
+    <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                xmlns:o="urn:schemas-microsoft-com:office:office" 
+                xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
+                xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
+                xmlns:v="urn:schemas-microsoft-com:vml" 
+                xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
+                xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
+                xmlns:w10="urn:schemas-microsoft-com:office:word" 
+                xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
+                xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
+                xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
+                xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
+                xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
+                xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+                mc:Ignorable="w14 wp14">
+       {$body}
     </w:document>
 };
 
