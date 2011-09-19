@@ -214,7 +214,7 @@ declare function ooxml:add-paragraph-properties(
   $type as xs:string
 ) as node()*
 {
-    element w:p{ $wp/@*, $paraprops, ooxml:set-paragraph-styles-passthru($wp/* except $wp/w:pPr, $paraprops, $type) }
+    element w:p{ $wp/@*, $paraprops, $wp/* except $wp/w:pPr }
 };
 
 declare function ooxml:replace-paragraph-styles(
@@ -615,6 +615,110 @@ $binstring as xs:string)
       fn:string-join(ooxml:format-binary($binstring),"&#xD;&#xA;") 
 };
 
+
+declare function ooxml:passthru-pkg-doc(
+  $pkg as node() 
+) as node()*
+{
+    for $i in $pkg/node() return ooxml:namespace-2010-update($i)
+};
+
+declare function ooxml:namespace-2010-update(
+  $pkg as node()
+) as node()*
+{
+    typeswitch($pkg)
+     case text() return $pkg
+     case document-node() return document {$pkg/@*, ooxml:passthru-pkg-doc($pkg)}
+     case element(w:document) return <w:document xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+                                                   xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"
+                                                   xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+                                                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                                                   xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+                                                   xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+                                                   xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+                                                   xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+                                                   xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
+                                        >
+                                           {$pkg/@*,ooxml:passthru-pkg-doc($pkg)}
+                                       </w:document>
+
+     case element(w:styles) return <w:styles xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+                                             xmlns:o="urn:schemas-microsoft-com:office:office" 
+                                             xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
+                                             xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
+                                             xmlns:v="urn:schemas-microsoft-com:vml" 
+                                             xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
+                                             xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
+                                             xmlns:w10="urn:schemas-microsoft-com:office:word"
+                                             xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
+                                             xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
+                                             xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
+                                             xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
+                                             xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
+                                     >
+                                           {$pkg/@*,ooxml:passthru-pkg-doc($pkg)}
+                                   </w:styles>
+     case element(w:fonts) return  <w:fonts xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
+                                            xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+                                   >
+                                           {$pkg/@*,ooxml:passthru-pkg-doc($pkg)}
+                                   </w:fonts>
+     case element(w:webSettings) return <w:webSettings xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
+                                                       xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+                                        >
+                                           {$pkg/@*,ooxml:passthru-pkg-doc($pkg)}
+                                        </w:webSettings>
+     case element(w:settings) return <w:settings xmlns:o="urn:schemas-microsoft-com:office:office"
+                                                 xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+                                                 xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+                                                 xmlns:v="urn:schemas-microsoft-com:vml"
+                                                 xmlns:w10="urn:schemas-microsoft-com:office:word"
+                                                 xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+                                                 xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main"
+                                      >
+                                           {$pkg/@*,ooxml:passthru-pkg-doc($pkg)}
+                                      </w:settings>
+     case element(w:glossaryDocument) return <w:glossaryDocument xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
+                                                                 xmlns:o="urn:schemas-microsoft-com:office:office" 
+                                                                 xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
+                                                                 xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
+                                                                 xmlns:v="urn:schemas-microsoft-com:vml" 
+                                                                 xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
+                                                                 xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
+                                                                 xmlns:w10="urn:schemas-microsoft-com:office:word" 
+                                                                 xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
+                                                                 xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
+                                                                 xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
+                                                                 xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
+                                                                 xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
+                                             >
+                                                   {$pkg/@*,ooxml:passthru-pkg-doc($pkg)}
+                                             </w:glossaryDocument>
+     case element(w:numbering) return <w:numbering xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
+                                                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                                                   xmlns:o="urn:schemas-microsoft-com:office:office" 
+                                                   xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
+                                                   xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
+                                                   xmlns:v="urn:schemas-microsoft-com:vml" 
+                                                   xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
+                                                   xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
+                                                   xmlns:w10="urn:schemas-microsoft-com:office:word" 
+                                                   xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
+                                                   xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
+                                                   xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
+                                                   xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
+                                                   xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
+                                                   xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+                                                   mc:Ignorable="w14 wp14"
+                                      >
+                                                   {ooxml:passthru-pkg-doc($pkg)}
+                                      </w:numbering>
+ 
+     case element() return  element{fn:node-name($pkg)} {$pkg/@* ,ooxml:passthru-pkg-doc($pkg)} 
+     default return $pkg
+};
+
 declare function ooxml:package(
   $nodes as node()*
 ) as element(pkg:package)
@@ -630,8 +734,8 @@ declare function ooxml:package(
                          let $bin := ooxml:binary-to-base64-string($node)  
                          let $formattedbin := ooxml:base64-opc-format($bin) 
                          return element pkg:part { ooxml:get-part-attributes($node), element pkg:binaryData { $formattedbin  } } 
-                   else 
-                         element pkg:part { ooxml:get-part-attributes($node), element pkg:xmlData { $node }}
+                   else  (:have to check filetypes and update namespaces for 2010 :)
+                         element pkg:part { ooxml:get-part-attributes($node), element pkg:xmlData { ooxml:namespace-2010-update($node) }}
       return  $part 
                        }
 };
@@ -1615,7 +1719,8 @@ declare function ooxml:replace-package-document(
   $document-xml as element(w:document)
 ) as element(pkg:package)
 {
-   ooxml:dispatch-doc-replace($pkg-xml, $document-xml)
+   let $doc := ooxml:dispatch-doc-replace($pkg-xml, $document-xml)
+   return ooxml:namespace-2010-update($doc)
 };
 (: END replace document.xml within Flat OPC Package XML ===================  :)
 
