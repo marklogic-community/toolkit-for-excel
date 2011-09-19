@@ -1388,7 +1388,7 @@ import module namespace ooxml= "http://marklogic.com/openxml"
 		  at "MarkLogic/openxml/word-processing-ml-support.xqy";
 declare namespace w= "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 
-let $wp := <w:p><w:r><w:t>The MarkLogic government summit was in Washington DC this year.</w:t></w:r></w:p>
+let $wp := &lt;w:p&gt;&lt;w:r&gt;&lt;w:t&gt;The MarkLogic government summit was in Washington DC this year.&lt;/w:t&gt;&lt;/w:r&gt;&lt;/w:p&gt;
 return ooxml:custom-xml-entity-highlight($wp)
 =&gt;
 &lt;w:p&gt;
@@ -3574,8 +3574,8 @@ declare namespace w=
   "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 
 let $styleids := "oslo"
-let $styles := doc("/Test_docx_parts/word/styles.xml") 
-return ooxml:get-style-definition($styleids, $styles)/w:style
+let $styles := doc("/Test_docx_parts/word/styles.xml")/w:styles 
+return ooxml:get-style-definition($styleids, $styles)
 =&gt;
 &lt;w:style xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
        	w:type="character" w:customStyle="1" w:styleId="oslo"&gt;
