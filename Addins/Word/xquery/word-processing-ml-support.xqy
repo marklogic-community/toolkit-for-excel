@@ -53,6 +53,7 @@ declare variable $ooxml:EXT-PROPERTIES := "http://schemas.openxmlformats.org/off
 declare variable $ooxml:CORE-PROPERTIES := "http://schemas.openxmlformats.org/package/2006/metadata/core-properties";
 declare variable $ooxml:CUSTOM-PROPERTIES := "http://schemas.openxmlformats.org/officeDocument/2006/custom-properties";
 declare variable $ooxml:CUSTOM-XML-PROPS := "http://schemas.openxmlformats.org/officeDocument/2006/customXml";
+declare variable $ooxml:CHART:="http://schemas.openxmlformats.org/drawingml/2006/chart";
 
 (:version 2.0:)
 
@@ -532,16 +533,27 @@ declare function ooxml:get-part-content-type(
     else if(fn:node-name($node) eq fn:QName($ooxml:CUSTOM-XML-PROPS, "datastoreItem"))
     then 
         "application/vnd.openxmlformats-officedocument.customXmlProperties+xml"
-    (: else if(fn:matches($uri,"customXml/item\d+\.xml")) then :)
-    else 
+    else if(fn:node-name($node) eq fn:QName($ooxml:CHART, "chartSpace"))
+    then
+        "application/vnd.openxmlformats-officedocument.drawingml.chart+xml"
+    else
         "application/xml"
+
+    (: else if(fn:matches($uri,"customXml/item\d+\.xml")) then :)
+    
 
 };
 
-declare function get-image-part-content-type(
+declare function get-binary-part-content-type(
   $uri as xs:string
 )as xs:string?
 {
+(: if the following were defined in the mimetypes configuration, you could use
+   ooxml:get-mimetype() or xdmp:uri-content-type().
+   All following are not guaranteed to be defined in the mimetypes config so
+   they are defined here for convenience 
+:)
+
     if(fn:ends-with(fn:upper-case($uri),"JPEG")) 
     then
         "image/jpeg"
@@ -553,8 +565,34 @@ declare function get-image-part-content-type(
         "image/png"
     else if(fn:ends-with(fn:upper-case($uri),"GIF"))
     then
-         "image/gif"
-    else ()
+        "image/gif"
+    else if(fn:ends-with(fn:upper-case($uri),"EMF")) then
+        "image/x-emf"
+    else if(fn:ends-with(fn:upper-case($uri),"XLSX")) then
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    else if(fn:ends-with(fn:upper-case($uri),"XLSM")) then
+        "application/vnd.ms-excel.sheet.macroEnabled.12"
+    else if(fn:ends-with(fn:upper-case($uri),"XLSB")) then
+        "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
+    else if(fn:ends-with(fn:upper-case($uri),"DOCX")) then
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    else if(fn:ends-with(fn:upper-case($uri),"DOTX")) then
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.template"
+    else if(fn:ends-with(fn:upper-case($uri),"DOCM")) then
+        "application/vnd.ms-word.document.macroEnabled.12"
+    else if(fn:ends-with(fn:upper-case($uri),"DOTM")) then
+        "application/vnd.ms-word.template.macroEnabled.12"
+    else if(fn:ends-with(fn:upper-case($uri),"PPTX")) then
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    else if(fn:ends-with(fn:upper-case($uri),"PPTM")) then
+         "application/vnd.ms-powerpoint.presentation.macroEnabled.12"
+    else if(fn:ends-with(fn:upper-case($uri),"PPSX")) then
+         "application/vnd.openxmlformats-officedocument.presentationml.slideshow"
+    else if(fn:ends-with(fn:upper-case($uri),"PPSM")) then
+         "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"
+    else
+        ()
+
 };
 
 declare function ooxml:get-part-attributes(
@@ -568,7 +606,7 @@ declare function ooxml:get-part-attributes(
     let $name := attribute pkg:name{$uri}
 
     let $contenttype := if (xdmp:node-kind($node) eq "binary") then
-                            attribute pkg:contentType{ooxml:get-image-part-content-type($uri)}
+                            attribute pkg:contentType{ooxml:get-binary-part-content-type($uri)}
                         else
                              attribute pkg:contentType{ooxml:get-part-content-type($node)} 
 
