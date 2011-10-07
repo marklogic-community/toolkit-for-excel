@@ -661,42 +661,6 @@ declare function ooxml:dispatch-pkg-ns(
     for $i in $pkg/node() return ooxml:namespace-update($i)
 };
 
-declare function ooxml:namespace-map()
-{
-   let $map := map:map()
-   let $put := ((: w:document :)
-                map:put($map,"a","http://schemas.openxmlformats.org/drawingml/2006/main"),
-                map:put($map,"pic","http://schemas.openxmlformats.org/drawingml/2006/picture"),
-                map:put($map,"wpc","http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
-                map:put($map,"mc","http://schemas.openxmlformats.org/markup-compatibility/2006"),
-                map:put($map,"wp14","http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
-                map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
-                map:put($map,"wpg","http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"),
-                map:put($map,"wpi","http://schemas.microsoft.com/office/word/2010/wordprocessingInk"),
-                map:put($map,"wps","http://schemas.microsoft.com/office/word/2010/wordprocessingShape"),
-
-                (: w:styles :)
-                map:put($map,"o","urn:schemas-microsoft-com:office:office"),
-                map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
-                map:put($map,"m","http://schemas.openxmlformats.org/officeDocument/2006/math"),
-                map:put($map,"v","urn:schemas-microsoft-com:vml"),
-                map:put($map,"wp","http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"), 
-                map:put($map,"w10","urn:schemas-microsoft-com:office:word"),
-                map:put($map,"wne","http://schemas.microsoft.com/office/word/2006/wordml"), 
-
-                (: w:fonts w:webSetting r w14 :)
-                (: w:settings :)
-                map:put($map,"sl","http://schemas.openxmlformats.org/schemaLibrary/2006/main"),
-             
-                (: w:glossaryDocument :)
-                (: w:numbering :)
-                map:put($map,"w","http://schemas.openxmlformats.org/wordprocessingml/2006/main") 
-
-                                       
-               )
-   return $map
-};
-
 declare function ooxml:namespace-map-document()
 {
     let $map := map:map()
@@ -882,102 +846,6 @@ declare function ooxml:namespace-update(
      default return $pkg
 };
  
-declare function ooxml:namespace-update-orig(
-  $pkg as node()
-) as node()*
-{
-    typeswitch($pkg)
-     case text() return $pkg
-     case document-node() return document {$pkg/@*, ooxml:dispatch-pkg-ns($pkg)}
-     case element(w:document) return <w:document xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
-                                                   xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"
-                                                   xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
-                                                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                                                   xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
-                                                   xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
-                                                   xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
-                                                   xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
-                                                   xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
-                                        >
-                                           {$pkg/@*,ooxml:dispatch-pkg-ns($pkg)}
-                                       </w:document>
-
-     case element(w:styles) return <w:styles xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
-                                             xmlns:o="urn:schemas-microsoft-com:office:office" 
-                                             xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-                                             xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
-                                             xmlns:v="urn:schemas-microsoft-com:vml" 
-                                             xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
-                                             xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
-                                             xmlns:w10="urn:schemas-microsoft-com:office:word"
-                                             xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-                                             xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
-                                             xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
-                                             xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
-                                             xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
-                                     >
-                                           {$pkg/@*,ooxml:dispatch-pkg-ns($pkg)}
-                                   </w:styles>
-     case element(w:fonts) return  <w:fonts xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-                                            xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
-                                   >
-                                           {$pkg/@*,ooxml:dispatch-pkg-ns($pkg)}
-                                   </w:fonts>
-     case element(w:webSettings) return <w:webSettings xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-                                                       xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
-                                        >
-                                           {$pkg/@*,ooxml:dispatch-pkg-ns($pkg)}
-                                        </w:webSettings>
-     case element(w:settings) return <w:settings xmlns:o="urn:schemas-microsoft-com:office:office"
-                                                 xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
-                                                 xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
-                                                 xmlns:v="urn:schemas-microsoft-com:vml"
-                                                 xmlns:w10="urn:schemas-microsoft-com:office:word"
-                                                 xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
-                                                 xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main"
-                                      >
-                                           {$pkg/@*,ooxml:dispatch-pkg-ns($pkg)}
-                                      </w:settings>
-     case element(w:glossaryDocument) return <w:glossaryDocument xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
-                                                                 xmlns:o="urn:schemas-microsoft-com:office:office" 
-                                                                 xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-                                                                 xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
-                                                                 xmlns:v="urn:schemas-microsoft-com:vml" 
-                                                                 xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
-                                                                 xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
-                                                                 xmlns:w10="urn:schemas-microsoft-com:office:word" 
-                                                                 xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-                                                                 xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
-                                                                 xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
-                                                                 xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
-                                                                 xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
-                                             >
-                                                   {$pkg/@*,ooxml:dispatch-pkg-ns($pkg)}
-                                             </w:glossaryDocument>
-     case element(w:numbering) return <w:numbering xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
-                                                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-                                                   xmlns:o="urn:schemas-microsoft-com:office:office" 
-                                                   xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-                                                   xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
-                                                   xmlns:v="urn:schemas-microsoft-com:vml" 
-                                                   xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
-                                                   xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
-                                                   xmlns:w10="urn:schemas-microsoft-com:office:word" 
-                                                   xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
-                                                   xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-                                                   xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
-                                                   xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
-                                                   xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
-                                                   xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
-                                                   mc:Ignorable="w14 wp14"
-                                      >
-                                                   {ooxml:dispatch-pkg-ns($pkg)}
-                                      </w:numbering>
- 
-     case element() return  element{fn:node-name($pkg)} {$pkg/@* ,ooxml:dispatch-pkg-ns($pkg)} 
-     default return $pkg
-};
-
 declare function ooxml:package(
   $nodes as node()*
 ) as element(pkg:package)
@@ -1972,7 +1840,7 @@ declare function ooxml:dispatch-doc-replace(
      case document-node() return document {$x/@*,ooxml:passthru-pkg-doc($x, $document-xml)}
      default return $x
 };
-(:HERE:)
+
 declare function ooxml:replace-package-document(
   $pkg-xml as element(pkg:package), 
   $document-xml as element(w:document)
