@@ -65,24 +65,88 @@ return xdmp:save("C:\simpleDocxTest-4.docx",ooxml:docx-package($content-types, $
 
 }
 </test4>
-<test5>
+<test5A>
 {
 (:assumes sampleManuscript.docx has been saved to db and extracted using Office Open XML Extract pipeline :)
 (: ooxml:package has been updated to add 2010 namespaces to certain .docx components
    so 2007 documents may open properly in 2010; 2007 docs will open in 2010 in compatability mode :)
 let $directory:="/sampleManuscript_docx_parts/" 
 let $package := ooxml:get-directory-package($directory)
-return xdmp:save("C:\testOutput-1.xml",$package)
+return xdmp:save("C:\testOutput-1a.xml",$package)
 }
-</test5>
-<test6>
+</test5A>
+<test5B>
+{
+(:assumes sampleManuscript2007.docx has been saved to db and extracted using Office Open XML Extract pipeline :)
+let $directory:="/sampleManuscript2007_docx_parts/" 
+let $package := ooxml:get-directory-package($directory)
+return xdmp:save("C:\testOutput-1b.xml",$package)
+}
+</test5B>
+<test5C>
+{
+(:assumes sampleManuscript2010.docx has been saved to db and extracted using Office Open XML Extract pipeline :)
+let $directory:="/sampleManuscript2010_docx_parts/" 
+let $package := ooxml:get-directory-package($directory)
+return xdmp:save("C:\testOutput-1c.xml",$package)
+}
+</test5C>
+<test5D>
+{
+(:assumes TractorDrivers2007.docx has been saved to db and extracted using Office Open XML Extract pipeline :)
+let $directory:="/TractorDrivers2007_docx_parts/" 
+let $package := ooxml:get-directory-package($directory)
+return xdmp:save("C:\testOutput-1d.xml",$package)
+}
+</test5D>
+<test5E>
+{
+(:assumes TractorDrivers2010.docx has been saved to db and extracted using Office Open XML Extract pipeline :)
+let $directory:="/TractorDrivers2010_docx_parts/" 
+let $package := ooxml:get-directory-package($directory)
+return xdmp:save("C:\testOutput-1e.xml",$package)
+}
+</test5E>
+<test6A>
 {
 let $directory := "/sampleManuscript_docx_parts/"
 let $uris := ooxml:directory-uris($directory)
 let $parts := fn:doc(($uris))/node()
-return xdmp:save("C:\testOutput-2.xml",ooxml:package($parts))
+return xdmp:save("C:\testOutput-2a.xml",ooxml:package($parts))
 }
-</test6>
+</test6A>
+<test6B>
+{
+let $directory := "/sampleManuscript2007_docx_parts/"
+let $uris := ooxml:directory-uris($directory)
+let $parts := fn:doc(($uris))/node()
+return xdmp:save("C:\testOutput-2b.xml",ooxml:package($parts))
+}
+</test6B>
+<test6C>
+{
+let $directory := "/sampleManuscript2010_docx_parts/"
+let $uris := ooxml:directory-uris($directory)
+let $parts := fn:doc(($uris))/node()
+return xdmp:save("C:\testOutput-2c.xml",ooxml:package($parts))
+}
+</test6C>
+<test6D>
+{
+let $directory := "/TractorDrivers2007_docx_parts/"
+let $uris := ooxml:directory-uris($directory)
+let $parts := fn:doc(($uris))/node()
+return xdmp:save("C:\testOutput-2d.xml",ooxml:package($parts))
+}
+</test6D>
+<test6E>
+{
+let $directory := "/TractorDrivers2010_docx_parts/"
+let $uris := ooxml:directory-uris($directory)
+let $parts := fn:doc(($uris))/node()
+return xdmp:save("C:\testOutput-2e.xml",ooxml:package($parts))
+}
+</test6E>
 <test7>
 {
 let $text2 := ooxml:text("Four scored and seven years ago, our forefathers put forth on this great nation...")
