@@ -654,20 +654,241 @@ $binstring as xs:string)
 };
 
 
-declare function ooxml:passthru-pkg-doc(
+declare function ooxml:dispatch-pkg-ns(
   $pkg as node() 
 ) as node()*
 {
-    for $i in $pkg/node() return ooxml:namespace-2010-update($i)
+    for $i in $pkg/node() return ooxml:namespace-update($i)
 };
 
-declare function ooxml:namespace-2010-update(
+declare function ooxml:namespace-map()
+{
+   let $map := map:map()
+   let $put := ((: w:document :)
+                map:put($map,"a","http://schemas.openxmlformats.org/drawingml/2006/main"),
+                map:put($map,"pic","http://schemas.openxmlformats.org/drawingml/2006/picture"),
+                map:put($map,"wpc","http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
+                map:put($map,"mc","http://schemas.openxmlformats.org/markup-compatibility/2006"),
+                map:put($map,"wp14","http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
+                map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
+                map:put($map,"wpg","http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"),
+                map:put($map,"wpi","http://schemas.microsoft.com/office/word/2010/wordprocessingInk"),
+                map:put($map,"wps","http://schemas.microsoft.com/office/word/2010/wordprocessingShape"),
+
+                (: w:styles :)
+                map:put($map,"o","urn:schemas-microsoft-com:office:office"),
+                map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                map:put($map,"m","http://schemas.openxmlformats.org/officeDocument/2006/math"),
+                map:put($map,"v","urn:schemas-microsoft-com:vml"),
+                map:put($map,"wp","http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"), 
+                map:put($map,"w10","urn:schemas-microsoft-com:office:word"),
+                map:put($map,"wne","http://schemas.microsoft.com/office/word/2006/wordml"), 
+
+                (: w:fonts w:webSetting r w14 :)
+                (: w:settings :)
+                map:put($map,"sl","http://schemas.openxmlformats.org/schemaLibrary/2006/main"),
+             
+                (: w:glossaryDocument :)
+                (: w:numbering :)
+                map:put($map,"w","http://schemas.openxmlformats.org/wordprocessingml/2006/main") 
+
+                                       
+               )
+   return $map
+};
+
+declare function ooxml:namespace-map-document()
+{
+    let $map := map:map()
+    let $put := (
+                  map:put($map,"a","http://schemas.openxmlformats.org/drawingml/2006/main"),
+                  map:put($map,"pic","http://schemas.openxmlformats.org/drawingml/2006/picture"),
+                  map:put($map,"wpc","http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
+                  map:put($map,"mc","http://schemas.openxmlformats.org/markup-compatibility/2006"),
+                  map:put($map,"wp14","http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
+                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
+                  map:put($map,"wpg","http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"),
+                  map:put($map,"wpi","http://schemas.microsoft.com/office/word/2010/wordprocessingInk"),
+                  map:put($map,"wps","http://schemas.microsoft.com/office/word/2010/wordprocessingShape")
+                )
+    return $map
+                                        
+};
+
+declare function ooxml:namespace-map-styles()
+{
+    let $map := map:map()
+    let $put := (
+                  map:put($map,"wpc","http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
+                  map:put($map,"o","urn:schemas-microsoft-com:office:office"),
+                  map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                  map:put($map,"m","http://schemas.openxmlformats.org/officeDocument/2006/math") ,
+                  map:put($map,"v","urn:schemas-microsoft-com:vml"),
+                  map:put($map,"wp14","http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
+                  map:put($map,"wp","http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"), 
+                  map:put($map,"w10","urn:schemas-microsoft-com:office:word"),
+                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
+                  map:put($map,"wpg","http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"), 
+                  map:put($map,"wpi","http://schemas.microsoft.com/office/word/2010/wordprocessingInk"), 
+                  map:put($map,"wne","http://schemas.microsoft.com/office/word/2006/wordml"),
+                  map:put($map,"wps","http://schemas.microsoft.com/office/word/2010/wordprocessingShape")
+                )
+    return $map
+
+};
+
+declare function ooxml:namespace-map-fonts()
+{
+    let $map := map:map()
+    let $put := (
+                  map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml")
+                )
+    return $map
+};
+
+declare function ooxml:namespace-map-web-settings()
+{
+    let $map := map:map()
+    let $put := (
+                  map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml")
+                )
+    return $map
+};
+
+declare function ooxml:namespace-map-settings()
+{
+    let $map := map:map()
+    let $put := (
+                  map:put($map,"o","urn:schemas-microsoft-com:office:office"),
+                  map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                  map:put($map,"m","http://schemas.openxmlformats.org/officeDocument/2006/math") ,
+                  map:put($map,"v","urn:schemas-microsoft-com:vml"),
+                  map:put($map,"w10","urn:schemas-microsoft-com:office:word"),
+                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
+                  map:put($map,"sl","http://schemas.openxmlformats.org/schemaLibrary/2006/main")
+                )
+    return $map
+};
+
+declare function ooxml:namespace-map-glossary-document()
+{
+    let $map := map:map()
+    let $put := (
+                  map:put($map,"wpc","http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
+                  map:put($map,"o","urn:schemas-microsoft-com:office:office"),
+                  map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                  map:put($map,"m","http://schemas.openxmlformats.org/officeDocument/2006/math") ,
+                  map:put($map,"v","urn:schemas-microsoft-com:vml"),
+                  map:put($map,"w10","urn:schemas-microsoft-com:office:word"),
+                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
+                  map:put($map,"wp14","http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
+                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
+                  map:put($map,"wpg","http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"),
+                  map:put($map,"wpi","http://schemas.microsoft.com/office/word/2010/wordprocessingInk"),
+                  map:put($map,"wps","http://schemas.microsoft.com/office/word/2010/wordprocessingShape"),
+                  map:put($map,"wp","http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"),
+                  map:put($map,"wne","http://schemas.microsoft.com/office/word/2006/wordml")
+                )
+    return $map
+                                             
+};
+
+declare function ooxml:namespace-map-numbering()
+{
+
+    let $map := map:map()
+    let $put := (
+                  map:put($map,"wpc","http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
+                  map:put($map,"mc","http://schemas.openxmlformats.org/markup-compatibility/2006"),
+                  map:put($map,"o","urn:schemas-microsoft-com:office:office"),
+                  map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                  map:put($map,"m","http://schemas.openxmlformats.org/officeDocument/2006/math") ,
+                  map:put($map,"v","urn:schemas-microsoft-com:vml"),
+                  map:put($map,"wp14","http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
+                  map:put($map,"wp","http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"),
+                  map:put($map,"w10","urn:schemas-microsoft-com:office:word"),
+                  map:put($map,"w","http://schemas.openxmlformats.org/wordprocessingml/2006/main"),
+                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
+                  map:put($map,"wpg","http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"),
+                  map:put($map,"wpi","http://schemas.microsoft.com/office/word/2010/wordprocessingInk"),
+                  map:put($map,"wne","http://schemas.microsoft.com/office/word/2006/wordml"),
+                  map:put($map,"wps","http://schemas.microsoft.com/office/word/2010/wordprocessingShape")
+                                                   (:mc:Ignorable="w14 wp14":)
+                )
+    return $map
+       
+};
+
+
+
+declare function ooxml:namespace-add($pkg as node()*, $map as map:map)
+{
+
+     let $nss := for $ns in $pkg/namespace::* 
+                 return <x prefix="{fn:local-name($ns)}" uri="{$ns}"/>
+
+     (:let $upd := for $n in $nss
+                 let $value:= map:get($map,$n/@prefix)
+                 (:test:)
+                 return $value 
+     :)
+             (: <foo><map>{$map}</map><nss>{$nss}</nss><upd>{$upd}</upd></foo> :)
+     return  
+                   element { fn:node-name($pkg) }
+                    {
+                      ($pkg/@*,
+                      let $keys := map:keys($map)
+
+                      return for $k in $keys
+                                 let $v := map:get($map,$k)
+                                 return namespace {$k} {$v},
+                      ooxml:dispatch-pkg-ns($pkg)
+                      )
+                    }
+};
+
+declare function ooxml:namespace-update(
+  $pkg as node()
+) as node()*
+{
+
+   typeswitch($pkg)
+     case text() return $pkg
+     case document-node() return document {$pkg/@*, ooxml:dispatch-pkg-ns($pkg)}
+     case element(w:document) return 
+                               let $d-map :=  ooxml:namespace-map-document()
+                               return ooxml:namespace-add($pkg,$d-map) 
+     case element(w:styles)   return 
+                               let $s-map := ooxml:namespace-map-styles()
+                               return ooxml:namespace-add($pkg,$s-map) 
+     case element(w:fonts)    return 
+                               let $f-map := ooxml:namespace-map-fonts()
+                               return ooxml:namespace-add($pkg,$f-map)
+     case element(w:webSettings) return 
+                                  let $ws-map := ooxml:namespace-map-web-settings()
+                                  return ooxml:namespace-add($pkg,$ws-map)
+     case element(w:settings)    return 
+                                  let $ss-map := ooxml:namespace-map-settings()
+                                  return ooxml:namespace-add($pkg,$ss-map)
+     case element(w:glossaryDocument) return 
+                                       let $gd-map := ooxml:namespace-map-glossary-document()
+                                       return ooxml:namespace-add($pkg,$gd-map)
+     case element(w:numbering)        return 
+                                       let $n-map := ooxml:namespace-map-numbering()
+                                       return ooxml:namespace-add($pkg,$n-map) 
+     case element() return element{fn:node-name($pkg)} {$pkg/@* ,ooxml:dispatch-pkg-ns($pkg)} 
+     default return $pkg
+};
+ 
+declare function ooxml:namespace-update-orig(
   $pkg as node()
 ) as node()*
 {
     typeswitch($pkg)
      case text() return $pkg
-     case document-node() return document {$pkg/@*, ooxml:passthru-pkg-doc($pkg)}
+     case document-node() return document {$pkg/@*, ooxml:dispatch-pkg-ns($pkg)}
      case element(w:document) return <w:document xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
                                                    xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"
                                                    xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
@@ -678,7 +899,7 @@ declare function ooxml:namespace-2010-update(
                                                    xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
                                                    xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
                                         >
-                                           {$pkg/@*,ooxml:passthru-pkg-doc($pkg)}
+                                           {$pkg/@*,ooxml:dispatch-pkg-ns($pkg)}
                                        </w:document>
 
      case element(w:styles) return <w:styles xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
@@ -695,17 +916,17 @@ declare function ooxml:namespace-2010-update(
                                              xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
                                              xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
                                      >
-                                           {$pkg/@*,ooxml:passthru-pkg-doc($pkg)}
+                                           {$pkg/@*,ooxml:dispatch-pkg-ns($pkg)}
                                    </w:styles>
      case element(w:fonts) return  <w:fonts xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
                                             xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
                                    >
-                                           {$pkg/@*,ooxml:passthru-pkg-doc($pkg)}
+                                           {$pkg/@*,ooxml:dispatch-pkg-ns($pkg)}
                                    </w:fonts>
      case element(w:webSettings) return <w:webSettings xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
                                                        xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
                                         >
-                                           {$pkg/@*,ooxml:passthru-pkg-doc($pkg)}
+                                           {$pkg/@*,ooxml:dispatch-pkg-ns($pkg)}
                                         </w:webSettings>
      case element(w:settings) return <w:settings xmlns:o="urn:schemas-microsoft-com:office:office"
                                                  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -715,7 +936,7 @@ declare function ooxml:namespace-2010-update(
                                                  xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
                                                  xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main"
                                       >
-                                           {$pkg/@*,ooxml:passthru-pkg-doc($pkg)}
+                                           {$pkg/@*,ooxml:dispatch-pkg-ns($pkg)}
                                       </w:settings>
      case element(w:glossaryDocument) return <w:glossaryDocument xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
                                                                  xmlns:o="urn:schemas-microsoft-com:office:office" 
@@ -731,7 +952,7 @@ declare function ooxml:namespace-2010-update(
                                                                  xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
                                                                  xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
                                              >
-                                                   {$pkg/@*,ooxml:passthru-pkg-doc($pkg)}
+                                                   {$pkg/@*,ooxml:dispatch-pkg-ns($pkg)}
                                              </w:glossaryDocument>
      case element(w:numbering) return <w:numbering xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
                                                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -750,10 +971,10 @@ declare function ooxml:namespace-2010-update(
                                                    xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
                                                    mc:Ignorable="w14 wp14"
                                       >
-                                                   {ooxml:passthru-pkg-doc($pkg)}
+                                                   {ooxml:dispatch-pkg-ns($pkg)}
                                       </w:numbering>
  
-     case element() return  element{fn:node-name($pkg)} {$pkg/@* ,ooxml:passthru-pkg-doc($pkg)} 
+     case element() return  element{fn:node-name($pkg)} {$pkg/@* ,ooxml:dispatch-pkg-ns($pkg)} 
      default return $pkg
 };
 
@@ -773,7 +994,7 @@ declare function ooxml:package(
                          let $formattedbin := ooxml:base64-opc-format($bin) 
                          return element pkg:part { ooxml:get-part-attributes($node), element pkg:binaryData { $formattedbin  } } 
                    else  (:have to check filetypes and update namespaces for 2010 :)
-                         element pkg:part { ooxml:get-part-attributes($node), element pkg:xmlData { ooxml:namespace-2010-update($node) }}
+                         element pkg:part { ooxml:get-part-attributes($node), element pkg:xmlData { ooxml:namespace-update($node) }}
       return  $part 
                        }
 };
@@ -1751,14 +1972,14 @@ declare function ooxml:dispatch-doc-replace(
      case document-node() return document {$x/@*,ooxml:passthru-pkg-doc($x, $document-xml)}
      default return $x
 };
-
+(:HERE:)
 declare function ooxml:replace-package-document(
   $pkg-xml as element(pkg:package), 
   $document-xml as element(w:document)
 ) as element(pkg:package)
 {
    let $doc := ooxml:dispatch-doc-replace($pkg-xml, $document-xml)
-   return ooxml:namespace-2010-update($doc)
+   return ooxml:namespace-update($doc)
 };
 (: END replace document.xml within Flat OPC Package XML ===================  :)
 
