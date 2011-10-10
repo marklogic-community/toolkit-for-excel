@@ -135,6 +135,8 @@ declare function excel:map-shared-strings(
 )as element(ms:worksheet)
 {
     (: for $sheet in $sheets ?, check function mapping :)
+
+(:
     let $shared := $shared-strings/ms:si/fn:string-join(.//ms:t/fn:string(.), "")
     let $rows := for $row at $d in $sheet//ms:row
                  let $cells := for $cell at $e in $row/ms:c
@@ -147,12 +149,30 @@ declare function excel:map-shared-strings(
                                   return $c
                       
                  return element ms:row{ $row/@*, $cells }
+:)
+
+ (:   let $start := xdmp:log(fn:concat("START",fn:current-time())):)
+    let $shared := $shared-strings/ms:si
+    let $rows := for $row at $d in $sheet/ms:sheetData/ms:row
+                 let $cells := for $cell at $e in $row/ms:c
+                                 let $c := if(fn:data($cell/@t) eq "s")
+                                           then
+                                             element ms:c { $cell/@* except $cell/@t, attribute t{"inlineStr"}, element ms:is { element ms:t { $shared[($cell/ms:v+1 cast as xs:integer)]/(ms:t/text()|ms:r/ms:t/text()) }}}
+                                           else
+                                             $cell
+                                                          
+                                  return $c
+                     
+                 return element ms:row{ $row/@*, $cells }
+
                                 
     let $worksheet := $sheet/* except ( $sheet/ms:sheetData, $sheet/ms:tableParts, $sheet/ms:pageMargins, $sheet/ms:pageSetup)
     let $page-setup := $sheet/ms:pageSetup
     let $table-parts := $sheet/ms:tableParts
     let $sheet-data := $sheet/ms:sheetData
     let $ws := element ms:worksheet { $sheet/ms:worksheet/@*, $worksheet, element ms:sheetData{ $sheet-data/@*, $rows }, $page-setup ,$table-parts }
+
+
     return $ws
  
 }; 
