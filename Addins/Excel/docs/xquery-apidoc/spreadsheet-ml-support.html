@@ -754,7 +754,7 @@ import module namespace excel= "http://marklogic.com/openxml/excel"
 
 excel:a1-to-r1c1("CJL1")
 =&gt;
-R:1C:2378 
+R1C2378 
  </pre>
   
             </div>
@@ -1654,7 +1654,7 @@ declare namespace ms = "http://schemas.openxmlformats.org/spreadsheetml/2006/mai
 let $ws:= (&lt;ms:worksheet&gt;
                 &lt;ms:sheetData&gt;
                  &lt;ms:row&gt;
-                   &lt;ms:c t="s"&gt;
+                   &lt;ms:c&gt;
                    &lt;ms:v&gt;1&lt;/ms:v&gt;
                  &lt;/ms:c&gt;
                 &lt;/ms:row&gt;
