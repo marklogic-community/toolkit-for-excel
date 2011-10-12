@@ -166,11 +166,16 @@ declare function excel:map-shared-strings(
                  return element ms:row{ $row/@*, $cells }
 
                                 
-    let $worksheet := $sheet/* except ( $sheet/ms:sheetData, $sheet/ms:tableParts, $sheet/ms:pageMargins, $sheet/ms:pageSetup)
+    let $pre-sheetData := $sheet/* except ( $sheet/ms:sheetData, $sheet/ms:tableParts, $sheet/ms:pageMargins, $sheet/ms:pageSetup, $sheet/ms:drawing)
+    let $page-margins :=  $sheet/ms:pageMargins
     let $page-setup := $sheet/ms:pageSetup
+    let $drawing :=  $sheet/ms:drawing
     let $table-parts := $sheet/ms:tableParts
     let $sheet-data := $sheet/ms:sheetData
-    let $ws := element ms:worksheet { $sheet/ms:worksheet/@*, $worksheet, element ms:sheetData{ $sheet-data/@*, $rows }, $page-setup ,$table-parts }
+    let $ws := element ms:worksheet { $sheet/@*, 
+                                      namespace {"x14ac"} {"http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac"},
+                                      namespace {"r"} {"http://schemas.openxmlformats.org/officeDocument/2006/relationships"},
+                                      $pre-sheetData, element ms:sheetData{ $sheet-data/@*, $rows }, $page-margins, $page-setup , $drawing, $table-parts }
 
 
     return $ws
