@@ -719,6 +719,7 @@ declare function excel:wb-set-sheetdata($x as node(), $newSheetData as element(m
    typeswitch($x)
      case text() return $x
      case document-node() return document {$x/@*,excel:passthru-workbook($x,$newSheetData)}
+     case element(ms:worksheet) return  element{fn:name($x)} {$x/@*, namespace {"x14ac"} {"http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac"},excel:passthru-workbook($x,$newSheetData)}
      case element(ms:sheetData) return  $newSheetData
      case element() return  element{fn:name($x)} {$x/@*,excel:passthru-workbook($x,$newSheetData)}
      default return $x
