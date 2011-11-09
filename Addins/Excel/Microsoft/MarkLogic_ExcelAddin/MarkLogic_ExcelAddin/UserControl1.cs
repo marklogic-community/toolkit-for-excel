@@ -1,4 +1,4 @@
-﻿/*Copyright 2009-2010 Mark Logic Corporation
+﻿/*Copyright 2009-2011 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ namespace MarkLogic_ExcelAddin
             private bool debugMsg = false;
             private string color = "";
             //private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";  
-            private string addinVersion = "1.0-2"; 
+            private string addinVersion = "2.0-1"; 
             HtmlDocument htmlDoc;
 
             /*private const int CF_ENHMETAFILE = 14;
