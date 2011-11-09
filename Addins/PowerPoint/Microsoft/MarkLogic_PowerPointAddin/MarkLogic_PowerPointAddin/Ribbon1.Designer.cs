@@ -55,7 +55,7 @@
             // tab2
             // 
             this.tab2.Groups.Add(this.group2);
-            this.tab2.Label = "Mark Logic";
+            this.tab2.Label = "MarkLogic";
             this.tab2.Name = "tab2";
             // 
             // group2

@@ -1,4 +1,4 @@
-﻿/*Copyright 2009-2010 Mark Logic Corporation
+﻿/*Copyright 2009-2011 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ namespace MarkLogic_PowerPointAddin
         private bool debug = false;
         private string color = "";
         //private string addinVersion = "@MAJOR_VERSION.@MINOR_VERSION@PATCH_VERSION";
-        private string addinVersion = "1.1-1";
+        private string addinVersion = "2.0-1";
         HtmlDocument htmlDoc;
 
         public PPT.ApplicationClass  ppta = null;
