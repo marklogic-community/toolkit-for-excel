@@ -9,8 +9,8 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 	<title>Custom Metadata</title>
 	<link rel="stylesheet" type="text/css" href="office-blue.css"/>
 	<link rel="stylesheet" type="text/css" href="test.css"/>
-	<script type="text/javascript" src="MarkLogicWordAddin.js">//</script>
-	<script type="text/javascript" src="test.js">//</script>
+	<script type="text/javascript" src="MarkLogicWordAddin.js?rand={xdmp:random()}">//</script>
+	<script type="text/javascript" src="test.js?rand={xdmp:random()}">//</script>
 </head>
  <body>
 	 <div id="ML-Add-in">

@@ -8,7 +8,7 @@ function initPage()
 	var fName ="";
         //alert(MLA.getDocumentName());
 	var docname = MLA.getDocumentName();
-
+        //alert("DOCNAME: "+docname);
 	if(docname == "maptest.docx") //ccMapTest.docx
 	{
 	   //var tag = "pttesttag";
@@ -32,6 +32,7 @@ function initPage()
 		         "<test>"+test2Results+"</test>"+
 		         "<test>"+test3Results+"</test>"+
 		       "</tests>";
+	  //alert("test output"+testOutput);
 
 	  fName="addcontrolstest.txt";
 	}
@@ -135,7 +136,7 @@ function addControlWithImage()
        var picuri = fullurl + "/download-support.xqy?uid="+pic;
 
        var msg2 = MLA.addContentControl("FOOBAR2","FANCYTITLE2","wdContentControlPicture","true");
-       var msg = MLA.insertContentControlImage(msg2, picuri,"oslo","oslo");
+       //var msg = MLA.insertContentControlImage(msg2, picuri,"oslo","oslo");
        return msg2;
 
 }
@@ -189,7 +190,7 @@ function unlockControlContents()
 
 /* ================ BEGIN CONTROLS TESTS ====================================*/
 function addComplexControl()
-{
+{       //alert("HERE");
 	var msg15=MLA.addContentControl("FOOBAR","FANCYTITLE","wdContentControlRichText","true","");
 	var parentID = msg15;
 	var msg16=MLA.addContentControl("BAR16","FANCYTITLE6","wdContentControlRichText","true",parentID);
@@ -210,7 +211,7 @@ function addComplexControl()
 
 function insertXML()
 {
-	url  =  "http://localhost:8023/wordQATests/fetchWordOpenXml.xqy";
+	url  =  "http://localhost:8023/wordTests/fetchWordOpenXml.xqy";
         var opc_xml = loadXMLDoc(url);
         //alert(opc_xml);
 	MLA.insertWordOpenXML(opc_xml);
@@ -386,7 +387,7 @@ function writeToFile(output, filename)
 {
   try {
    var fso = new ActiveXObject("Scripting.FileSystemObject");
-   var a = fso.CreateTextFile("C:\\tmp\\testOutput\\"+filename, true);
+   var a = fso.CreateTextFile("C:\\Users\\paven\\AppData\\Local\\Temp\\junk\\"+filename, true);
    a.WriteLine(output);
    a.Close();
  }
@@ -394,6 +395,7 @@ function writeToFile(output, filename)
    var strErr = 'Error:';
    strErr += '\nNumber:' + err.number;
    strErr += '\nDescription:' + err.description;
+   alert("ERROR: "+strErr);
    document.write(newid);
   }
 }
