@@ -17,8 +17,7 @@ Copyright 2002-2011 Mark Logic Corporation.  All Rights Reserved.
 
 Change Notes:
 ------------------
-version 2.0
-
+version 2.0-1
 new functions:
 
 MLA.addChartObjectMouseDownEvents()
@@ -74,3 +73,6 @@ chartObjectMouseDown()
 custom event definitions should be placed by developers in:
    MarkLogicExcelEventHandlers.js
 
+XQuery API updated to support Office 2010 SpreadsheetML
+
+install/install.xqy script provided to simplify install of .xqy and CPF components
