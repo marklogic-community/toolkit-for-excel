@@ -92,4 +92,4 @@ Change Notes:
       updated presentationml-pipeline.xml    - now initial state is tagged, instead of initial
       update of presentation-ml-support.xqy (unpublished function to assist dereferencing of tags)
  
-2.0 install/install.xqy script provided to simplify install of .xqy and CPF components 
+2.0-1 install/install.xqy script provided to simplify install of .xqy and CPF components 
