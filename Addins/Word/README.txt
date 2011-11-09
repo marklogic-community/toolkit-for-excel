@@ -23,3 +23,8 @@ Change Notes:
 
       We now also include the Authoring Sample App as another Application you can choose to deploy as a Sample with the TK.
 
+2.0-1 XQuery API updated to support Office 2010 WordprocessingML
+
+install/install.xqy script provided to simplify install of .xqy and CPF components
+
+
