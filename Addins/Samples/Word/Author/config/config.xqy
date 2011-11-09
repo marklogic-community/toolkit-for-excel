@@ -19,7 +19,7 @@ module namespace config="http://marklogic.com/toolkit/word/author/config";
 declare namespace dc="http://purl.org/dc/elements/1.1/";
 
 
-declare variable $config:CONFIG-PATH := "http://localhost:8023/Author/config/";
+declare variable $config:CONFIG-PATH := "http://localhost:8030/Author/config/";
 declare variable $config:USER := "oslo";
 declare variable $config:PWD  := "oslo";
 
@@ -50,7 +50,7 @@ declare function config:textctrl-sections()
     for $t at $d in $text-sections
     let $func := fn:concat("txtSectionFunc",$d,"()")
     return <li>
-             <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:title/text()}</a>
+             <a href="#" onmouseup="blurSelected(this)" onclick="{$func}">{$t/config:title/text()}</a>
            </li>
 
 };
@@ -61,7 +61,7 @@ declare function config:textctrl-inline()
     for $t at $d in $text-inline
     let $func := fn:concat("txtInlineFunc",$d,"()")
     return <li>
-             <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:title/text()}</a>
+             <a href="#" onmouseup="blurSelected(this)" onclick="{$func}">{$t/config:title/text()}</a>
            </li>
 
 };
@@ -72,7 +72,7 @@ declare function config:picctrl-inline()
     for $t at $d in $img-inline
     let $func := fn:concat("picInlineFunc",$d,"()")
     return <li>
-             <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:title/text()}</a>
+             <a href="#" onmouseup="blurSelected(this)" onclick="{$func}">{$t/config:title/text()}</a>
            </li>
 };
 
@@ -82,7 +82,7 @@ declare function config:calctrl-inline()
     for $t at $d in $cal-inline
     let $func := fn:concat("calInlineFunc",$d,"()")
     return <li>
-             <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:title/text()}</a>
+             <a href="#" onmouseup="blurSelected(this)" onclick="{$func}">{$t/config:title/text()}</a>
            </li>
 };
 
@@ -92,7 +92,7 @@ declare function config:dropctrl-inline()
     for $t at $d in $drop-inline
     let $func := fn:concat("dropInlineFunc",$d,"()")
     return <li>
-             <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:title/text()}</a>
+             <a href="#" onmouseup="blurSelected(this)" onclick="{$func}">{$t/config:title/text()}</a>
            </li>
 };
 
@@ -102,7 +102,7 @@ declare function config:comboctrl-inline()
     for $t at $d in $combo-inline
     let $func := fn:concat("comboInlineFunc",$d,"()")
     return <li>
-             <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:title/text()}</a>
+             <a href="#" onmouseup="blurSelected(this)" onclick="{$func}">{$t/config:title/text()}</a>
            </li>
 };
 (:END Current-Document - Controls Tab Display:)

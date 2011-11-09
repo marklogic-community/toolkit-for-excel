@@ -19,7 +19,7 @@ module namespace config="http://marklogic.com/toolkit/excel/author/config";
 declare namespace dc="http://purl.org/dc/elements/1.1/";
 
 
-declare variable $config:CONFIG-PATH := "http://localhost:8023/xlAuthor/config/";
+declare variable $config:CONFIG-PATH := "http://localhost:8030/xlAuthor/config/";
 declare variable $config:USER := "oslo";
 declare variable $config:PWD  := "oslo";
 
@@ -50,7 +50,7 @@ declare function config:workbook-tags()
     (:let $func := fn:concat("workbookTagFunc",$d,"()"):)
     let $func := fn:concat("workbookTagFunc",$d,"()")
     return <li>
-             <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:name/text()}</a>
+             <a href="#" onmouseup="blurSelected(this)" onclick="{$func}">{$t/config:name/text()}</a>
            </li>
 
 
@@ -62,7 +62,7 @@ declare function config:worksheet-tags()
     for $t at $d in $img-inline
     let $func := fn:concat("worksheetTagFunc",$d,"()")
     return <li>
-             <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:name/text()}</a>
+             <a href="#" onmouseup="blurSelected(this)" onclick="{$func}">{$t/config:name/text()}</a>
            </li>
 
 
@@ -74,7 +74,7 @@ declare function config:component-tags()
     for $t at $d in $img-inline
     let $func := fn:concat("componentTagFunc",$d,"()")
     return <li>
-             <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:name/text()}</a>
+             <a href="#" onmouseup="blurSelected(this)" onclick="{$func}">{$t/config:name/text()}</a>
            </li>
 
 

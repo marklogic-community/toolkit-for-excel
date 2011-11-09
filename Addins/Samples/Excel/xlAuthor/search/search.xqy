@@ -258,7 +258,7 @@ return	xdmp:quote(
                                               return <td class="ML-td">{fn:data($c)}</td>}</tr>
 
                                 let $snippet :=  if($search-type eq "workbook") then 
-                                                   <table class="ML-table" id={fn:concat("table",$idx)}>
+                                                   <table class="ML-table" id="{fn:concat("table",$idx)}">
                                                      <tr>{$headers}</tr>
                                                      <tr>{$final}</tr>
                                                    </table>
@@ -300,7 +300,7 @@ return	xdmp:quote(
                                                                      return <tr>{for $c in $row/ms:c
                                                                                  return <td class="ML-td">{fn:data($c)}</td> }</tr>
 
-                                                         return  <table class="ML-table" id={fn:concat("table",$idx)}>
+                                                         return  <table class="ML-table" id="{fn:concat("table",$idx)}">
                                                                     {$trs}
                                                                  </table>
                                                        else

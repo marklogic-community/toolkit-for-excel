@@ -133,7 +133,7 @@ limitations under the License.
               <xs:element ref="calendar"/>
               <xs:element ref="dropdown"/>
               <xs:element ref="combo"/>
-            </xs:all>
+            </xs:choice>
           </xs:complexType>
         </xs:element>
 
@@ -212,7 +212,7 @@ limitations under the License.
           </xs:annotation>
           <xs:complexType>
 	     <xs:sequence>
-               <xs:element ref="template" maxOccurs="unbounded">
+		     <xs:element ref="template" maxOccurs="unbounded"/>
 	     </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -229,7 +229,7 @@ limitations under the License.
           </xs:annotation>
           <xs:complexType>
 	     <xs:sequence>
-               <xs:element ref="searchfilter" maxOccurs="unbounded">
+		     <xs:element ref="searchfilter" maxOccurs="unbounded"/>
 	     </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -247,7 +247,7 @@ limitations under the License.
           </xs:annotation>
           <xs:complexType>
 	     <xs:sequence>
-               <xs:element ref="comparefilter" maxOccurs="unbounded">
+		     <xs:element ref="comparefilter" maxOccurs="unbounded"/>
 	     </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -263,8 +263,8 @@ limitations under the License.
           </xs:annotation>
           <xs:complexType>
 	     <xs:sequence>
-               <xs:element ref="section">
-               <xs:element ref="inline">
+		     <xs:element ref="section"/>
+		     <xs:element ref="inline"/>
 	     </xs:sequence>
           </xs:complexType>
         </xs:element>
