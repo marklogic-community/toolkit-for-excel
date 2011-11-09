@@ -1,4 +1,4 @@
-﻿/*Copyright 2008-2010 Mark Logic Corporation
+﻿/*Copyright 2008-2011 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ namespace MarkLogic_WordAddin
         private bool debug = false;
         private bool debugMsg = false;
         private string color = "";
-        private string addinVersion = "1.2-1";  //automate update of this
+        private string addinVersion = "2.0-1";  //automate update of this
         HtmlDocument htmlDoc;
         public Word.Document udoc;
       
