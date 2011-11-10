@@ -1,5 +1,5 @@
 /* 
-Copyright 2009-2010 Mark Logic Corporation
+Copyright 2009-2011 MarkLogic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ function ml_js_import(jsFile) {
  * {@link http://www.marklogic.com} 
  *
  * @author Pete Aven pete.aven@marklogic.com
- * @version 1.1-1
+ * @version 2.0-1
  */
 
 /**
@@ -284,7 +284,7 @@ MLA.getConfiguration = function()
  */
 MLA.insertImage = function(url,user,pwd)
 {
-	
+
 	var inserted = window.external.InsertImage(url,user,pwd);
 	var errMsg = MLA.errorCheck(inserted);
 
@@ -1092,7 +1092,167 @@ MLA.jsonGetParagraphs =  function(paragraphs)
 	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
 
 	jsonPara += "],";
-	//
+
+
+//BEGIN PARAGRAPH FORMAT, THIS CAN BE DONE MUCH BETTER
+//
+        jsonPara +=  "\"paragraphBulletCharacter\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphBulletCharacter+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+        jsonPara +=  "\"paragraphBulletStyle\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphBulletStyle+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+        jsonPara +=  "\"paragraphBulletFontName\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphBulletFontName+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+	jsonPara +=  "\"paragraphBulletFontSize\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphBulletFontSize+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+	jsonPara +=  "\"paragraphBulletFontRGB\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphBulletFontRGB+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+	jsonPara +=  "\"paragraphBulletFontItalic\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphBulletFontItalic+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+	jsonPara +=  "\"paragraphBulletFontUnderline\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphBulletFontUnderline+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+	jsonPara +=  "\"paragraphBulletFontBold\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphBulletFontBold+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+//SECOND RUN FOR PARAS
+        jsonPara +=  "\"paragraphFontName\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphFontName+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+	jsonPara +=  "\"paragraphFontSize\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphFontSize+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+	jsonPara +=  "\"paragraphFontRGB\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphFontRGB+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+	jsonPara +=  "\"paragraphFontItalic\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphFontItalic+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+	jsonPara +=  "\"paragraphFontUnderline\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphFontUnderline+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+	jsonPara +=  "\"paragraphFontBold\": ["; 
+        for(var j =0;j<paragraphs.length;j++)
+	{
+		var para = paragraphs[j];
+		jsonPara += "\""+para.paragraphFontBold+"\",";
+        }
+        if(paragraphs.length>=1)
+	  jsonPara = jsonPara.substring(0,jsonPara.length-1);
+
+        jsonPara += "],";
+
+	
+//END PARAGRPAH FORMAT
+
 
 	jsonPara += "\"runs\": [";
 

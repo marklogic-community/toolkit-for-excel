@@ -4,7 +4,7 @@
 =========================================================================
 
 MarkLogic Authoring Sample App for PowerPoint®
-Copyright 2008–2010 Mark Logic Corporation
+Copyright 2008–2011 MarkLogic Corporation
 
 ==== jQuery ====
 

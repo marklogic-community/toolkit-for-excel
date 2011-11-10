@@ -20,6 +20,11 @@
 		  <config:value>Publish</config:value>
 		  <config:metatemplate>2</config:metatemplate>
 	  </config:tag>
+	  	  <config:tag>
+		  <config:name>Submit</config:name>
+		  <config:value>Submit</config:value>
+		  <config:metatemplate>2</config:metatemplate>
+	  </config:tag>
         </config:presentation>
   	<config:slide>
 	  <config:tag>

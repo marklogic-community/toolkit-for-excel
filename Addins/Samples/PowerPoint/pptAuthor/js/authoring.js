@@ -1,5 +1,5 @@
 /*
-Copyright 2008-2010 Mark Logic Corporation
+Copyright 2008-2011 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -255,7 +255,7 @@ $(document).ready(function() {
        $('#ML-Message').hide();
 
 //REMOVE COMMENT commenting out for testing in IE, uncomment for release
-//refreshPropertiesPanel();
+refreshPropertiesPanel();
        
 });
 
@@ -412,7 +412,7 @@ function insertImage(picuri)
        var config = MLA.getConfiguration();
        var fullurl= config.url;
        var picuri = fullurl + "/search/download-support.xqy?uid="+picuri;
-
+//alert("IN FUNCTION" +config + " / " + fullurl +" / "+picuri);
        var msg = MLA.insertImage(picuri,USER,AUTH);
 }
 
@@ -473,16 +473,22 @@ function insertComponentContent(content, other, buttonIndex)
 		}
 		else
 		{
+			//alert("HERE");
 			shapeRange = MLA.jsonParse(jsonString);
 			var newShapeName = "";
 
+			//alert("HERE 2");
 			if(shapeRange.shape.type=="msoPicture")
 			{
+				//alert("HERE 3"+other);
 				  insertImage(other);
+				//alert("HERE 4"+other);
 				  setPictureFormat(shapeRange.pictureFormat);
+				//alert("HERE 5"+other);
 				  var slideIndex=MLA.getSlideIndex();
 				  var newShapeName= MLA.getShapeRangeName();
 				  var jsonTags = MLA.jsonStringify(shapeRange.tags);
+				//alert("HERE 6"+other);
 				  MLA.addShapeTags(slideIndex,newShapeName,jsonTags);
 			}
 			else

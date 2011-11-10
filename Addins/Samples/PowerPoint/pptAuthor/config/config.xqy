@@ -1,6 +1,6 @@
 xquery version "1.0-ml";
 (:
-Copyright 2008-2010 Mark Logic Corporation
+Copyright 2008-2011 MarkLogic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ declare function config:presentation-tags()
     for $t at $d in $img-inline
     let $func := fn:concat("presentationTagFunc",$d,"()")
     return <li>
-             <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:name/text()}</a>
+             <a href="#" onmouseup="blurSelected(this)" onclick="{$func}">{$t/config:name/text()}</a>
            </li>
 
 
@@ -61,7 +61,7 @@ declare function config:slide-tags()
     for $t at $d in $img-inline
     let $func := fn:concat("slideTagFunc",$d,"()")
     return <li>
-             <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:name/text()}</a>
+             <a href="#" onmouseup="blurSelected(this)" onclick="{$func}">{$t/config:name/text()}</a>
            </li>
 
 
@@ -73,7 +73,7 @@ declare function config:shape-tags()
     for $t at $d in $img-inline
     let $func := fn:concat("shapeTagFunc",$d,"()")
     return <li>
-             <a href="#" onmouseup="blurSelected(this)" onclick={$func}>{$t/config:name/text()}</a>
+             <a href="#" onmouseup="blurSelected(this)" onclick="{$func}">{$t/config:name/text()}</a>
            </li>
 
 
