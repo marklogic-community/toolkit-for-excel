@@ -13,3 +13,6 @@ C:\cygwin\home\paven\MLOS\Office2007\Addins\PowerPoint\images\MarkLogic_PowerPoi
 C:\cygwin\home\paven\SVNADDINS\integrations\Office\trunk\Addins\PowerPoint\images\MarkLogic_PowerPoint_Images\MarkLogic_PowerPoint_Images\obj\Debug\MarkLogic_PowerPoint_Images.csproj.ResolveComReference.cache
 C:\cygwin\home\paven\SVNADDINS\integrations\Office\trunk\Addins\PowerPoint\images\MarkLogic_PowerPoint_Images\MarkLogic_PowerPoint_Images\obj\Debug\MarkLogic_PowerPoint_Images.exe
 C:\cygwin\home\paven\SVNADDINS\integrations\Office\trunk\Addins\PowerPoint\images\MarkLogic_PowerPoint_Images\MarkLogic_PowerPoint_Images\obj\Debug\MarkLogic_PowerPoint_Images.pdb
+C:\cygwin\home\paven\SVNADDINSNEW\trunk\Addins\PowerPoint\images\MarkLogic_PowerPoint_Images\MarkLogic_PowerPoint_Images\obj\Debug\MarkLogic_PowerPoint_Images.csproj.ResolveComReference.cache
+C:\cygwin\home\paven\SVNADDINSNEW\trunk\Addins\PowerPoint\images\MarkLogic_PowerPoint_Images\MarkLogic_PowerPoint_Images\obj\Debug\MarkLogic_PowerPoint_Images.exe
+C:\cygwin\home\paven\SVNADDINSNEW\trunk\Addins\PowerPoint\images\MarkLogic_PowerPoint_Images\MarkLogic_PowerPoint_Images\obj\Debug\MarkLogic_PowerPoint_Images.pdb
