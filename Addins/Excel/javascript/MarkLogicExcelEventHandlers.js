@@ -16,6 +16,8 @@ limitations under the License.
 MarkLogicExcelEventHandlers.js - javascript api captures events in PowerPoint.
 
 for events you'd like to use, add try/catch and handler call
+
+version 2.0-1
 */
 
 var debug = false;

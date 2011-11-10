@@ -17,6 +17,8 @@ MarkLogicExcelEventSupport.js - javascript api captures events in PowerPoint.
 
 you should NOT edit this file.  to add your own handling, see associated
 handlers in MarkLogicExcelEventHandlers.js
+
+version 2.0-1
 */
 
 var debug = false;

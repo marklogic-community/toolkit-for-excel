@@ -24,7 +24,7 @@ MarkLogicExcelAddin.js - javascript api for interacting with webBrowser control 
  * {@link http://www.marklogic.com} 
  *
  * @author Pete Aven pete.aven@marklogic.com
- * @version 2.0 
+ * @version 2.0-1 
  */
 
 
