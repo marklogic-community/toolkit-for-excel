@@ -1,5 +1,5 @@
 /* 
-Copyright 2008-2010 Mark Logic Corporation
+Copyright 2008-2011 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ MarkLogicWordAddin.js - javascript api for interacting with webBrowser control w
  * {@link http://www.marklogic.com} 
  *
  * @author Pete Aven pete.aven@marklogic.com
- * @version 1.1-1 
+ * @version 2.0-1 
  */
 
 
@@ -43,7 +43,7 @@ function MLA(){
 }
 */
 /** @ignore */
-MLA.version = { "release" : "1.2-1" }; 
+MLA.version = { "release" : "2.0-1" }; 
 
 /** @ignore */
 MLA.SimpleRange = function(begin,finish){
@@ -1330,6 +1330,8 @@ MLA.getSimpleContentControls = function()
 		
 	}else
 	{
+	//alert(contentControlIds.length);
+
 	       for(var i =0; i<contentControlIds.length; i++)
 	       {
 	  	  var controlid = contentControlIds[i];
@@ -1352,7 +1354,7 @@ MLA.getSimpleContentControls = function()
 	}
 
 	//alert("HAVE THE ARRAY");
-
+//alert(controlArray.length);
 	return controlArray;
 }
 
@@ -1378,7 +1380,7 @@ MLA.insertWordOpenXML = function(opc_xml)
 
     var msg = window.external.insertWordOpenXML(v_docx);
     var errMsg = MLA.errorCheck(msg);
-
+    //alert(errMsg);
     if(errMsg!=null)
       throw("Error: Not able to insertWordOpenXML(); "+errMsg);
 
