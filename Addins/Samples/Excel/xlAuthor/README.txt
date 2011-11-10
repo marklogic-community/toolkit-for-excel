@@ -20,11 +20,3 @@ Set $config:PWD to the password for your application server
 
 
 NOTE: The Authoring Developer's Guide (pptAuthoringGuide.docx), provides more detail on how to update these files so less configuration may be required for future deployments, as well as Security items to consider that might prompt you to update the code to meet your specific requirements.
-
-Change Notes:
------------------
-
-1.0-2 updated config/config.xqy 
-              search/search.xqy
-      Added missing quotes to attribute values.
-      example: onclick={$func} -> onclick="{$func}

@@ -13,7 +13,7 @@ to deploy a customized installer to your Microsof Word user base.
 The latest version of the documention is available on 
 http://developer.marklogic.com/pubs.
 
-Copyright 2002-2010 Mark Logic Corporation.  All Rights Reserved.
+Copyright 2002-2011 MarkLogic Corporation.  All Rights Reserved.
 
 Change Notes:
 ------------------

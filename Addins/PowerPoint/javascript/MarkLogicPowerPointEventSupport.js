@@ -1,5 +1,5 @@
 /* 
-Copyright 2008-2010 MarkLogic Corporation
+Copyright 2008-2011 MarkLogic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@ limitations under the License.
 MarkLogicPowerPointEventSupport.js - javascript api captures events in PowerPoint.
 
 for events you'd like to use, add try/catch and handler call
+
+version 2.0-1
 */
 
 var debug = false;

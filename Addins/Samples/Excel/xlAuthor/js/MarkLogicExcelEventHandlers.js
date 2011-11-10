@@ -16,6 +16,8 @@ limitations under the License.
 MarkLogicExcelEventHandlers.js - javascript api captures events in PowerPoint.
 
 for events you'd like to use, add try/catch and handler call
+
+version 2.0-1
 */
 
 var debug = false;
@@ -26,15 +28,17 @@ MLA.sheetActivateHandler = function(sheetName)
 	//different in pane )(properties, what tags applied to worksheet
 	try{
 	    var msg = sheetName;
-  	    if(debug)
+  	    if(debug){
 	      alert("in handler sheet activate name: "+sheetName);
+	    }
 
 	    var sheetType = MLA.getSheetType(sheetName);
 	    //UPDATE UI
 	    worksheetSelectionHandler(sheetName);
 
-	    if(debug)
+	    if(debug){
 	      alert("sheet type: "+sheetType);
+	    }
 
 	    //ADD CHART MOUSEDOWN EVENTS FOR EMBEDDED CHARTS IN SHEET
 	    if(sheetType=="xlWorksheet"){
@@ -125,4 +129,94 @@ MLA.chartObjectMouseDownHandler = function(chartName)
 	return msg;
 }
 
+MLA.workbookActivateHandler = function(workbookName)
+{
+   if(debug){
+    alert("In workbookActivateHandler, workbookName: "+workbookName);
+   }
+}
+
+MLA.workbookAfterXmlExportHandler = function(workbookName, mapName, url)
+{
+   if(debug){
+    alert("In workbookAfterXmlExportHandler, workbookName: "+workbookName+" mapName: "+mapName+" url: "+url);
+   }
+}
+
+MLA.workbookAfterXmlImportHandler = function(workbookName, mapName, refresh)
+{
+   if(debug){
+    alert("In workbookAfterXmlImportHandler, workbookName: "+workbookName+" mapName: "+mapName+" refresh: "+refresh);
+   }
+}
+
+MLA.workbookBeforeXmlExportHandler = function(workbookName, mapName, url)
+{
+   if(debug){
+    alert("In workbookBeforeXmlExportHandler, workbookName: "+workbookName+" mapName: "+mapName+" url: "+url);
+   }
+}
+
+MLA.workbookBeforeXmlImportHandler = function(workbookName, mapName, refresh)
+{
+   if(debug){
+    alert("In workbookBeforeXmlImportHandler, workbookName: "+workbookName+" mapName: "+mapName+" refresh: "+refresh);	
+   }
+}
+
+MLA.workbookBeforeCloseHandler = function(workbookName)
+{
+   if(debug){
+    alert("In workbookBeforeCloseHandler, workbookName: "+workbookName);
+   }    
+}
+
+MLA.workbookBeforeSaveHandler = function(workbookName)
+{
+   if(debug){
+    alert("In workbookBeforeSaveHandler, workbookName: "+workbookName);	
+   }
+}
+
+MLA.workbookDeactivateHandler= function(workbookName)
+{
+   if(debug){
+    alert("In workbookDeactivateHandler, workbookName: "+workbookName);	
+   }
+}
+
+MLA.workbookNewSheetHandler = function(workbookName, sheetName)
+{
+   if(debug){
+    alert("In workbookNewSheetHandler, workbookName: "+workbookName+" sheetName: "+sheetName);
+   }
+}
+
+MLA.workbookOpenHandler = function(workbookName)
+{
+   if(debug){
+    alert("In workbookOpenHandler, workbookName: "+workbookName);
+   }    
+}
+
+MLA.sheetBeforeDoubleClickHandler = function(sheetName, range)
+{
+   if(debug){
+    alert("In sheetBeforeDoubleClickHandler, sheetName: "+sheetName+" range"+range);
+   }    
+}
+
+MLA.sheetBeforeRightClickHandler = function(sheetName, range)
+{
+   if(debug){
+    alert("In sheetBeforeRightClickHandler, sheetName: "+sheetName+" range"+range);
+   }    
+}
+
+MLA.sheetChangeHandler = function(rangeName)
+{
+   if(debug){
+    alert("In sheetChangeHandler, rangeName: "+rangeName);
+   }
+}
 

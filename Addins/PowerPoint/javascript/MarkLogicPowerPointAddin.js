@@ -1,5 +1,5 @@
 /* 
-Copyright 2009-2010 Mark Logic Corporation
+Copyright 2009-2011 MarkLogic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ function ml_js_import(jsFile) {
  * {@link http://www.marklogic.com} 
  *
  * @author Pete Aven pete.aven@marklogic.com
- * @version 1.1-1
+ * @version 2.0-1
  */
 
 /**

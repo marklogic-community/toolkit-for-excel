@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 
-var SERVER = "http://localhost:8023/pptAuthor";
+var SERVER = "http://localhost:8030/pptAuthor";
 var USER="oslo";
 var AUTH="oslo";
 
