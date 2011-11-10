@@ -1,5 +1,5 @@
 xquery version "1.0-ml";
-(: Copyright 2009-2011 Mark Logic Corporation
+(: Copyright 2009-2011 MarkLogic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ declare default element namespace  "http://schemas.openxmlformats.org/spreadshee
 
 (: import module "http://marklogic.com/openxml" at "/MarkLogic/openxml/package.xqy"; ? :)
 
-(:version 1.0-2:)
+(:version 2.0-1:)
 
 declare function excel:error($message as xs:string)
 {

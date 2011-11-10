@@ -1,5 +1,5 @@
 xquery version "1.0-ml";
-(: Copyright 2008-2011 Mark Logic Corporation
+(: Copyright 2008-2011 MarkLogic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ declare variable $ooxml:CUSTOM-PROPERTIES := "http://schemas.openxmlformats.org/
 declare variable $ooxml:CUSTOM-XML-PROPS := "http://schemas.openxmlformats.org/officeDocument/2006/customXml";
 declare variable $ooxml:CHART:="http://schemas.openxmlformats.org/drawingml/2006/chart";
 
-(:version 2.0:)
+(:version 2.0-1:)
 
 declare function ooxml:error($message as xs:string)
 {
