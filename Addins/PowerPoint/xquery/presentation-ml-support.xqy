@@ -37,7 +37,7 @@ declare namespace dc = "http://purl.org/dc/elements/1.1/";
 
 import module "http://marklogic.com/openxml/powerpoint" at "/MarkLogic/openxml/presentation-ml-support-content-types.xqy"; 
 
-(:version 1.0-3:)
+(:version 2.0-1:)
 
 declare default element namespace "http://schemas.openxmlformats.org/package/2006/relationships";
 

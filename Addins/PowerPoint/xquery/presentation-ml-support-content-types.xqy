@@ -36,7 +36,7 @@ declare namespace zip="xdmp:zip";
 
 declare default element namespace "http://schemas.openxmlformats.org/package/2006/content-types";
 
-(:version 1.0-3:)
+(:version 2.0-1:)
 
 declare function  ppt:ct-utils-update-types(
    $content-types as node(), 
