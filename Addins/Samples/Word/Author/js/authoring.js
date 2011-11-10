@@ -1,5 +1,5 @@
 /*
-Copyright 2008-2010 Mark Logic Corporation
+Copyright 2008-2011 MarkLogic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 
-var SERVER = "http://localhost:8023/Author";
+var SERVER = "http://localhost:8030/Author";
 var BOILERPLATE_URL =  SERVER + "/utils/fetchboilerplate.xqy";
 
 $(document).ready(function() {
@@ -378,7 +378,8 @@ function simpleAjaxSearch(searchval, startidx, cbsid)
 }
 
 function insertAction(contenturl, contentpath, other)
-{ 
+{
+        //alert("contenturl" +contenturl+ " contentpath "+contentpath);	
 	try{
 	     simpleAjaxInsert(contenturl,contentpath);
 	}catch(err)
@@ -395,6 +396,7 @@ function simpleAjaxInsert(contenturl,contentpath)
           data: "uri=" + contenturl+"&path="+ contentpath,
           success: function(msg){
 			try{
+			  //alert("msg"+msg);
 			  insertContent(msg);
 			}catch(e)
 			{
@@ -422,8 +424,9 @@ function insertContent(content)
 		  metadataPartArray.push(metaparts.item(i));
                    
                 }
-		
-		MLA.insertWordOpenXML(pkgxml.xml);
+	        //alert(pkgxml.xml);	
+		var errmsg= MLA.insertWordOpenXML(pkgxml.xml);
+		//alert(errmsg);
 
 	}catch(e)
 	{

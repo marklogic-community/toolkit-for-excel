@@ -1,6 +1,6 @@
 xquery version "1.0-ml";
 (:
-Copyright 2008-2010 Mark Logic Corporation
+Copyright 2008-2011 MarkLogic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ xdmp:set-response-content-type('text/html'),
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> <!--harset=iso-8859-1" />-->
 <link rel="stylesheet" href="css/authoring.css" />
-<script type="text/javascript" src="js/jquery-1.3.2.min.js"></script>
-<script type="text/javascript" src="js/authoring.js"></script>
-<script type="text/javascript" src="js/MarkLogicWordAddin.js">//</script>
-<script type="text/javascript" src="js/MarkLogicContentControlSupport.js">//</script>
+<script type="text/javascript" src="js/jquery-1.3.2.min.js?rand='{xdmp:random()}'"></script>
+<script type="text/javascript" src="js/authoring.js?rand='{xdmp:random()}'"></script>
+<script type="text/javascript" src="js/MarkLogicWordAddin.js?rand='{xdmp:random()}'">//</script>
+<script type="text/javascript" src="js/MarkLogicContentControlSupport.js?rand='{xdmp:random()}'">//</script>
 
 <!-- generate a lookuptable in js as well , so I can add appropriate metadata for control-->
 <script type="text/javascript">{config:generate-js-for-controls()}</script>

@@ -1,5 +1,5 @@
 /* 
-Copyright 2008-2010 Mark Logic Corporation
+Copyright 2008-2011 MarkLogic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@ limitations under the License.
 
 MarkLogicContentControlSupport.js - javascript api captures Content Control events in Word and return SimpleContentControl objects.
 */
+/** 
+ * @fileoverview  API documentation for MarkLogicContentConrolSupport.js
+ * @version 2.0-1 
+ */
 
 contentControlOnEnter  = function(id,tag,title, type, lockcontrol, lockcontents, parenttag, parentid)
 {
