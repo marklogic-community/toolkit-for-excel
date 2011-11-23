@@ -20,8 +20,8 @@ declare namespace dc="http://purl.org/dc/elements/1.1/";
 
 
 declare variable $config:CONFIG-PATH := "http://localhost:8030/xlAuthor/config/";
-declare variable $config:USER := "oslo";
-declare variable $config:PWD  := "oslo";
+declare variable $config:USER := "user";
+declare variable $config:PWD  := "password";
 
 (: security discussion in notes :)
 declare variable $config:TAGS :=         config:get-config-document("tags.xml");

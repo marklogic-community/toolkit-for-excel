@@ -16,8 +16,8 @@ limitations under the License.
 
 
 var SERVER = "http://localhost:8030/pptAuthor";
-var USER="oslo";
-var AUTH="oslo";
+var USER="user";
+var AUTH="password";
 
 $(document).ready(function() {
 
