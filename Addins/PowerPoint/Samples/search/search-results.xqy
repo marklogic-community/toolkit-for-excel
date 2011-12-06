@@ -1,6 +1,6 @@
 xquery version "1.0-ml";
 (:
-Copyright 2009-2011 MarkLogic Corporation
+Copyright 2009-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -56,12 +56,12 @@ if($searchtype eq "slide") then
               <li>
                 <table>
                   <tr>
-                    <td><a name={$imgnum} href={$imganchor} onclick="insertSlide('{$pptx}','{$index}','{$d}')">
+                    <td><a name="{$imgnum}" href="{$imganchor}" onclick="insertSlide('{$pptx}','{$index}','{$d}')">
                           <img src="{$src}" class="resize"></img>
                         </a>
                     </td>
                     <td style="vertical-align: top;" >
-                          <input type="checkbox" id={fn:concat("retain",$d)} name="format"/>retain format
+                          <input type="checkbox" id="{fn:concat("retain",$d)}" name="format"/>retain format
                     </td>
                  </tr>
                 </table>
@@ -81,7 +81,7 @@ else if($searchtype eq "image") then
        let $imgnum := fn:concat("num",$d) 
 
        return 
-         (<a name={$imgnum} href={$imganchor} onclick="insertImage('{$uri (:$imageuri:)}')">
+         (<a name="{$imgnum}" href="{$imganchor}" onclick="insertImage('{$uri (:$imageuri:)}')">
           <img src="{$src}"></img>
           </a>,<br/>,<br/>)
 else

@@ -1,6 +1,6 @@
 xquery version "1.0-ml";
 (:
-Copyright 2009-2011 MarkLogic Corporation
+Copyright 2009-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ let $type := for $s at $res in $slides
                          <table>
                           <tr>
                            <td>
-                            <a name={$imgnum} href={$imganchor} onclick="insertSlide('{$pptx}','{$index}','{$res}')">
+                            <a name="{$imgnum}" href="{$imganchor}" onclick="insertSlide('{$pptx}','{$index}','{$res}')">
                              <img src="{$src}" class="resize"></img>
                             </a>
                            </td>
@@ -73,7 +73,7 @@ let $type := for $s at $res in $slides
                          </table>
                               <ul>
                                <li>
-                                  <form id={fn:concat("buttons",$res)}>
+                                  <form id="{fn:concat("buttons",$res)}">
                                     <input type="radio" name="{$orig-uri}" value="insertslide" id="searchtype" checked="checked"/>Insert Slide
                                     <input type="radio" name="{$orig-uri}" value="embeddocument" id="searchtype" disabled="disabled"/>Embed Document
                                     <input type="radio" name="{$orig-uri}" value="opendocument" id="searchtype"/>Open Document
@@ -95,12 +95,12 @@ let $type := for $s at $res in $slides
                     return (<div>
                               <ul>
                                <li title="{data($s)}">
-	                          <a name={$name} class="test" href="{$anchor}" onclick="actionDocument('{$res}','{fn:data($s)}')">
+	                          <a name="{$name}" class="test" href="{$anchor}" onclick="actionDocument('{$res}','{fn:data($s)}')">
                                      {cts:highlight(<p>{$snippet}</p>,$w-query, <strong class="ML-highlight">{$cts:text}</strong>)}
                                   </a>
                                </li>
                                <li>
-                                  <form id={fn:concat("buttons",$res)}>
+                                  <form id="{fn:concat("buttons",$res)}">
                                     <input type="radio" name="{$uri}" value="inserttext" id="searchtype" checked="checked"/>Insert Text
                                     <input type="radio" name="{$uri}" value="embeddocument" id="searchtype"/>Embed Document
                                     <input type="radio" name="{$uri}" value="opendocument" id="searchtype"/>Open Document
@@ -126,14 +126,14 @@ let $type := for $s at $res in $slides
                               <ul>
                                 <li>  
                                    {(:<a name={$name} class="test" href="{$anchor}" onclick="openDocument('{$res}')"> :) }
-                                   <a name={$name} class="test" href="{$anchor}" onclick="actionDocument('{$res}','{$name}')"> 
-                                      <table class="ML-table" id={fn:concat("table",$res)}>
+                                   <a name="{$name}" class="test" href="{$anchor}" onclick="actionDocument('{$res}','{$name}')"> 
+                                      <table class="ML-table" id="{fn:concat("table",$res)}">
                                                   <tr>{$headers}</tr>
                                                   <tr>{$final}</tr>
                                       </table>
                                    </a>                                 </li>
                                 <li>
-                                   <form id={fn:concat("buttons",$res)}>
+                                   <form id="{fn:concat("buttons",$res)}">
                                       <input type="radio" name="{$uri}" value="inserttable" id="searchtype" checked="checked"/> Insert Table
                                       <input type="radio" name="{$uri}" value="embeddocument" id="searchtype"/>Embed Document
                                       <input type="radio" name="{$uri}" value="opendocument" id="searchtype"/>Open Document

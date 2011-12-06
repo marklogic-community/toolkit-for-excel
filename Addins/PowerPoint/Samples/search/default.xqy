@@ -1,6 +1,6 @@
 xquery version "1.0-ml";
 (:
-Copyright 2009-2011 MarkLogic Corporation
+Copyright 2009-2010 Mark Logic Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,12 +40,12 @@ let $searchtype :=  if(fn:empty(xdmp:get-request-field("pptadd:searchtype"))) th
 
 let $searchval := $searchparam 
 let $body :=
-      <body bgcolor={$rgb}>
+      <body bgcolor="{$rgb}">
 	<div id="ML-Add-in">
 <br/>
 <form id="basicsearch" action="default.xqy" method="post">
                    <div>
-                      <input type="text" size="40" name="pptadd:bsv" autocomplete="off" value={$searchval} id="bsearchval"  method="post"/>&nbsp;
+                      <input type="text" size="40" name="pptadd:bsv" autocomplete="off" value="{$searchval}" id="bsearchval"  method="post"/>&nbsp;
                       <input type="submit" value="Go"/> 
                   </div>     
                    <br/> {
