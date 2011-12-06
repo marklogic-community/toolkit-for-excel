@@ -55,7 +55,7 @@ xdmp:set-response-content-type('text/html;charset=utf-8'),
 {
 let $rgb :=  "rgb(200,216,237)"
 let $body :=
-      <body bgcolor={$rgb}> 
+      <body bgcolor="{$rgb}"> 
       <br/>
       <img src="ackbar2.jpg"/>
 <div id="ML-Add-in">

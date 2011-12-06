@@ -24,7 +24,7 @@ let $header:=((: xdmp:set-response-content-type('text/html'), :)
               <div id="header">
                  <form id="basicsearch" action="default.xqy" method="post">
                    <div>
-                      <input type="text" size="40" name="xladd:bsv" autocomplete="off" value={$searchval} id="bsearchval"  method="post"/>&nbsp;
+                      <input type="text" size="40" name="xladd:bsv" autocomplete="off" value="{$searchval}" id="bsearchval"  method="post"/>&nbsp;
                      <!-- TEST : { $no:color}--><input type="submit" value="Search"/> 
                        
                    </div> 
