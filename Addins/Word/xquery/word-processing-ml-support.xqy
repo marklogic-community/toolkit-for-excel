@@ -663,17 +663,18 @@ declare function ooxml:dispatch-pkg-ns(
 
 declare function ooxml:namespace-map-document()
 {
+    let $pre:= "xmlns:"
     let $map := map:map()
     let $put := (
-                  map:put($map,"a","http://schemas.openxmlformats.org/drawingml/2006/main"),
-                  map:put($map,"pic","http://schemas.openxmlformats.org/drawingml/2006/picture"),
-                  map:put($map,"wpc","http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
-                  map:put($map,"mc","http://schemas.openxmlformats.org/markup-compatibility/2006"),
-                  map:put($map,"wp14","http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
-                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
-                  map:put($map,"wpg","http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"),
-                  map:put($map,"wpi","http://schemas.microsoft.com/office/word/2010/wordprocessingInk"),
-                  map:put($map,"wps","http://schemas.microsoft.com/office/word/2010/wordprocessingShape")
+                  map:put($map,fn:concat($pre,"a"),"http://schemas.openxmlformats.org/drawingml/2006/main"),
+                  map:put($map,fn:concat($pre,"pic"),"http://schemas.openxmlformats.org/drawingml/2006/picture"),
+                  map:put($map,fn:concat($pre,"wpc"),"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
+                  map:put($map,fn:concat($pre,"mc"),"http://schemas.openxmlformats.org/markup-compatibility/2006"),
+                  map:put($map,fn:concat($pre,"wp14"),"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
+                  map:put($map,fn:concat($pre,"w14"),"http://schemas.microsoft.com/office/word/2010/wordml"),
+                  map:put($map,fn:concat($pre,"wpg"),"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"),
+                  map:put($map,fn:concat($pre,"wpi"),"http://schemas.microsoft.com/office/word/2010/wordprocessingInk"),
+                  map:put($map,fn:concat($pre,"wps"),"http://schemas.microsoft.com/office/word/2010/wordprocessingShape")
                 )
     return $map
                                         
@@ -681,21 +682,22 @@ declare function ooxml:namespace-map-document()
 
 declare function ooxml:namespace-map-styles()
 {
+    let $pre:= "xmlns:"
     let $map := map:map()
     let $put := (
-                  map:put($map,"wpc","http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
-                  map:put($map,"o","urn:schemas-microsoft-com:office:office"),
-                  map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
-                  map:put($map,"m","http://schemas.openxmlformats.org/officeDocument/2006/math") ,
-                  map:put($map,"v","urn:schemas-microsoft-com:vml"),
-                  map:put($map,"wp14","http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
-                  map:put($map,"wp","http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"), 
-                  map:put($map,"w10","urn:schemas-microsoft-com:office:word"),
-                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
-                  map:put($map,"wpg","http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"), 
-                  map:put($map,"wpi","http://schemas.microsoft.com/office/word/2010/wordprocessingInk"), 
-                  map:put($map,"wne","http://schemas.microsoft.com/office/word/2006/wordml"),
-                  map:put($map,"wps","http://schemas.microsoft.com/office/word/2010/wordprocessingShape")
+                  map:put($map,fn:concat($pre,"wpc"),"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
+                  map:put($map,fn:concat($pre,"o"),"urn:schemas-microsoft-com:office:office"),
+                  map:put($map,fn:concat($pre,"r"),"http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                  map:put($map,fn:concat($pre,"m"),"http://schemas.openxmlformats.org/officeDocument/2006/math") ,
+                  map:put($map,fn:concat($pre,"v"),"urn:schemas-microsoft-com:vml"),
+                  map:put($map,fn:concat($pre,"wp14"),"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
+                  map:put($map,fn:concat($pre,"wp"),"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"), 
+                  map:put($map,fn:concat($pre,"w10"),"urn:schemas-microsoft-com:office:word"),
+                  map:put($map,fn:concat($pre,"w14"),"http://schemas.microsoft.com/office/word/2010/wordml"),
+                  map:put($map,fn:concat($pre,"wpg"),"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"), 
+                  map:put($map,fn:concat($pre,"wpi"),"http://schemas.microsoft.com/office/word/2010/wordprocessingInk"), 
+                  map:put($map,fn:concat($pre,"wne"),"http://schemas.microsoft.com/office/word/2006/wordml"),
+                  map:put($map,fn:concat($pre,"wps"),"http://schemas.microsoft.com/office/word/2010/wordprocessingShape")
                 )
     return $map
 
@@ -703,57 +705,61 @@ declare function ooxml:namespace-map-styles()
 
 declare function ooxml:namespace-map-fonts()
 {
+    let $pre:= "xmlns:"
     let $map := map:map()
     let $put := (
-                  map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
-                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml")
+                  map:put($map,fn:concat($pre,"r"),"http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                  map:put($map,fn:concat($pre,"w14"),"http://schemas.microsoft.com/office/word/2010/wordml")
                 )
     return $map
 };
 
 declare function ooxml:namespace-map-web-settings()
 {
+    let $pre:= "xmlns:"
     let $map := map:map()
     let $put := (
-                  map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
-                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml")
+                  map:put($map,fn:concat($pre,"r"),"http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                  map:put($map,fn:concat($pre,"w14"),"http://schemas.microsoft.com/office/word/2010/wordml")
                 )
     return $map
 };
 
 declare function ooxml:namespace-map-settings()
 {
+    let $pre:= "xmlns:"
     let $map := map:map()
     let $put := (
-                  map:put($map,"o","urn:schemas-microsoft-com:office:office"),
-                  map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
-                  map:put($map,"m","http://schemas.openxmlformats.org/officeDocument/2006/math") ,
-                  map:put($map,"v","urn:schemas-microsoft-com:vml"),
-                  map:put($map,"w10","urn:schemas-microsoft-com:office:word"),
-                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
-                  map:put($map,"sl","http://schemas.openxmlformats.org/schemaLibrary/2006/main")
+                  map:put($map,fn:concat($pre,"o"),"urn:schemas-microsoft-com:office:office"),
+                  map:put($map,fn:concat($pre,"r"),"http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                  map:put($map,fn:concat($pre,"m"),"http://schemas.openxmlformats.org/officeDocument/2006/math") ,
+                  map:put($map,fn:concat($pre,"v"),"urn:schemas-microsoft-com:vml"),
+                  map:put($map,fn:concat($pre,"w10"),"urn:schemas-microsoft-com:office:word"),
+                  map:put($map,fn:concat($pre,"w14"),"http://schemas.microsoft.com/office/word/2010/wordml"),
+                  map:put($map,fn:concat($pre,"sl"),"http://schemas.openxmlformats.org/schemaLibrary/2006/main")
                 )
     return $map
 };
 
 declare function ooxml:namespace-map-glossary-document()
 {
+    let $pre:= "xmlns:"
     let $map := map:map()
     let $put := (
-                  map:put($map,"wpc","http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
-                  map:put($map,"o","urn:schemas-microsoft-com:office:office"),
-                  map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
-                  map:put($map,"m","http://schemas.openxmlformats.org/officeDocument/2006/math") ,
-                  map:put($map,"v","urn:schemas-microsoft-com:vml"),
-                  map:put($map,"w10","urn:schemas-microsoft-com:office:word"),
-                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
-                  map:put($map,"wp14","http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
-                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
-                  map:put($map,"wpg","http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"),
-                  map:put($map,"wpi","http://schemas.microsoft.com/office/word/2010/wordprocessingInk"),
-                  map:put($map,"wps","http://schemas.microsoft.com/office/word/2010/wordprocessingShape"),
-                  map:put($map,"wp","http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"),
-                  map:put($map,"wne","http://schemas.microsoft.com/office/word/2006/wordml")
+                  map:put($map,fn:concat($pre,"wpc"),"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
+                  map:put($map,fn:concat($pre,"o"),"urn:schemas-microsoft-com:office:office"),
+                  map:put($map,fn:concat($pre,"r"),"http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                  map:put($map,fn:concat($pre,"m"),"http://schemas.openxmlformats.org/officeDocument/2006/math") ,
+                  map:put($map,fn:concat($pre,"v"),"urn:schemas-microsoft-com:vml"),
+                  map:put($map,fn:concat($pre,"w10"),"urn:schemas-microsoft-com:office:word"),
+                  map:put($map,fn:concat($pre,"w14"),"http://schemas.microsoft.com/office/word/2010/wordml"),
+                  map:put($map,fn:concat($pre,"wp14"),"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
+                  map:put($map,fn:concat($pre,"w14"),"http://schemas.microsoft.com/office/word/2010/wordml"),
+                  map:put($map,fn:concat($pre,"wpg"),"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"),
+                  map:put($map,fn:concat($pre,"wpi"),"http://schemas.microsoft.com/office/word/2010/wordprocessingInk"),
+                  map:put($map,fn:concat($pre,"wps"),"http://schemas.microsoft.com/office/word/2010/wordprocessingShape"),
+                  map:put($map,fn:concat($pre,"wp"),"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"),
+                  map:put($map,fn:concat($pre,"wne"),"http://schemas.microsoft.com/office/word/2006/wordml")
                 )
     return $map
                                              
@@ -762,23 +768,24 @@ declare function ooxml:namespace-map-glossary-document()
 declare function ooxml:namespace-map-numbering()
 {
 
+    let $pre:= "xmlns:"
     let $map := map:map()
     let $put := (
-                  map:put($map,"wpc","http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
-                  map:put($map,"mc","http://schemas.openxmlformats.org/markup-compatibility/2006"),
-                  map:put($map,"o","urn:schemas-microsoft-com:office:office"),
-                  map:put($map,"r","http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
-                  map:put($map,"m","http://schemas.openxmlformats.org/officeDocument/2006/math") ,
-                  map:put($map,"v","urn:schemas-microsoft-com:vml"),
-                  map:put($map,"wp14","http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
-                  map:put($map,"wp","http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"),
-                  map:put($map,"w10","urn:schemas-microsoft-com:office:word"),
-                  map:put($map,"w","http://schemas.openxmlformats.org/wordprocessingml/2006/main"),
-                  map:put($map,"w14","http://schemas.microsoft.com/office/word/2010/wordml"),
-                  map:put($map,"wpg","http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"),
-                  map:put($map,"wpi","http://schemas.microsoft.com/office/word/2010/wordprocessingInk"),
-                  map:put($map,"wne","http://schemas.microsoft.com/office/word/2006/wordml"),
-                  map:put($map,"wps","http://schemas.microsoft.com/office/word/2010/wordprocessingShape")
+                  map:put($map,fn:concat($pre,"wpc"),"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"),
+                  map:put($map,fn:concat($pre,"mc"),"http://schemas.openxmlformats.org/markup-compatibility/2006"),
+                  map:put($map,fn:concat($pre,"o"),"urn:schemas-microsoft-com:office:office"),
+                  map:put($map,fn:concat($pre,"r"),"http://schemas.openxmlformats.org/officeDocument/2006/relationships"), 
+                  map:put($map,fn:concat($pre,"m"),"http://schemas.openxmlformats.org/officeDocument/2006/math") ,
+                  map:put($map,fn:concat($pre,"v"),"urn:schemas-microsoft-com:vml"),
+                  map:put($map,fn:concat($pre,"wp14"),"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"),
+                  map:put($map,fn:concat($pre,"wp"),"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"),
+                  map:put($map,fn:concat($pre,"w10"),"urn:schemas-microsoft-com:office:word"),
+                  map:put($map,fn:concat($pre,"w"),"http://schemas.openxmlformats.org/wordprocessingml/2006/main"),
+                  map:put($map,fn:concat($pre,"w14"),"http://schemas.microsoft.com/office/word/2010/wordml"),
+                  map:put($map,fn:concat($pre,"wpg"),"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"),
+                  map:put($map,fn:concat($pre,"wpi"),"http://schemas.microsoft.com/office/word/2010/wordprocessingInk"),
+                  map:put($map,fn:concat($pre,"wne"),"http://schemas.microsoft.com/office/word/2006/wordml"),
+                  map:put($map,fn:concat($pre,"wps"),"http://schemas.microsoft.com/office/word/2010/wordprocessingShape")
                                                    (:mc:Ignorable="w14 wp14":)
                 )
     return $map
@@ -807,8 +814,9 @@ declare function ooxml:namespace-add($pkg as node()*, $map as map:map)
 
                       return for $k in $keys
                                  let $v := map:get($map,$k)
-                                 return namespace {$k} {$v},
-                      ooxml:dispatch-pkg-ns($pkg)
+                                 (:return namespace {$k} {$v},:)
+                                 return attribute {$k} {$v},
+                                        ooxml:dispatch-pkg-ns($pkg)
                       )
                     }
 };
