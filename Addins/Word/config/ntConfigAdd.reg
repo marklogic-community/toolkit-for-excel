@@ -1,8 +1,0 @@
-REGEDIT4
-[HKEY_CURRENT_USER\MarkLogicAddinConfiguration\Word]
-"URL"="http://localhost:8000/addinStandard/addinhello.xqy" 
-"CTPTitle"="My Task Pane"
-"RbnTabLbl"="My Tab"
-"RbnGrpLbl"="My Group"
-"RbnBtnLbl"="My Button"
-"CTPEnabled"="true"

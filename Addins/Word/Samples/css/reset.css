@@ -1,18 +1,0 @@
-/*
-Copyright 2008-2011 MarkLogic Corporation
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-/* Adapted from http://meyerweb.com/eric/thoughts/2007/05/01/reset-reloaded/ */
-
- html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {border:0pt none;font-family:inherit;font-size:100%;font-style:inherit;font-weight:inherit;margin:0pt;outline-color:invert;outline-style:none;outline-width:0pt;padding:0pt;vertical-align:baseline;}*:focus {outline-color:invert;outline-style:none;outline-width:0pt;}body {background:white none repeat scroll 0%;color:black;line-height:1;}ol, ul {list-style-image:none;list-style-position:outside;list-style-type:none;}table {border-collapse:collapse;border-spacing:0pt;}caption, th, td {font-weight:normal;text-align:left;}blockquote:before, blockquote:after, q:before, q:after {content:"";}blockquote, q {quotes:"" "";}

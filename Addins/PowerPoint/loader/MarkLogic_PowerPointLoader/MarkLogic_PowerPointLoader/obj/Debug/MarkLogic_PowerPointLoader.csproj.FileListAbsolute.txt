@@ -1,6 +1,0 @@
-C:\Documents and Settings\paven\My Documents\Visual Studio 2008\Projects\MarkLogic_PowerPointLoader\MarkLogic_PowerPointLoader\bin\Debug\MarkLogic_PowerPointLoader.exe
-C:\Documents and Settings\paven\My Documents\Visual Studio 2008\Projects\MarkLogic_PowerPointLoader\MarkLogic_PowerPointLoader\bin\Debug\MarkLogic_PowerPointLoader.pdb
-C:\Documents and Settings\paven\My Documents\Visual Studio 2008\Projects\MarkLogic_PowerPointLoader\MarkLogic_PowerPointLoader\obj\Debug\ResolveAssemblyReference.cache
-C:\Documents and Settings\paven\My Documents\Visual Studio 2008\Projects\MarkLogic_PowerPointLoader\MarkLogic_PowerPointLoader\obj\Debug\MarkLogic_PowerPointLoader.csproj.ResolveComReference.cache
-C:\Documents and Settings\paven\My Documents\Visual Studio 2008\Projects\MarkLogic_PowerPointLoader\MarkLogic_PowerPointLoader\obj\Debug\MarkLogic_PowerPointLoader.exe
-C:\Documents and Settings\paven\My Documents\Visual Studio 2008\Projects\MarkLogic_PowerPointLoader\MarkLogic_PowerPointLoader\obj\Debug\MarkLogic_PowerPointLoader.pdb

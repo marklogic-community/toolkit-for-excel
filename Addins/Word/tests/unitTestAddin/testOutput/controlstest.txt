@@ -1,1 +1,0 @@
-<tests><test>C:\Documents and Settings\paven\Local Settings\Temp\</test><test>C:\tmp\testOutput</test><test>controlstest.docx</test><test>19455454</test><test>19455487</test><test>ID: 19455487  tag: FOO16B  title: FANCY16B type: wdContentControlRichText parentTag: BAR16 parentID: 19455458</test><test>inserted WordOpenXML both text and DOM style</test></tests>

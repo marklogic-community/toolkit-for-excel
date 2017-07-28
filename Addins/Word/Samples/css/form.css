@@ -1,60 +1,0 @@
-/*
-Copyright 2008-2011 MarkLogic Corporation
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
-.ML-control .ML-guide {font-size: 80%;color: #999;}
-
-.ML-control input, 
-.ML-control select, 
-.ML-control textarea {font-size: 110%;}
-
-.ML-control .ML-label label { font-weight: bold;}
- div.ML-control {clear:both;margin:1em 0pt;overflow:hidden;}div.ML-control .ML-label {display:block;float:left;text-align:right;width:20%;}div.ML-control .ML-input {padding-left:22%;width:78%;}div.ML-control .ML-guide {margin:0.5em 0pt;}div.ML-control .ML-label .ML-guide {margin-left:2em;}div.ML-control input, div.ML-control textarea, div.ML-control select {display:block;margin:0;width:99%;}
-div.ML-control select {
-width: 100%;
-}div.ML-control input[type="checkbox"], div.ML-control input[type="radio"], div.ML-control input[type="file"] {display:inline;font-size:inherit;width:auto;}div.ML-control input:focus, div.ML-control textarea:focus, div.ML-control select:focus {}div.ML-control textarea {height:4em;}
-
-/* IE-specific */
-
-div.ML-control {
-    width: 100%;
-}
-div.ML-control .ML-label {
-}
-.ML-input {
-}
-div.ML-control .ML-input, div.ML-control .ML-guide {
-    width: 77%;
-    padding-left: 0;
-    margin-left: 2%;
-}
-div.ML-control input.checkbox,
-div.ML-control input.radio,
-div.ML-control input.file {
-    display: inline;
-	border: none;
-	width: auto;
-}
-.clear { clear: both; display: none; }
-div.ML-control select {  
-	margin-left: 2%; 
-	width: 100%;
-}
-.ML-control .ML-label label {
-margin-top: 4px;
-}
-div.ML-label label {
-	line-height: 1.5;
-}

@@ -1,7 +1,0 @@
-C:\Users\paven\Documents\Visual Studio 2008\Projects\XCC_Test\XCC_Test\bin\Debug\XCC_Test.exe
-C:\Users\paven\Documents\Visual Studio 2008\Projects\XCC_Test\XCC_Test\bin\Debug\XCC_Test.pdb
-C:\Users\paven\Documents\Visual Studio 2008\Projects\XCC_Test\XCC_Test\bin\Debug\MarklogicXcc.dll
-C:\Users\paven\Documents\Visual Studio 2008\Projects\XCC_Test\XCC_Test\bin\Debug\xcccore.dll
-C:\Users\paven\Documents\Visual Studio 2008\Projects\XCC_Test\XCC_Test\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\paven\Documents\Visual Studio 2008\Projects\XCC_Test\XCC_Test\obj\Debug\XCC_Test.exe
-C:\Users\paven\Documents\Visual Studio 2008\Projects\XCC_Test\XCC_Test\obj\Debug\XCC_Test.pdb

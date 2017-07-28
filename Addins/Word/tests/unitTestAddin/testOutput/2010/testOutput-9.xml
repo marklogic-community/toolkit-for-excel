@@ -1,8 +1,0 @@
-<style-definition>
-  <w:style w:type="character" w:default="1" w:styleId="DefaultParagraphFont" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-    <w:name w:val="Default Paragraph Font"/>
-    <w:uiPriority w:val="1"/>
-    <w:semiHidden/>
-    <w:unhideWhenUsed/>
-  </w:style>
-</style-definition>

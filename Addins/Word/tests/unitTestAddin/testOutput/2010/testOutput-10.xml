@@ -1,7 +1,0 @@
-<w:customXml w:element="EFGH" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-  <w:p>
-    <w:r>
-      <w:t>This is my paragraph.</w:t>
-    </w:r>
-  </w:p>
-</w:customXml>
