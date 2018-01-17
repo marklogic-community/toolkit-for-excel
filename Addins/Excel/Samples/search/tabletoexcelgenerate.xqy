@@ -57,7 +57,7 @@ let $rgb :=  "rgb(200,216,237)"
 let $body :=
       <body bgcolor="{$rgb}"> 
       <br/>
-      <img src="ackbar2.jpg"/>
+      <img src="pete_aven.jpg"/>
 <div id="ML-Add-in">
 <!-- <div id="ML-Message"> -->
      <!-- <h1>ACK! It's A Trap!!!</h1> -->
